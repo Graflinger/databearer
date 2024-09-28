@@ -1,4 +1,4 @@
-# graf_blog
+# databaerer blog
 Creating transparency through open sourcing the code used to create the data analysis for my blog
 
 # technologies used
