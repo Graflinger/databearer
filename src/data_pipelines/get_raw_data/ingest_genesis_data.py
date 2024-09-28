@@ -5,8 +5,9 @@ from src.tools.genesis_api_helper.genesis_api_helper import get_pandas_table
 from src.tools.genesis_api_helper.datasources_retrieval import (
     get_datasource_information,
 )
-from src.tools.duckdb_utils.duckdb_utils import create_duckdb_conform_name
-from src.config.parameter_handler import retrieve_parameter_value_by_name
+from src.tools.duckdb_utils.duckdb_utils import ( 
+    create_duckdb_conform_name, 
+    get_duckdb_connection)
 
 
 def ingest_genesis_tables():
@@ -16,11 +17,8 @@ def ingest_genesis_tables():
     # get datasources
     datasources = get_datasource_information(type="tables")
 
-    # get duckdb location
-    duckdb_location = retrieve_parameter_value_by_name("duckdb_location")
-
     # connect to duckdb
-    with duckdb.connect(duckdb_location) as con:
+    with get_duckdb_connection() as con:
 
         # use staging schema
         con.sql("USE staging")
@@ -32,16 +30,16 @@ def ingest_genesis_tables():
 
             # get pandas table
             df = get_pandas_table(name)
-            
+
             table_name = create_duckdb_conform_name(name)
 
             # store table in duckdb
-            duckdb.sql(f"CREATE TABLE genesis_{table_name}"
-                       " AS SELECT * FROM df")
+            con.sql(f"CREATE OR REPLACE TABLE genesis_{table_name} "
+                    "AS SELECT * FROM df")
 
             con.commit()
 
-            logging.info(f"Table staging.{table_name} ingested into duckdb")
+            logging.info(f"Table staging.genesis_{table_name} ingested into duckdb")
 
 
 def main():
