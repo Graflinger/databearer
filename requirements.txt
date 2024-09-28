@@ -1,7 +1,8 @@
-duckdb==0.10.0
+duckdb==1.1.1
 requests==2.32.3
 pandas==2.2.3
 ipykernel==6.29.5
+PyYAML==6.0.2
 
 # dbt-core==1.7.8
 # dbt-duckdb==1.7.1
