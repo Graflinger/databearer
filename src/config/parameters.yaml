@@ -1,0 +1,4 @@
+Parameters:
+  duckdb_location:
+    value: ".data/duckdb.db"
+    description: "Location of the DuckDB database file"
