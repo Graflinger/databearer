@@ -46,19 +46,17 @@ def get_pandas_table(name: str, endpoint: str = "table"):
     # which makes the data unparsable for a flat table
 
     # remove front part of string which is not needed
-    cleaned_data = raw_data.split("\n;;")[-1] 
+    cleaned_data = raw_data.split("\n;;")[-1]
 
     # remove back part of string which is not needed
-    cleaned_data = cleaned_data.split("\n__________")[0] 
+    cleaned_data = cleaned_data.split("\n__________")[0]
 
     # convert data string to stringIO object and read it as a pandas dataframe
-    cleaned_data_str = StringIO(cleaned_data) 
+    cleaned_data_str = StringIO(cleaned_data)
     cleaned_df = pd.read_csv(cleaned_data_str, sep=";")
 
     # reset index and rename columns
     cleaned_df = cleaned_df.reset_index()
-    cleaned_df.rename(
-        columns={"level_0": "Measure", "level_1": "Year"},
-        inplace=True)
+    cleaned_df.rename(columns={"level_0": "Measure", "level_1": "Year"}, inplace=True)
 
     return cleaned_df

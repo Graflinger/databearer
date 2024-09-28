@@ -1,6 +1,6 @@
 import duckdb
 
-duckdb_conn = duckdb.connect('.data/duckdb.db')
+duckdb_conn = duckdb.connect(".data/duckdb.db")
 
 # create schemas
 duckdb_conn.sql("CREATE SCHEMA IF NOT EXISTS staging")
