@@ -1,10 +1,12 @@
 import requests as req
 import pandas as pd
-from src.credentials import genesis_user, genesis_password
 from io import StringIO
 
+from src.credentials import genesis_user, genesis_password
+from src.tools.genesis_api_helper.datasources_utils import datasource_meta_information
 
-def get_raw_response(name: str, endpoint: str = "table"):
+
+def get_raw_response(name: str, endpoint: str = "tables"):
     """
     Calls genesis API with defined endpoint and returns raw response
 
@@ -16,12 +18,14 @@ def get_raw_response(name: str, endpoint: str = "table"):
         requests.models.Response: Raw response of the API
     """
 
+    table_meta_data = datasource_meta_information(name)
+    
     url = (
         f"https://www-genesis.destatis.de/genesisWS/rest/2020/data/{endpoint}"
         f"?username={genesis_user}&password={genesis_password}&name={name}"
     )
 
-    response = req.get(url)
+    response = req.get(url, params=table_meta_data.api_params)
 
     return response
 
@@ -55,8 +59,11 @@ def get_pandas_table(name: str, endpoint: str = "table"):
     cleaned_data_str = StringIO(cleaned_data)
     cleaned_df = pd.read_csv(cleaned_data_str, sep=";")
 
-    # reset index and rename columns
+    # reset index and rename columns with metadata form datasources.yaml
     cleaned_df = cleaned_df.reset_index()
-    cleaned_df.rename(columns={"level_0": "Measure", "level_1": "Year"}, inplace=True)
+    table_meta_data = datasource_meta_information(name)
+    index_names = table_meta_data.index_columns
+    index_dict = {f"level_{i}": index_names[i] for i in range(len(index_names))}
+    cleaned_df.rename(columns=index_dict, inplace=True)
 
     return cleaned_df

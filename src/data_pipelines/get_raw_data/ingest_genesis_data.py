@@ -1,13 +1,15 @@
-import duckdb
 import logging
 
 from src.tools.genesis_api_helper.genesis_api_helper import get_pandas_table
-from src.tools.genesis_api_helper.datasources_retrieval import (
+from src.tools.genesis_api_helper.datasources_utils import (
     get_datasource_information,
 )
 from src.tools.duckdb_utils.duckdb_utils import ( 
     create_duckdb_conform_name, 
     get_duckdb_connection)
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def ingest_genesis_tables():
@@ -25,6 +27,7 @@ def ingest_genesis_tables():
 
         # iterate over tables
         for table in datasources:
+            
             # get name of the datasource
             name = table["name"]
 

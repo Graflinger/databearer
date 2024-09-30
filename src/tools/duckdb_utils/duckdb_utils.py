@@ -37,3 +37,20 @@ def get_duckdb_connection(
     duckdb_location = retrieve_parameter_value_by_name(duckdb_database)
 
     return duckdb.connect(duckdb_location)
+
+
+def get_cols_from_table(
+    table_name: str, con: duckdb.DuckDBPyConnection
+) -> list:
+    """
+    Returns the columns of a table
+
+    Args:
+        table_name: str: the name of the table
+        con: duckdb.Connection: the connection to the duckdb database
+
+    Returns:
+        list: the columns of the table
+
+    """
+    return con.table(table_name).columns
