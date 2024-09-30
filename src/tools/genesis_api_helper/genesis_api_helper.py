@@ -1,12 +1,16 @@
-import requests as req
-import pandas as pd
+from __future__ import annotations
+
 from io import StringIO
 
-from src.credentials import genesis_user, genesis_password
+import pandas as pd
+import requests as req
+
+from src.credentials import genesis_password
+from src.credentials import genesis_user
 from src.tools.genesis_api_helper.datasources_utils import datasource_meta_information
 
 
-def get_raw_response(name: str, endpoint: str = "tables"):
+def get_raw_response(name: str, endpoint: str = 'tables'):
     """
     Calls genesis API with defined endpoint and returns raw response
 
@@ -19,7 +23,7 @@ def get_raw_response(name: str, endpoint: str = "tables"):
     """
 
     table_meta_data = datasource_meta_information(name)
-    
+
     url = (
         f"https://www-genesis.destatis.de/genesisWS/rest/2020/data/{endpoint}"
         f"?username={genesis_user}&password={genesis_password}&name={name}"
@@ -30,7 +34,7 @@ def get_raw_response(name: str, endpoint: str = "tables"):
     return response
 
 
-def get_pandas_table(name: str, endpoint: str = "table"):
+def get_pandas_table(name: str, endpoint: str = 'table'):
     """
     Calls genesis API with defined endpoint and returns
     table as pandas DataFrame
@@ -44,26 +48,29 @@ def get_pandas_table(name: str, endpoint: str = "table"):
     """
     response = get_raw_response(name, endpoint)
     # get data content from response
-    raw_data = response.json()["Object"]["Content"]
+    raw_data = response.json()['Object']['Content']
 
     # remove unneccessary metadata information
     # which makes the data unparsable for a flat table
 
     # remove front part of string which is not needed
-    cleaned_data = raw_data.split("\n;;")[-1]
+    cleaned_data = raw_data.split('\n;;')[-1]
 
     # remove back part of string which is not needed
-    cleaned_data = cleaned_data.split("\n__________")[0]
+    cleaned_data = cleaned_data.split('\n__________')[0]
 
     # convert data string to stringIO object and read it as a pandas dataframe
     cleaned_data_str = StringIO(cleaned_data)
-    cleaned_df = pd.read_csv(cleaned_data_str, sep=";")
+    cleaned_df = pd.read_csv(cleaned_data_str, sep=';')
 
     # reset index and rename columns with metadata form datasources.yaml
     cleaned_df = cleaned_df.reset_index()
     table_meta_data = datasource_meta_information(name)
     index_names = table_meta_data.index_columns
-    index_dict = {f"level_{i}": index_names[i] for i in range(len(index_names))}
+    index_dict = {
+        f"level_{i}": index_names[i]
+        for i in range(len(index_names))
+    }
     cleaned_df.rename(columns=index_dict, inplace=True)
 
     return cleaned_df

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import duckdb
 
 from src.config.parameter_handler import retrieve_parameter_value_by_name
@@ -15,13 +17,13 @@ def create_duckdb_conform_name(name: str) -> str:
         str: the name of the table conform with the duckdb naming conventions
 
     """
-    name = name.replace("-", "")
+    name = name.replace('-', '')
 
     return name
 
 
 def get_duckdb_connection(
-    duckdb_database: str = "duckdb_location",
+    duckdb_database: str = 'duckdb_location',
 ) -> duckdb.DuckDBPyConnection:
     """
     Returns a connection to a duckdb database
@@ -40,7 +42,7 @@ def get_duckdb_connection(
 
 
 def get_cols_from_table(
-    table_name: str, con: duckdb.DuckDBPyConnection
+    table_name: str, con: duckdb.DuckDBPyConnection,
 ) -> list:
     """
     Returns the columns of a table

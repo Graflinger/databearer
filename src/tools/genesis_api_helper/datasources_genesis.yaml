@@ -6,7 +6,7 @@ tables:
     value_unit: billion_euro
     value_adjustment: 1.000.000.000
     api_params:
-      startyear: 1993 
+      startyear: 1993
     index_columns:
       - VGR_Nummer
       - Steuereinnahmearten
