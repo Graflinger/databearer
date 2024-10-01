@@ -39,13 +39,13 @@ def ingest_genesis_tables():
 
             # store table in duckdb
             con.sql(
-                f"CREATE OR REPLACE TABLE genesis_{table_name} "
+                f"CREATE OR REPLACE TABLE {table["table_database_name"]} "
                 'AS SELECT * FROM df',
             )
 
             con.commit()
 
-            logging.info(f"Table staging.genesis_{table_name} ingested into duckdb")
+            logging.info(f"Table {table["table_database_name"]} ingested into duckdb")
 
 
 def main():

@@ -49,6 +49,10 @@ class datasource_meta_information:
         return self.datasources_information['index_columns']
 
     @property
+    def table_database_name(self):
+        return self.datasources_information['table_database_name']
+
+    @property
     def index_table_type(self):
         return self.datasources_information['table_type']
 

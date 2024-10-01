@@ -1,10 +1,10 @@
 tables:
   - name: 81000-0415
-    table_database_name: VGR_BUND_810000415
+    table_database_name: genesis_VGR_BUND_810000415
     table_type: pivoted
     description: "VGR des Bundes - Steuereinnahmen: Deutschland, Jahre, Steuereinnahmearten"
     value_unit: billion_euro
-    value_adjustment: 1.000.000.000
+    value_adjustment: 1000000000
     api_params:
       startyear: 1993
     index_columns:
