@@ -15,12 +15,6 @@ logger.setLevel(logging.INFO)
 
 
 def clean_unpivoted_tables(name: str):
-    """
-    Cleans unpivoted tables by unpivoting them
-    clean data by casting year to integer and values to double
-    and adjust the values by the value_adjustment to harmonize the values to euros
-
-    """
     with get_duckdb_connection() as con:
 
         table_meta_data = datasource_meta_information(name)
@@ -34,18 +28,23 @@ def clean_unpivoted_tables(name: str):
             f"""
             CREATE OR REPLACE TABLE cleaned.{table_meta_data.table_database_name} AS
             WITH unpivoted_table AS
-            (UNPIVOT staging.genesis_810000415
+            (UNPIVOT staging.{table_meta_data.table_database_name}
             ON {cols_to_pivot}
             INTO
                 NAME year
                 VALUE value),
             cleaned AS(
-                SELECT {",".join(table_meta_data.index_columns)}
+                SELECT {",".join([f"replace(trim({x}), ' ', '_') AS {x}" for x in table_meta_data.index_columns])}
                 ,CAST(year AS INTEGER) as year
                 ,CAST(replace(value, ',', '.') AS DOUBLE)
                 * {table_meta_data.value_adjustment} as value
-            FROM unpivoted_table)
-            SELECT * FROM cleaned""",
+            FROM unpivoted_table),
+            pivoted_by_index AS(
+                PIVOT cleaned
+                ON {",".join(table_meta_data.pivot_columns)}
+                USING max(value)
+            )
+            SELECT * FROM pivoted_by_index""",
         )
 
         con.commit()

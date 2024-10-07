@@ -15,10 +15,8 @@ def create_fact_bund_yearly_table():
             """
             CREATE OR REPLACE TABLE curated.fact_bund_yearly AS
             SELECT
-                year,
-                vgr_bund.value income
-            FROM cleaned.genesis_VGR_BUND_810000415 as vgr_bund
-            WHERE vgr_bund.VGR_Nummer = 'VGR-STE-1'
+                vgr_bund.*
+            FROM cleaned.genesis_VGR_BUND_810000031 as vgr_bund
             """,
         )
 
