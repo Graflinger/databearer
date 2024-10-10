@@ -5,6 +5,7 @@ tables:
     description: "VGR des Bundes - Einnahmen und Ausgaben sowie Finanzierungssaldo des Staates: Deutschland, Jahre"
     value_unit: billion_euro
     value_adjustment: 1000000000
+    begin_split_flag: "\n;;"
     api_params:
       startyear: 1991
     index_columns:
@@ -12,3 +13,36 @@ tables:
       - Unit
     pivot_columns:
       - Description
+    where_clause: 1=1
+  - name: 71211-0002
+    table_database_name: genesis_steuern_einnahmen_712110002
+    table_type: pivoted
+    description: "Steuereinnahmen: Deutschland, Jahre, Steuerarten nach der Steuerverteilung"
+    value_unit: tausend_euro
+    value_adjustment: 1000
+    begin_split_flag: "\n;"
+    api_params:
+      startyear: 1991
+    index_columns:
+      - Steuerarten
+    pivot_columns:
+      - Steuerarten
+    where_clause: 1=1
+  - name: 81000-0001
+    table_database_name: genesis_VGR_BUND_810000001
+    table_type: pivoted
+    description: "VGR des Bundes - Bruttowertschöpfung, Bruttoinlandsprodukt(nominal/preisbereinigt): Deutschland, Jahre"
+    value_unit: billion_euro
+    value_adjustment: 1000000000
+    begin_split_flag: "\n;;"
+    api_params:
+      startyear: 1991
+      classifyingvariable1: VGRPB5
+      classifyingkey1: VGRJPM
+    index_columns:
+      - Kategorie
+      - Beschreibung
+      - Einheit
+    pivot_columns:
+      - Beschreibung
+    where_clause: "Einheit = 'jew._ME'"

@@ -47,30 +47,30 @@ def get_pandas_table(name: str, endpoint: str = 'table'):
         pandas.DataFrame: Table as pandas DataFrame
     """
     response = get_raw_response(name, endpoint)
-    # get data content from response
     raw_data = response.json()['Object']['Content']
 
-    # remove unneccessary metadata information
-    # which makes the data unparsable for a flat table
-
-    # remove front part of string which is not needed
-    cleaned_data = raw_data.split('\n;;')[-1]
-
-    # remove back part of string which is not needed
-    cleaned_data = cleaned_data.split('\n__________')[0]
-
-    # convert data string to stringIO object and read it as a pandas dataframe
-    cleaned_data_str = StringIO(cleaned_data)
-    cleaned_df = pd.read_csv(cleaned_data_str, sep=';')
-
-    # reset index and rename columns with metadata form datasources.yaml
-    cleaned_df = cleaned_df.reset_index()
     table_meta_data = datasource_meta_information(name)
     index_names = table_meta_data.index_columns
-    index_dict = {
-        f"level_{i}": index_names[i]
-        for i in range(len(index_names))
-    }
-    cleaned_df.rename(columns=index_dict, inplace=True)
+    begin_split_flag = table_meta_data.begin_split_flag
+
+    # remove unneccessary metadata information
+    cleaned_data_string = raw_data.split(begin_split_flag)[-1]
+
+    cleaned_data_string = cleaned_data_string.split('\n__________')[0]
+
+    # handle empty values represented as '-'
+    cleaned_data_string = cleaned_data_string.replace(';-;', ';;')
+    cleaned_data_string = cleaned_data_string.replace('-;', ';')
+    cleaned_data_string = cleaned_data_string.replace(';-', ';')
+
+    cleaned_data_string = cleaned_data_string.replace(',', '.')
+
+    cleaned_data_string_io = StringIO(cleaned_data_string)
+    cleaned_df = pd.read_csv(cleaned_data_string_io, sep=';')
+
+    cleaned_df = cleaned_df.reset_index()
+
+    for i in range(0, len(index_names)):
+        cleaned_df.columns.values[i] = index_names[i]
 
     return cleaned_df

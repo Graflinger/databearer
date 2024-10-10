@@ -51,3 +51,11 @@ class datasource_meta_information:
     @property
     def pivot_columns(self):
         return self.datasources_information['pivot_columns']
+
+    @property
+    def begin_split_flag(self):
+        return self.datasources_information['begin_split_flag']
+
+    @property
+    def where_clause(self):
+        return self.datasources_information['where_clause']

@@ -36,15 +36,19 @@ def clean_unpivoted_tables(name: str):
             cleaned AS(
                 SELECT {",".join([f"replace(trim({x}), ' ', '_') AS {x}" for x in table_meta_data.index_columns])}
                 ,CAST(year AS INTEGER) as year
-                ,CAST(replace(value, ',', '.') AS DOUBLE)
-                * {table_meta_data.value_adjustment} as value
+                ,round(value * {table_meta_data.value_adjustment}, 2) as value
             FROM unpivoted_table),
             pivoted_by_index AS(
                 PIVOT cleaned
                 ON {",".join(table_meta_data.pivot_columns)}
                 USING max(value)
             )
-            SELECT * FROM pivoted_by_index""",
+            SELECT
+                *
+            FROM
+                pivoted_by_index
+            WHERE
+                {table_meta_data.where_clause}""",
         )
 
         con.commit()

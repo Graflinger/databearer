@@ -15,8 +15,18 @@ def create_fact_bund_yearly_table():
             """
             CREATE OR REPLACE TABLE curated.fact_bund_yearly AS
             SELECT
-                vgr_bund.*
-            FROM cleaned.genesis_VGR_BUND_810000031 as vgr_bund
+                vgr_bund.year,
+                vgr_bund.Sozialbeiträge_an_den_Staat,
+                steuern_einnahmen.Steuereinnahmen_des_Bundes,
+                bip_yearly.Bruttoinlandsprodukt
+            FROM
+                cleaned.genesis_VGR_BUND_810000031 as vgr_bund
+            LEFT JOIN
+                cleaned.genesis_steuern_einnahmen_712110002 as steuern_einnahmen
+                ON vgr_bund.year = steuern_einnahmen.year
+            LEFT JOIN
+                cleaned.genesis_VGR_BUND_810000001 as bip_yearly
+                ON vgr_bund.year = bip_yearly.year
             """,
         )
 
