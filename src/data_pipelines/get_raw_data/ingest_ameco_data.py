@@ -10,7 +10,11 @@ logger.setLevel(logging.INFO)
 
 
 def ingest_ameco_tables():
-    tables = {'GDP_current_prices': '1.0.99.0.UDGG'}
+    tables = {
+        'gross_public_debt': '1.0.99.0.UDGG',
+        'GDP_current_prices': '1.0.99.0.UVGD',
+        'GDP_constant_prices': '1.1.0.0.OVGD',
+    }
 
     with get_duckdb_connection() as con:
         con.sql('USE staging')
