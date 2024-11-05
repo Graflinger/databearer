@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 100,
+            "driver": "DuckDB",
+            "name": "quack",
+            "database": "C:\\Users\\stefangraf\\OneDrive - Microsoft\\Desktop\\Workspace\\blog\\code\\graf_blog\\.data\\duckdb.db"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
