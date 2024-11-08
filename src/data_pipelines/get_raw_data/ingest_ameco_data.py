@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from src.tools.ameco_api_helper.ameco_api_utils import get_ameco_pandas_table
+from src.tools.datasources.ameco_api_helper.ameco_api_utils import get_ameco_pandas_table
 from src.tools.duckdb_utils.duckdb_utils import get_duckdb_connection
 
 logger = logging.getLogger()
