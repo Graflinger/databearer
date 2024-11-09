@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import logging
 
-from src.tools.duckdb_utils.duckdb_utils import get_duckdb_connection
-from src.tools.genesis_api_helper.datasources_utils import (
+from src.tools.datasources.genesis_api_helper.datasources_utils import (
     get_datasource_information,
 )
-from src.tools.genesis_api_helper.genesis_api_helper import get_pandas_table
+from src.tools.datasources.genesis_api_helper.genesis_api_helper import get_pandas_table
+from src.tools.duckdb_utils.duckdb_utils import get_duckdb_connection
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
