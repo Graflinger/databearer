@@ -16,7 +16,7 @@ def create_fact_energy_germany_yearly_table():
             CREATE OR REPLACE TABLE curated.fact_energy_germany_yearly AS
             WITH selected_columns AS (
             SELECT
-                datetrunc('year', bwa.bid_date) as year,
+                date_part('year', bwa.bid_date) as year,
                 bwa.procedure,
                 SUM(bwa.awarded_quantity_kw) as awarded_quantity_kw
 

@@ -5,7 +5,7 @@ def translate_countries(df, country_column='country'):
     country_translation = {
         'Austria': 'Österreich',
         'Belgium': 'Belgien',
-        'Bulgari': 'Bulgarien',
+        'Bulgaria': 'Bulgarien',
         'Croatia': 'Kroatien',
         'Cyprus': 'Zypern',
         'Czechia': 'Tschechien',
@@ -23,7 +23,7 @@ def translate_countries(df, country_column='country'):
         'Ireland': 'Irland',
         'Italy': 'Italien',
         'Latvia': 'Lettland',
-        'Lithuan': 'Litauen',
+        'Lithuania': 'Litauen',
         'Luxembourg': 'Luxemburg',
         'Malta': 'Malta',
         'Netherlands': 'Niederlande',
