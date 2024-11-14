@@ -34,7 +34,7 @@ def clean_unpivoted_tables_with_billion_euro_unit(table_name: str):
                 country,
                 label,
                 'EUR' as unit,
-                year,
+                CAST(year AS INTEGER) as year,
                 round(value * 1000000000, 0) as value
             FROM unpivoted_table)
             SELECT
