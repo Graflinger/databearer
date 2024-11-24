@@ -24,6 +24,3 @@ models:
       +schema: cleaned
     curated:
       +schema: curated
-    visualisation_exports:
-      +materialized: view
-      +schema: visualisation_exports
