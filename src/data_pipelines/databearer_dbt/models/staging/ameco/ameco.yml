@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: ameco_GDP_current_prices
+        description: "AMECO - Gross Domestic Product at current prices"
+      - name: ameco_GDP_constant_prices
+        description: "AMECO - Gross Domestic Product at constant prices"
+      - name: ameco_gross_public_debt
+        description: "AMECO - Gross public debt"

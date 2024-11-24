@@ -49,7 +49,7 @@ def clean_unpivoted_tables_with_billion_euro_unit(table_name: str):
 
 
 def main():
-    billion_euro_tables = ['GDP_current_prices', 'GDP_constant_prices', 'gross_public_debt']
+    billion_euro_tables = ['ameco_GDP_current_prices', 'GDP_constant_prices', 'gross_public_debt']
 
     for table in billion_euro_tables:
         clean_unpivoted_tables_with_billion_euro_unit('ameco_' + table)

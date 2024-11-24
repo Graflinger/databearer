@@ -1,0 +1,6 @@
+databearer_dbt:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      path: '.data/duckdb.db'

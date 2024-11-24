@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: genesis_VGR_BUND_810000001
+        description: "VGR des Bundes - Bruttowertschöpfung, Bruttoinlandsprodukt(nominal/preisbereinigt): Deutschland, Jahre"
+      - name: genesis_steuern_einnahmen_712110002
+        description: "Steuereinnahmen: Deutschland, Jahre, Steuerarten nach der Steuerverteilung"
+      - name: genesis_VGR_BUND_810000031
+        description: "VGR des Bundes - Einnahmen und Ausgaben sowie Finanzierungssaldo des Staates: Deutschland, Jahre"
+      - name: genesis_bildungsausgaben_217110001
+        description: "Bildungsberichterstattung für nationale Zwecke"

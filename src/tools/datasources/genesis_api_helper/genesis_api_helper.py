@@ -7,7 +7,7 @@ import requests as req
 
 from src.credentials import genesis_password
 from src.credentials import genesis_user
-from src.tools.genesis_api_helper.datasources_utils import datasource_meta_information
+from src.tools.datasources.genesis_api_helper.datasources_utils import datasource_meta_information
 
 
 def get_raw_response(name: str, endpoint: str = 'tables'):
@@ -64,6 +64,7 @@ def get_pandas_table(name: str, endpoint: str = 'table'):
     cleaned_data_string = cleaned_data_string.replace(';-', ';')
 
     cleaned_data_string = cleaned_data_string.replace(',', '.')
+    cleaned_data_string = cleaned_data_string.replace(';.', ';')
 
     cleaned_data_string_io = StringIO(cleaned_data_string)
     cleaned_df = pd.read_csv(cleaned_data_string_io, sep=';')

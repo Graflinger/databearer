@@ -1,0 +1,17 @@
+models:
+  - name: bnetza_windkraft_ausschreibung
+    description: "cleaning bnetza_windkraft_ausschreibung"
+    columns:
+      - name: verfahren
+        description: "Ausschreibungsverfahren"
+        data-tests:
+          - not_null
+      - name: gebotstermin
+        description: "Gebotsterminsdatum"
+        data-tests:
+          - not_null
+          - unique
+      - name: zuschlagsmenge_kw
+        description: "Zuschlagsmenge in kW"
+        data-tests:
+          - not_null
