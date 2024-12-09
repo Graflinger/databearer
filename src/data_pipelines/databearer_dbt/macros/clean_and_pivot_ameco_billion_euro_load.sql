@@ -17,5 +17,5 @@ FROM unpivoted_table)
 SELECT
     *
 FROM
-    unpivoted_table
+    cleaned
 {% endmacro %}

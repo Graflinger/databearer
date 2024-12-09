@@ -1,6 +1,11 @@
 databearer_dbt:
-  target: local
+  target: dev
   outputs:
-    local:
+    dev:
+      schema: dev
+      type: duckdb
+      path: '.data/duckdb.db'
+    prod:
+      schema: prod
       type: duckdb
       path: '.data/duckdb.db'

@@ -1,8 +1,8 @@
 
 SELECT
     vgr_bund.year,
-    vgr_bund.Sozialbeiträge_an_den_Staat,
-    steuern_einnahmen.Steuereinnahmen_des_Bundes,
+    vgr_bund."Sozialbeiträge an den Staat" as Sozialbeiträge_an_den_Staat,
+    steuern_einnahmen."Steuereinnahmen des Bundes" as Steuereinnahmen_des_Bundes,
     bip_yearly.Bruttoinlandsprodukt
 FROM
     {{ ref('genesis_VGR_BUND_810000031')}} as vgr_bund

@@ -15,7 +15,7 @@ cleaned AS(
 FROM unpivoted_table),
 pivoted_by_index AS(
     PIVOT cleaned
-    ON {{comma_seperated_col_list_cleaned(pivot_columns, clean=False)}}
+    ON {{comma_seperated_col_list_cleaned(pivot_columns, apply_trim=False, clean_name=False)}}
     ,USING max(value)
 )
 SELECT
