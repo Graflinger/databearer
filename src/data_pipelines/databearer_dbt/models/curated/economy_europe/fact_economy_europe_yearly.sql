@@ -29,6 +29,3 @@ SELECT
 
 FROM
     selected_columns
-
-
--- Übersetzen
