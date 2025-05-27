@@ -5,7 +5,8 @@ Creating transparency through open sourcing the code used to create the data ana
 
 - Devcontainer for easy reusability and maintainability
 - DuckDB as compute engine
+- DBT for organising data transformation
 - Datawrapper for visualisation
 
 # release process
-Each blog entry will get release notes and a associated tag 
+Each blog entry will get release notes and a associated tag

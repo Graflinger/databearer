@@ -37,25 +37,9 @@ class datasource_meta_information:
         return self.datasources_information['table_database_name']
 
     @property
-    def index_table_type(self):
-        return self.datasources_information['table_type']
-
-    @property
     def api_params(self):
         return self.datasources_information['api_params']
 
     @property
-    def value_adjustment(self):
-        return self.datasources_information['value_adjustment']
-
-    @property
-    def pivot_columns(self):
-        return self.datasources_information['pivot_columns']
-
-    @property
     def begin_split_flag(self):
         return self.datasources_information['begin_split_flag']
-
-    @property
-    def where_clause(self):
-        return self.datasources_information['where_clause']

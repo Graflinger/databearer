@@ -7,5 +7,6 @@
             "database": "C:\\Users\\stefangraf\\OneDrive - Microsoft\\Desktop\\Workspace\\blog\\code\\graf_blog\\.data\\duckdb.db"
         }
     ],
-    "sqltools.useNodeRuntime": true
+    "sqltools.useNodeRuntime": true,
+    "dbt.enableNewLineagePanel": true
 }

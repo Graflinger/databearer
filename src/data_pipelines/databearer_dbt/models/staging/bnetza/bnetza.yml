@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: bnetza_windkraft_ausschreibung
+        description: "BNetzA - Wind power auctions"
