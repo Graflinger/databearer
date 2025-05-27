@@ -21,7 +21,7 @@ def export_gross_debt_and_debt_gdp_ratio_to_csv():
             feey.debt_to_gdp_ratio AS 'Schulden zu BIP Verhältnis (%)',
             feey.yearly_new_debt AS 'Jährliche Neuverschuldung',
         FROM
-            curated.fact_europe_economics_yearly feey
+            prod_curated.fact_economy_europe_yearly feey
         WHERE country = 'Deutschland'
         ORDER BY
             feey.country ASC,

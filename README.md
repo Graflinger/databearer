@@ -9,4 +9,18 @@ Creating transparency through open sourcing the code used to create the data ana
 - Datawrapper for visualisation
 
 # release process
-Each blog entry will get release notes and a associated tag
+Each blog entry which relys on data will get release notes and a associated tag
+
+
+# run the pipeline
+## use the dev container
+every requirement is already installed/configured with the usage of the devcontainer
+
+## import
+python src/data_pipelines/get_raw_data/<python_file>
+
+## dbt pipeline
+dbt run --profiles-dir src/data_pipelines/databearer_dbt/ --project-dir src/data_pipelines/databearer_dbt/
+
+## export data
+python src/data_pipelines/export_data/<python_file>

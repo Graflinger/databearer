@@ -26,7 +26,7 @@ def export_income_expenses_bund_yearly_to_csv():
             / fby.Bruttoinlandsprodukt * 100, 4) as Anteil_Steuern_Sozialbeiträge_kombiniert_am_BIP
 
         FROM
-            curated.fact_bund_yearly fby
+            prod_curated.fact_ecnonomy_germany_yearly fby
         ORDER BY
             fby.year ASC
             )
