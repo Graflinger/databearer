@@ -15,7 +15,7 @@ def export_income_expenses_bund_yearly_to_csv():
         COPY (
         SELECT
             fegy.jahr,
-            fegy.zuschlagsmenge_kw as "Zuschlagsmenge in kw",
+            fegy.zuschlagsmenge_wind_kw as "Zuschlagsmenge in kw",
         FROM
             prod_curated.fact_energy_germany_yearly fegy
         ORDER BY
