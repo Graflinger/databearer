@@ -4,7 +4,7 @@ from yaml import safe_load
 
 
 def get_datasource_information(type: str = 'tables'):
-    with open('src/tools/datasources/genesis_api_helper/datasources_genesis.yaml') as file:
+    with open('src/config/datasource_metadata/datasources_genesis.yaml') as file:
         datasources = safe_load(file)
         datasources = datasources[type]
     return datasources

@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: Hitzetage_Projektion_ECS
+        description: "CMIP6 X0.25 timeseries HD35 timeseries annual 2015-2100 median SSP245 ensemble all mean for region ECS"
