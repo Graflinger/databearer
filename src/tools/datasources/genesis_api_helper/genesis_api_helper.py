@@ -30,7 +30,7 @@ def get_raw_response(name: str, endpoint: str = 'tables'):
     )
 
     result = req.get(url, params=table_meta_data.api_params)
-    
+
     if result.status_code != 200:
         raise ValueError(f"Failed to fetch data: {result.status_code} - {result.text}")
 

@@ -18,7 +18,7 @@ def get_world_bank_climate_change_knowledge_pandas_table(query: str) -> pd.DataF
     result = requests.get(
         f'https://cckpapi.worldbank.org/cckp/v1/{query}?_format=json'
     )
-    
+
     if result.status_code != 200:
         raise ValueError(f"Failed to fetch data: {result.status_code} - {result.text}")
 
