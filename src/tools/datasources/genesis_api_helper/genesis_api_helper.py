@@ -29,9 +29,12 @@ def get_raw_response(name: str, endpoint: str = 'tables'):
         f"?username={genesis_user}&password={genesis_password}&name={name}"
     )
 
-    response = req.get(url, params=table_meta_data.api_params)
+    result = req.get(url, params=table_meta_data.api_params)
+    
+    if result.status_code != 200:
+        raise ValueError(f"Failed to fetch data: {result.status_code} - {result.text}")
 
-    return response
+    return result
 
 
 def get_pandas_table(name: str, endpoint: str = 'table'):

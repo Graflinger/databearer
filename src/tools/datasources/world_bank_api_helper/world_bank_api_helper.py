@@ -19,6 +19,9 @@ def get_world_bank_climate_change_knowledge_pandas_table(query: str) -> pd.DataF
         f'https://cckpapi.worldbank.org/cckp/v1/{query}?_format=json'
     )
     
+    if result.status_code != 200:
+        raise ValueError(f"Failed to fetch data: {result.status_code} - {result.text}")
+
     df = pd.DataFrame.from_dict(result.json()["data"], orient="index")
 
     df = df.rename(columns={col: col[:4] for col in df.columns}).reset_index()
