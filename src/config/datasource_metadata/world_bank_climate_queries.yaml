@@ -1,0 +1,4 @@
+queries:
+- name: Hitzetage_Projektion_ECS
+  value: cmip6-x0.25_timeseries_hd35_timeseries_annual_2015-2100_median_ssp245_ensemble_all_mean/region_ecs
+  description: "CMIP6 X0.25 timeseries HD35 timeseries annual 2015-2100 median SSP245 ensemble all mean for region ECS"

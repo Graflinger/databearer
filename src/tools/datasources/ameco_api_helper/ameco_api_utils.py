@@ -10,6 +10,10 @@ def get_ameco_pandas_table(variable) -> pd.DataFrame:
     result = requests.get(
         f'https://ec.europa.eu/economy_finance/ameco/wq/series?fullVariable={variable}&defaultCountries=1',
     )
+
+    if result.status_code != 200:
+        raise ValueError(f"Failed to fetch data: {result.status_code} - {result.text}")
+
     cleaned_data_string = result.text
     cleaned_data_string_io = StringIO(cleaned_data_string)
 

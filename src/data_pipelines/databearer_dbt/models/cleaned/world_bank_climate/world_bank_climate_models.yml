@@ -1,0 +1,18 @@
+models:
+  - name: hitzetage_projektion
+    description: "cleaning hitzetage_projektion"
+    columns:
+      - name: länder_code
+        description: "Ländercode"
+        data-tests:
+          - not_null
+          - unique
+      - name: jahr
+        description: "Jahr"
+        data-tests:
+          - not_null
+      - name: hitzetage_projektion
+        description: "Projektion der Hitzetage"
+        data-tests:
+          - not_null
+
