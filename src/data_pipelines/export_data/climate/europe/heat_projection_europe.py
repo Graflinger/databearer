@@ -29,7 +29,7 @@ def export_heat_projection_yearly_to_csv():
 
         df = result.df()
 
-        df.rename(columns={
+        df = df.rename(columns={
             'FRA': 'Frankreich',
             'DEU': 'Deutschland',
             'UK': 'Vereinigtes Königreich',
