@@ -13,11 +13,11 @@ def export_heat_projection_yearly_to_csv():
         result = con.sql(
             """
         WITH selection AS (
-            SELECT 
+            SELECT
                 Jahr,
                 Ländercode AS Land,
                 Hitzetageprognose
-            FROM  
+            FROM
                 prod_curated.fact_climate_projections_yearly_by_country
                 WHERE Ländercode in ('FRA', 'DEU', 'UK', 'ESP', 'ITA')
             )
@@ -47,4 +47,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
