@@ -1,7 +1,7 @@
 SELECT 
-    date_part('year', date) as jahr,
-    AVG(anteil_eeg) as anteil_eeg
+    date_trunc('month', date) as datum,
+    round(AVG(anteil_eeg),2) as anteil_eeg
 FROM
     {{ ref('ren_share_daily_avg') }}
 GROUP BY
-    jahr
+    datum
