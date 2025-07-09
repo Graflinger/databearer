@@ -10,7 +10,7 @@ WITH bnetza_windkraft_ausschreibung AS (
 ren_share_daily_avg AS (
     SELECT
         date_part('year', rda.date) as jahr,
-        AVG(rda.anteil_eeg) as anteil_eeg
+        round(AVG(rda.anteil_eeg), 2) as anteil_eeg
     FROM
         {{ref('ren_share_daily_avg')}} as rda
     GROUP BY
