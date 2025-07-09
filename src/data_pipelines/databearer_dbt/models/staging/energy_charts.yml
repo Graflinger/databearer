@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: energy_charts_ren_share_daily_avg
+        description: "Daily average renewable energy share in Germany"
