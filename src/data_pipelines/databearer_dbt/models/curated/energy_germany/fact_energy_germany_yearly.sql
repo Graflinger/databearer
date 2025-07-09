@@ -18,7 +18,8 @@ ren_share_daily_avg AS (
 )
 SELECT
     rda.jahr,
-    zuschlagsmenge_wind_kw
+    bwa.zuschlagsmenge_wind_kw,
+    rda.anteil_eeg
 FROM
     ren_share_daily_avg AS rda
 LEFT JOIN
