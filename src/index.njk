@@ -1,0 +1,70 @@
+---
+layout: base.njk
+title: Home - My Blog
+pagination:
+  data: collections.post
+  size: 10
+  reverse: true
+---
+
+<nav class="topics-nav">
+    <div class="container">
+        <button class="burger-menu" aria-label="Toggle menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="topics-menu">
+            <li><a href="/topic-1/">Topic 1</a></li>
+            <li><a href="/topic-2/">Topic 2</a></li>
+            <li><a href="/topic-3/">Topic 3</a></li>
+        </ul>
+    </div>
+</nav>
+
+<section class="blog-grid">
+    <h1>Latest Posts</h1>
+
+    {%- if pagination.items.length > 0 %}
+    {%- set featuredPost = pagination.items[0] %}
+    <article class="blog-card featured-post">
+        <div class="blog-card-image">
+            <img src="https://via.placeholder.com/1200x400/e0e0e0/666666?text=Featured+Post" alt="{{ featuredPost.data.title }}">
+        </div>
+        <div class="blog-card-content">
+            <p class="post-date">{{ featuredPost.data.date | localDate(site.locale) }}</p>
+            <h2><a href="{{ featuredPost.url }}">{{ featuredPost.data.title }}</a></h2>
+        </div>
+    </article>
+    {%- endif %}
+
+    <div class="grid">
+        {%- for post in pagination.items %}
+        {%- if loop.index0 > 0 %}
+        <article class="blog-card">
+            <div class="blog-card-image">
+                <img src="https://via.placeholder.com/400x250/e0e0e0/666666?text=Blog+Image" alt="{{ post.data.title }}">
+            </div>
+            <div class="blog-card-content">
+                <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
+                <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+            </div>
+        </article>
+        {%- endif %}
+        {%- endfor %}
+    </div>
+
+    {%- if pagination.href.previous or pagination.href.next %}
+    <nav class="pagination">
+        {%- if pagination.href.previous %}
+        <a href="{{ pagination.href.previous }}" class="pagination-link">← Newer Posts</a>
+        {%- endif %}
+
+        <span class="pagination-info">Page {{ pagination.pageNumber + 1 }} of {{ pagination.pages.length }}</span>
+
+        {%- if pagination.href.next %}
+        <a href="{{ pagination.href.next }}" class="pagination-link">Older Posts →</a>
+        {%- endif %}
+    </nav>
+    {%- endif %}
+</section>
