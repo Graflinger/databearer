@@ -32,22 +32,18 @@ body {
 }
 
 .logo a {
-    text-decoration: none;
-    color: #333;
+    display: block;
+    transition: opacity 0.3s ease;
 }
 
-.logo-placeholder {
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    padding: 8px 16px;
-    border: 2px solid #333;
-    transition: all 0.3s ease;
+.logo a:hover {
+    opacity: 0.8;
 }
 
-.logo-placeholder:hover {
-    background-color: #333;
-    color: #fff;
+.logo-image {
+    height: 40px;
+    width: auto;
+    display: block;
 }
 
 /* Main Content */
@@ -118,8 +114,8 @@ body {
 }
 
 .topics-nav a:hover {
-    background-color: #fff;
-    color: #333;
+    background-color: #d9c176;
+    color: #fff;
 }
 
 /* Blog Grid */
@@ -173,8 +169,8 @@ body {
 }
 
 .blog-card:hover {
-    border-color: #333;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #d9c176;
+    box-shadow: 0 4px 12px rgba(217, 193, 118, 0.2);
 }
 
 .blog-card-image {
@@ -212,7 +208,7 @@ body {
 }
 
 .blog-card h2 a:hover {
-    color: #666;
+    color: #d9c176;
 }
 
 .post-date {
@@ -229,14 +225,15 @@ body {
 
 .read-more {
     display: inline-block;
-    color: #333;
+    color: #d9c176;
     text-decoration: none;
     font-weight: 500;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .read-more:hover {
     transform: translateX(5px);
+    color: #c4ad61;
 }
 
 /* Pagination */
@@ -250,7 +247,7 @@ body {
 
 .pagination-link {
     padding: 10px 20px;
-    background-color: #333;
+    background-color: #d9c176;
     color: #fff;
     text-decoration: none;
     border-radius: 4px;
@@ -258,7 +255,7 @@ body {
 }
 
 .pagination-link:hover {
-    background-color: #555;
+    background-color: #c4ad61;
 }
 
 .pagination-info {
@@ -290,7 +287,7 @@ body {
 }
 
 .footer-nav a:hover {
-    color: #333;
+    color: #d9c176;
 }
 
 .copyright {
@@ -299,74 +296,65 @@ body {
     font-size: 14px;
 }
 
-/* Single Post - Newspaper Style */
+/* Single Post - Modern Minimalist Style */
 .post-content {
-    max-width: 900px;
+    max-width: 680px;
     margin: 0 auto;
-    padding: 40px 30px;
-    background-color: #fefefe;
+    padding: 80px 30px;
+    background-color: #fff;
 }
 
 .post-content h1 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 42px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 48px;
     line-height: 1.2;
-    margin-bottom: 15px;
+    margin-bottom: 40px;
     margin-top: 0;
     font-weight: 700;
-    letter-spacing: -0.5px;
-    border-bottom: 3px solid #333;
-    padding-bottom: 15px;
-}
-
-.post-content h2 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 28px;
-    margin-top: 35px;
-    margin-bottom: 15px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    border-left: 4px solid #333;
-    padding-left: 15px;
-}
-
-.post-content p {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 18px;
-    line-height: 1.8;
-    margin-bottom: 20px;
-    text-align: justify;
-    hyphens: auto;
+    letter-spacing: -1px;
     color: #1a1a1a;
 }
 
-.post-content p:first-of-type {
-    margin-top: 20px;
+.post-content h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 32px;
+    margin-top: 60px;
+    margin-bottom: 24px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: #1a1a1a;
 }
 
-.post-content p:first-of-type::first-letter {
-    font-size: 58px;
-    font-weight: 700;
-    float: left;
-    line-height: 0.9;
-    margin: 5px 10px 0 0;
-    color: #000;
+.post-content p {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 28px;
+    color: #374151;
+}
+
+.post-content p:first-of-type {
+    margin-top: 0;
+    font-size: 20px;
+    color: #1a1a1a;
 }
 
 .post-content ul,
 .post-content ol {
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 18px;
     line-height: 1.8;
-    margin-bottom: 25px;
-    padding-left: 40px;
-    columns: 2;
-    column-gap: 30px;
+    margin-bottom: 28px;
+    padding-left: 28px;
+    color: #374151;
 }
 
 .post-content li {
-    margin-bottom: 10px;
-    break-inside: avoid;
+    margin-bottom: 12px;
+}
+
+.post-content iframe {
+    margin: 40px 0;
 }
 
 /* Responsive Design */
@@ -444,43 +432,35 @@ body {
         flex-wrap: wrap;
     }
 
-    /* Newspaper style adjustments for mobile */
+    /* Post content mobile adjustments */
     .post-content {
-        padding: 40px 20px;
+        padding: 60px 24px;
     }
 
     .post-content h1 {
-        font-size: 42px;
-        margin-bottom: 20px;
-        padding-bottom: 20px;
+        font-size: 36px;
+        margin-bottom: 32px;
     }
 
     .post-content h2 {
         font-size: 28px;
-        margin-top: 40px;
+        margin-top: 48px;
         margin-bottom: 20px;
     }
 
     .post-content p {
-        font-size: 18px;
-        text-align: left;
-        padding: 0;
-        line-height: 1.8;
+        font-size: 17px;
+        line-height: 1.7;
     }
 
     .post-content p:first-of-type {
-        margin-top: 30px;
-    }
-
-    .post-content p:first-of-type::first-letter {
-        font-size: 60px;
+        font-size: 18px;
     }
 
     .post-content ul,
     .post-content ol {
-        font-size: 18px;
-        columns: 1;
-        padding-left: 30px;
-        line-height: 1.8;
+        font-size: 17px;
+        padding-left: 24px;
+        line-height: 1.7;
     }
 }

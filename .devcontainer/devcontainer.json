@@ -1,0 +1,97 @@
+{
+  "name": "Databearer Frontend - Eleventy",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "upgradePackages": true,
+      "username": "vscode",
+      "userUid": "automatic",
+      "userGid": "automatic"
+    }
+  },
+
+  // Configure tool-specific properties
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Essential for the project
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "EditorConfig.EditorConfig",
+
+        // Eleventy/Nunjucks support
+        "ronnidc.nunjucks",
+        "okitavera.vscode-nunjucks-formatter",
+
+        // Markdown support
+        "yzhang.markdown-all-in-one",
+        "DavidAnson.vscode-markdownlint",
+
+        // Git integration
+        "eamodio.gitlens",
+
+        // Utilities
+        "christian-kohler.path-intellisense",
+        "wayou.vscode-todo-highlight"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[nunjucks]": {
+          "editor.defaultFormatter": "okitavera.vscode-nunjucks-formatter"
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+        },
+        "files.associations": {
+          "*.njk": "nunjucks",
+          "*.md": "markdown"
+        }
+      }
+    }
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally
+  "forwardPorts": [8080],
+
+  // Port attributes
+  "portsAttributes": {
+    "8080": {
+      "label": "Eleventy Dev Server",
+      "onAutoForward": "notify"
+    }
+  },
+
+  // Use 'postCreateCommand' to run commands after the container is created
+  "postCreateCommand": "npm install",
+
+  // Use 'postStartCommand' to run commands after the container starts
+  // "postStartCommand": "npm start",
+
+  // Set the default user
+  "remoteUser": "vscode",
+
+  // Mount the local workspace folder
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+
+  // Working directory
+  "workspaceFolder": "/workspace",
+
+  // Environment variables
+  "containerEnv": {
+    "NODE_ENV": "development"
+  }
+}
