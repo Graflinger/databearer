@@ -9,11 +9,6 @@ pagination:
 
 <nav class="topics-nav">
     <div class="container">
-        <button class="burger-menu" aria-label="Toggle menu" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
         <ul class="topics-menu">
             <li>
                 <a href="/topic-1/">Topic 1</a>
@@ -31,7 +26,7 @@ pagination:
 <section class="blog-grid">
     <h1>Latest Posts</h1>
 
-    {%- if pagination.items.length > 0 %}
+    {%- if pagination.items.length > 0 and not pagination.href.previous %}
         {%- set featuredPost = pagination.items[0] %}
         <article class="blog-card featured-post">
             <div class="blog-card-image">

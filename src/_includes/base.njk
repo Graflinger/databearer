@@ -1,104 +1,112 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {# Primary Meta Tags #}
-    <title>{{ title or "Databearer Blog" }}</title>
-    <meta name="title" content="{{ title or 'Databearer Blog' }}">
-    <meta name="description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
-    <meta name="author" content="Databearer">
+        {# Primary Meta Tags #}
+        <title>{{ title or "Databearer Blog" }}</title>
+        <meta name="title" content="{{ title or 'Databearer Blog' }}">
+        <meta name="description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
+        <meta name="author" content="Databearer">
 
-    {# Canonical URL #}
-    <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+        {# Canonical URL #}
+        <link rel="canonical" href="{{ site.url }}{{ page.url }}">
 
-    {# Open Graph / Facebook #}
-    <meta property="og:type" content="{{ 'article' if date else 'website' }}">
-    <meta property="og:url" content="{{ site.url }}{{ page.url }}">
-    <meta property="og:title" content="{{ title or 'Databearer Blog' }}">
-    <meta property="og:description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
-    <meta property="og:image" content="{{ image or site.url ~ '/images/databearer_logo_big.png' }}">
-    <meta property="og:locale" content="de_DE">
-    <meta property="og:site_name" content="Databearer">
-    {% if date %}
-    <meta property="article:published_time" content="{{ date | htmlDateString }}">
-    {% endif %}
+        {# Open Graph / Facebook #}
+        <meta property="og:type" content="{{ 'article' if date else 'website' }}">
+        <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+        <meta property="og:title" content="{{ title or 'Databearer Blog' }}">
+        <meta property="og:description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
+        <meta property="og:image" content="{{ image or site.url ~ '/images/logo_transparent.png' }}">
+        <meta property="og:locale" content="de_DE">
+        <meta property="og:site_name" content="Databearer">
+        {% if date %}
+            <meta property="article:published_time" content="{{ date | htmlDateString }}">
+        {% endif %}
 
-    {# Twitter #}
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
-    <meta name="twitter:title" content="{{ title or 'Databearer Blog' }}">
-    <meta name="twitter:description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
-    <meta name="twitter:image" content="{{ image or site.url ~ '/images/databearer_logo_big.png' }}">
+        {# Twitter #}
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
+        <meta name="twitter:title" content="{{ title or 'Databearer Blog' }}">
+        <meta name="twitter:description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
+        <meta name="twitter:image" content="{{ image or site.url ~ '/images/logo_transparent.png' }}">
 
-    {# Favicon #}
-    <link rel="icon" type="image/png" href="/images/databearer_logo_small.png">
+        {# Favicon #}
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/logo_circle.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/images/logo_circle.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/logo_circle.png">
 
-    {# Robots #}
-    <meta name="robots" content="index, follow">
+        {# Robots #}
+        <meta name="robots" content="index, follow">
 
-    {# Structured Data (JSON-LD) #}
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "{{ 'Article' if date else 'WebSite' }}",
-      {% if date %}
-      "headline": "{{ title }}",
-      "description": "{{ excerpt or description }}",
-      "image": "{{ image or site.url ~ '/images/databearer_logo_big.png' }}",
-      "datePublished": "{{ date | htmlDateString }}",
-      "author": {
-        "@type": "Organization",
-        "name": "Databearer"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Databearer",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "{{ site.url }}/images/databearer_logo_big.png"
-        }
-      }
-      {% else %}
-      "name": "Databearer Blog",
-      "url": "{{ site.url }}",
-      "description": "Insights and analysis on data, energy, and technology trends"
-      {% endif %}
-    }
-    </script>
+        {# Structured Data (JSON-LD) #}
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "{{ 'Article' if date else 'WebSite' }}",
+                {% if date %}
+                    "headline": "{{ title }}",
+                    "description": "{{ excerpt or description }}",
+                    "image": "{{ image or site.url ~ '/images/logo_transparent.png' }}",
+                    "datePublished": "{{ date | htmlDateString }}",
+                    "author": {
+                        "@type": "Organization",
+                        "name": "Databearer"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "Databearer",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "{{ site.url }}/images/logo_transparent.png"
+                        }
+                    }
+                {% else %}
+                    "name": "Databearer Blog",
+                    "url": "{{ site.url }}",
+                    "description": "Insights and analysis on data, energy, and technology trends"
+                {% endif %}
+            }
+        </script>
 
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-    <header class="site-header">
-        <div class="container">
-            <div class="logo">
-                <a href="/">
-                    <img src="/images/databearer_logo_small.png" alt="Databearer Logo" class="logo-image">
-                </a>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="container">
+                <div class="logo">
+                    <a href="/">
+                        <img src="/images/logo_transparent.png" alt="Databearer Logo" class="logo-image">
+                    </a>
+                </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <main class="site-main">
-        <div class="container">
-            {{ content | safe }}
-        </div>
-    </main>
+        <main class="site-main">
+            <div class="container">
+                {{ content | safe }}
+            </div>
+        </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <nav class="footer-nav">
-                <ul>
-                    <li><a href="/about/">About</a></li>
-                    <li><a href="/contact/">Contact</a></li>
-                    <li><a href="/privacy/">Privacy</a></li>
-                </ul>
-            </nav>
-            <p class="copyright">&copy; {{ helpers.year }} My Blog. All rights reserved.</p>
-        </div>
-    </footer>
-    <script src="/js/menu.js"></script>
-</body>
+        <footer class="site-footer">
+            <div class="container">
+                <nav class="footer-nav">
+                    <ul>
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        <li>
+                            <a href="/contact/">Contact</a>
+                        </li>
+                        <li>
+                            <a href="/privacy/">Privacy</a>
+                        </li>
+                    </ul>
+                </nav>
+                <p class="copyright">&copy; {{ helpers.year }} My Blog. All rights reserved.</p>
+            </div>
+        </footer>
+        <script src="/js/menu.js"></script>
+    </body>
 </html>

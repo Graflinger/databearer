@@ -41,7 +41,7 @@ body {
 }
 
 .logo-image {
-    height: 40px;
+    height: 80px;
     width: auto;
     display: block;
 }
@@ -54,7 +54,6 @@ body {
 
 /* Topics Navigation */
 .topics-nav {
-    background-color: #f5f5f5;
     border-bottom: 1px solid #e0e0e0;
     padding: 20px 0;
 }
@@ -63,38 +62,6 @@ body {
     position: relative;
 }
 
-.burger-menu {
-    display: none;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 30px;
-    height: 25px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    z-index: 10;
-}
-
-.burger-menu span {
-    width: 30px;
-    height: 3px;
-    background-color: #333;
-    border-radius: 2px;
-    transition: all 0.3s ease;
-}
-
-.burger-menu.active span:nth-child(1) {
-    transform: rotate(45deg) translate(8px, 8px);
-}
-
-.burger-menu.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.burger-menu.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -7px);
-}
 
 .topics-menu {
     display: flex;
@@ -106,7 +73,7 @@ body {
 .topics-nav a {
     text-decoration: none;
     color: #666;
-    font-weight: 500;
+    font-weight: 700;
     font-size: 16px;
     padding: 8px 16px;
     border-radius: 4px;
@@ -359,39 +326,14 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .burger-menu {
-        display: flex;
-        margin: 0 auto;
-    }
-
     .topics-menu {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 50px;
-        left: 0;
-        right: 0;
-        background-color: #fff;
-        border: 1px solid #e0e0e0;
-        border-radius: 4px;
-        padding: 20px;
-        gap: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        z-index: 100;
-    }
-
-    .topics-menu.active {
-        display: flex;
-    }
-
-    .topics-menu li {
-        text-align: center;
+        flex-wrap: wrap;
+        gap: 20px;
     }
 
     .topics-nav a {
-        display: block;
-        font-size: 16px;
-        padding: 12px 16px;
+        font-size: 14px;
+        padding: 8px 12px;
     }
 
     .grid {
