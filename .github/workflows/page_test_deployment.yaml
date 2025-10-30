@@ -1,0 +1,28 @@
+name: page test deployment
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js 22.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+        cache: 'npm'
+    - run:  elventy --output page
+    - uses: actions/checkout@4
+      with:
+        ref: test/test_deployment
+    - run: git add . 
+    - run: git commit -m "updated page for testing"
+    - run: git push
+    
