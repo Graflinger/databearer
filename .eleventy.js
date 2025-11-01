@@ -1,6 +1,11 @@
-module.exports = function(eleventyConfig) {
+import { HtmlBasePlugin } from "@11ty/eleventy";
+
+module.exports = function (eleventyConfig) {
   // Copy the CSS directory to output
   eleventyConfig.addPassthroughCopy("src/css");
+
+  // Add HTML base plugin to manage base URLs
+  eleventyConfig.addPlugin(HtmlBasePlugin);
 
   // Copy the JS directory to output
   eleventyConfig.addPassthroughCopy("src/js");
@@ -9,28 +14,28 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/images");
 
   // Add a date filter for formatting dates
-  eleventyConfig.addFilter("localDate", function(date, locale = "en-US") {
+  eleventyConfig.addFilter("localDate", function (date, locale = "en-US") {
     return new Date(date).toLocaleDateString(locale, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   });
 
   // Add ISO date string filter for meta tags
-  eleventyConfig.addFilter("htmlDateString", function(date) {
+  eleventyConfig.addFilter("htmlDateString", function (date) {
     return new Date(date).toISOString();
   });
 
   // Add global data for helpers
   eleventyConfig.addGlobalData("helpers", {
-    year: new Date().getFullYear()
+    year: new Date().getFullYear(),
   });
 
   // Add global data for site
   eleventyConfig.addGlobalData("site", {
     locale: "de-DE",
-    url: "https://databearer.com" // Update this with your actual domain
+    url: "https://databearer.com", // Update this with your actual domain
   });
 
   return {
@@ -38,7 +43,7 @@ module.exports = function(eleventyConfig) {
       input: "src",
       output: "_site",
       includes: "_includes",
-      layouts: "_includes"
-    }
+      layouts: "_includes",
+    },
   };
 };
