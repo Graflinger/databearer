@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "start": "eleventy --serve",
-    "build": "eleventy"
+    "build": "eleventy",
+    "build-ghpages": "npx @11ty/eleventy --output=pages --pathprefix=/databearer-frontend/"
   },
   "keywords": [],
   "author": "",
