@@ -1,4 +1,4 @@
-import { HtmlBasePlugin } from "@11ty/eleventy";
+const { HtmlBasePlugin } = require("@11ty/eleventy");
 
 module.exports = function (eleventyConfig) {
   // Copy the CSS directory to output
