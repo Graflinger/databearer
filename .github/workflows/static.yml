@@ -36,7 +36,7 @@ jobs:
       - name: install eleventy
         run: npm install
       - name: build eleventy page
-        run: build-ghpages
+        run: npm run build-ghpages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
