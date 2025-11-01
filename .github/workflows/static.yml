@@ -34,7 +34,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: install eleventy
-        run: npm install -g @11ty/eleventy
+        run: npm install
       - name: build eleventy page
         run: build-ghpages
       - name: Upload artifact
