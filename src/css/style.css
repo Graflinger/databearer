@@ -87,12 +87,12 @@ body {
 
 /* Blog Grid */
 .blog-grid {
-  padding: 60px 0;
+  padding: 5px 0;
 }
 
 .blog-grid h1 {
   font-size: 36px;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
   font-weight: 700;
 }
 
@@ -124,7 +124,6 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
-  margin-bottom: 60px;
 }
 
 /* Blog Card Links - Remove default link styling */
@@ -345,6 +344,20 @@ body {
 
   .blog-grid h1 {
     font-size: 28px;
+  }
+
+  /* Make featured post look like regular posts on mobile */
+  .featured-post .blog-card-image {
+    height: 200px;
+  }
+
+  .featured-post .blog-card-content {
+    padding: 25px;
+  }
+
+  .featured-post h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
   }
 
   .pagination {
