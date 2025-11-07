@@ -23,27 +23,6 @@ pagination:
     </div>
 </nav>
 <section class="blog-grid">
-    <h1>Highlights</h1>
-    <div class="grid">
-        {%- for post in collections.post | reverse %}
-            {%- if loop.index0 < 3 %}
-                <a href="{{ post.url }}" class="blog-card-link">
-                    <article class="blog-card">
-                        <div class="blog-card-image">
-                            <img src="https://via.placeholder.com/600x300/e0e0e0/666666?text=Highlight+Post" alt="{{ post.data.title }}">
-                        </div>
-                        <div class="blog-card-content">
-                            <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
-                            <h2>{{ post.data.title }}</h2>
-                            <p>{{ post.data.excerpt }}</p>
-                        </div>
-                    </article>
-                </a>
-            {%- endif %}
-        {%- endfor %}
-    </div>
-</section>
-<section class="blog-grid">
 
     <h1>Aktuelle Beiträge</h1>
 
@@ -52,7 +31,7 @@ pagination:
         <a href="{{ featuredPost.url }}" class="blog-card-link">
             <article class="blog-card featured-post">
                 <div class="blog-card-image">
-                    <img src="https://via.placeholder.com/1200x400/e0e0e0/666666?text=Featured+Post" alt="{{ featuredPost.data.title }}">
+                    <img src="{{ featuredPost.data.image}}"" alt="{{ featuredPost.data.title }}">
                 </div>
                 <div class="blog-card-content">
                     <p class="post-date">{{ featuredPost.data.date | localDate(site.locale) }}</p>
@@ -69,7 +48,7 @@ pagination:
                 <a href="{{ post.url }}" class="blog-card-link">
                     <article class="blog-card">
                         <div class="blog-card-image">
-                            <img src="https://via.placeholder.com/400x250/e0e0e0/666666?text=Blog+Image" alt="{{ post.data.title }}">
+                            <img src="{{ post.data.image}}" alt="{{ post.data.title }}">
                         </div>
                         <div class="blog-card-content">
                             <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
