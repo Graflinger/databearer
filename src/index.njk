@@ -23,9 +23,6 @@ pagination:
     </div>
 </nav>
 <section class="blog-grid">
-
-    <h1>Aktuelle Beiträge</h1>
-
     {%- if pagination.items.length > 0 and not pagination.href.previous %}
         {%- set featuredPost = pagination.items[0] %}
         <a href="{{ featuredPost.url }}" class="blog-card-link">
