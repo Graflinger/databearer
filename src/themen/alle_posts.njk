@@ -1,0 +1,44 @@
+---
+layout: base.njk
+title: Home - My Blog
+pagination:
+  data: collections.post
+  size: 10
+  reverse: true
+---
+
+<section class="blog-grid blog-grid-all-posts">
+    <h1> Alle Beiträge</h1>
+    <div class="grid">
+        {%- for post in pagination.items %}
+            <a href="{{ post.url }}" class="blog-card-link">
+
+                <article class="blog-card blog-card-horizontal">
+                    <div class="blog-card-image-small">
+                        <img src="{{ post.data.image}}" alt="{{ post.data.title }}">
+                    </div>
+                    <div class="blog-card-content">
+                        <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
+                        <h2>{{ post.data.title }}</h2>
+                        <p>{{ post.data.excerpt }}</p>
+                    </div>
+                </article>
+            </a>
+
+        {%- endfor %}
+    </div>
+
+    {%- if pagination.href.previous or pagination.href.next %}
+        <nav class="pagination">
+            {%- if pagination.href.previous %}
+                <a href="{{ pagination.href.previous }}" class="pagination-link">← Neuere Beiträge</a>
+            {%- endif %}
+
+            <span class="pagination-info">Seite {{ pagination.pageNumber + 1 }} von {{ pagination.pages.length }}</span>
+
+            {%- if pagination.href.next %}
+                <a href="{{ pagination.href.next }}" class="pagination-link">Ältere Beiträge →</a>
+            {%- endif %}
+        </nav>
+    {%- endif %}
+</section>
