@@ -4,6 +4,7 @@ date: 2025-11-05
 excerpt: "Der Juni 2025 markiert mit über 70% den bisherigen Höhepunkt in der Stromerzeugung durch EEG."
 image: "/images/blog_card_images/test_img.png"
 fullWidthCard: true
+topic: ["eeg", "test"]
 ---
 
 <figure>

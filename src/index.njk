@@ -1,43 +1,10 @@
 ---
-layout: base.njk
-title: Home - My Blog
+layout: all_posts.njk
+title: Home - Datebearer
 pagination:
   data: collections.post
   size: 10
   reverse: true
+useFullCard: true
+showAllPosts: true
 ---
-
-<section class="blog-grid">
-
-    <div class="grid">
-        {%- for post in pagination.items %}
-            <a href="{{ post.url }}" class="blog-card-link">
-                {%- if post.data.fullWidthCard %}
-                    <article class="blog-card blog-card-full">
-                        <div class="blog-card-image-full">
-                            <img src="{{ post.data.image}}" alt="{{ post.data.title }}">
-                        </div>
-                        <div class="blog-card-content">
-                            <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
-                            <h2>{{ post.data.title }}</h2>
-                            <p>{{ post.data.excerpt }}</p>
-                        </div>
-                    </article>
-                {%- else %}
-                    <article class="blog-card blog-card-horizontal">
-                        <div class="blog-card-image-small">
-                            <img src="{{ post.data.image}}" alt="{{ post.data.title }}">
-                        </div>
-                        <div class="blog-card-content">
-                            <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
-                            <h2>{{ post.data.title }}</h2>
-                            <p>{{ post.data.excerpt }}</p>
-                        </div>
-                    </article>
-                {%- endif %}
-            </a>
-
-        {%- endfor %}
-    </div>
-
-</section>
