@@ -45,4 +45,18 @@ pagination:
     {%- endfor %}
   </div>
 
+  {%- if pagination.href.previous or pagination.href.next and not disablePagination %}
+    <nav class="pagination">
+      {%- if pagination.href.previous %}
+        <a href="{{ pagination.href.previous }}" class="pagination-link">← Neuere Beiträge</a>
+      {%- endif %}
+
+      <span class="pagination-info">Seite {{ pagination.pageNumber + 1 }} von {{ pagination.pages.length }}</span>
+
+      {%- if pagination.href.next %}
+        <a href="{{ pagination.href.next }}" class="pagination-link">Ältere Beiträge →</a>
+      {%- endif %}
+    </nav>
+  {%- endif %}
+
 </section>
