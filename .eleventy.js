@@ -38,6 +38,27 @@ module.exports = function (eleventyConfig) {
     url: "https://databearer.com", // Update this with your actual domain
   });
 
+  // Create topic-specific collections
+  eleventyConfig.addCollection("energiePosts", function (collectionApi) {
+    return collectionApi.getFilteredByTag("post").filter((post) => {
+      return post.data.topic && post.data.topic.includes("energie");
+    });
+  });
+
+  eleventyConfig.addCollection("politikPosts", function (collectionApi) {
+    return collectionApi.getFilteredByTag("post").filter((post) => {
+      return (
+        post.data.topic && post.data.topic.includes("politik_und_gesellschaft")
+      );
+    });
+  });
+
+  eleventyConfig.addCollection("wirtschaftPosts", function (collectionApi) {
+    return collectionApi.getFilteredByTag("post").filter((post) => {
+      return post.data.topic && post.data.topic.includes("wirtschaft");
+    });
+  });
+
   return {
     dir: {
       input: "src",

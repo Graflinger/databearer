@@ -14,34 +14,31 @@ pagination:
   {%- endif %}
   <div class="grid">
     {%- for post in pagination.items %}
-      {%- if showAllPosts or (post.data.topic and topic in post.data.topic) %}
-        <a href="{{ post.url }}" class="blog-card-link">
-          {%- if post.data.fullWidthCard and useFullCard %}
-            <article class="blog-card blog-card-full">
-              <div class="blog-card-image-full">
-                <img src="{{ post.data.image}}" alt="{{ post.data.title }}">
-                <div class="blog-card-overlay">
-                  <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
-                  <h2>{{ post.data.title }}</h2>
-                  <p>{{ post.data.excerpt }}</p>
-                </div>
-              </div>
-            </article>
-          {%- else %}
-            <article class="blog-card blog-card-horizontal">
-              <div class="blog-card-image-small">
-                <img src="{{ post.data.image}}" alt="{{ post.data.title }}">
-              </div>
-              <div class="blog-card-content">
-                <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
-                <h2>{{ post.data.title }}</h2>
-                <p>{{ post.data.excerpt }}</p>
-              </div>
-            </article>
-          {%- endif %}
-        </a>
-      {%- endif %}
-
+      <a href="{{ post.url }}" class="blog-card-link">
+        {%- if post.data.fullWidthCard and useFullCard %}
+          <article class="blog-card blog-card-full">
+            <div class="blog-card-image-full">
+              <img src="{{ post.data.image}}" alt="{{ post.data.title }}">
+            </div>
+            <div class="blog-card-content">
+              <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
+              <h2>{{ post.data.title }}</h2>
+              <p class="post-excerpt">{{ post.data.excerpt }}</p>
+            </div>
+          </article>
+        {%- else %}
+          <article class="blog-card blog-card-horizontal">
+            <div class="blog-card-image-small">
+              <img src="{{ post.data.image}}" alt="{{ post.data.title }}">
+            </div>
+            <div class="blog-card-content">
+              <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
+              <h2>{{ post.data.title }}</h2>
+              <p>{{ post.data.excerpt }}</p>
+            </div>
+          </article>
+        {%- endif %}
+      </a>
     {%- endfor %}
   </div>
 

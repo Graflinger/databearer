@@ -4,6 +4,7 @@ date: 2025-11-05
 excerpt: "Der Juni 2025 markiert mit über 70% den bisherigen Höhepunkt in der Stromerzeugung durch EEG."
 highlight: True
 image: "/images/blog_card_images/test_img.png"
+topic: ["wirtschaft"]
 ---
 
 # Erneuerbare Stromerzeugung auf dem Vormarsch
