@@ -1,23 +1,50 @@
 ---
-layout: base.njk
-title: About - My Blog
+layout: supporting_sites
+title: Über mich
 ---
 
-# About
+# Über mich
 
-Welcome to my blog! This is a space where I share my thoughts, experiences, and knowledge about web development and technology.
+## Hi, ich bin Stefan
 
-## Who Am I?
+Ich bin der Gründer von **databearer**. Dieser Blog soll als Plattform dienen, um verschiedene Artikel und Beiträge zu teilen, die auf Daten und Fakten basieren.
 
-I'm a passionate web developer who loves creating beautiful, functional websites. This blog is my platform to share what I learn and connect with others in the community.
+Mir ist hier besonders wichtig, aktuelle Diskussionen in den richtigen Kontext zu setzen und faktenbasiert zu arbeiten. Hierfür nutze ich vor allem auch verschiedene Datenvisualisierungen, um das zu hinterlegen.
 
-## What You'll Find Here
+## Mein Background
 
-- Web development tutorials and tips
-- Technology insights
-- Personal projects and experiments
-- Industry best practices
+Ich bin seit mehreren Jahren als **Data Scientist/Engineer/Analyst** tätig und habe somit viel Erfahrung in der Beschaffung, Aufbereitung und Analyse von Daten.
 
-## Get In Touch
+Das will ich hier kombinieren mit meinem Interesse an verschiedenen Themen wie:
+- Wirtschaft
+- Finanzthemen
+- Energiewende
+- Andere gesellschaftliche Felder
 
-Feel free to reach out if you have questions or just want to connect!
+## Transparenz & Open Source
+
+Mein Ansatz ist nicht nur das datenbasierte Bloggen über diese Themenfelder. Zusätzlich will ich für maximale **Transparenz** sorgen, indem die ganze Datenanalyse - soweit möglich - aus meinem eigenen Open Source Code besteht.
+
+Den Code findest du hier: [GitHub - databearer](https://github.com/Graflinger/databearer)
+
+## Feedback willkommen
+
+Diese Transparenz schließt auch eine gewisse Feedbackkultur mit ein. Falls du Anmerkungen, Verbesserungsvorschläge oder einen sonstigen produktiven Input hast, würde es mich freuen, wenn du ihn auf einem der verschiedenen Kanäle mit mir teilst.
+
+---
+
+## Social Media
+
+### Bluesky
+
+**[@databearer.bsky.social](https://bsky.app/profile/databearer.bsky.social)**
+
+Profil für den datenbasierten Blog databearer.de. Beschäftige mich mit Themen rund um Energiewende, Wirtschaft, Finanzen und sonstigen Bereichen, die ich mit Hilfe von Datenvisualisierung und Analyse durchleuchte.
+
+[Zum Bluesky Profil](https://bsky.app/profile/databearer.bsky.social)
+
+### X (Twitter)
+
+**[@databearerde](https://x.com/databearerde)**
+
+[Zum X Profil](https://x.com/databearerde)

@@ -1,7 +1,6 @@
 ---
 layout: supporting_sites
 title: Supporte mich
-tag: post
 ---
 
 <figure>
@@ -17,4 +16,4 @@ Ich freu mich über jede Unterstützung - Vielen Dank!
 
 Dir gefallen die Beiträge hier? Dann teil sie gerne mit deinen Freunden und hilf mir eine größere Reichweite aufzubauen
 ## Affiliate Links
-Amazon - Du planst eh einen Einkauf auf Amazon? Dann nutze diesen Link hier um ohne extra Kosten für dich meinen Blog zu unterstützen: https://amzn.to/3YwIPL2
+Amazon - Du planst eh einen Einkauf auf Amazon? Dann nutze diesen Link hier um ohne extra Kosten für dich meinen Blog zu unterstützen: [Amazon Affiliate Link](https://amzn.to/47EfRfm)
