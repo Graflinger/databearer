@@ -1,3 +1,8 @@
 module.exports = {
-  locale: "de-DE"  // Change this to your preferred locale (en-US, de-DE, fr-FR, etc.)
+  locale: "de-DE",
+  author: "Stefan Graf",
+  title: "Datenjournalismus",
+  description:
+    "Datenjournalismus mit Fokus auf Energie, Politik und Wirtschaft",
+  url: "https://databearer.de",
 };

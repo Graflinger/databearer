@@ -1,6 +1,7 @@
 ---
 layout: supporting_sites
 title: Datenschutzerklärung
+excludeFromSitemap: true
 ---
 
 # Datenschutzerklärung

@@ -1,6 +1,7 @@
 ---
 layout: supporting_sites
 title: Supporte mich
+excludeFromSitemap: true
 ---
 
 <figure>

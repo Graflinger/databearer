@@ -1,3 +1,9 @@
+---
+layout: supporting_sites
+title: Quellen
+excludeFromSitemap: true
+---
+
 # Quellen
 ## Quellenverweise
 Zahlen die benutzt werden, sei es im Text oder Visualisierungen, basieren - soweit wie möglich - auf vertrauenswürdigen Quellen, die auch direkt angegeben oder verlinkt sind. 

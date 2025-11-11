@@ -1,6 +1,7 @@
 ---
 layout: supporting_sites
 title: Über mich
+excludeFromSitemap: true
 ---
 
 # Über mich
