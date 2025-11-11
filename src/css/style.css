@@ -857,6 +857,21 @@ a:hover {
     color: #1a1a1a;
   }
 
+  /* Mobile menu dark mode */
+  .topics-menu {
+    background-color: #1a1a1a;
+  }
+
+  .topics-menu li {
+    border-bottom-color: #333;
+  }
+
+  .hamburger-icon,
+  .hamburger-icon::before,
+  .hamburger-icon::after {
+    background-color: #b0b0b0;
+  }
+
   .blog-card {
     background-color: #2a2a2a;
     border-color: #404040;

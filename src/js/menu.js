@@ -1,27 +1,33 @@
-// Burger menu toggle functionality
+// Topics menu toggle functionality
 document.addEventListener('DOMContentLoaded', function() {
-  const burgerMenu = document.querySelector('.burger-menu');
+  const menuToggle = document.querySelector('.topics-menu-toggle');
   const topicsMenu = document.querySelector('.topics-menu');
 
-  if (burgerMenu && topicsMenu) {
-    burgerMenu.addEventListener('click', function() {
-      // Toggle active class on burger menu (for animation)
-      burgerMenu.classList.toggle('active');
+  if (menuToggle && topicsMenu) {
+    menuToggle.addEventListener('click', function(event) {
+      event.stopPropagation();
 
       // Toggle active class on menu (to show/hide)
       topicsMenu.classList.toggle('active');
 
       // Update aria-expanded for accessibility
-      const isExpanded = burgerMenu.getAttribute('aria-expanded') === 'true';
-      burgerMenu.setAttribute('aria-expanded', !isExpanded);
+      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+      menuToggle.setAttribute('aria-expanded', !isExpanded);
+
+      // Update aria-label
+      if (isExpanded) {
+        menuToggle.setAttribute('aria-label', 'Menü öffnen');
+      } else {
+        menuToggle.setAttribute('aria-label', 'Menü schließen');
+      }
     });
 
     // Close menu when clicking outside
     document.addEventListener('click', function(event) {
       if (!event.target.closest('.topics-nav')) {
-        burgerMenu.classList.remove('active');
         topicsMenu.classList.remove('active');
-        burgerMenu.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Menü öffnen');
       }
     });
 
@@ -29,10 +35,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuLinks = topicsMenu.querySelectorAll('a');
     menuLinks.forEach(link => {
       link.addEventListener('click', function() {
-        burgerMenu.classList.remove('active');
         topicsMenu.classList.remove('active');
-        burgerMenu.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Menü öffnen');
       });
+    });
+
+    // Prevent menu from being affected by window resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        if (window.innerWidth > 768) {
+          topicsMenu.classList.remove('active');
+          menuToggle.setAttribute('aria-expanded', 'false');
+          menuToggle.setAttribute('aria-label', 'Menü öffnen');
+        }
+      }, 250);
     });
   }
 });
