@@ -5,7 +5,7 @@ excludeFromSitemap: true
 ---
 
 <figure>
-  <img src="/images/blog_card_images/logo_transparent.png" alt="Titelbild">
+  <img src="/images/logo_transparent.png" alt="Titelbild">
 </figure>
 
 # Supporte mich
