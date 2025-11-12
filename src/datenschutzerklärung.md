@@ -60,12 +60,6 @@ Durch das Nutzen der Website werden folgende notwendige Daten erfasst:
 
 Es werden folgende Cookies benutzt:
 
-### Technisch notwendige Cookies
-
-Für den Anmeldeprozess, sofern aktiviert, werden Cookies erhoben, um die Identität des Users überprüfen zu können.
-
-### Andere Cookies
-
 Für die Services von Google AdSense werden Cookies erhoben. Dies wird durch ein Cookieformular abgefragt. Cookies können jederzeit widerrufen werden. Am Ende jeder Seite taucht links unten ein Kontrollfeld auf, um die Cookieeinstellungen ändern zu können.
 
 ## Visualisierungen mit Datawrapper
