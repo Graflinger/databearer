@@ -39,7 +39,7 @@ layout: base.njk
 
     {%- if image %}
         <div class="post-header-image">
-            <img src="{{ image }}" alt="{{ title }}">
+            <img src="{{ image }}" alt="{{ title }}" loading="eager">
             {%- if imageText %}
                 <p class="image-caption">{{ imageText }}</p>
             {%- endif %}
@@ -59,7 +59,7 @@ layout: base.njk
                     <a href="{{ post.url }}" class="blog-card-link">
                         <article class="blog-card blog-card-horizontal">
                             <div class="blog-card-image-small">
-                                <img src="{{ post.data.image }}" alt="{{ post.data.title }}">
+                                <img src="{{ post.data.image }}" alt="{{ post.data.title }}" loading="lazy">
                             </div>
                             <div class="blog-card-content">
                                 <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>

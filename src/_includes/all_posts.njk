@@ -18,7 +18,7 @@ pagination:
         {%- if post.data.fullWidthCard and useFullCard %}
           <article class="blog-card blog-card-full">
             <div class="blog-card-image-full">
-              <img src="{{ post.data.image}}" alt="{{ post.data.title }}">
+              <img src="{{ post.data.image}}" alt="{{ post.data.title }}" loading="lazy">
             </div>
             <div class="blog-card-content">
               <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
@@ -29,7 +29,7 @@ pagination:
         {%- else %}
           <article class="blog-card blog-card-horizontal">
             <div class="blog-card-image-small">
-              <img src="{{ post.data.image}}" alt="{{ post.data.title }}">
+              <img src="{{ post.data.image}}" alt="{{ post.data.title }}" loading="lazy">
             </div>
             <div class="blog-card-content">
               <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
