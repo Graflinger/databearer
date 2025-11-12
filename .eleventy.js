@@ -33,7 +33,8 @@ module.exports = function (eleventyConfig) {
   // Filter to get related posts
   eleventyConfig.addFilter("relatedPosts", function (collections, currentPage) {
     const allPosts = collections.post || [];
-    const currentTopics = (currentPage && currentPage.data && currentPage.data.topic) || [];
+    const currentTopics =
+      (currentPage && currentPage.data && currentPage.data.topic) || [];
     const currentUrl = (currentPage && currentPage.url) || "";
 
     // Get posts from the same topic (excluding current post)
@@ -90,7 +91,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addCollection("politikPosts", function (collectionApi) {
     return collectionApi.getFilteredByGlob("src/posts/*.md").filter((post) => {
       return (
-        post.data.topic && post.data.topic.includes("politik_und_gesellschaft")
+        post.data.topic && post.data.topic.includes("politik-und-gesellschaft")
       );
     });
   });
