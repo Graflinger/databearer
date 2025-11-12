@@ -98,7 +98,7 @@
                     {%- if topic and topic.length > 0 -%}, {
                             "@type": "ListItem",
                             "position": 2,
-                            "name": "{% if topic[0] == 'energie' %}Energie{% elif topic[0] == 'wirtschaft' %}Wirtschaft{% elif topic[0] == 'politik_und_gesellschaft' %}Politik & Gesellschaft{% else %}{{ topic[0] }}{% endif %}",
+                            "name": "{% if topic[0] == 'energie' %}Energie{% elif topic[0] == 'wirtschaft' %}Wirtschaft{% elif topic[0] == 'politik-und-gesellschaft' %}Politik & Gesellschaft{% else %}{{ topic[0] }}{% endif %}",
                             "item": "{{ site.url }}/themen/{{ topic[0] }}"
                         }
                     {%- endif -%}
@@ -169,7 +169,7 @@
                         <a href="/themen/energie">Energie</a>
                     </li>
                     <li>
-                        <a href="/themen/politik_und_gesellschaft">Politik & Gesellschaft</a>
+                        <a href="/themen/politik-und-gesellschaft">Politik & Gesellschaft</a>
                     </li>
                     <li>
                         <a href="/themen/wirtschaft">Wirtschaft</a>
