@@ -2,7 +2,10 @@
   "name": "Databearer Frontend - Eleventy",
   "build": {
     "dockerfile": "Dockerfile",
-    "context": ".."
+    "context": "..",
+    "args": {
+      "CLAUDE_CODE_VERSION": "latest"
+    }
   },
 
   // Features to add to the dev container
@@ -24,25 +27,17 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        // Essential for the project
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "EditorConfig.EditorConfig",
-
-        // Eleventy/Nunjucks support
         "ronnidc.nunjucks",
         "okitavera.vscode-nunjucks-formatter",
-
-        // Markdown support
         "yzhang.markdown-all-in-one",
         "DavidAnson.vscode-markdownlint",
-
-        // Git integration
         "eamodio.gitlens",
-
-        // Utilities
         "christian-kohler.path-intellisense",
-        "wayou.vscode-todo-highlight"
+        "wayou.vscode-todo-highlight",
+        "Anthropic.claude-code"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",
@@ -84,7 +79,9 @@
 
   // Mount the local workspace folder
   "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=claude-code-config-${devcontainerId},target=/home/node/.claude,type=volume"
   ],
 
   // Working directory
