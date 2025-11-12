@@ -1,0 +1,178 @@
+---
+layout: base.njk
+title: Suche
+---
+
+<main class="container">
+  <div class="search-container">
+    <h1>Suche</h1>
+
+    <div class="search-box">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Suchbegriff eingeben..."
+        autocomplete="off"
+      />
+      <button id="search-button" aria-label="Suchen">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div id="search-results">
+      <p class="search-info">Geben Sie einen Suchbegriff ein, um Artikel zu finden.</p>
+    </div>
+  </div>
+</main>
+
+<style>
+  .search-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .search-container h1 {
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+  }
+
+  .search-box {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  #search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.3s;
+  }
+
+  #search-input:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+
+  #search-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  #search-button:hover {
+    background-color: #0056b3;
+  }
+
+  #search-button:active {
+    transform: scale(0.98);
+  }
+
+  .search-info {
+    color: #666;
+    font-style: italic;
+  }
+
+  .search-results-count {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .search-result {
+    background: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .search-result:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .search-result h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+  }
+
+  .search-result h2 a {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  .search-result h2 a:hover {
+    text-decoration: underline;
+  }
+
+  .search-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .search-topic {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+
+  .search-excerpt {
+    color: #333;
+    line-height: 1.6;
+  }
+
+  .search-highlight {
+    background-color: #ffeb3b;
+    font-weight: 600;
+    padding: 0 2px;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #666;
+  }
+
+  .no-results h2 {
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .search-container h1 {
+      font-size: 2rem;
+    }
+
+    .search-box {
+      flex-direction: column;
+    }
+
+    #search-button {
+      width: 100%;
+    }
+
+    .search-meta {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+  }
+</style>
+
+<script src="/js/search.js"></script>

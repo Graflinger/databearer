@@ -1,0 +1,15 @@
+---
+permalink: /search.json
+---
+[
+{%- for post in collections.post -%}
+  {
+    "title": {{ post.data.title | dump | safe }},
+    "url": {{ post.url | dump | safe }},
+    "excerpt": {{ post.data.excerpt | dump | safe }},
+    "date": {{ post.data.date | htmlDateString | dump | safe }},
+    "topic": {{ post.data.topic | dump | safe }},
+    "content": {{ post.templateContent | striptags | dump | safe }}
+  }{%- if not loop.last -%},{%- endif -%}
+{%- endfor -%}
+]
