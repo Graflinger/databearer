@@ -156,6 +156,8 @@
             </div>
         </header>
 
+        <a href="#main-content" class="skip-link">Zum Hauptinhalt springen</a>
+
         <nav class="topics-nav">
             <div class="container">
                 <button class="topics-menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
@@ -163,25 +165,28 @@
                 </button>
                 <ul class="topics-menu">
                     <li>
-                        <a href="/">Alle Posts</a>
+                        <a href="/" {% if page.url == "/" %}aria-current="page"{% endif %}>Alle Posts</a>
                     </li>
                     <li>
-                        <a href="/themen/energie">Energie</a>
+                        <a href="/themen/energie" {% if page.url.startsWith("/themen/energie") %}aria-current="page"{% endif %}>Energie</a>
                     </li>
                     <li>
-                        <a href="/themen/politik-und-gesellschaft">Politik & Gesellschaft</a>
+                        <a href="/themen/politik-und-gesellschaft" {% if page.url.startsWith("/themen/politik-und-gesellschaft") %}aria-current="page"{% endif %}>Politik & Gesellschaft</a>
                     </li>
                     <li>
-                        <a href="/themen/wirtschaft">Wirtschaft</a>
+                        <a href="/themen/wirtschaft" {% if page.url.startsWith("/themen/wirtschaft") %}aria-current="page"{% endif %}>Wirtschaft</a>
                     </li>
                     <li>
-                        <a href="/supportme">Supporte mich</a>
+                        <a href="/suche" {% if page.url.startsWith("/suche") %}aria-current="page"{% endif %}>Suche</a>
+                    </li>
+                    <li>
+                        <a href="/supportme" {% if page.url.startsWith("/supportme") %}aria-current="page"{% endif %}>Supporte mich</a>
                     </li>
                 </ul>
             </div>
         </nav>
 
-        <main class="site-main">
+        <main class="site-main" id="main-content">
             <div class="container">
                 {{ content | safe }}
             </div>
@@ -204,7 +209,7 @@
 
                     </ul>
                 </nav>
-                <p class="copyright">&copy; {{ helpers.year }} My Blog. All rights reserved.</p>
+                <p class="copyright">&copy; {{ helpers.year }} Databearer. All rights reserved.</p>
             </div>
         </footer>
         <script src="/js/menu.js"></script>

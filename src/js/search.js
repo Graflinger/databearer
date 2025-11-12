@@ -95,7 +95,7 @@
         ? "1 Ergebnis gefunden"
         : `${results.length} Ergebnisse gefunden`;
 
-    let html = `<p class="search-results-count">${countText}</p>`;
+    let html = `<p class="search-results-count">${countText}</p><div class="search-results-grid">`;
 
     results.forEach((result) => {
       const title = highlightText(result.title, query);
@@ -104,23 +104,24 @@
         : highlightText(truncateText(result.content, 200), query);
 
       const date = formatDate(result.date);
-      const topics =
-        result.topic
-          ?.map((t) => `<span class="search-topic">${formatTopic(t)}</span>`)
-          .join(" ") || "";
 
       html += `
-        <article class="search-result">
-          <h2><a href="${result.url}">${title}</a></h2>
-          <div class="search-meta">
-            <span>${date}</span>
-            ${topics}
-          </div>
-          <p class="search-excerpt">${excerpt}</p>
-        </article>
+        <a href="${result.url}" class="blog-card-link">
+          <article class="blog-card blog-card-horizontal">
+            <div class="blog-card-image-small">
+              <img src="${result.image || '/images/blog_card_images/test_img.png'}" alt="${escapeHtml(result.title)}" loading="lazy">
+            </div>
+            <div class="blog-card-content">
+              <p class="post-date">${date}</p>
+              <h2>${title}</h2>
+              <p>${excerpt}</p>
+            </div>
+          </article>
+        </a>
       `;
     });
 
+    html += `</div>`;
     searchResults.innerHTML = html;
   }
 

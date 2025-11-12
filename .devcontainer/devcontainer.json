@@ -2,7 +2,10 @@
   "name": "Databearer Frontend - Eleventy",
   "build": {
     "dockerfile": "Dockerfile",
-    "context": ".."
+    "context": "..",
+    "args": {
+      "CLAUDE_CODE_VERSION": "latest"
+    }
   },
 
   // Features to add to the dev container
@@ -76,7 +79,9 @@
 
   // Mount the local workspace folder
   "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=claude-code-config-${devcontainerId},target=/home/node/.claude,type=volume"
   ],
 
   // Working directory
