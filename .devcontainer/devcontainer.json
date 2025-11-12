@@ -24,25 +24,17 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        // Essential for the project
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "EditorConfig.EditorConfig",
-
-        // Eleventy/Nunjucks support
         "ronnidc.nunjucks",
         "okitavera.vscode-nunjucks-formatter",
-
-        // Markdown support
         "yzhang.markdown-all-in-one",
         "DavidAnson.vscode-markdownlint",
-
-        // Git integration
         "eamodio.gitlens",
-
-        // Utilities
         "christian-kohler.path-intellisense",
-        "wayou.vscode-todo-highlight"
+        "wayou.vscode-todo-highlight",
+        "Anthropic.claude-code"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",
