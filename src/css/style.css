@@ -649,9 +649,9 @@ a:hover {
     height: 200px;
   }
 
-  /* Reduce full-width card height on mobile */
+  /* Reduce full-width card height on mobile - same as horizontal cards */
   .blog-card-image-full {
-    height: 250px;
+    height: 200px;
   }
 
   .pagination {
