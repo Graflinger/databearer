@@ -222,7 +222,7 @@ a:focus {
 }
 
 .featured-post .blog-card-content {
-  padding: 35px;
+  padding: 15px;
 }
 
 .featured-post h2 {
@@ -293,16 +293,17 @@ a:focus {
 
 .blog-card-horizontal .blog-card-content {
   flex: 1;
-  padding: 20px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 /* Layout 2: Full-width Card - Image with text below */
 .blog-card-full {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .blog-card-image-full {
@@ -324,12 +325,15 @@ a:focus {
 }
 
 .blog-card-full .blog-card-content {
-  padding: 25px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 /* Shared styles */
 .blog-card-content {
-  padding: 25px;
+  padding: 15px;
 }
 
 .blog-card h2 {
@@ -342,12 +346,17 @@ a:focus {
 .post-date {
   font-size: 14px;
   color: #999;
-  margin-bottom: 15px;
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+.blog-card .post-date {
+  margin-bottom: 0px;
 }
 
 .post-excerpt {
   color: #666;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   line-height: 1.5;
 }
 
@@ -684,7 +693,7 @@ a:focus {
   }
 
   .featured-post .blog-card-content {
-    padding: 25px;
+    padding: 15px;
   }
 
   .featured-post h2 {

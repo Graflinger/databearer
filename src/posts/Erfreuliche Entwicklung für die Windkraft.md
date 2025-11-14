@@ -4,7 +4,7 @@ date: 2024-10-27
 lastUpdated: 2024-10-27
 excerpt: "Nach Jahren der ernüchternden Ausschreibungen und Ausbauzahlen, kommt Schwung in die Entwicklung von Windenergie an Land."
 image: "/images/blog_card_images/test_img.png"
-fullWidthCard: true
+fullWidthCard: false
 topic: ["energie"]
 ---
 

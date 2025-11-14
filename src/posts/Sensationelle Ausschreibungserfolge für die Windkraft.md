@@ -4,7 +4,7 @@ date: 2025-06-10
 lastUpdated: 2025-06-11
 excerpt: "Der neuen Regierung wurde ein Geschenk, in Form von herausragenden Ausschreibungsergebnissen für neue Windkraftanlagen, hinterlassen. Wird das weitergeführt oder abgewürgt?"
 image: "/images/blog_card_images/test_img.png"
-fullWidthCard: true
+fullWidthCard: false
 topic: ["wirtschaft", "politik-und-gesellschaft"]
 ---
 
