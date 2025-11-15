@@ -148,6 +148,9 @@
     <body>
         <header class="site-header">
             <div class="container">
+                <button class="topics-menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
+                    <span class="hamburger-icon"></span>
+                </button>
                 <div class="logo">
                     <a href="/">
                         <img src="/images/logo_transparent.png" alt="Databearer Logo" class="logo-image">
@@ -156,12 +159,10 @@
             </div>
         </header>
 
+        <div class="menu-backdrop"></div>
+
         <nav class="topics-nav">
             <div class="container">
-                <button class="topics-menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
-                    <span class="hamburger-icon"></span>
-                </button>
-                <div class="menu-backdrop"></div>
                 <ul class="topics-menu">
                     <li>
                         <a href="/" {% if page.url == "/" %}aria-current="page"{% endif %}>Alle Posts</a>

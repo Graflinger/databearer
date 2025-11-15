@@ -58,12 +58,14 @@ a:focus {
   border-bottom: 1px solid #e0e0e0;
   padding: 20px 0;
   background-color: #fff;
+  position: relative;
 }
 
 .site-header .container {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .logo a {
@@ -107,9 +109,11 @@ a:focus {
   border: none;
   cursor: pointer;
   padding: 12px;
-  z-index: 1001;
+  z-index: 1002;
   position: absolute;
-  left: 16px;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   border-radius: 8px;
   transition: background-color 0.2s ease;
 }
@@ -661,7 +665,7 @@ a:focus {
   -webkit-backdrop-filter: blur(4px);
   opacity: 0;
   transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 999;
+  z-index: 1000;
   pointer-events: none;
 }
 
@@ -672,9 +676,14 @@ a:focus {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  /* Show hamburger menu button */
+  /* Show hamburger menu button in header */
   .topics-menu-toggle {
     display: block;
+  }
+
+  /* Hide the entire topics navigation bar on mobile */
+  .topics-nav {
+    display: none;
   }
 
   /* Show backdrop on mobile */
@@ -682,8 +691,9 @@ a:focus {
     display: block;
   }
 
-  /* Hide menu by default, show when active */
+  /* Mobile menu drawer - slides in from left */
   .topics-menu {
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
@@ -695,10 +705,10 @@ a:focus {
     justify-content: flex-start;
     align-items: stretch;
     gap: 0;
-    padding: 100px 0 40px;
+    padding: 80px 0 40px;
     transform: translateX(-100%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1000;
+    z-index: 1001;
     overflow-y: auto;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
   }
