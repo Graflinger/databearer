@@ -78,18 +78,18 @@ module.exports = function (eleventyConfig) {
 
   // Create main post collection from all posts in src/posts
   eleventyConfig.addCollection("post", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/posts/*.md");
+    return collectionApi.getFilteredByGlob("src/posts/**/*.md");
   });
 
   // Create topic-specific collections
   eleventyConfig.addCollection("energiePosts", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/posts/*.md").filter((post) => {
+    return collectionApi.getFilteredByGlob("src/posts/**/*.md").filter((post) => {
       return post.data.topic && post.data.topic.includes("energie");
     });
   });
 
   eleventyConfig.addCollection("politikPosts", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/posts/*.md").filter((post) => {
+    return collectionApi.getFilteredByGlob("src/posts/**/*.md").filter((post) => {
       return (
         post.data.topic && post.data.topic.includes("politik-und-gesellschaft")
       );
@@ -97,7 +97,7 @@ module.exports = function (eleventyConfig) {
   });
 
   eleventyConfig.addCollection("wirtschaftPosts", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/posts/*.md").filter((post) => {
+    return collectionApi.getFilteredByGlob("src/posts/**/*.md").filter((post) => {
       return post.data.topic && post.data.topic.includes("wirtschaft");
     });
   });
