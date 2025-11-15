@@ -177,12 +177,18 @@ a:focus {
   top: 0;
 }
 
-.topics-menu {
+.topics-menu-desktop {
   display: flex;
   justify-content: center;
   gap: 40px;
   list-style: none;
   transition: all 0.3s ease;
+}
+
+/* Mobile menu - hidden by default on all screen sizes */
+.topics-menu {
+  display: none;
+  list-style: none;
 }
 
 .topics-nav a {

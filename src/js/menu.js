@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', function() {
       closeMenu();
     });
 
-    // Close menu when clicking outside (for cases without backdrop)
+    // Close menu when clicking outside
     document.addEventListener('click', function(event) {
-      if (!event.target.closest('.topics-nav')) {
+      if (!event.target.closest('.topics-menu') && !event.target.closest('.topics-menu-toggle')) {
         closeMenu();
       }
     });

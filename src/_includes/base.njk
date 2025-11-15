@@ -163,7 +163,7 @@
 
         <nav class="topics-nav">
             <div class="container">
-                <ul class="topics-menu">
+                <ul class="topics-menu-desktop">
                     <li>
                         <a href="/" {% if page.url == "/" %}aria-current="page"{% endif %}>Alle Posts</a>
                     </li>
@@ -185,6 +185,27 @@
                 </ul>
             </div>
         </nav>
+
+        <ul class="topics-menu">
+            <li>
+                <a href="/" {% if page.url == "/" %}aria-current="page"{% endif %}>Alle Posts</a>
+            </li>
+            <li>
+                <a href="/themen/energie" {% if page.url.startsWith("/themen/energie") %}aria-current="page"{% endif %}>Energie</a>
+            </li>
+            <li>
+                <a href="/themen/politik-und-gesellschaft" {% if page.url.startsWith("/themen/politik-und-gesellschaft") %}aria-current="page"{% endif %}>Politik & Gesellschaft</a>
+            </li>
+            <li>
+                <a href="/themen/wirtschaft" {% if page.url.startsWith("/themen/wirtschaft") %}aria-current="page"{% endif %}>Wirtschaft</a>
+            </li>
+            <li>
+                <a href="/suche" {% if page.url.startsWith("/suche") %}aria-current="page"{% endif %}>Suche</a>
+            </li>
+            <li>
+                <a href="/supportme" {% if page.url.startsWith("/supportme") %}aria-current="page"{% endif %}>Supporte mich</a>
+            </li>
+        </ul>
 
         <main class="site-main" id="main-content">
             <div class="container">
