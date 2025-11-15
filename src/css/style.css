@@ -490,7 +490,6 @@ a:focus {
   height: auto;
   margin: 0 -10%;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: block;
   margin-bottom: 10px;
 }
@@ -595,7 +594,6 @@ a:focus {
   height: auto;
   margin: 0 -10%;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .post-content figure {
@@ -732,7 +730,7 @@ a:focus {
 
   /* Post content mobile adjustments */
   .post-content {
-    padding: 60px 24px;
+    padding: 10px 8px;
   }
 
   .post-content p {
@@ -745,7 +743,6 @@ a:focus {
     height: auto;
     margin: 0 0;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .image-caption {
@@ -770,13 +767,6 @@ a:focus {
     height: auto;
     margin: 0 0;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .post-meta {
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
   }
 
   /* Search page mobile adjustments */
@@ -1022,6 +1012,24 @@ a:focus {
     color: #e0e0e0;
   }
 
+  /* Post content dark mode */
+  .post-content {
+    background-color: #1a1a1a;
+  }
+
+  .pagination {
+    border-top-color: #333;
+  }
+
+  .pagination-info {
+    color: #b0b0b0;
+  }
+
+  .site-footer {
+    background-color: #1a1a1a;
+    border-top-color: #333;
+  }
+
   .site-header {
     background-color: #1a1a1a;
     border-bottom-color: #333;
@@ -1058,162 +1066,110 @@ a:focus {
   /* .blog-card {
     background-color: #2a2a2a;
     border-color: #404040; */
-}
 
-.blog-card:hover {
-  border-color: #d9c176;
-  box-shadow: 0 4px 12px rgba(217, 193, 118, 0.3);
-}
+  .blog-card:hover {
+    border-color: #d9c176;
+    box-shadow: 0 4px 12px rgba(217, 193, 118, 0.3);
+  }
 
-.blog-card h2 {
-  color: #e0e0e0;
-}
+  .footer-nav a {
+    color: #b0b0b0;
+  }
 
-.post-date {
-  color: #888;
-}
+  .footer-nav a:hover {
+    color: #d9c176;
+  }
 
-.post-excerpt {
-  color: #b0b0b0;
-}
+  .copyright {
+    color: #888;
+  }
 
-.pagination {
-  border-top-color: #333;
-}
+  /* Breadcrumb dark mode */
+  .breadcrumb ol {
+    color: #b0b0b0;
+  }
 
-.pagination-info {
-  color: #b0b0b0;
-}
+  .breadcrumb li[aria-current="page"] {
+    color: #e0e0e0;
+  }
 
-.site-footer {
-  background-color: #1a1a1a;
-  border-top-color: #333;
-}
+  .breadcrumb li:not(:last-child)::after {
+    color: #666;
+  }
 
-.footer-nav a {
-  color: #b0b0b0;
-}
+  .image-caption {
+    color: #b0b0b0;
+  }
 
-.footer-nav a:hover {
-  color: #d9c176;
-}
+  .post-meta {
+    border-bottom-color: #333;
+    color: #b0b0b0;
+  }
 
-.copyright {
-  color: #888;
-}
+  .post-published {
+    color: #b0b0b0;
+  }
 
-/* Breadcrumb dark mode */
-.breadcrumb ol {
-  color: #b0b0b0;
-}
+  .post-updated {
+    color: #d9c176;
+  }
 
-.breadcrumb li[aria-current="page"] {
-  color: #e0e0e0;
-}
+  /* Related posts dark mode */
+  .related-posts {
+    background-color: #1a1a1a;
+    border-top-color: #333;
+  }
 
-.breadcrumb li:not(:last-child)::after {
-  color: #666;
-}
+  .related-posts-title {
+    color: #e0e0e0;
+  }
 
-/* Post content dark mode */
-.post-content {
-  background-color: #1a1a1a;
-}
+  /* 404 dark mode */
+  .error-404-subtitle {
+    color: #e0e0e0;
+  }
 
-.post-content h1,
-.post-content h2 {
-  color: #e0e0e0;
-}
+  .error-404-text {
+    color: #b0b0b0;
+  }
 
-.post-content p {
-  color: #b0b0b0;
-}
+  .error-404-suggestions {
+    border-top-color: #333;
+  }
 
-.post-content ul,
-.post-content ol {
-  color: #b0b0b0;
-}
+  .error-404-suggestions h3 {
+    color: #e0e0e0;
+  }
 
-.post-content img {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-}
+  /* Search page dark mode */
+  #search-input {
+    background-color: #2a2a2a;
+    border-color: #404040;
+    color: #e0e0e0;
+  }
 
-.post-header-image img {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-}
+  #search-input:focus {
+    border-color: #c4ad61;
+  }
 
-.image-caption {
-  color: #b0b0b0;
-}
+  .search-info {
+    color: #b0b0b0;
+  }
 
-.post-meta {
-  border-bottom-color: #333;
-  color: #b0b0b0;
-}
+  .search-results-count {
+    color: #e0e0e0;
+  }
 
-.post-published {
-  color: #b0b0b0;
-}
+  .no-results {
+    color: #b0b0b0;
+  }
 
-.post-updated {
-  color: #d9c176;
-}
+  .no-results h2 {
+    color: #e0e0e0;
+  }
 
-/* Related posts dark mode */
-.related-posts {
-  background-color: #1a1a1a;
-  border-top-color: #333;
-}
-
-.related-posts-title {
-  color: #e0e0e0;
-}
-
-/* 404 dark mode */
-.error-404-subtitle {
-  color: #e0e0e0;
-}
-
-.error-404-text {
-  color: #b0b0b0;
-}
-
-.error-404-suggestions {
-  border-top-color: #333;
-}
-
-.error-404-suggestions h3 {
-  color: #e0e0e0;
-}
-
-/* Search page dark mode */
-#search-input {
-  background-color: #2a2a2a;
-  border-color: #404040;
-  color: #e0e0e0;
-}
-
-#search-input:focus {
-  border-color: #c4ad61;
-}
-
-.search-info {
-  color: #b0b0b0;
-}
-
-.search-results-count {
-  color: #e0e0e0;
-}
-
-.no-results {
-  color: #b0b0b0;
-}
-
-.no-results h2 {
-  color: #e0e0e0;
-}
-
-.search-highlight {
-  background-color: #ffeb3b;
-  color: #1a1a1a;
+  .search-highlight {
+    background-color: #ffeb3b;
+    color: #1a1a1a;
+  }
 }
