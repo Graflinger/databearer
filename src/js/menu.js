@@ -3,8 +3,27 @@ document.addEventListener('DOMContentLoaded', function() {
   const menuToggle = document.querySelector('.topics-menu-toggle');
   const topicsMenu = document.querySelector('.topics-menu');
   const menuBackdrop = document.querySelector('.menu-backdrop');
+  const topicsNav = document.querySelector('.topics-nav');
+  const topicsNavContainer = document.querySelector('.topics-nav .container');
 
-  if (menuToggle && topicsMenu && menuBackdrop) {
+  if (menuToggle && topicsMenu && menuBackdrop && topicsNav && topicsNavContainer) {
+    // Function to handle menu positioning based on screen size
+    function handleMenuPosition() {
+      if (window.innerWidth <= 768) {
+        // Mobile: Move menu outside of nav (after body's first child)
+        if (topicsMenu.parentElement === topicsNavContainer) {
+          document.body.insertBefore(topicsMenu, topicsNav.nextSibling);
+        }
+      } else {
+        // Desktop: Move menu back inside nav container
+        if (topicsMenu.parentElement !== topicsNavContainer) {
+          topicsNavContainer.appendChild(topicsMenu);
+        }
+        // Ensure menu is closed when switching to desktop
+        closeMenu();
+      }
+    }
+
     // Function to open menu
     function openMenu() {
       topicsMenu.classList.add('active');
@@ -22,6 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
       menuToggle.setAttribute('aria-expanded', 'false');
       menuToggle.setAttribute('aria-label', 'Menü öffnen');
     }
+
+    // Initial position setup
+    handleMenuPosition();
 
     // Toggle menu on button click
     menuToggle.addEventListener('click', function(event) {
@@ -55,14 +77,12 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    // Close menu and restore scroll on window resize
+    // Handle menu position and close on window resize
     let resizeTimer;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function() {
-        if (window.innerWidth > 768) {
-          closeMenu();
-        }
+        handleMenuPosition();
       }, 250);
     });
 

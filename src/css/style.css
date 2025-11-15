@@ -118,14 +118,6 @@ a:focus {
   transition: background-color 0.2s ease;
 }
 
-.topics-menu-toggle:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.topics-menu-toggle:active {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
 .topics-menu-toggle:focus {
   outline: 2px solid #c4ad61;
   outline-offset: 2px;
@@ -139,7 +131,7 @@ a:focus {
   background-color: #666;
   position: relative;
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 2px;
 }
 
@@ -177,18 +169,12 @@ a:focus {
   top: 0;
 }
 
-.topics-menu-desktop {
+.topics-menu {
   display: flex;
   justify-content: center;
   gap: 40px;
   list-style: none;
   transition: all 0.3s ease;
-}
-
-/* Mobile menu - hidden by default on all screen sizes */
-.topics-menu {
-  display: none;
-  list-style: none;
 }
 
 .topics-nav a {
@@ -728,7 +714,7 @@ a:focus {
     opacity: 0;
     transform: translateX(-20px);
     transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .topics-menu.active li {
@@ -737,12 +723,24 @@ a:focus {
   }
 
   /* Stagger animation for menu items */
-  .topics-menu.active li:nth-child(1) { transition-delay: 0.05s; }
-  .topics-menu.active li:nth-child(2) { transition-delay: 0.1s; }
-  .topics-menu.active li:nth-child(3) { transition-delay: 0.15s; }
-  .topics-menu.active li:nth-child(4) { transition-delay: 0.2s; }
-  .topics-menu.active li:nth-child(5) { transition-delay: 0.25s; }
-  .topics-menu.active li:nth-child(6) { transition-delay: 0.3s; }
+  .topics-menu.active li:nth-child(1) {
+    transition-delay: 0.05s;
+  }
+  .topics-menu.active li:nth-child(2) {
+    transition-delay: 0.1s;
+  }
+  .topics-menu.active li:nth-child(3) {
+    transition-delay: 0.15s;
+  }
+  .topics-menu.active li:nth-child(4) {
+    transition-delay: 0.2s;
+  }
+  .topics-menu.active li:nth-child(5) {
+    transition-delay: 0.25s;
+  }
+  .topics-menu.active li:nth-child(6) {
+    transition-delay: 0.3s;
+  }
 
   .topics-nav a {
     font-size: 17px;
@@ -1156,12 +1154,6 @@ a:focus {
 
   .topics-menu-toggle:active {
     background-color: rgba(255, 255, 255, 0.12);
-  }
-
-  .hamburger-icon,
-  .hamburger-icon::before,
-  .hamburger-icon::after {
-    background-color: #b0b0b0;
   }
 
   /* Dark mode mobile navigation links */
