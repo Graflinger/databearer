@@ -3,7 +3,8 @@ title: "Staatsverschuldung - Deutschland steht besser da als gedacht"
 date: 2024-10-27
 lastUpdated: 2024-10-27
 excerpt: "Diskussionen um die Staatsverschuldungen drehen sich oft im Kreis, weil die falsche Zahl betrachtet wird. Mit der richtigen Kenngröße sehen wir gleich, dass Deutschland viel besser da steht, als die allgemeine Stimmungslage vermuten lassen würde."
-image: "/images/blog_card_images/test_img.png"
+image: "/images/blog_card_images/2024/deutschlandschuldenbesseralsgedacht.png"
+imageText: "Deutschland hat auch in schlechten Zeiten gespart"
 fullWidthCard: false
 topic: ["wirtschaft", "politik-und-gesellschaft"]
 ---
