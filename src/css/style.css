@@ -22,10 +22,10 @@ a {
   text-decoration: none;
 }
 
-a:focus {
+/* a:focus {
   outline: 2px solid #c4ad61;
   outline-offset: 2px;
-}
+} */
 
 /* Skip to Main Content Link */
 .skip-link {

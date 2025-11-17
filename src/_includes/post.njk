@@ -49,7 +49,7 @@ layout: base.njk
     {{ content | safe }}
 </article>
 
-{%- set relatedPostsList = collections | relatedPosts(page) %}
+{%- set relatedPostsList = collections | relatedPosts(page, topic) %}
 {%- if relatedPostsList.length > 0 %}
     <section class="related-posts">
         <div class="container">

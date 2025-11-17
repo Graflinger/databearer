@@ -31,22 +31,21 @@ module.exports = function (eleventyConfig) {
   });
 
   // Filter to get related posts
-  eleventyConfig.addFilter("relatedPosts", function (collections, currentPage) {
+  eleventyConfig.addFilter("relatedPosts", function (collections, currentPage, currentTopics) {
     const allPosts = collections.post || [];
-    const currentTopics =
-      (currentPage && currentPage.data && currentPage.data.topic) || [];
+    const topics = currentTopics || [];
     const currentUrl = (currentPage && currentPage.url) || "";
 
     // Get posts from the same topic (excluding current post)
     const sameTopic = allPosts.filter((post) => {
       if (post.url === currentUrl) return false;
       const postTopics = post.data.topic || [];
-      return postTopics.some((topic) => currentTopics.includes(topic));
+      return postTopics.some((topic) => topics.includes(topic));
     });
 
     // Sort by date (newest first) and get latest 10
     const latest10SameTopic = sameTopic
-      .sort((a, b) => b.date - a.date)
+      .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))
       .slice(0, 10);
 
     // Randomly select 3 from the latest 10
@@ -60,7 +59,7 @@ module.exports = function (eleventyConfig) {
           post.url !== currentUrl &&
           !sameTopic.some((samePost) => samePost.url === post.url)
       )
-      .sort((a, b) => b.date - a.date)[0];
+      .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))[0];
 
     // Combine: 3 random from same topic + 1 newest across topics
     const result = [...randomThree];
