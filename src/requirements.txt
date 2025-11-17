@@ -1,0 +1,10 @@
+dbt-core==1.8.8
+dbt-duckdb==1.9.0
+duckdb==1.1.1
+ipykernel==6.29.5
+lxml==5.3.0
+openpyxl==3.1.5
+pandas==2.2.3
+pre-commit==3.8.0
+PyYAML==6.0.2
+requests==2.32.3
