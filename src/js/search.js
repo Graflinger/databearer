@@ -109,12 +109,15 @@
         <a href="${result.url}" class="blog-card-link">
           <article class="blog-card blog-card-horizontal">
             <div class="blog-card-image-small">
-              <img src="${result.image || '/images/blog_card_images/test_img.png'}" alt="${escapeHtml(result.title)}" loading="lazy">
+              <img src="${
+                result.image || "/images/blog_card_images/test_img.png"
+              }" alt="${escapeHtml(result.title)}" loading="lazy">
             </div>
             <div class="blog-card-content">
-              <p class="post-date">${date}</p>
-              <h2>${title}</h2>
+            <h2>${title}</h2>
               <p>${excerpt}</p>
+              <p class="post-date">${date}</p>
+              
             </div>
           </article>
         </a>

@@ -3,7 +3,8 @@ title: "Sensationelle Ausschreibungserfolge für die Windkraft"
 date: 2025-06-10
 lastUpdated: 2025-06-11
 excerpt: "Der neuen Regierung wurde ein Geschenk, in Form von herausragenden Ausschreibungsergebnissen für neue Windkraftanlagen, hinterlassen. Wird das weitergeführt oder abgewürgt?"
-image: "/images/blog_card_images/test_img.png"
+image: "/images/blog_card_images/2025/windenergie2.png"
+imageText: "Die Windenergie nimmt noch mehr Fahrt auf"
 fullWidthCard: false
 topic: ["wirtschaft", "politik-und-gesellschaft"]
 ---

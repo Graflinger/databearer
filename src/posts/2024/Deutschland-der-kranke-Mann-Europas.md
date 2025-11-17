@@ -3,7 +3,8 @@ title: "Deutschland der kranke Mann Europas?"
 date: 2024-11-27
 lastUpdated: 2024-11-27
 excerpt: "Die anderen großen europäischen Volkswirtschaften wachsen viel schneller als Deutschland. Hat Deutschland überhaupt noch eine Chance? "
-image: "/images/blog_card_images/test_img.png"
+image: "/images/blog_card_images/2024/deutschlandkrankermann.png"
+imageText: "Ist Deutschland wirklich wieder der kranke Mann Europas?"
 fullWidthCard: false
 topic: ["wirtschaft", "politik-und-gesellschaft"]
 ---

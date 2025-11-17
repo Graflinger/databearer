@@ -2,7 +2,8 @@
 title: "Die Dunkelflaute der Kernkraft: Hitzewellen"
 date: 2025-07-05
 excerpt: "Kernkraft wird durch den Klimawandel immer unzuverlässiger. Hitze und die damit einhergehenden Probleme beim Kühlwasser setzen der Stromerzeugung durch Kernkraft zu."
-image: "/images/blog_card_images/test_img.png"
+image: "/images/blog_card_images/2025/dürrenkernkraftwerke.png"
+imageText: "Kernkraftwerke haben auch mit dem Klimawandel zu kämpfen"
 fullWidthCard: false
 topic: ["energie"]
 ---
