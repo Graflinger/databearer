@@ -244,7 +244,7 @@ a {
 .grid {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 15px;
   max-width: 900px;
   margin: 0 auto;
 }
@@ -259,6 +259,7 @@ a {
 .blog-card {
   border: 1px solid transparent;
   border-radius: 4px;
+  padding: 0px 12px;
   transition: all 0.3s ease;
   background-color: transparent;
   overflow: hidden;
@@ -288,7 +289,7 @@ a {
 .blog-card-image-small img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   transition: transform 0.3s ease;
 }
 
@@ -673,6 +674,15 @@ a {
     display: block;
   }
 
+  .container {
+    padding: 0 4px;
+  }
+
+  .blog-card-horizontal .blog-card-content,
+  .blog-card-full .blog-card-content {
+    padding-left: 0px;
+  }
+
   /* Hide the entire topics navigation bar on mobile */
   .topics-nav {
     display: none;
@@ -847,6 +857,7 @@ a {
 
   .image-caption {
     width: 100%;
+    margin: 0;
   }
 
   .post-content ul,

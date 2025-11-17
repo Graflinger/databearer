@@ -13,8 +13,22 @@ Mir ist wichtig, dass jeglicher Inhalt auf diesen Block für alle freizugänglic
 Ich freu mich über jede Unterstützung - Vielen Dank!
 
 # Gratis Möglichkeiten
+## Folge mir auf social media
+### Bluesky
+
+**[@databearer.bsky.social](https://bsky.app/profile/databearer.bsky.social)**
+
+[Zum Bluesky Profil](https://bsky.app/profile/databearer.bsky.social)
+
+### X (Twitter)
+
+**[@databearerde](https://x.com/databearerde)**
+
+[Zum X Profil](https://x.com/databearerde)
+
 ## Teile meine Beiträge
 
 Dir gefallen die Beiträge hier? Dann teil sie gerne mit deinen Freunden und hilf mir eine größere Reichweite aufzubauen
+
 ## Affiliate Links
 Amazon - Du planst eh einen Einkauf auf Amazon? Dann nutze diesen Link hier um ohne extra Kosten für dich meinen Blog zu unterstützen: [Amazon Affiliate Link](https://amzn.to/47EfRfm)

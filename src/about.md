@@ -26,7 +26,9 @@ Das will ich hier kombinieren mit meinem Interesse an verschiedenen Themen wie:
 
 Mein Ansatz ist nicht nur das datenbasierte Bloggen über diese Themenfelder. Zusätzlich will ich für maximale **Transparenz** sorgen, indem die ganze Datenanalyse - soweit möglich - aus meinem eigenen Open Source Code besteht.
 
-Den Code findest du hier: [GitHub - databearer](https://github.com/Graflinger/databearer)
+Den Code zu den Datenanalysen findest du hier: [GitHub - databearer](https://github.com/Graflinger/databearer)
+
+Das Frontend hier: [GitHub - databearer frontend](https://github.com/Graflinger/databearer-frontend)
 
 ## Feedback willkommen
 
@@ -39,8 +41,6 @@ Diese Transparenz schließt auch eine gewisse Feedbackkultur mit ein. Falls du A
 ### Bluesky
 
 **[@databearer.bsky.social](https://bsky.app/profile/databearer.bsky.social)**
-
-Profil für den datenbasierten Blog databearer.de. Beschäftige mich mit Themen rund um Energiewende, Wirtschaft, Finanzen und sonstigen Bereichen, die ich mit Hilfe von Datenvisualisierung und Analyse durchleuchte.
 
 [Zum Bluesky Profil](https://bsky.app/profile/databearer.bsky.social)
 
