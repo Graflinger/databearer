@@ -628,17 +628,11 @@ a {
 }
 
 .related-posts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 30px;
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
-}
-
-@media (max-width: 600px) {
-  .related-posts-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .related-posts .blog-card {
