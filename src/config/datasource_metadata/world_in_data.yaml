@@ -1,5 +1,5 @@
 tables:
-- name: battery_cell_prices
+- name: battery_cell_prices_combined
   channel: "garden"
   channel_dataset: "benchmark_mineral_intelligence"
   version: "2024-11-29"

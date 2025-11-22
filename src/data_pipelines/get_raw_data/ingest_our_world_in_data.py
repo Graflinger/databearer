@@ -2,42 +2,54 @@ from __future__ import annotations
 
 import logging
 
-from src.tools.datasources.world_bank_api_helper.world_bank_api_helper import (
-    get_world_bank_climate_change_knowledge_pandas_table,
-    read_metadata_from_yaml,
+from src.tools.datasources.our_world_in_data.datasource_utils import (
+    CatalogDataSource,
+    ChartDataSource,
 )
 from src.tools.duckdb_utils.duckdb_utils import get_duckdb_connection
+from owid.catalog import charts
+
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def ingest_world_bank_climate_change_tables():
+def ingest_our_world_in_data():
     """
     Ingests climate change data from the World Bank API into a DuckDB database.
     """
-    queries = read_metadata_from_yaml()
-
-    for query in queries['queries']:
-        name = query["name"]
-        
-        "https://catalog.ourworldindata.org/[channel]/[dataset]/[version]/[dataset]/[table].parquet"
-        df = get_world_bank_climate_change_knowledge_pandas_table(query["value"])
-
+    logging.info("Starting ingestion of Our World in Data datasets")
+    catalog_datasources = CatalogDataSource.load_catalogs()
+    chart_datasources = ChartDataSource.load_charts()
+    
+    for ds in catalog_datasources:
         with get_duckdb_connection() as con:
             con.sql('USE staging')
-
-            con.sql(
-                f"CREATE OR REPLACE TABLE {name} AS SELECT * FROM df",
+            con.execute(
+                f"""
+                CREATE OR REPLACE TABLE {ds.name} AS
+                SELECT * FROM read_parquet('{ds.get_catalog_url()}.parquet')
+                """
             )
-
             con.commit()
+            logging.info(f"Table {ds.name} ingested into duckdb")
 
-            logging.info(f"Table {name} ingested into DuckDB")
+    for ds in chart_datasources:
+        df = charts.get_data(ds.citation_url)
+        with get_duckdb_connection() as con:
+            con.sql('USE staging')
+            con.execute(
+                f"""
+                CREATE OR REPLACE TABLE {ds.name} AS
+                SELECT * FROM df
+                """
+            )
+            con.commit()
+            logging.info(f"Chart data {ds.name} ingested into duckdb")
 
 
 def main():
-    ingest_world_bank_climate_change_tables()
+    ingest_our_world_in_data()
 
 
 if __name__ == '__main__':
