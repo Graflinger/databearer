@@ -4,13 +4,13 @@ sources:
   - name: staging
     schema: staging
     tables:
-      - name: battery_cell_prices_combined
+      - name: owid_battery_cell_prices_combined
         description: "Battery cell prices - Benchmark Mineral Intelligence (2024) with minor processing by Our World in Data"
-      - name: solar_photovoltaic_module_prices
+      - name: owid_solar_photovoltaic_module_prices
         description: "Solar photovoltaic module prices - IRENA (2025); Nemet (2009); Farmer and Lafond (2016) with major processing by Our World in Data"
-      - name: electricity_as_share_of_primary_energy
+      - name: owid_electricity_as_share_of_primary_energy
         description: "Electricity as share of primary energy - Ember (2025); Energy Institute - Statistical Review of World Energy (2025) with major processing by Our World in Data"
-      - name: ev_share
+      - name: owid_ev_share
         description: "Electric vehicle sales share - International Energy Agency. Global EV Outlook 2025. processed by Our World in Data"
-      - name: compute_power
+      - name: owid_compute_power
         description: "Supercomputer power (FLOPS) - Dongarra et al. (2024) with minor processing by Our World in Data"

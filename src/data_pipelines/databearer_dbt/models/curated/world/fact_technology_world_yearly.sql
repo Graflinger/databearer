@@ -3,7 +3,7 @@ WITH batterie_ncm AS (
         date_part('year', CAST(datum AS DATE)) as jahr,
         preis_usd_pro_kwh as batterie_preis_ncm_usd_pro_kwh
     FROM
-        {{ref('batterie_zellpreise')}}
+        {{ref('owid_batterie_zellpreise')}}
     WHERE
         batterie_chemie = 'NCM'
 ),
@@ -12,14 +12,14 @@ solar_preise AS (
         jahr,
         kosten_usd_pro_watt as solar_modul_kosten_usd_pro_watt
     FROM
-        {{ref('solar_modul_preise')}}
+        {{ref('owid_solar_modul_preise')}}
 ),
 supercomputer AS (
     SELECT
         jahr,
         rechenleistung_flops
     FROM
-        {{ref('supercomputer_rechenleistung')}}
+        {{ref('owid_supercomputer_rechenleistung')}}
 ),
 combined AS (
     SELECT

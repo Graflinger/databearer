@@ -27,12 +27,12 @@ def ingest_our_world_in_data():
             con.sql('USE staging')
             con.execute(
                 f"""
-                CREATE OR REPLACE TABLE {ds.name} AS
+                CREATE OR REPLACE TABLE owid_{ds.name} AS
                 SELECT * FROM read_parquet('{ds.get_catalog_url()}.parquet')
                 """
             )
             con.commit()
-            logging.info(f"Table {ds.name} ingested into duckdb")
+            logging.info(f"Table owid_{ds.name} ingested into duckdb")
 
     for ds in chart_datasources:
         df = charts.get_data(ds.citation_url)
@@ -40,12 +40,12 @@ def ingest_our_world_in_data():
             con.sql('USE staging')
             con.execute(
                 f"""
-                CREATE OR REPLACE TABLE {ds.name} AS
+                CREATE OR REPLACE TABLE owid_{ds.name} AS
                 SELECT * FROM df
                 """
             )
             con.commit()
-            logging.info(f"Chart data {ds.name} ingested into duckdb")
+            logging.info(f"Chart data owid_{ds.name} ingested into duckdb")
 
 
 def main():

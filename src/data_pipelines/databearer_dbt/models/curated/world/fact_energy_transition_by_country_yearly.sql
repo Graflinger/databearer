@@ -4,7 +4,7 @@ WITH strom_anteil AS (
         jahr,
         strom_anteil_prozent
     FROM
-        {{ref('strom_anteil_primaerenergie')}}
+        {{ref('owid_strom_anteil_primaerenergie')}}
 ),
 ev_anteil AS (
     SELECT
@@ -12,7 +12,7 @@ ev_anteil AS (
         Jahr as jahr,
         ev_anteil_prozent
     FROM
-        {{ref('ev_share')}}
+        {{ref('owid_ev_share')}}
 ),
 combined AS (
     SELECT

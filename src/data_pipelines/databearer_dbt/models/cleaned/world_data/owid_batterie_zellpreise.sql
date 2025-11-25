@@ -3,4 +3,4 @@ SELECT
     date as datum,
     price as preis_usd_pro_kwh
 FROM
-    {{source('staging','battery_cell_prices_combined')}}
+    {{source('staging','owid_battery_cell_prices_combined')}}
