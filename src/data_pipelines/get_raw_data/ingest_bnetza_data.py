@@ -11,7 +11,7 @@ logger.setLevel(logging.INFO)
 
 
 urls = {
-    'windkraft_ausschreibung': 'vhttps://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/Ausschreibungen/_DL/Statistiken/Statistik_Onshore.xlsx?__blob=publicationFile&v=11',
+    'windkraft_ausschreibung': 'https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/Ausschreibungen/_DL/Statistiken/Statistik_Onshore.xlsx?__blob=publicationFile&v=11',
 }
 
 

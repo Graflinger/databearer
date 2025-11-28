@@ -16,20 +16,20 @@ def ingest_energy_charts():
     with open("src/config/datasource_metadata/energy_charts_queries.yaml", 'r') as file:
         metadata = yaml.safe_load(file)
 
-        for query in metadata["queries"]:
-            logging.info(f"Processing query: {query['name']}")
-            table_name = query["name"]
-            params = query["api_params"]
-            params_permutation = [dict(zip(params.keys(), x)) for x in itertools.product(*params.values())]
+        # Use a single connection for all operations to avoid file locking issues
+        with get_duckdb_connection() as con:
+            for query in metadata["queries"]:
+                logging.info(f"Processing query: {query['name']}")
+                table_name = query["name"]
+                params = query["api_params"]
+                params_permutation = [dict(zip(params.keys(), x)) for x in itertools.product(*params.values())]
 
-            df = pd.DataFrame()
-            for param_dict in params_permutation:
-                logging.info(f"Fetching data for {table_name} with params: {param_dict}")
-                df_result = get_energy_chart_table(endpoint=table_name, params=param_dict)
-                if df_result is not None:
-                    df = pd.concat([df, df_result], ignore_index=True)
-
-            with get_duckdb_connection() as con:
+                df = pd.DataFrame()
+                for param_dict in params_permutation:
+                    logging.info(f"Fetching data for {table_name} with params: {param_dict}")
+                    df_result = get_energy_chart_table(endpoint=table_name, params=param_dict)
+                    if df_result is not None:
+                        df = pd.concat([df, df_result], ignore_index=True)
 
                 con.sql(
                     f"CREATE OR REPLACE TABLE staging.energy_charts_{table_name} "

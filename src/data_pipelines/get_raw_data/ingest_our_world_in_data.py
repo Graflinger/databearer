@@ -21,10 +21,12 @@ def ingest_our_world_in_data():
     logging.info("Starting ingestion of Our World in Data datasets")
     catalog_datasources = CatalogDataSource.load_catalogs()
     chart_datasources = ChartDataSource.load_charts()
-    
-    for ds in catalog_datasources:
-        with get_duckdb_connection() as con:
-            con.sql('USE staging')
+
+    # Use a single connection for all operations to avoid file locking issues
+    with get_duckdb_connection() as con:
+        con.sql('USE staging')
+
+        for ds in catalog_datasources:
             con.execute(
                 f"""
                 CREATE OR REPLACE TABLE owid_{ds.name} AS
@@ -34,10 +36,8 @@ def ingest_our_world_in_data():
             con.commit()
             logging.info(f"Table owid_{ds.name} ingested into duckdb")
 
-    for ds in chart_datasources:
-        df = charts.get_data(ds.citation_url)
-        with get_duckdb_connection() as con:
-            con.sql('USE staging')
+        for ds in chart_datasources:
+            df = charts.get_data(ds.citation_url)
             con.execute(
                 f"""
                 CREATE OR REPLACE TABLE owid_{ds.name} AS
