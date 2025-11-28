@@ -28,9 +28,7 @@ src/
 │   ├── setup/                   # Database initialization
 │   ├── get_raw_data/            # Data ingestion scripts
 │   ├── databearer_dbt/          # dbt transformation project
-│   └── export_data/             # CSV export scripts
-├── orchestration/
-│   └── dagster/                 # Dagster orchestration
+│   └── export_data/             # CSV/Json export scripts
 └── tools/                       # Utility modules
 ```
 
@@ -41,42 +39,7 @@ src/
 1. Ensure a `.data/` folder exists in your root folder
 2. Use the devcontainer (all requirements pre-installed)
 
-### Option 1: Run with Dagster (Recommended)
-
-Dagster provides a web UI for running and monitoring the pipeline:
-
-```bash
-# Start the Dagster UI (development mode)
-./scripts/run_dagster_ui.sh
-
-# Or for production mode
-export DBT_TARGET=prod
-./scripts/run_dagster_ui.sh
-
-# Open http://localhost:3000 in your browser
-# Click "Assets" → "Materialize all" to run the full pipeline
-```
-
-**Command Line Options:**
-```bash
-# Run full pipeline (development)
-./scripts/materialize_pipeline.sh
-
-# Run in production mode
-./scripts/materialize_pipeline.sh --prod
-
-# Skip CSV exports
-./scripts/materialize_pipeline.sh --no-exports
-
-# Run only specific parts
-./scripts/materialize_pipeline.sh --only-ingestion
-./scripts/materialize_pipeline.sh --only-dbt
-./scripts/materialize_pipeline.sh --only-exports
-```
-
-See [docs/DAGSTER_GUIDE.md](docs/DAGSTER_GUIDE.md) for detailed instructions and [docs/DAGSTER_CONFIGURATION.md](docs/DAGSTER_CONFIGURATION.md) for configuration options.
-
-### Option 2: Run Manually
+### Run Manually
 
 If you prefer to run steps individually:
 
@@ -120,18 +83,12 @@ python src/data_pipelines/export_data/economic/germany/income_increases_record_h
 The pipeline follows a **medallion architecture**:
 
 ```
-External APIs → Staging → Cleaned → Curated → CSV Exports
+External APIs/Datasources → Staging → Cleaned → Curated → Exports
 ```
 
 - **Staging**: Raw data as ingested (minimal transformations)
 - **Cleaned**: Standardized data (unpivoted, renamed, type-cast)
-- **Curated**: Business-ready fact tables (aggregated, enriched)
-
-## Documentation
-
-- [Dagster Orchestration Guide](docs/DAGSTER_GUIDE.md) - How to use Dagster for pipeline orchestration
-- [Data Dictionary Guide](docs/HOW_TO_DATA_DICTIONARY.md) - How to view and maintain data documentation
-- [Project Review](PROJECT_REVIEW.md) - Comprehensive project analysis and improvement roadmap
+- **Curated**: Usage-ready fact tables (aggregated, enriched)
 
 ## Release Process
 
