@@ -1,12 +1,5 @@
 {
-    "sqltools.connections": [
-        {
-            "previewLimit": 200,
-            "driver": "DuckDB",
-            "name": "duckdb",
-            "database": "${workspaceFolder:databearer}/.data/duckdb.db"
-        }
-    ],
+    "sqltools.connections": [],
     "sqltools.useNodeRuntime": true,
     "dbt.enableNewLineagePanel": true
 }
