@@ -1,2 +1,3 @@
 _site/
 settings.local.json
+node_modules/
