@@ -1,11 +1,11 @@
 WITH batterie_ncm AS (
     SELECT
-        date_part('year', CAST(datum AS DATE)) as jahr,
-        preis_usd_pro_kwh as batterie_preis_ncm_usd_pro_kwh
+        jahr,
+        preis_usd_pro_kwh as batterie_preis_usd_pro_kwh
     FROM
         {{ref('owid_batterie_zellpreise')}}
     WHERE
-        batterie_chemie = 'NCM'
+        batterie_chemie = 'Average'
 ),
 solar_preise AS (
     SELECT
@@ -24,7 +24,7 @@ supercomputer AS (
 combined AS (
     SELECT
         s.jahr,
-        b.batterie_preis_ncm_usd_pro_kwh,
+        b.batterie_preis_usd_pro_kwh,
         s.solar_modul_kosten_usd_pro_watt,
         sc.rechenleistung_flops
     FROM
@@ -36,15 +36,15 @@ combined AS (
 )
 SELECT
     jahr,
-    batterie_preis_ncm_usd_pro_kwh,
+    batterie_preis_usd_pro_kwh,
     solar_modul_kosten_usd_pro_watt,
     rechenleistung_flops,
-    LAG(batterie_preis_ncm_usd_pro_kwh) OVER (ORDER BY jahr) AS batterie_preis_vorjahr,
+    LAG(batterie_preis_usd_pro_kwh) OVER (ORDER BY jahr) AS batterie_preis_vorjahr,
     LAG(solar_modul_kosten_usd_pro_watt) OVER (ORDER BY jahr) AS solar_kosten_vorjahr,
     LAG(rechenleistung_flops) OVER (ORDER BY jahr) AS rechenleistung_vorjahr,
     round(
-        (batterie_preis_ncm_usd_pro_kwh - LAG(batterie_preis_ncm_usd_pro_kwh) OVER (ORDER BY jahr)) /
-        NULLIF(LAG(batterie_preis_ncm_usd_pro_kwh) OVER (ORDER BY jahr), 0) * 100, 2
+        (batterie_preis_usd_pro_kwh - LAG(batterie_preis_usd_pro_kwh) OVER (ORDER BY jahr)) /
+        NULLIF(LAG(batterie_preis_usd_pro_kwh) OVER (ORDER BY jahr), 0) * 100, 2
     ) AS batterie_preis_veraenderung_prozent,
     round(
         (solar_modul_kosten_usd_pro_watt - LAG(solar_modul_kosten_usd_pro_watt) OVER (ORDER BY jahr)) /
