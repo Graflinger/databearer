@@ -36,13 +36,13 @@ module.exports = [
     xKey: "jahr",
     seriesKeys: [
       "European Union (27)",
-      "World",
       "China",
       "United States",
       "Norway",
       "Germany",
+      "World",
     ],
-    seriesNames: ["EU", "Welt", "China", "USA", "Norwegen", "Deutschland"],
+    seriesNames: ["EU", "China", "USA", "Norwegen", "Deutschland", "Welt"],
     smooth: true,
   },
 
