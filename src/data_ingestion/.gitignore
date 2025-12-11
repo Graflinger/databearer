@@ -1,5 +1,2 @@
 # Ignore all data files
 data/*
-
-# Except the example
-!data/example-data.csv
