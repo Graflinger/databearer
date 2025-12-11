@@ -20,7 +20,7 @@ def export_income_expenses_bund_yearly_to_csv():
             prod_curated.socio_economic_germany_yearly as segy
         LEFT JOIN
             prod_curated.fact_ecnonomy_germany_yearly as fegy
-            ON segy.jahr = fegy.yeaded
+            ON segy.jahr = fegy.year
 
             )
 

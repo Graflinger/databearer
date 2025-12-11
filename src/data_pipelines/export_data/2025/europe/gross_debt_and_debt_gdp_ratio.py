@@ -14,18 +14,18 @@ def export_gross_debt_and_debt_gdp_ratio_to_csv():
             """
         COPY (
         SELECT
-            feey.year AS Jahr,
-            feey.country AS Land,
-            feey.gross_public_debt AS Staatsverchuldung,
-            feey.GDP_current_prices AS 'BIP nominell',
-            feey.debt_to_gdp_ratio AS 'Schulden zu BIP Verhältnis (%)',
-            feey.yearly_new_debt AS 'Jährliche Neuverschuldung',
+            feey.jahr AS Jahr,
+            feey.land AS Land,
+            feey.bruttostaatsverschuldung AS Staatsverchuldung,
+            feey.bip_nominal AS 'BIP nominell',
+            feey.schulden_zu_bip_verhältnis AS 'Schulden zu BIP Verhältnis (%)',
+            feey.neuverschuldung AS 'Jährliche Neuverschuldung',
         FROM
             prod_curated.fact_economy_europe_yearly feey
-        WHERE country = 'Deutschland'
+        WHERE feey.land = 'Deutschland'
         ORDER BY
-            feey.country ASC,
-            feey.year ASC
+            feey.land ASC,
+            feey.jahr ASC
 
 
             )

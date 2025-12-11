@@ -1,0 +1,34 @@
+tables:
+- name: battery_cell_prices_combined
+  channel: "garden"
+  channel_dataset: "benchmark_mineral_intelligence"
+  version: "2024-11-29"
+  dataset: "battery_cell_prices"
+  license: "CC BY"
+  base_url: "https://catalog.ourworldindata.org/"
+  type: "catalog"
+  citation: "Benchmark Mineral Intelligence (2024) – with minor processing by Our World in Data"
+  citation_url: "https://ourworldindata.org/grapher/average-battery-cell-price?tab=table&time=2014-07-01..2024-08-15"
+- name: solar_photovoltaic_module_prices
+  channel: "garden"
+  channel_dataset: "irena"
+  version: "2025-08-22"
+  dataset: "renewable_power_generation_costs"
+  license: "CC BY"
+  base_url: "https://catalog.ourworldindata.org/"
+  type: "catalog"
+  unit: "US$ per watt."
+  citation: "IIRENA (2025); Nemet (2009); Farmer and Lafond (2016) – with major processing by Our World in Data"
+  citation_url: "https://ourworldindata.org/grapher/solar-pv-prices?time=1975..2024&tab=table"
+- name: electricity_as_share_of_primary_energy
+  type: "chart"
+  citation: "Ember (2025); Energy Institute - Statistical Review of World Energy (2025) – with major processing by Our World in Data"
+  citation_url: "https://ourworldindata.org/grapher/electricity-as-a-share-of-primary-energy?tab=line&country=OWID_WRL~CHN~DEU#sources-and-processing"
+- name: ev_share
+  type: "chart"
+  citation: "International Energy Agency. Global EV Outlook 2025. – processed by Our World in Data"
+  citation_url: "https://ourworldindata.org/grapher/electric-car-sales-share"
+- name: compute_power
+  type: "chart"
+  citation: "Dongarra et al. (2024) – with minor processing by Our World in Data"
+  citation_url: "https://ourworldindata.org/grapher/supercomputer-power-flops"

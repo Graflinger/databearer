@@ -1,80 +1,91 @@
 from __future__ import annotations
 
-from io import StringIO
-
 import pandas as pd
 import requests as req
+import io
+import zipfile
 
 from src.credentials import genesis_password
 from src.credentials import genesis_user
-from src.tools.datasources.genesis_api_helper.datasources_utils import datasource_meta_information
+from src.tools.datasources.genesis_api_helper.datasources_utils import (
+    datasource_meta_information,
+)
 
 
-def get_raw_response(name: str, endpoint: str = 'tables'):
+def csvUnZip(response):
     """
-    Calls genesis API with defined endpoint and returns raw response
-
-    Args:
-        name (str): Name of the table
-        endpoint (str, optional): Endpoint of the API. Defaults
-
-    Returns:
-        requests.models.Response: Raw response of the API
+    Unzips the csv file from genesis API response
     """
-
-    table_meta_data = datasource_meta_information(name)
-
-    url = (
-        f"https://www-genesis.destatis.de/genesisWS/rest/2020/data/{endpoint}"
-        f"?username={genesis_user}&password={genesis_password}&name={name}"
-    )
-
-    result = req.get(url, params=table_meta_data.api_params)
-
-    if result.status_code != 200:
-        raise ValueError(f"Failed to fetch data: {result.status_code} - {result.text}")
-
-    return result
+    filebytes = io.BytesIO(response.content)
+    zipFile = zipfile.ZipFile(filebytes)
+    csvFile = zipFile.open(zipFile.namelist()[0])
+    return csvFile
 
 
-def get_pandas_table(name: str, endpoint: str = 'table'):
+def get_pandas_table(table_name: str, endpoint: str = "table"):
     """
     Calls genesis API with defined endpoint and returns
     table as pandas DataFrame
 
     Args:
-        name (str): Name of the table
+        table_name (str): Name of the table
         endpoint (str, optional): Endpoint of the API. Defaults
 
     Returns:
         pandas.DataFrame: Table as pandas DataFrame
     """
-    response = get_raw_response(name, endpoint)
-    raw_data = response.json()['Object']['Content']
+    table_meta_data = datasource_meta_information(table_name)
 
-    table_meta_data = datasource_meta_information(name)
-    index_names = table_meta_data.index_columns
-    begin_split_flag = table_meta_data.begin_split_flag
+    url = "https://www-genesis.destatis.de/genesisWS/rest/2020/"
 
-    # remove unneccessary metadata information
-    cleaned_data_string = raw_data.split(begin_split_flag)[-1]
+    langPref = "de"
 
-    cleaned_data_string = cleaned_data_string.split('\n__________')[0]
+    data = {
+        "name": table_name,
+        "compress": "true",
+        "format": "ffcsv",
+        "transpose": "true",
+        "language": langPref,
+    }
+    data = data | table_meta_data.api_params
 
-    # handle empty values represented as '-'
-    cleaned_data_string = cleaned_data_string.replace(';-;', ';;')
-    cleaned_data_string = cleaned_data_string.replace('-;', ';')
-    cleaned_data_string = cleaned_data_string.replace(';-', ';')
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "username": genesis_user,
+        "password": genesis_password,
+    }
 
-    cleaned_data_string = cleaned_data_string.replace(',', '.')
-    cleaned_data_string = cleaned_data_string.replace(';.', ';')
+    response = req.post(url + "data/tablefile", headers=headers, data=data)
 
-    cleaned_data_string_io = StringIO(cleaned_data_string)
-    cleaned_df = pd.read_csv(cleaned_data_string_io, sep=';')
+    if response.status_code != 200:
+        raise ValueError(
+            f"Failed to fetch data: {response.status_code} - {response.text}"
+        )
 
-    cleaned_df = cleaned_df.reset_index()
+    csvFile = csvUnZip(response)
+    df = pd.read_csv(
+        csvFile, delimiter=";", decimal=",", na_values=["...", ".", "-", "/", "x"]
+    )
 
-    for i in range(0, len(index_names)):
-        cleaned_df.columns.values[i] = index_names[i]
+    columns = table_meta_data.index_columns.copy()
+    columns.append(table_meta_data.year_column)
+    columns.append(table_meta_data.value_column)
 
-    return cleaned_df
+    df_subset = df[columns]
+    df_subset = df_subset.reset_index(drop=True)
+
+    df_pivoted = df_subset.pivot_table(
+        index=table_meta_data.index_columns,
+        columns=table_meta_data.year_column,
+        values=table_meta_data.value_column,
+        aggfunc="sum",
+    )
+
+    df_pivoted = df_pivoted.reset_index()
+    df_pivoted.columns.name = None
+
+    df_pivoted.columns = table_meta_data.index_columns_renamed + list(
+        df_pivoted.columns[len(table_meta_data.index_columns_renamed):]
+    )
+
+    return df_pivoted

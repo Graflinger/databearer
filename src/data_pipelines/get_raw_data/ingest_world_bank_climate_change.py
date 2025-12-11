@@ -18,12 +18,13 @@ def ingest_world_bank_climate_change_tables():
     """
     queries = read_metadata_from_yaml()
 
-    for query in queries['queries']:
-        name = query["name"]
-        df = get_world_bank_climate_change_knowledge_pandas_table(query["value"])
+    # Use a single connection for all operations to avoid file locking issues
+    with get_duckdb_connection() as con:
+        con.sql('USE staging')
 
-        with get_duckdb_connection() as con:
-            con.sql('USE staging')
+        for query in queries['queries']:
+            name = query["name"]
+            df = get_world_bank_climate_change_knowledge_pandas_table(query["value"])
 
             con.sql(
                 f"CREATE OR REPLACE TABLE {name} AS SELECT * FROM df",
