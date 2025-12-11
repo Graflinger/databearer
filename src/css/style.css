@@ -1323,3 +1323,74 @@ a {
     color: #1a1a1a;
   }
 }
+
+/* Chart Section Styles */
+.chart-section {
+  margin: 2.5rem 0;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.chart-section h3 {
+  font-size: 20px;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.post-content .chart-description {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.chart-sources {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+  line-height: 1.3;
+}
+
+.chart-sources strong {
+  font-weight: 600;
+  color: #333;
+}
+
+.chart-sources ul {
+  margin: 0.25rem 0 0 0;
+  padding-left: 1.5rem;
+  font-size: 0.75rem;
+}
+
+.chart-sources li {
+  margin-bottom: 0.15rem;
+}
+
+/* Dark mode chart styles */
+@media (prefers-color-scheme: dark) {
+  .chart-section {
+    background-color: #2a2a2a;
+  }
+
+  .chart-section h3 {
+    color: #e0e0e0;
+  }
+
+  .post-content .chart-description {
+    color: #b0b0b0;
+  }
+
+  .chart-sources {
+    color: #b0b0b0;
+    border-top-color: #404040;
+  }
+
+  .chart-sources strong {
+    color: #e0e0e0;
+  }
+}

@@ -1,6 +1,25 @@
 const { HtmlBasePlugin } = require("@11ty/eleventy");
+const { execSync } = require("child_process");
 
 module.exports = function (eleventyConfig) {
+  // Generate charts before Eleventy build
+  eleventyConfig.on("eleventy.before", async () => {
+    console.log("🎨 Generating charts...");
+    try {
+      execSync('node "src/data_ingestion/generate-charts.js"', {
+        stdio: "inherit",
+      });
+    } catch (error) {
+      console.error("Chart generation failed:", error.message);
+    }
+  });
+
+  // Ignore data ingestion folder
+  eleventyConfig.ignores.add("src/data_ingestion/**");
+
+  // Exclude generated charts from watch to prevent rebuild loop
+  eleventyConfig.watchIgnores.add("src/js/charts/**");
+
   // Copy the CSS directory to output
   eleventyConfig.addPassthroughCopy("src/css");
 
@@ -15,6 +34,11 @@ module.exports = function (eleventyConfig) {
 
   // Copy robots.txt to output
   eleventyConfig.addPassthroughCopy("src/robots.txt");
+
+  // Copy ECharts library to output
+  eleventyConfig.addPassthroughCopy({
+    "node_modules/echarts/dist/echarts.min.js": "js/lib/echarts.min.js",
+  });
 
   // Add a date filter for formatting dates
   eleventyConfig.addFilter("localDate", function (date, locale = "en-US") {
@@ -31,44 +55,47 @@ module.exports = function (eleventyConfig) {
   });
 
   // Filter to get related posts
-  eleventyConfig.addFilter("relatedPosts", function (collections, currentPage, currentTopics) {
-    const allPosts = collections.post || [];
-    const topics = currentTopics || [];
-    const currentUrl = (currentPage && currentPage.url) || "";
+  eleventyConfig.addFilter(
+    "relatedPosts",
+    function (collections, currentPage, currentTopics) {
+      const allPosts = collections.post || [];
+      const topics = currentTopics || [];
+      const currentUrl = (currentPage && currentPage.url) || "";
 
-    // Get posts from the same topic (excluding current post)
-    const sameTopic = allPosts.filter((post) => {
-      if (post.url === currentUrl) return false;
-      const postTopics = post.data.topic || [];
-      return postTopics.some((topic) => topics.includes(topic));
-    });
+      // Get posts from the same topic (excluding current post)
+      const sameTopic = allPosts.filter((post) => {
+        if (post.url === currentUrl) return false;
+        const postTopics = post.data.topic || [];
+        return postTopics.some((topic) => topics.includes(topic));
+      });
 
-    // Sort by date (newest first) and get latest 10
-    const latest10SameTopic = sameTopic
-      .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))
-      .slice(0, 10);
+      // Sort by date (newest first) and get latest 10
+      const latest10SameTopic = sameTopic
+        .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))
+        .slice(0, 10);
 
-    // Randomly select 3 from the latest 10
-    const shuffled = latest10SameTopic.sort(() => 0.5 - Math.random());
-    const randomThree = shuffled.slice(0, 3);
+      // Randomly select 3 from the latest 10
+      const shuffled = latest10SameTopic.sort(() => 0.5 - Math.random());
+      const randomThree = shuffled.slice(0, 3);
 
-    // Get the newest post from all posts (excluding current post and same topic)
-    const newestAcrossTopics = allPosts
-      .filter(
-        (post) =>
-          post.url !== currentUrl &&
-          !sameTopic.some((samePost) => samePost.url === post.url)
-      )
-      .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))[0];
+      // Get the newest post from all posts (excluding current post and same topic)
+      const newestAcrossTopics = allPosts
+        .filter(
+          (post) =>
+            post.url !== currentUrl &&
+            !sameTopic.some((samePost) => samePost.url === post.url)
+        )
+        .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))[0];
 
-    // Combine: 3 random from same topic + 1 newest across topics
-    const result = [...randomThree];
-    if (newestAcrossTopics) {
-      result.push(newestAcrossTopics);
+      // Combine: 3 random from same topic + 1 newest across topics
+      const result = [...randomThree];
+      if (newestAcrossTopics) {
+        result.push(newestAcrossTopics);
+      }
+
+      return result;
     }
-
-    return result;
-  });
+  );
 
   // Add global data for helpers
   eleventyConfig.addGlobalData("helpers", {
@@ -82,23 +109,30 @@ module.exports = function (eleventyConfig) {
 
   // Create topic-specific collections
   eleventyConfig.addCollection("energiePosts", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/posts/**/*.md").filter((post) => {
-      return post.data.topic && post.data.topic.includes("energie");
-    });
+    return collectionApi
+      .getFilteredByGlob("src/posts/**/*.md")
+      .filter((post) => {
+        return post.data.topic && post.data.topic.includes("energie");
+      });
   });
 
   eleventyConfig.addCollection("politikPosts", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/posts/**/*.md").filter((post) => {
-      return (
-        post.data.topic && post.data.topic.includes("politik-und-gesellschaft")
-      );
-    });
+    return collectionApi
+      .getFilteredByGlob("src/posts/**/*.md")
+      .filter((post) => {
+        return (
+          post.data.topic &&
+          post.data.topic.includes("politik-und-gesellschaft")
+        );
+      });
   });
 
   eleventyConfig.addCollection("wirtschaftPosts", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/posts/**/*.md").filter((post) => {
-      return post.data.topic && post.data.topic.includes("wirtschaft");
-    });
+    return collectionApi
+      .getFilteredByGlob("src/posts/**/*.md")
+      .filter((post) => {
+        return post.data.topic && post.data.topic.includes("wirtschaft");
+      });
   });
 
   return {
