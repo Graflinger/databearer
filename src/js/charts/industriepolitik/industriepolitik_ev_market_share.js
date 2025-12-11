@@ -32,7 +32,7 @@
 
     const colors = getThemeColors();
     const xData = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024];
-    const seriesData = [{"key":"European Union (27)","name":"EU","data":[0.01,0.066,0.19,0.47,0.56,0.81,1.1,1.5,1.9,2.9,10,18,21,22,21],"color":null},{"key":"World","name":"Welt","data":[0.012,0.073,0.18,0.29,0.44,0.68,0.96,1.5,2.5,2.7,4.4,9.3,15,18,22],"color":null},{"key":"China","name":"China","data":[0.01,0.034,0.073,0.095,0.4,1,1.5,2.4,4.7,5,5.7,15,29,38,48],"color":null},{"key":"United States","name":"USA","data":[0.012,0.15,0.42,0.71,0.77,0.7,0.99,1.3,2.3,2.1,2.3,4.7,7.4,9.5,10],"color":null},{"key":"Norway","name":"Norwegen","data":[0.28,1.4,3.1,5.8,15,22,29,39,49,56,75,86,89,90,92],"color":null},{"key":"Germany","name":"Deutschland","data":[0.0049,0.052,0.11,0.23,0.45,0.73,0.74,1.6,2,3,14,26,31,24,19],"color":null}];
+    const seriesData = [{"key":"European Union (27)","name":"EU","data":[0.01,0.066,0.19,0.47,0.56,0.81,1.1,1.5,1.9,2.9,10,18,21,22,21],"color":null},{"key":"China","name":"China","data":[0.01,0.034,0.073,0.095,0.4,1,1.5,2.4,4.7,5,5.7,15,29,38,48],"color":null},{"key":"United States","name":"USA","data":[0.012,0.15,0.42,0.71,0.77,0.7,0.99,1.3,2.3,2.1,2.3,4.7,7.4,9.5,10],"color":null},{"key":"Norway","name":"Norwegen","data":[0.28,1.4,3.1,5.8,15,22,29,39,49,56,75,86,89,90,92],"color":null},{"key":"Germany","name":"Deutschland","data":[0.0049,0.052,0.11,0.23,0.45,0.73,0.74,1.6,2,3,14,26,31,24,19],"color":null},{"key":"World","name":"Welt","data":[0.012,0.073,0.18,0.29,0.44,0.68,0.96,1.5,2.5,2.7,4.4,9.3,15,18,22],"color":null}];
 
     const option = {
       backgroundColor: colors.backgroundColor,
