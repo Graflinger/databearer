@@ -1,6 +1,6 @@
 ---
 title: "Technologieoffenheit oder Industriepolitik?"
-date: 2025-12-04
+date: 2025-12-11
 excerpt: "Die aktuell propagierte Technologieoffenheit ist kein Zeichen von starker Industriepolitik - ganz im Gegenteil. Gute Industriepolitik zeichnet sich durch das Erkennen von Zukunftstrends aus."
 image: "/images/blog_card_images/2025/Industriepolitik.png"
 imageText: "Nur mit der richtigen Strategie geht die eigene Industriepolitik auf"
