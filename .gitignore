@@ -5,3 +5,5 @@ __pycache__
 *.ipynb
 dbt.log
 .user.yml
+
+/docs

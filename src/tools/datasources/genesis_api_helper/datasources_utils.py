@@ -39,7 +39,15 @@ class datasource_meta_information:
     @property
     def api_params(self):
         return self.datasources_information['api_params']
-
+    
     @property
-    def begin_split_flag(self):
-        return self.datasources_information['begin_split_flag']
+    def year_column(self):
+        return self.datasources_information['year_column']
+    
+    @property
+    def value_column(self):
+        return self.datasources_information['value_column']
+    
+    @property
+    def index_columns_renamed(self):
+        return self.datasources_information['index_columns_renamed']

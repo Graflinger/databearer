@@ -8,46 +8,68 @@ tables:
     begin_split_flag: "\n;;"
     api_params:
       startyear: 1991
+    year_column: time
+    value_column: value
     index_columns:
+      - value_variable_label
+      - value_unit
+    index_columns_renamed:
       - beschreibung
       - einheit
+
   - name: 71211-0002
     table_database_name: genesis_steuern_einnahmen_712110002
     table_type: pivoted
     description: "Steuereinnahmen: Deutschland, Jahre, Steuerarten nach der Steuerverteilung"
     value_unit: tausend_euro
     value_adjustment: 1000
-    begin_split_flag: "\n;"
     api_params:
       startyear: 1991
+    year_column: time
+    value_column: value
     index_columns:
+      - 2_variable_attribute_label
+    index_columns_renamed:
       - steuerarten
+    
   - name: 81000-0001
     table_database_name: genesis_VGR_BUND_810000001
     table_type: pivoted
     description: "VGR des Bundes - Bruttowertschöpfung, Bruttoinlandsprodukt(nominal/preisbereinigt): Deutschland, Jahre"
     value_unit: billion_euro
     value_adjustment: 1000000000
-    begin_split_flag: "\n;;"
     api_params:
       startyear: 1991
       classifyingvariable1: VGRPB5
       classifyingkey1: VGRJPM
+    year_column: time
+    value_column: value
     index_columns:
+      - 2_variable_attribute_label
+      - value_variable_label
+      - value_unit
+    index_columns_renamed:
       - kategorie
       - beschreibung
       - einheit
+
   - name: 21711-0001
     table_database_name: genesis_bildungsausgaben_217110001
     table_type: pivoted
     description: "Bildungsberichterstattung für nationale Zwecke"
     value_unit: percent
     value_adjustment: 100
-    begin_split_flag: "\n;;"
     api_params:
       startyear: 1991
+    year_column: time
+    value_column: value
     index_columns:
-      - körperschaftsgruppen
-      - gruppe
+      - value_variable_label 
+      - 2_variable_attribute_label
+      - 3_variable_attribute_label
+      - value_unit
+    index_columns_renamed:
       - beschreibung
+      - gruppe
+      - körperschaftsgruppen
       - einheit
