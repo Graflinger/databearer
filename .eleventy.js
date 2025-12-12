@@ -35,6 +35,9 @@ module.exports = function (eleventyConfig) {
   // Copy robots.txt to output
   eleventyConfig.addPassthroughCopy("src/robots.txt");
 
+  // Copy ads.txt to output
+  eleventyConfig.addPassthroughCopy("src/ads.txt");
+
   // Copy ECharts library to output
   eleventyConfig.addPassthroughCopy({
     "node_modules/echarts/dist/echarts.min.js": "js/lib/echarts.min.js",
