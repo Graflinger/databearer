@@ -15,3 +15,15 @@ models:
         description: "Zuschlagsmenge in kW"
         data-tests:
           - not_null
+      - name: gebotsmenge_kw
+        description: "Gebotsmenge in kW"
+        data-tests:
+          - not_null
+      - name: ausschreibungsvolumen_kw
+        description: "Ausschreibungsvolumen in kW"
+        data-tests:
+          - not_null
+      - name: zuschlagswert_ct_kwh_gew_mittel
+        description: "Zuschlagswert in ct/kWh (Gewichteter Mittelwert)"
+        data-tests:
+          - not_null

@@ -1,7 +1,10 @@
 WITH bnetza_windkraft_ausschreibung AS (
     SELECT
         date_part('year', bwa.gebotstermin) as jahr,
-        SUM(bwa.zuschlagsmenge_kw) as zuschlagsmenge_wind_kw
+        SUM(bwa.zuschlagsmenge_kw) as zuschlagsmenge_wind_kw,
+        SUM(gebotsmenge_kw) as gebotsmenge_wind_kw,
+        SUM(ausschreibungsvolumen_kw) as ausschreibungsvolumen_kw,
+        SUM(zuschlagswert_ct_kwh_gew_mittel) as zuschlagswert_ct_kwh_gew_mittel
     FROM
         {{ref('bnetza_windkraft_ausschreibung')}} as bwa
     GROUP BY
@@ -19,6 +22,9 @@ ren_share_daily_avg AS (
 SELECT
     rda.jahr,
     bwa.zuschlagsmenge_wind_kw,
+    bwa.gebotsmenge_wind_kw,
+    bwa.ausschreibungsvolumen_kw,
+    bwa.zuschlagswert_ct_kwh_gew_mittel,
     rda.anteil_eeg
 FROM
     ren_share_daily_avg AS rda

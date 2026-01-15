@@ -24,8 +24,7 @@
           "ms-vscode-remote.remote-wsl",
           "ms-toolsai.jupyter",
           "ritwickdey.LiveServer",
-          "Anthropic.claude-code",
-          "dbcode.dbcode"
+          "Anthropic.claude-code"
         ],
         "settings": {
           "python.testing.pytestArgs": [ "tests" ],

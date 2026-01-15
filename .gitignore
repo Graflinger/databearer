@@ -7,3 +7,5 @@ dbt.log
 .user.yml
 
 /docs
+
+.DS_Store
