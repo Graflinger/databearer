@@ -4,7 +4,7 @@ WITH bnetza_windkraft_ausschreibung AS (
         SUM(bwa.zuschlagsmenge_kw) as zuschlagsmenge_wind_kw,
         SUM(gebotsmenge_kw) as gebotsmenge_wind_kw,
         SUM(ausschreibungsvolumen_kw) as ausschreibungsvolumen_kw,
-        SUM(zuschlagswert_ct_kwh_gew_mittel) as zuschlagswert_ct_kwh_gew_mittel
+        AVG(zuschlagswert_ct_kwh_gew_mittel) as zuschlagswert_ct_kwh_gew_mittel
     FROM
         {{ref('bnetza_windkraft_ausschreibung')}} as bwa
     GROUP BY
