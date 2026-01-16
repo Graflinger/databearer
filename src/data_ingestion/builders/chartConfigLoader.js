@@ -4,9 +4,10 @@ const path = require('path');
 /**
  * Load all chart configuration files from the charts directory
  * @param {string} chartsDir - Path to the charts directory
+ * @param {string} [specificFile] - Optional specific file to load (e.g., "industriepolitik.js")
  * @returns {Array} Array of chart configurations with source file metadata
  */
-function loadChartConfigs(chartsDir) {
+function loadChartConfigs(chartsDir, specificFile = null) {
   const configs = [];
 
   if (!fs.existsSync(chartsDir)) {
@@ -14,7 +15,15 @@ function loadChartConfigs(chartsDir) {
     return configs;
   }
 
-  const files = fs.readdirSync(chartsDir);
+  let files;
+  if (specificFile) {
+    // Load only the specific file
+    files = [specificFile];
+    console.log(`Loading specific file: ${specificFile}`);
+  } else {
+    // Load all .js files in the directory
+    files = fs.readdirSync(chartsDir);
+  }
 
   for (const file of files) {
     // Only load .js files

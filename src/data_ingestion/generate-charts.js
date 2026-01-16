@@ -6,13 +6,15 @@
  * This script automatically discovers and generates all charts defined
  * in the charts/ configuration directory.
  *
- * Usage: node "src/data_ingestion/generate-charts.js"
+ * Usage:
+ *   - Generate all charts: node "src/data_ingestion/generate-charts.js"
+ *   - Generate specific file: node "src/data_ingestion/generate-charts.js" industriepolitik.js
  *
  * To add new charts:
  * 1. Create CSV data files in src/data_ingestion/data/
  * 2. Create a new .js file in src/data_ingestion/charts/
  * 3. Export an array of chart configurations referencing your CSV files
- * 4. Run: npm run build:charts
+ * 4. Run: npm run build:charts [optional-filename.js]
  */
 
 const path = require("path");
@@ -26,10 +28,17 @@ const DATA_DIR = path.join(__dirname, "data");
 const OUTPUT_DIR = path.join(__dirname, "../js/charts");
 const CHARTS_DIR = path.join(__dirname, "charts");
 
-console.log("🎨 Generating charts...\n");
+// Get optional specific file from command line arguments
+const specificFile = process.argv[2];
 
-// Load all chart configurations
-const chartConfigs = loadChartConfigs(CHARTS_DIR);
+if (specificFile) {
+  console.log(`🎨 Generating charts from ${specificFile}...\n`);
+} else {
+  console.log("🎨 Generating charts...\n");
+}
+
+// Load all chart configurations (or just the specific file if provided)
+const chartConfigs = loadChartConfigs(CHARTS_DIR, specificFile);
 
 if (chartConfigs.length === 0) {
   console.log("⚠ No chart configurations found in charts/ directory");
