@@ -4,7 +4,7 @@ WITH bnetza_windkraft_ausschreibung AS (
         bwa.zuschlagsmenge_kw as zuschlagsmenge_wind_kw,
         gebotsmenge_kw as gebotsmenge_wind_kw,
         ausschreibungsvolumen_kw as ausschreibungsvolumen_kw,
-        zuschlagswert_ct_kwh_gew_mittel as zuschlagswert_ct_kwh_gew_mittel
+        round(zuschlagswert_ct_kwh_gew_mittel, 2) as zuschlagswert_ct_kwh_gew_mittel
     FROM
         {{ref('bnetza_windkraft_ausschreibung')}} as bwa
 )
