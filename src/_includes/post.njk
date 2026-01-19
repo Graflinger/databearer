@@ -62,9 +62,9 @@ layout: base.njk
                                 <img src="{{ post.data.image }}" alt="{{ post.data.title }}" loading="lazy">
                             </div>
                             <div class="blog-card-content">
-                                <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
                                 <h2>{{ post.data.title }}</h2>
                                 <p class="post-excerpt">{{ post.data.excerpt }}</p>
+                                <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
                             </div>
                         </article>
                     </a>
