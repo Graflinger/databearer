@@ -21,8 +21,16 @@ module.exports = [
     xAxisLabel: "Datum",
     yAxisLabel: "Menge in kW",
     xKey: "datum",
-    seriesKeys: ["Zuschlagsmenge in kw", "Gebotsmenge in kw"],
-    seriesNames: ["Zuschlagsmenge in kw", "Gebotsmenge in kw"],
+    seriesKeys: [
+      "Zuschlagsmenge in kw",
+      "Ausschreibungsvolumen in kw",
+      "Gebotsmenge in kw",
+    ],
+    seriesNames: [
+      "Zuschlagsmenge in kW",
+      "Ausschreibungsvolumen in kW",
+      "Gebotsmenge in kW",
+    ],
     smooth: true,
   },
 
