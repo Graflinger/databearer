@@ -5,7 +5,4 @@ node_modules/
 # macOS system files
 .DS_Store
 
-*.md
-
-!claude.md
-!readme.md
+PROJECT_REVIEW.md
