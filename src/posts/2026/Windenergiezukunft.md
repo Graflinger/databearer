@@ -3,7 +3,7 @@ title: "Einblicke in die Windkraftauschreibungen 2025"
 date: 2026-01-19
 excerpt: "Robuste Ergebnisse und sinkende Preise markieren ein erfolgreiches Jahr für die Ausschreibungen der Windkraft an Land."
 image: "/images/blog_card_images/2026/windenergie3.png"
-imageText: "2025 war ein erflogreiches Ausschreibungsjahr für die Windenergie an Land"
+imageText: "2025 war ein erfolgreiches Ausschreibungsjahr für die Windenergie an Land"
 fullWidthCard: false
 topic: ["energie", "wirtschaft"]
 ---
@@ -11,12 +11,12 @@ topic: ["energie", "wirtschaft"]
 
 # Das Angebot an Windenergie wird wachsen
 
-Die Ausschreibungen der Bundesnetzagentur haben das Ziel die besten Gebote für das ausgeschriebene Volumen an Nennleistung zu erreichen. Wichtig hier ist, dass zunächst grundsätzlich genug Nachfrage besteht, um das Ausschreibungsvolumen voll abzudecken. Der zweite Faktor ist der Preis für den erzeugten Strom, der den Windkraftanlagenbetreibern garantiert wird. Dieser wird tendenziell geringer, wenn mehr Gebote abegegeben werden und damit mehr Konkurrenz um einen Zuschlag herrscht.
+Die Ausschreibungen der Bundesnetzagentur haben das Ziel die besten Gebote für das ausgeschriebene Volumen an Nennleistung zu erreichen. Wichtig hier ist, dass zunächst grundsätzlich genug Nachfrage besteht, um das Ausschreibungsvolumen voll abzudecken. Der zweite Faktor ist der Preis für den erzeugten Strom, der den Windkraftanlagenbetreibern garantiert wird. Dieser wird tendenziell geringer, wenn mehr Gebote abgegeben werden und damit mehr Konkurrenz um einen Zuschlag herrscht.
 
-Diese Gemengenlage hat für 2025 ein positives Bild abgegeben. In den folgenden Datenvisualisierungen können wir gut erkennen, dass 2025 ein Rekordjahr in der Menge der Zuschlagsmenge war. Außerdem ist die Nachfrage an den Ausschreibungen stark gewachsen und der durchschnittliche Preis gefallen.
+Diese Konstellation zeigt für 2025 ein positives Bild. In den folgenden Datenvisualisierungen können wir gut erkennen, dass 2025 ein Rekordjahr in der Menge der Zuschlagsmenge war. Außerdem ist die Nachfrage an den Ausschreibungen stark gewachsen und der durchschnittliche Preis gefallen.
 
 <div class="chart-section">
-  <h3>Die Zuschlagsmenge der letzen Jahre</h3>
+  <h3>Die Zuschlagsmenge der letzten Jahre</h3>
   <p class="chart-description">
    2025 markiert einen Rekord in der Zuschlagsmenge für Windenergie an Land
   </p>
@@ -49,7 +49,7 @@ Diese Gemengenlage hat für 2025 ein positives Bild abgegeben. In den folgenden 
 
 Nachdem ab der Februarausschreibung 2023 das Ausschreibungsvolumen deutlich anstieg, ist damit auch der durchschnittliche Preis je kWh stark gestiegen. Hier ist klar zu sehen, dass das Ausschreibungsvolumen größer als die Gebotsmenge war, was den Preis nach oben getrieben hat.
 
-Dank gestiegener Nachfrage ist der Preis seit Ende 2024 wieder gesunken und erreichte mit der letzten Ausschreibung 2025 wieder das alte Niveau. Trotz einem noch höheren Ausschreibungsvolumen als Februar 2023 übertrifft die Gebotsmenge nun dise. Damit hat sich im Vergleich zur Phase vor 2023 die Zuschlagsmenge verfierfacht ohne den Preis langfristig nach oben zu treiben. Ein starkes Signal!
+Dank gestiegener Nachfrage ist der Preis seit Ende 2024 wieder gesunken und erreichte mit der letzten Ausschreibung 2025 wieder das alte Niveau. Trotz eines noch höheren Ausschreibungsvolumens als im Februar 2023 übertrifft die Gebotsmenge nun diese. Damit hat sich im Vergleich zur Phase vor 2023 die Zuschlagsmenge vervierfacht, ohne den Preis langfristig nach oben zu treiben. Ein starkes Signal!
 
 <div class="chart-section">
   <h3>Preisentwicklung bei Windkraftausschreibungen</h3>
@@ -68,6 +68,6 @@ Dank gestiegener Nachfrage ist der Preis seit Ende 2024 wieder gesunken und erre
 
 # Windenergie auf einem guten Weg
 
-Die erfolgreichen Ausschreibungen für 2025 werden naturgemäß den Ausbau der Windenergie die nächsten Jahre beschleunigen. Allgemein sind die Grundvoraussetzungen gerade sehr gut. Die Nachfrage steigt, der Preis sinkt und die Menge steigt. Wenn diese Dynamik auch für 2026 beibehalten wird, werden wir hoffentlich wieder gebrochene Rekorde sehen.
+Die erfolgreichen Ausschreibungen für 2025 werden naturgemäß den Ausbau der Windenergie in den nächsten Jahren beschleunigen. Allgemein sind die Grundvoraussetzungen gerade sehr gut. Die Nachfrage steigt, der Preis sinkt und die Menge steigt. Wenn diese Dynamik auch für 2026 beibehalten wird, werden wir hoffentlich wieder neue Rekorde sehen.
 
-Am Ende liegt das aber auch in den Händen der Politik. Dieses Wachstum darf nicht schon wieder abgewürgt werden, wie damals bei der berühmten Altmaierdelle. Erneuerbare Energien haben durch ihre Volatilität gewisse Herausforderungen, insbesondere in der Energiespeicherung. Der sich abzeichnende Boom bei Batteriespeichern kommt hier aber genau zum richtigen Zeitpunkt um einen Unteschied zu machen.
+Am Ende liegt das aber auch in den Händen der Politik. Dieses Wachstum darf nicht schon wieder abgewürgt werden, wie damals bei der berühmten Altmaierdelle. Erneuerbare Energien haben durch ihre Volatilität gewisse Herausforderungen, insbesondere in der Energiespeicherung. Der sich abzeichnende Boom bei Batteriespeichern kommt hier aber genau zum richtigen Zeitpunkt um einen Unterschied zu machen.
