@@ -1353,6 +1353,36 @@ a {
   }
 }
 
+/* Google Ads - Prevent overlap with content */
+.google-auto-placed {
+  position: relative !important;
+  min-height: 280px;
+  margin: 20px 0;
+  z-index: 1;
+}
+
+.google-auto-placed ins {
+  position: relative !important;
+}
+
+/* Ensure post content stays above any absolutely positioned ad elements */
+.post-content {
+  position: relative;
+  z-index: 10;
+}
+
+.post-content p,
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content ul,
+.post-content ol,
+.post-content .chart-section {
+  position: relative;
+  z-index: 10;
+  background-color: inherit;
+}
+
 /* Chart Section Styles */
 .chart-section {
   margin: 2.5rem 0;
