@@ -1,12 +1,12 @@
 ---
-title: "Das fadenscheinige Argument der Rekordsteuereinnahmen"
+title: 'Das fadenscheinige Argument der Rekordsteuereinnahmen'
 date: 2024-10-21
 lastUpdated: 2024-10-23
 excerpt: 'Fast jedes Jahr das gleiche Spiel in den Meldungen verschiedener Zeitungen: "Der Bund nimmt eine Rekordmenge von Steuern ein" - "Die Steuereinnahmen erreichen einen neuen Rekord". Doch was ist dran? Und ist das überhaupt wichtig?'
-image: "/images/blog_card_images/2024/rekordsteuern.png"
-imageText: "Durch Inflation und Wirtschaftswachstum sind Rekordsteuereinnahmen quasi ein Naturgesetz"
+image: '/images/blog_card_images/2024/rekordsteuern.png'
+imageText: 'Durch Inflation und Wirtschaftswachstum sind Rekordsteuereinnahmen quasi ein Naturgesetz'
 fullWidthCard: false
-topic: ["politik-und-gesellschaft"]
+topic: ['politik-und-gesellschaft']
 ---
 
 Die Opposition nutzt diese Meldungen gerne, um die Regierung zu kritisieren, weil sie trotz Rekordeinnahmen Probleme in der Ausarbeitung des Haushalts haben und doch jetzt endlich mal die Steuern senken sollen. Gerne hört man dann immer Argumente, dass der Bund kein Einnahme Problem, sondern ein Ausgabeproblem habe, wenn es um Lücken im Bundeshaushalt geht.
@@ -14,6 +14,7 @@ Die Opposition nutzt diese Meldungen gerne, um die Regierung zu kritisieren, wei
 Auch Befürworter für die Schuldenbremse springen gerne auf diesen Zug und argumentieren, dass es ja genug Geld vorhanden ist, da der Bund schließlich mit Rekordeinnahmen arbeiten kann.
 
 Haben dir kritischen Stimmen nun recht? Auf den ersten Blick, ja. Wenn wir die Entwicklung von Steuern, die der Bund einnimmt, genauer betrachten, ist klar zu erkennen, dass der Bund aktuell mit Rekordeinnahmen arbeiten kann. Zusätzlich nehmen wir auch die Sozialeinnahmen mit ins Bild, und sehen auch hier stetig wachsende Rekordeinnahmen. Jedoch erzählen diese oberflächlichen Zahlen nicht die ganze Geschichte.
+
 <iframe title="Entwicklung Einnahmen Bund " aria-label="Interactive line chart" id="datawrapper-chart-RGyJ5" src="https://datawrapper.dwcdn.net/RGyJ5/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="415" data-external="1"></iframe><script type="text/javascript">!function(){"use strict";window.addEventListener("message",(function(a){if(void 0!==a.data["datawrapper-height"]){var e=document.querySelectorAll("iframe");for(var t in a.data["datawrapper-height"])for(var r=0;r<e.length;r++)if(e[r].contentWindow===a.source){var i=a.data["datawrapper-height"][t]+"px";e[r].style.height=i}}}))}();
 </script>
 
@@ -28,6 +29,6 @@ Mit den Daten in die richtige Perspektive gesetzt lässt sich leicht erkennen, d
 
 ## Was wirklich wichtig ist
 
-Durch einen kritischen Blick auf die Zahlen und durch die Einführung der relevanten Kenngröße -die Steuerquote-, wird einem schnell klar, dass Politiker oder andere öffentliche Personen, die das Argument der Rekordeinnahmen nutzen, sich dabei jedoch nur auf nominale (nicht inflationsbereinigte) Zahlen beziehen, bestenfalls keine Experten in Wirtschafts- und Finanzfragen sind. Schlimmstenfalls einfach plumbe Populistenstrategien benutzen. 
+Durch einen kritischen Blick auf die Zahlen und durch die Einführung der relevanten Kenngröße -die Steuerquote-, wird einem schnell klar, dass Politiker oder andere öffentliche Personen, die das Argument der Rekordeinnahmen nutzen, sich dabei jedoch nur auf nominale (nicht inflationsbereinigte) Zahlen beziehen, bestenfalls keine Experten in Wirtschafts- und Finanzfragen sind. Schlimmstenfalls einfach plumbe Populistenstrategien benutzen.
 
 Viel wichtiger ist jedoch zu erkennen, dass auch hier in dieser Frage einfache Erklärungen uns nicht weiterhelfen. Diskussionen, die sich um die falsche Grundlage drehen sind am Ende fast wertlos.

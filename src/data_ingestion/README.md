@@ -30,9 +30,9 @@ Place your JSON data files in the `data/` directory:
 
 ```json
 [
-  {"date": "2024-01", "value": 120},
-  {"date": "2024-02", "value": 150},
-  {"date": "2024-03", "value": 180}
+  { "date": "2024-01", "value": 120 },
+  { "date": "2024-02", "value": 150 },
+  { "date": "2024-03", "value": 180 }
 ]
 ```
 
@@ -52,12 +52,13 @@ module.exports = [
     yAxisLabel: 'Value',
     xKey: 'date',
     yKey: 'value',
-    smooth: true
-  }
+    smooth: true,
+  },
 ];
 ```
 
 **Benefits of this approach:**
+
 - One file per blog post or topic
 - Easy to organize and find charts
 - No need to modify `generate-charts.js`
@@ -66,11 +67,13 @@ module.exports = [
 ### 3. Run Chart Generation
 
 Charts are generated automatically when you run:
+
 - `npm start` (development server)
 - `npm run build` (production build)
 - `npm run build-ghpages` (GitHub Pages build)
 
 Or manually with:
+
 ```bash
 npm run build:charts
 ```
@@ -98,13 +101,13 @@ In your markdown or HTML files:
 const { buildLineChart } = require('./builders/lineChart');
 
 buildLineChart(data, {
-  containerId: 'my-line-chart',     // Required: DOM element ID
-  title: 'Chart Title',             // Optional
-  xAxisLabel: 'X Axis',             // Optional
-  yAxisLabel: 'Y Axis',             // Optional
-  xKey: 'x',                        // Default: 'x'
-  yKey: 'y',                        // Default: 'y'
-  smooth: false                     // Default: false
+  containerId: 'my-line-chart', // Required: DOM element ID
+  title: 'Chart Title', // Optional
+  xAxisLabel: 'X Axis', // Optional
+  yAxisLabel: 'Y Axis', // Optional
+  xKey: 'x', // Default: 'x'
+  yKey: 'y', // Default: 'y'
+  smooth: false, // Default: false
 });
 ```
 
@@ -114,42 +117,46 @@ buildLineChart(data, {
 const { buildBarChart } = require('./builders/barChart');
 
 buildBarChart(data, {
-  containerId: 'my-bar-chart',      // Required: DOM element ID
-  title: 'Chart Title',             // Optional
-  xAxisLabel: 'Category',           // Optional
-  yAxisLabel: 'Value',              // Optional
-  xKey: 'x',                        // Default: 'x'
-  yKey: 'y',                        // Default: 'y'
-  color: '#5470c6'                  // Optional: bar color
+  containerId: 'my-bar-chart', // Required: DOM element ID
+  title: 'Chart Title', // Optional
+  xAxisLabel: 'Category', // Optional
+  yAxisLabel: 'Value', // Optional
+  xKey: 'x', // Default: 'x'
+  yKey: 'y', // Default: 'y'
+  color: '#5470c6', // Optional: bar color
 });
 ```
 
 ## 🛠️ Utility Functions
 
 ### Load Data
+
 ```javascript
 const { loadData } = require('./builders/utils');
 const data = loadData('path/to/data.json');
 ```
 
 ### Save Chart
+
 ```javascript
 const { saveChart } = require('./builders/utils');
 saveChart(chartJS, 'path/to/output.js');
 ```
 
 ### Transform Data
+
 ```javascript
 const { transformData } = require('./builders/utils');
 const transformed = transformData(data, {
   x: 'originalXKey',
-  y: 'originalYKey'
+  y: 'originalYKey',
 });
 ```
 
 ## 📝 Example Workflow
 
 1. **Export data from DuckDB:**
+
    ```sql
    COPY (SELECT date, value FROM my_table)
    TO 'src/data_ingestion/data/my-data.csv'
@@ -157,13 +164,14 @@ const transformed = transformData(data, {
    ```
 
 2. **Generate chart in `generate-charts.js`:**
+
    ```javascript
    const data = loadData(path.join(DATA_DIR, 'my-data.json'));
    const chartJS = buildLineChart(data, {
      containerId: 'growth-chart',
      title: 'Growth Over Time',
      xKey: 'date',
-     yKey: 'value'
+     yKey: 'value',
    });
    saveChart(chartJS, path.join(OUTPUT_DIR, 'growth-chart.js'));
    ```
@@ -193,17 +201,20 @@ To create a new chart type:
 ## 🔧 Troubleshooting
 
 ### Charts not appearing?
+
 - Check browser console for errors
 - Verify the container ID matches
 - Ensure ECharts library is loaded before your chart script
 - Check that chart generation completed successfully
 
 ### Charts not updating?
+
 - Run `npm run build:charts` manually
 - Check `src/js/charts/` for generated files
 - Clear browser cache
 
 ### Data format issues?
+
 - Ensure JSON is valid (use a JSON validator)
 - Check that xKey and yKey match your data structure
 - Use the `transformData` utility if needed

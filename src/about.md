@@ -17,6 +17,7 @@ Mir ist hier besonders wichtig, aktuelle Diskussionen in den richtigen Kontext z
 Ich bin seit mehreren Jahren als **Data Scientist/Engineer/Analyst** tätig und habe somit viel Erfahrung in der Beschaffung, Aufbereitung und Analyse von Daten.
 
 Das will ich hier kombinieren mit meinem Interesse an verschiedenen Themen wie:
+
 - Wirtschaft
 - Finanzthemen
 - Energiewende

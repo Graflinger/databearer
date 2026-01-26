@@ -29,6 +29,7 @@ Auf databearer speichern wir Daten verschiedener Art. Zum anderen erheben wir ü
 Die Website wird durch Cloudflare gehosted. Anfragen aus Europa sollten im Normalfall auch in Europa verarbeitet werden, falls der Internetprovider kein Routing außerhalb Europas vornimmt.
 
 **Links:**
+
 - [Cloudflare Pages](https://pages.cloudflare.com)
 - [Cloudflare Contact](https://www.cloudflare.com/de-de/impressum-germany/)
 
@@ -54,7 +55,6 @@ Durch das Nutzen der Website werden folgende notwendige Daten erfasst:
 - Uhrzeit zum Zeitpunkt des Zugriffes
 - Menge der gesendeten Daten in Byte
 - Quelle/Verweis, von welchem Sie auf die Seite gelangten
-
 
 ## Cookies
 

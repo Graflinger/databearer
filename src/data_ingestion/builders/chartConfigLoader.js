@@ -34,9 +34,9 @@ function loadChartConfigs(chartsDir) {
 
       if (Array.isArray(chartConfigs)) {
         // Add source file metadata to each config
-        const configsWithMetadata = chartConfigs.map(config => ({
+        const configsWithMetadata = chartConfigs.map((config) => ({
           ...config,
-          _sourceFile: sourceFileName
+          _sourceFile: sourceFileName,
         }));
         configs.push(...configsWithMetadata);
         console.log(`✓ Loaded ${chartConfigs.length} chart(s) from ${file}`);
@@ -68,5 +68,5 @@ function processChartConfig(config, buildFn, data) {
 
 module.exports = {
   loadChartConfigs,
-  processChartConfig
+  processChartConfig,
 };

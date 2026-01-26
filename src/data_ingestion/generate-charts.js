@@ -15,27 +15,25 @@
  * 4. Run: npm run build:charts
  */
 
-const path = require("path");
-const { buildLineChart } = require("./builders/lineChart");
-const { buildBarChart } = require("./builders/barChart");
-const { loadData, saveChart } = require("./builders/utils");
-const { loadChartConfigs } = require("./builders/chartConfigLoader");
+const path = require('path');
+const { buildLineChart } = require('./builders/lineChart');
+const { buildBarChart } = require('./builders/barChart');
+const { loadData, saveChart } = require('./builders/utils');
+const { loadChartConfigs } = require('./builders/chartConfigLoader');
 
 // Configuration
-const DATA_DIR = path.join(__dirname, "data");
-const OUTPUT_DIR = path.join(__dirname, "../js/charts");
-const CHARTS_DIR = path.join(__dirname, "charts");
+const DATA_DIR = path.join(__dirname, 'data');
+const OUTPUT_DIR = path.join(__dirname, '../js/charts');
+const CHARTS_DIR = path.join(__dirname, 'charts');
 
-console.log("🎨 Generating charts...\n");
+console.log('🎨 Generating charts...\n');
 
 // Load all chart configurations
 const chartConfigs = loadChartConfigs(CHARTS_DIR);
 
 if (chartConfigs.length === 0) {
-  console.log("⚠ No chart configurations found in charts/ directory");
-  console.log(
-    "  Create .js files in src/data_ingestion/charts/ to define your charts"
-  );
+  console.log('⚠ No chart configurations found in charts/ directory');
+  console.log('  Create .js files in src/data_ingestion/charts/ to define your charts');
   process.exit(0);
 }
 
@@ -67,33 +65,28 @@ for (const config of chartConfigs) {
 
     // Select builder based on type
     let buildFn;
-    if (config.type === "line") {
+    if (config.type === 'line') {
       buildFn = buildLineChart;
-    } else if (config.type === "bar") {
+    } else if (config.type === 'bar') {
       buildFn = buildBarChart;
     } else {
-      throw new Error(
-        `Unknown chart type: ${config.type}. Use 'line' or 'bar'`
-      );
+      throw new Error(`Unknown chart type: ${config.type}. Use 'line' or 'bar'`);
     }
 
     // Build chart configuration (remove metadata fields)
-    const { type, dataFile, outputFile, _sourceFile, ...chartOptions } = config;
+    const { outputFile, _sourceFile, ...chartOptions } = config;
 
     // Generate chart JavaScript
     const chartJS = buildFn(data, chartOptions);
 
     // Save chart with subdirectory based on source file
-    const outputSubDir = _sourceFile || "default";
+    const outputSubDir = _sourceFile || 'default';
     const outputPath = path.join(OUTPUT_DIR, outputSubDir, outputFile);
     saveChart(chartJS, outputPath);
 
     successCount++;
   } catch (error) {
-    console.error(
-      `✗ Failed to generate ${config.outputFile || "chart"}:`,
-      error.message
-    );
+    console.error(`✗ Failed to generate ${config.outputFile || 'chart'}:`, error.message);
     errorCount++;
   }
 }

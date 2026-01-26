@@ -13,10 +13,10 @@ function loadData(filePath) {
 
     // Parse CSV with headers
     const records = parse(fileContent, {
-      columns: true,        // Use first row as headers
+      columns: true, // Use first row as headers
       skip_empty_lines: true,
-      cast: true,           // Automatically convert numbers
-      trim: true            // Trim whitespace
+      cast: true, // Automatically convert numbers
+      trim: true, // Trim whitespace
     });
 
     return records;
@@ -52,7 +52,7 @@ function saveChart(chartJS, outputPath) {
  * @returns {Array} Transformed data
  */
 function transformData(data, keyMap) {
-  return data.map(item => {
+  return data.map((item) => {
     const transformed = {};
     for (const [newKey, oldKey] of Object.entries(keyMap)) {
       transformed[newKey] = item[oldKey];
@@ -64,5 +64,5 @@ function transformData(data, keyMap) {
 module.exports = {
   loadData,
   saveChart,
-  transformData
+  transformData,
 };

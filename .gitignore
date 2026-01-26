@@ -2,5 +2,6 @@ _site/
 settings.local.json
 node_modules/
 
+local/*
 # macOS system files
 .DS_Store

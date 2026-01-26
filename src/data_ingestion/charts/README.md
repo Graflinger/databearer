@@ -23,10 +23,10 @@ Each `.js` file should export an array of chart configurations:
 module.exports = [
   {
     // Required fields
-    type: 'line',                    // 'line' or 'bar'
-    dataFile: 'my-data.json',        // File in data/ directory
-    outputFile: 'my-chart.js',       // Output filename
-    containerId: 'my-chart',         // HTML element ID
+    type: 'line', // 'line' or 'bar'
+    dataFile: 'my-data.json', // File in data/ directory
+    outputFile: 'my-chart.js', // Output filename
+    containerId: 'my-chart', // HTML element ID
 
     // Chart options (optional)
     title: 'Chart Title',
@@ -45,8 +45,8 @@ module.exports = [
     // Multi-series (both line and bar)
     seriesKeys: ['sales', 'expenses', 'profit'],
     seriesNames: ['Sales', 'Expenses', 'Profit'],
-    colors: ['#5470c6', '#91cc75', '#fac858']
-  }
+    colors: ['#5470c6', '#91cc75', '#fac858'],
+  },
 ];
 ```
 
@@ -73,8 +73,8 @@ module.exports = [
     yAxisLabel: 'Price ($/Watt)',
     xKey: 'year',
     yKey: 'price',
-    smooth: true
-  }
+    smooth: true,
+  },
 ];
 ```
 
@@ -93,8 +93,8 @@ module.exports = [
     xKey: 'quarter',
     seriesKeys: ['revenue', 'costs', 'profit'],
     seriesNames: ['Revenue', 'Costs', 'Profit'],
-    smooth: false
-  }
+    smooth: false,
+  },
 ];
 ```
 
@@ -113,8 +113,8 @@ module.exports = [
     xKey: 'country',
     seriesKeys: ['solar', 'wind', 'hydro'],
     seriesNames: ['Solar', 'Wind', 'Hydro'],
-    stacked: false
-  }
+    stacked: false,
+  },
 ];
 ```
 
@@ -133,8 +133,8 @@ module.exports = [
     xKey: 'year',
     seriesKeys: ['transport', 'industry', 'buildings'],
     seriesNames: ['Transport', 'Industry', 'Buildings'],
-    stacked: true
-  }
+    stacked: true,
+  },
 ];
 ```
 
@@ -149,10 +149,12 @@ module.exports = [
 ## 🚨 Common Issues
 
 **Charts not generating?**
+
 - Check that your file exports an array
 - Verify all required fields are present
 - Check data file exists in `data/` directory
 
 **Empty file?**
+
 - Export an empty array: `module.exports = [];`
 - Add configurations as you create them

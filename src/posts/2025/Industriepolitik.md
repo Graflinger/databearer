@@ -1,11 +1,11 @@
 ---
-title: "Technologieoffenheit oder Industriepolitik?"
+title: 'Technologieoffenheit oder Industriepolitik?'
 date: 2025-12-11
-excerpt: "Die aktuell propagierte Technologieoffenheit ist kein Zeichen von starker Industriepolitik - ganz im Gegenteil. Gute Industriepolitik zeichnet sich durch das Erkennen von Zukunftstrends aus."
-image: "/images/blog_card_images/2025/Industriepolitik.png"
-imageText: "Nur mit der richtigen Strategie geht die eigene Industriepolitik auf"
+excerpt: 'Die aktuell propagierte Technologieoffenheit ist kein Zeichen von starker Industriepolitik - ganz im Gegenteil. Gute Industriepolitik zeichnet sich durch das Erkennen von Zukunftstrends aus.'
+image: '/images/blog_card_images/2025/Industriepolitik.png'
+imageText: 'Nur mit der richtigen Strategie geht die eigene Industriepolitik auf'
 fullWidthCard: false
-topic: ["wirtschaft", "politik-und-gesellschaft", "energie"]
+topic: ['wirtschaft', 'politik-und-gesellschaft', 'energie']
 ---
 
 # Technologieoffenheit wird unsere Industrie nicht retten
@@ -14,7 +14,7 @@ Jetzt ist es geschafft, das so viel aufbeschworene Unheil des Verbrennerverbots 
 
 Während der ein oder andere Politiker sich gerade daran erfreut, dass deutsche Hersteller schon bald Massen an mit E-Fuels und hocheffizienten Verbrennern ausgestatteten Fahrzeugen verkaufen werden, scheint die Realität doch eine andere zu sein. Global fallen die Märkte für Verbrennerfahrzeuge weg und E-Autos befinden sich auf dem Vormarsch.
 
-Die Hoffnung muss wohl sein, dass sich die deutschen Autohersteller nicht von kurzfristigen einfachen Profiten blenden lassen und weiterhin alles geben um vor allem mit der chinesischen Konkurrenz mithalten zu können. Sonst blüht der Automobilindustrie ein ähnliches Schicksal wie der PV Industrie in Deutschland. 
+Die Hoffnung muss wohl sein, dass sich die deutschen Autohersteller nicht von kurzfristigen einfachen Profiten blenden lassen und weiterhin alles geben um vor allem mit der chinesischen Konkurrenz mithalten zu können. Sonst blüht der Automobilindustrie ein ähnliches Schicksal wie der PV Industrie in Deutschland.
 
 PV hat sich als Technologie mittlerweile durchgesetzt, weil die absehbare Preisreduzierung durch Skaleneffekte und Verbesserungen der Fertigungstechnik sie zu der billigsten Stromherstellungsmethode hat aufsteigen lassen. Trotz dieser Aussicht wurde der deutschen PV Industrie der Boden unter den Füßen weggezogen. Die Preissignale bei der Emobilität sind ähnlich.
 
@@ -40,7 +40,7 @@ PV hat sich als Technologie mittlerweile durchgesetzt, weil die absehbare Preisr
 
 ## Der Preisverfall der Batterien ermöglicht den Aufstieg des E-Autos
 
-Vor wenigen Jahren waren E-Autos noch eine Randerscheinung und kaum massentauglich. Das ändert sich schnell durch den Preisverfall im Batteriesegment und andere Skaleneffekte. Wer jetzt noch auf Verbrenner setzt, wettet auf einen schrumpfenden Markt. 
+Vor wenigen Jahren waren E-Autos noch eine Randerscheinung und kaum massentauglich. Das ändert sich schnell durch den Preisverfall im Batteriesegment und andere Skaleneffekte. Wer jetzt noch auf Verbrenner setzt, wettet auf einen schrumpfenden Markt.
 
 <div class="chart-section">
   <h3>Marktanteil Elektrofahrzeuge</h3>
@@ -76,7 +76,7 @@ Gepaart mit dem Fakt, dass erneuerbare Energien und insbesondere PV jetzt schon 
   </div>
 </div>
 
-Intelligente Industriepolitik sollte dies erkennen und die Elektrifizierung in allen Bereichen, nicht nur der Mobilität, fördern. Über das Heizen mit Wärmepumpen, der Elektrifizierung von Industrieprozessen bis zum Betrieb von riesigen Rechenzentren. Ganz neue Möglichkeiten eröffnen sich, wenn durch kluge Politik Industrien gestärkt werden, die diesen Effekt voll nutzen können. 
+Intelligente Industriepolitik sollte dies erkennen und die Elektrifizierung in allen Bereichen, nicht nur der Mobilität, fördern. Über das Heizen mit Wärmepumpen, der Elektrifizierung von Industrieprozessen bis zum Betrieb von riesigen Rechenzentren. Ganz neue Möglichkeiten eröffnen sich, wenn durch kluge Politik Industrien gestärkt werden, die diesen Effekt voll nutzen können.
 
 Ganz zu schweigen von den Vorteilen nicht mehr abhängig vom fossilen Importen zu sein und Klimaschutz zu betreiben. Das wäre nur ein (sehr) netter Nebeneffekt.
 
@@ -98,8 +98,8 @@ Das vorherrschende Thema derzeit kann auch in einem solchen Bericht über Indust
   </div>
 </div>
 
-## Intelligente Industriepolitik 
+## Intelligente Industriepolitik
 
-Industriepolitik, die Wirtschaftswachstum erzeugen soll, muss auf in der Realität fundierten Trends basieren. Der hocheffiziente Verbrennungsmotor und fossile Brennstoffe werden dieses Ziel kaum erreichen. 
+Industriepolitik, die Wirtschaftswachstum erzeugen soll, muss auf in der Realität fundierten Trends basieren. Der hocheffiziente Verbrennungsmotor und fossile Brennstoffe werden dieses Ziel kaum erreichen.
 
 Deutschland hat alle Möglichkeiten sich auch in der Zukunft gegen globale Konkurrenz zu behaupten, wenn die richtigen Zukunftsthemen fokusiert werden.

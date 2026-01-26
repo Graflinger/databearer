@@ -28,14 +28,14 @@ function buildBarChart(data, options = {}) {
     seriesNames = null,
     colors = null,
     color = null,
-    stacked = false
+    stacked = false,
   } = options;
 
   if (!containerId) {
     throw new Error('containerId is required');
   }
 
-  const xData = data.map(d => d[xKey]);
+  const xData = data.map((d) => d[xKey]);
 
   // Multi-series mode
   const isMultiSeries = seriesKeys && Array.isArray(seriesKeys) && seriesKeys.length > 0;
@@ -45,11 +45,11 @@ function buildBarChart(data, options = {}) {
     seriesData = seriesKeys.map((key, index) => ({
       key,
       name: seriesNames && seriesNames[index] ? seriesNames[index] : key,
-      data: data.map(d => d[key]),
-      color: colors && colors[index] ? colors[index] : null
+      data: data.map((d) => d[key]),
+      color: colors && colors[index] ? colors[index] : null,
     }));
   } else {
-    const yData = data.map(d => d[yKey]);
+    const yData = data.map((d) => d[yKey]);
     seriesData = [{ key: yKey, name: yAxisLabel || yKey, data: yData, color: color }];
   }
 
@@ -93,13 +93,17 @@ function buildBarChart(data, options = {}) {
 
     const option = {
       backgroundColor: colors.backgroundColor,
-      title: ${title ? `{
+      title: ${
+        title
+          ? `{
         text: ${JSON.stringify(title)},
         left: 'center',
         textStyle: {
           color: colors.textColor
         }
-      }` : 'undefined'},
+      }`
+          : 'undefined'
+      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -111,13 +115,17 @@ function buildBarChart(data, options = {}) {
           color: colors.textColor
         }
       },
-      ${isMultiSeries ? `legend: {
+      ${
+        isMultiSeries
+          ? `legend: {
         data: seriesData.map(s => s.name),
         top: ${title ? "'12%'" : "'5%'"},
         textStyle: {
           color: colors.textColor
         }
-      },` : ''}
+      },`
+          : ''
+      }
       xAxis: {
         type: 'category',
         data: xData,
@@ -176,7 +184,7 @@ function buildBarChart(data, options = {}) {
         left: '10%',
         right: '10%',
         bottom: '15%',
-        top: ${isMultiSeries ? (title ? "'25%'" : "'18%'") : (title ? "'15%'" : "'10%'")}
+        top: ${isMultiSeries ? (title ? "'25%'" : "'18%'") : title ? "'15%'" : "'10%'"}
       },
       animation: true,
       animationDuration: 1000,
