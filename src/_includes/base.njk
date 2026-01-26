@@ -5,23 +5,33 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         {# Primary Meta Tags #}
-        <title>{{ title or "Databearer Blog" }}</title>
-        <meta name="title" content="{{ title or 'Databearer Blog' }}">
-        <meta name="description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
-        <meta name="author" content="Databearer">
+        {%- set metaTitleValue = metaTitle or title or "Databearer Blog" -%}
+        {%- set metaDescriptionValue = metaDescription or excerpt or description or "Datenjournalismus mit Fokus auf Energie, Politik und Wirtschaft" -%}
+        {%- set metaImageValue = image or site.url ~ "/images/logo_transparent.png" -%}
+        {%- if metaImageValue and metaImageValue.indexOf("http") != 0 -%}
+            {%- set metaImageValue = site.url ~ metaImageValue -%}
+        {%- endif -%}
+        <title>{{ metaTitleValue }}</title>
+        <meta name="title" content="{{ metaTitleValue }}">
+        <meta name="description" content="{{ metaDescriptionValue }}">
+        <meta name="author" content="{{ site.author }}">
 
         {# Canonical URL #}
         <link rel="canonical" href="{{ site.url }}{{ page.url }}">
 
+        {# Google Ad Sense #}
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6146112394026755"
+     crossorigin="anonymous"></script>
+
         {# Open Graph / Facebook #}
         <meta property="og:type" content="{{ 'article' if date else 'website' }}">
         <meta property="og:url" content="{{ site.url }}{{ page.url }}">
-        <meta property="og:title" content="{{ title or 'Databearer Blog' }}">
-        <meta property="og:description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
-        <meta property="og:image" content="{{ image or site.url ~ '/images/logo_transparent.png' }}">
-        <meta property="og:image:width" content="1070">
-        <meta property="og:image:height" content="388">
-        <meta property="og:image:alt" content="{{ title or 'Databearer Blog' }}">
+        <meta property="og:title" content="{{ metaTitleValue }}">
+        <meta property="og:description" content="{{ metaDescriptionValue }}">
+        <meta property="og:image" content="{{ metaImageValue }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:image:alt" content="{{ metaTitleValue }}">
         <meta property="og:locale" content="de_DE">
         <meta property="og:site_name" content="Databearer">
         {% if date %}
@@ -34,10 +44,10 @@
         {# Twitter #}
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
-        <meta name="twitter:title" content="{{ title or 'Databearer Blog' }}">
-        <meta name="twitter:description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
-        <meta name="twitter:image" content="{{ image or site.url ~ '/images/logo_transparent.png' }}">
-        <meta name="twitter:image:alt" content="{{ title or 'Databearer Blog' }}">
+        <meta name="twitter:title" content="{{ metaTitleValue }}">
+        <meta name="twitter:description" content="{{ metaDescriptionValue }}">
+        <meta name="twitter:image" content="{{ metaImageValue }}">
+        <meta name="twitter:image:alt" content="{{ metaTitleValue }}">
 
         {# Favicon #}
         <link rel="icon" type="image/png" sizes="32x32" href="/images/logo_circle.png">
@@ -54,18 +64,18 @@
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
-                "@type": "{{ 'Article' if date else 'WebSite' }}",
+                "@type": "{{ 'Article' if date else (isTopicPage and 'CollectionPage' or 'WebSite') }}",
                 {% if date %}
                     "headline": "{{ title }}",
-                    "description": "{{ excerpt or description }}",
-                    "image": "{{ image or site.url ~ '/images/logo_transparent.png' }}",
+                    "description": "{{ metaDescriptionValue }}",
+                    "image": "{{ metaImageValue }}",
                     "datePublished": "{{ date | htmlDateString }}",
                     {% if lastUpdated %}
                         "dateModified": "{{ lastUpdated | htmlDateString }}",
                     {% endif %}
                     "author": {
-                        "@type": "Organization",
-                        "name": "Databearer"
+                        "@type": "Person",
+                        "name": "{{ site.author }}"
                     },
                     "publisher": {
                         "@type": "Organization",
@@ -75,10 +85,14 @@
                             "url": "{{ site.url }}/images/logo_transparent.png"
                         }
                     }
+                {% elif isTopicPage %}
+                    "name": "{{ title }}",
+                    "url": "{{ site.url }}{{ page.url }}",
+                    "description": "{{ metaDescriptionValue }}"
                 {% else %}
                     "name": "Databearer Blog",
                     "url": "{{ site.url }}",
-                    "description": "Insights and analysis on data, energy, and technology trends"
+                    "description": "{{ site.description }}"
                 {% endif %}
             }
         </script>
@@ -212,7 +226,14 @@
 
                     </ul>
                 </nav>
-                <p class="copyright">&copy; {{ helpers.year }} Databearer. All rights reserved.</p>
+                <p class="copyright">
+                    &copy; {{ helpers.year }} Databearer. All rights reserved.
+                    <a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository" class="github-link">
+                        <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                        </svg>
+                    </a>
+                </p>
             </div>
         </footer>
         <script src="/js/menu.js"></script>

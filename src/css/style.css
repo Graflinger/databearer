@@ -216,6 +216,14 @@ a {
   text-align: center;
 }
 
+.topic-intro {
+  max-width: 900px;
+  margin: 0 auto 24px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #4b5563;
+}
+
 /* Featured Post - Full Width */
 .featured-post {
   margin-bottom: 50px;
@@ -435,6 +443,22 @@ a {
   text-align: center;
   color: #999;
   font-size: 14px;
+}
+
+.github-link {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle;
+  color: #999;
+  transition: color 0.2s ease;
+}
+
+.github-link:hover {
+  color: #333;
+}
+
+.github-link svg {
+  display: block;
 }
 
 /* Breadcrumb Navigation */

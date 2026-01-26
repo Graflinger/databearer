@@ -6,7 +6,7 @@ excerpt: 'Der neuen Regierung wurde ein Geschenk, in Form von herausragenden Aus
 image: '/images/blog_card_images/2025/windenergie2.png'
 imageText: 'Die Windenergie nimmt noch mehr Fahrt auf'
 fullWidthCard: false
-topic: ['wirtschaft', 'politik-und-gesellschaft']
+topic: ["wirtschaft", "energie"]
 ---
 
 Die Rahmenbedingungen für Windkraft scheinen so gut zu sein, wie schon seit Jahren nicht mehr. Während der Ausbau langsam in Fahrt kommt, sind die Ausschreibungserfolge mehr als beachtlich. Diese dienen als Frühindikator, um den zukünftigen Ausbau der Windenergie abschätzen zu können. Hierbei ist es wichtig zu wissen, dass es nach erfolgreicher Ausschreibung bis zu 36 Monate dauern kann, bis tatsächlich ein Windrad errichtet wurde und Strom erzeugt. Ein Blick in die Ausschreibungsergebnisse der letzten Jahre zeigt, dass seit 2023 ein beachtlicher Aufschwung zu erkennen ist:

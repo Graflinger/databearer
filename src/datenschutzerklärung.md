@@ -44,6 +44,18 @@ Weitere Informationen zur Einhaltung der DSGVO-Vorschriften (GDPR Compliance), d
 - [Data Processing Agreement](https://www.cloudflare.com/de-de/cloudflare-customer-dpa/)
 - [Privacy Policy](https://www.cloudflare.com/de-de/privacypolicy/)
 
+## Cloudflare Web Analytics
+
+Diese Website nutzt Cloudflare Web Analytics zur Erhebung von Nutzungskennzahlen. Im Gegensatz zu vielen anderen Analytics-Anbietern verfolgt Cloudflare ein datenschutzfreundliches Modell:
+
+- Es werden **keine clientseitigen Informationen** verwendet, die etwa mithilfe von Cookies oder localStorage erfasst werden
+- Es werden **keine "Fingerabdrücke"** von Einzelpersonen in Form ihrer IP-Adresse, User Agent Strings oder anderer Daten für Analysezwecke erstellt
+- Es werden **keine Besucherprofile** erstellt und Besucher werden nicht mit Werbung erneut angesprochen
+
+Die Analytics sind nicht invasiv und respektieren die Privatsphäre der Besucher.
+
+Weitere Informationen: [Cloudflare Web Analytics](https://www.cloudflare.com/de-de/web-analytics/)
+
 ## Technische oder notwendige Daten
 
 Durch das Nutzen der Website werden folgende notwendige Daten erfasst:
@@ -58,7 +70,7 @@ Durch das Nutzen der Website werden folgende notwendige Daten erfasst:
 
 ## Cookies
 
-Es werden folgende Cookies benutzt:
+Folgende Cookies werden benutzt, falls Werbungen aktiv sind:
 
 Für die Services von Google AdSense werden Cookies erhoben. Dies wird durch ein Cookieformular abgefragt. Cookies können jederzeit widerrufen werden. Am Ende jeder Seite taucht links unten ein Kontrollfeld auf, um die Cookieeinstellungen ändern zu können.
 
