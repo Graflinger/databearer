@@ -9,7 +9,7 @@ topic: ["energie", "wirtschaft"]
 ---
 <script src="/js/lib/echarts.min.js"></script>
 
-# Das Angebot an Windenergie wird wachsen
+## Das Angebot an Windenergie wird wachsen
 
 Die Ausschreibungen der Bundesnetzagentur haben das Ziel die besten Gebote für das ausgeschriebene Volumen an Nennleistung zu erreichen. Wichtig hier ist, dass zunächst grundsätzlich genug Nachfrage besteht, um das Ausschreibungsvolumen voll abzudecken. Der zweite Faktor ist der Preis für den erzeugten Strom, der den Windkraftanlagenbetreibern garantiert wird. Dieser wird tendenziell geringer, wenn mehr Gebote abgegeben werden und damit mehr Konkurrenz um einen Zuschlag herrscht.
 
@@ -45,7 +45,7 @@ Diese Konstellation zeigt für 2025 ein positives Bild. In den folgenden Datenvi
   </div>
 </div>
 
-# Und wie viel kostet der Windstrom nun?
+## Und wie viel kostet der Windstrom nun?
 
 Nachdem ab der Februarausschreibung 2023 das Ausschreibungsvolumen deutlich anstieg, ist damit auch der durchschnittliche Preis je kWh stark gestiegen. Hier ist klar zu sehen, dass das Ausschreibungsvolumen größer als die Gebotsmenge war, was den Preis nach oben getrieben hat.
 
@@ -66,7 +66,7 @@ Dank gestiegener Nachfrage ist der Preis seit Ende 2024 wieder gesunken und erre
   </div>
 </div>
 
-# Windenergie auf einem guten Weg
+## Windenergie auf einem guten Weg
 
 Die erfolgreichen Ausschreibungen für 2025 werden naturgemäß den Ausbau der Windenergie in den nächsten Jahren beschleunigen. Allgemein sind die Grundvoraussetzungen gerade sehr gut. Die Nachfrage steigt, der Preis sinkt und die Menge steigt. Wenn diese Dynamik auch für 2026 beibehalten wird, werden wir hoffentlich wieder neue Rekorde sehen.
 

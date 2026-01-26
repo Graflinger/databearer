@@ -8,7 +8,7 @@ fullWidthCard: false
 topic: ["wirtschaft", "politik-und-gesellschaft", "energie"]
 ---
 
-# Technologieoffenheit wird unsere Industrie nicht retten
+## Technologieoffenheit wird unsere Industrie nicht retten
 
 Jetzt ist es geschafft, das so viel aufbeschworene Unheil des Verbrennerverbots ab 2035 in der EU wurde aufgehoben. Endlich ist unsere Automobilindustrie sicher und kann wieder aufblühen. Oder etwa nicht?
 

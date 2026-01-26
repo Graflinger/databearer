@@ -12,13 +12,16 @@ pagination:
       {{ header }}
     </h1>
   {%- endif %}
+  {%- if intro %}
+    <p class="topic-intro">{{ intro }}</p>
+  {%- endif %}
   <div class="grid">
     {%- for post in pagination.items %}
       <a href="{{ post.url }}" class="blog-card-link">
         {%- if post.data.fullWidthCard and useFullCard %}
           <article class="blog-card blog-card-full">
             <div class="blog-card-image-full">
-              <img src="{{ post.data.image}}" alt="{{ post.data.title }}" loading="lazy">
+              <img src="{{ post.data.image}}" alt="{{ post.data.title }}" loading="lazy" width="1200" height="630">
             </div>
             <div class="blog-card-content">
               <h2>{{ post.data.title }}</h2>
@@ -29,7 +32,7 @@ pagination:
         {%- else %}
           <article class="blog-card blog-card-horizontal">
             <div class="blog-card-image-small">
-              <img src="{{ post.data.image}}" alt="{{ post.data.title }}" loading="lazy">
+              <img src="{{ post.data.image}}" alt="{{ post.data.title }}" loading="lazy" width="1200" height="630">
             </div>
             <div class="blog-card-content">
               <h2>{{ post.data.title }}</h2>
