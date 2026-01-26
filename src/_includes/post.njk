@@ -39,11 +39,21 @@ layout: base.njk
 
     {%- if image %}
         <div class="post-header-image">
-            <img src="{{ image }}" alt="{{ title }}" loading="eager">
+            <img src="{{ image }}" alt="{{ title }}" loading="eager" width="1200" height="630">
             {%- if imageText %}
                 <p class="image-caption">{{ imageText }}</p>
             {%- endif %}
         </div>
+    {%- endif %}
+
+    {%- if topic and topic.length > 0 %}
+        <p class="post-topics">
+            {%- for topicItem in topic %}
+                <a href="/themen/{{ topicItem }}" class="post-topic-link">
+                    {% if topicItem == 'energie' %}Energie{% elif topicItem == 'wirtschaft' %}Wirtschaft{% elif topicItem == 'politik-und-gesellschaft' %}Politik & Gesellschaft{% else %}{{ topicItem }}{% endif %}
+                </a>
+            {%- endfor %}
+        </p>
     {%- endif %}
 
     {{ content | safe }}
@@ -59,7 +69,7 @@ layout: base.njk
                     <a href="{{ post.url }}" class="blog-card-link">
                         <article class="blog-card blog-card-horizontal">
                             <div class="blog-card-image-small">
-                                <img src="{{ post.data.image }}" alt="{{ post.data.title }}" loading="lazy">
+                                <img src="{{ post.data.image }}" alt="{{ post.data.title }}" loading="lazy" width="1200" height="630">
                             </div>
                             <div class="blog-card-content">
                                 <h2>{{ post.data.title }}</h2>

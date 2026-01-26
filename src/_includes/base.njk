@@ -5,10 +5,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         {# Primary Meta Tags #}
-        <title>{{ title or "Databearer Blog" }}</title>
-        <meta name="title" content="{{ title or 'Databearer Blog' }}">
-        <meta name="description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
-        <meta name="author" content="Databearer">
+        {%- set metaTitleValue = metaTitle or title or "Databearer Blog" -%}
+        {%- set metaDescriptionValue = metaDescription or excerpt or description or "Datenjournalismus mit Fokus auf Energie, Politik und Wirtschaft" -%}
+        {%- set metaImageValue = image or site.url ~ "/images/logo_transparent.png" -%}
+        {%- if metaImageValue and metaImageValue.indexOf("http") != 0 -%}
+            {%- set metaImageValue = site.url ~ metaImageValue -%}
+        {%- endif -%}
+        <title>{{ metaTitleValue }}</title>
+        <meta name="title" content="{{ metaTitleValue }}">
+        <meta name="description" content="{{ metaDescriptionValue }}">
+        <meta name="author" content="{{ site.author }}">
 
         {# Canonical URL #}
         <link rel="canonical" href="{{ site.url }}{{ page.url }}">
@@ -16,12 +22,12 @@
         {# Open Graph / Facebook #}
         <meta property="og:type" content="{{ 'article' if date else 'website' }}">
         <meta property="og:url" content="{{ site.url }}{{ page.url }}">
-        <meta property="og:title" content="{{ title or 'Databearer Blog' }}">
-        <meta property="og:description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
-        <meta property="og:image" content="{{ image or site.url ~ '/images/logo_transparent.png' }}">
-        <meta property="og:image:width" content="1070">
-        <meta property="og:image:height" content="388">
-        <meta property="og:image:alt" content="{{ title or 'Databearer Blog' }}">
+        <meta property="og:title" content="{{ metaTitleValue }}">
+        <meta property="og:description" content="{{ metaDescriptionValue }}">
+        <meta property="og:image" content="{{ metaImageValue }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:image:alt" content="{{ metaTitleValue }}">
         <meta property="og:locale" content="de_DE">
         <meta property="og:site_name" content="Databearer">
         {% if date %}
@@ -34,10 +40,10 @@
         {# Twitter #}
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
-        <meta name="twitter:title" content="{{ title or 'Databearer Blog' }}">
-        <meta name="twitter:description" content="{{ excerpt or description or 'Databearer Blog - Insights and analysis on data, energy, and technology trends' }}">
-        <meta name="twitter:image" content="{{ image or site.url ~ '/images/logo_transparent.png' }}">
-        <meta name="twitter:image:alt" content="{{ title or 'Databearer Blog' }}">
+        <meta name="twitter:title" content="{{ metaTitleValue }}">
+        <meta name="twitter:description" content="{{ metaDescriptionValue }}">
+        <meta name="twitter:image" content="{{ metaImageValue }}">
+        <meta name="twitter:image:alt" content="{{ metaTitleValue }}">
 
         {# Favicon #}
         <link rel="icon" type="image/png" sizes="32x32" href="/images/logo_circle.png">
@@ -54,18 +60,18 @@
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
-                "@type": "{{ 'Article' if date else 'WebSite' }}",
+                "@type": "{{ 'Article' if date else (isTopicPage and 'CollectionPage' or 'WebSite') }}",
                 {% if date %}
                     "headline": "{{ title }}",
-                    "description": "{{ excerpt or description }}",
-                    "image": "{{ image or site.url ~ '/images/logo_transparent.png' }}",
+                    "description": "{{ metaDescriptionValue }}",
+                    "image": "{{ metaImageValue }}",
                     "datePublished": "{{ date | htmlDateString }}",
                     {% if lastUpdated %}
                         "dateModified": "{{ lastUpdated | htmlDateString }}",
                     {% endif %}
                     "author": {
-                        "@type": "Organization",
-                        "name": "Databearer"
+                        "@type": "Person",
+                        "name": "{{ site.author }}"
                     },
                     "publisher": {
                         "@type": "Organization",
@@ -75,10 +81,14 @@
                             "url": "{{ site.url }}/images/logo_transparent.png"
                         }
                     }
+                {% elif isTopicPage %}
+                    "name": "{{ title }}",
+                    "url": "{{ site.url }}{{ page.url }}",
+                    "description": "{{ metaDescriptionValue }}"
                 {% else %}
                     "name": "Databearer Blog",
                     "url": "{{ site.url }}",
-                    "description": "Insights and analysis on data, energy, and technology trends"
+                    "description": "{{ site.description }}"
                 {% endif %}
             }
         </script>
