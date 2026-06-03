@@ -1,0 +1,19 @@
+# Secrets — never commit
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Jupyter scratch
+*-checkpoint.ipynb
+
+# OS
+.DS_Store
+
+# NOTE: generated images go to IMAGE_OUTPUT_DIR (default ../generated-images),
+# which lives OUTSIDE this folder. Ignore it from the monorepo root .gitignore:
+#   generated-images/

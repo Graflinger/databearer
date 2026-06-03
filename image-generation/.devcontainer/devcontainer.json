@@ -1,0 +1,35 @@
+{
+    "name": "Python environment",
+    "image": "mcr.microsoft.com/devcontainers/python:1-3.13-bullseye",
+    "features": {
+      "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+      "ghcr.io/devcontainers/features/azure-cli:1": {},
+      "ghcr.io/devcontainers/features/common-utils:2": {}
+    },
+    "postAttachCommand": "sh .devcontainer/postAttachCommand.sh",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "mads-hartmann.bash-ide-vscode",
+          "dbaeumer.vscode-eslint",
+          "editorconfig.editorconfig",
+          "donjayamanne.python-extension-pack",
+          "formulahendry.docker-explorer",
+          "ms-python.flake8",
+          "ms-vscode-remote.remote-containers",
+          "ms-vscode-remote.remote-wsl",
+          "ms-toolsai.jupyter",
+          "ritwickdey.LiveServer",
+          "Anthropic.claude-code"
+        ],
+        "settings": {
+          "python.testing.pytestArgs": [ "tests" ],
+          "python.testing.unittestEnabled": false,
+          "python.testing.pytestEnabled": true,
+          "terminal.integrated.env.linux": {
+            "PYTHONPATH": "${containerWorkspaceFolder}"
+          }
+        }
+      }
+    }
+  }
