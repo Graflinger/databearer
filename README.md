@@ -1,99 +1,53 @@
-# databearer blog
+# databearer
 
-Creating transparency through open sourcing the code used to create the data analysis for my blog
+Monorepo for the **databearer** data-journalism blog (https://blog.databearer.de).
 
-## Technologies Used
+Public and open-sourced for reproducibility/transparency of the data analysis. A separate
+**private** `video-generator` project (not in this repo) consumes the published site to produce videos.
 
-- **Devcontainer** for easy reusability and maintainability
-- **DuckDB** as compute engine
-- **dbt** for organizing data transformation
-- **Dagster** for pipeline orchestration
-- **Datawrapper** for visualization
+## Structure
 
-## Data Sources
+| Folder | What | Stack |
+|--------|------|-------|
+| [`pipeline/`](pipeline/) | Data pipeline — ingest, transform, export datasets/CSV | Python, DuckDB, dbt |
+| [`frontend/`](frontend/) | The blog site (consumes the data, renders charts) | Eleventy (11ty) v3, Apache ECharts |
+| [`image-generation/`](image-generation/) | Generates blog header/card images | Python, Azure FLUX |
 
-- **GENESIS**: German statistical office (VGR, taxes, education)
-- **AMECO**: EU economic indicators (debt, GDP)
-- **BNetzA**: German Federal Network Agency (wind auctions)
-- **Energy Charts**: Fraunhofer ISE (renewable energy data)
-- **World Bank**: Climate projections
-- **Our World in Data**: Global statistics
+Data flow: **pipeline** produces datasets → **frontend** renders them as posts/charts →
+**image-generation** creates header images → finals land in `frontend/src/images/blog_card_images/`.
 
-## Project Structure
+## Important: running the pipeline
 
-```
-src/
-├── config/                      # Configuration and metadata
-├── data_pipelines/
-│   ├── setup/                   # Database initialization
-│   ├── get_raw_data/            # Data ingestion scripts
-│   ├── databearer_dbt/          # dbt transformation project
-│   └── export_data/             # CSV/Json export scripts
-└── tools/                       # Utility modules
-```
-
-## Quick Start
-
-### Prerequisites
-
-1. Ensure a `.data/` folder exists in your root folder
-2. Use the devcontainer (all requirements pre-installed)
-
-### Run Manually
-
-If you prefer to run steps individually:
-
-#### 1. Setup DuckDB
+The pipeline code uses repo-relative paths (`src/config/...`, `.data/output/...`) and
+`from src...` imports. After the monorepo move it must be run **from the `pipeline/` directory**
+(so `pipeline/` is the working dir and on `PYTHONPATH`). The devcontainer is preconfigured for this
+(`PYTHONPATH=${containerWorkspaceFolder}/pipeline`).
 
 ```bash
-python src/data_pipelines/setup/duckdb_setup.py
+cd pipeline
+pip install -r requirements.txt
+# run pipeline scripts from here
 ```
 
-Sets up an empty database with the staging schema.
-
-#### 2. Import Raw Data
+## Frontend
 
 ```bash
-# Run individual ingestion scripts
-python src/data_pipelines/get_raw_data/ingest_genesis_data.py
-python src/data_pipelines/get_raw_data/ingest_ameco_data.py
-python src/data_pipelines/get_raw_data/ingest_bnetza_data.py
-python src/data_pipelines/get_raw_data/ingest_energy_charts_data.py
-python src/data_pipelines/get_raw_data/ingest_world_bank_climate_change.py
-python src/data_pipelines/get_raw_data/ingest_our_world_in_data.py
+cd frontend
+npm install
+npm start          # dev server + hot reload
+npm run build      # production build -> _site
 ```
 
-#### 3. Run dbt Transformations
+Hosting: **Cloudflare Pages**, built from this repo with **Root directory = `frontend`**,
+served at `blog.databearer.de`.
+
+## Image generation
 
 ```bash
-dbt run --profiles-dir src/data_pipelines/databearer_dbt/ --project-dir src/data_pipelines/databearer_dbt/
+cd image-generation
+cp .env.example .env   # fill in AZURE_FLUX_API_KEY
+# run image_generation_flux.ipynb
 ```
 
-#### 4. Export Data
-
-```bash
-# Run individual export scripts
-python src/data_pipelines/export_data/energy/germany/wind_energy_awarded_germany.py
-python src/data_pipelines/export_data/economic/germany/income_increases_record_highs.py
-# ... other export scripts
-```
-
-## Data Pipeline Architecture
-
-The pipeline follows a **medallion architecture**:
-
-```
-External APIs/Datasources → Staging → Cleaned → Curated → Exports
-```
-
-- **Staging**: Raw data as ingested (minimal transformations)
-- **Cleaned**: Standardized data (unpivoted, renamed, type-cast)
-- **Curated**: Usage-ready fact tables (aggregated, enriched)
-
-## Release Process
-
-Each blog entry which relies on data will get release notes and an associated tag
-
-## Contributing
-
-This project is open-sourced to provide transparency for blog data analysis. Feel free to explore the code and provide feedback!
+Generated images are written to `../generated-images/` (gitignored). Curate finals into
+`frontend/src/images/blog_card_images/`.

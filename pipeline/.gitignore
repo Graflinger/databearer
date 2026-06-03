@@ -1,0 +1,24 @@
+# ===== Pipeline (data pipeline) .gitignore =====
+# Run pipeline scripts from THIS folder (pipeline/) so that relative paths
+# like `src/config/...` and `.data/output/...` resolve correctly.
+
+# Local data, generated docs, logs
+.data/
+docs/
+logs/
+
+# Python
+__pycache__/
+.venv/
+*.pyc
+
+# Local config / secrets
+credentials.*
+.user.yml
+dbt.log
+
+# Scratch notebooks (pipeline only)
+*.ipynb
+
+# OS
+.DS_Store
