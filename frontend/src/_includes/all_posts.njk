@@ -1,0 +1,62 @@
+---
+layout: base.njk
+pagination:
+  data: collections.post
+  size: 10
+  reverse: true
+---
+
+<section class="blog-grid">
+  {%- if header %}
+    <h1>
+      {{ header }}
+    </h1>
+  {%- endif %}
+  {%- if intro %}
+    <p class="topic-intro">{{ intro }}</p>
+  {%- endif %}
+  <div class="grid">
+    {%- for post in pagination.items %}
+      <a href="{{ post.url }}" class="blog-card-link">
+        {%- if post.data.fullWidthCard and useFullCard %}
+          <article class="blog-card blog-card-full">
+            <div class="blog-card-image-full">
+              <img src="{{ post.data.image}}" alt="{{ post.data.title }}" loading="lazy" width="1200" height="630">
+            </div>
+            <div class="blog-card-content">
+              <h2>{{ post.data.title }}</h2>
+              <p class="post-excerpt">{{ post.data.excerpt }}</p>
+              <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
+            </div>
+          </article>
+        {%- else %}
+          <article class="blog-card blog-card-horizontal">
+            <div class="blog-card-image-small">
+              <img src="{{ post.data.image}}" alt="{{ post.data.title }}" loading="lazy" width="1200" height="630">
+            </div>
+            <div class="blog-card-content">
+              <h2>{{ post.data.title }}</h2>
+              <p class="post-excerpt">{{ post.data.excerpt }}</p>
+              <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
+            </div>
+          </article>
+        {%- endif %}
+      </a>
+    {%- endfor %}
+  </div>
+
+  {%- if pagination.href.previous or pagination.href.next and not disablePagination %}
+    <nav class="pagination">
+      {%- if pagination.href.previous %}
+        <a href="{{ pagination.href.previous }}" class="pagination-link">← Neuere Beiträge</a>
+      {%- endif %}
+
+      <span class="pagination-info">Seite {{ pagination.pageNumber + 1 }} von {{ pagination.pages.length }}</span>
+
+      {%- if pagination.href.next %}
+        <a href="{{ pagination.href.next }}" class="pagination-link">Ältere Beiträge →</a>
+      {%- endif %}
+    </nav>
+  {%- endif %}
+
+</section>
