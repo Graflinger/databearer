@@ -1,0 +1,26 @@
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+.pagination-link {
+  padding: 10px 20px;
+  background-color: #d9c176;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-link:hover {
+  background-color: #c4ad61;
+}
+
+.pagination-info {
+  color: #666;
+  font-size: 14px;
+}

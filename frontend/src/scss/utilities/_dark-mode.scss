@@ -1,0 +1,207 @@
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+
+  .blog-card h2 {
+    color: #e0e0e0;
+  }
+
+  .blog-card p {
+    color: #b4a4a4;
+  }
+
+  .post-content h1,
+  .post-content h2,
+  .post-content h3,
+  .post-content p {
+    color: #e0e0e0;
+  }
+
+  /* Post content dark mode */
+  .post-content {
+    background-color: #1a1a1a;
+  }
+
+  .pagination {
+    border-top-color: #333;
+  }
+
+  .pagination-info {
+    color: #b0b0b0;
+  }
+
+  .site-footer {
+    background-color: #1a1a1a;
+    border-top-color: #333;
+  }
+
+  .site-header {
+    background-color: #1a1a1a;
+    border-bottom-color: #333;
+  }
+
+  .topics-nav {
+    border-bottom-color: #333;
+  }
+
+  .topics-nav a {
+    color: #b0b0b0;
+  }
+
+  .topics-nav a:hover {
+    background-color: #d9c176;
+    color: #1a1a1a;
+  }
+
+  /* Mobile menu dark mode */
+  .topics-menu {
+    background-color: #1a1a1a;
+  }
+
+  .topics-menu li {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .menu-backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  .topics-menu-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .topics-menu-toggle:active {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+
+  /* Dark mode mobile navigation links */
+  @media (max-width: 768px) {
+    .topics-nav a {
+      border-bottom-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .topics-nav a:hover,
+    .topics-nav a:focus {
+      background-color: rgba(196, 173, 97, 0.15);
+      color: #d9c176;
+    }
+
+    .topics-nav a[aria-current='page'] {
+      background-color: rgba(196, 173, 97, 0.2);
+      color: #d9c176;
+    }
+  }
+
+  /* .blog-card {
+    background-color: #2a2a2a;
+    border-color: #404040; */
+
+  /* .blog-card:hover {
+    border-color: #d9c176;
+    box-shadow: 0 4px 12px rgba(217, 193, 118, 0.3);
+  } */
+
+  .footer-nav a {
+    color: #b0b0b0;
+  }
+
+  .footer-nav a:hover {
+    color: #d9c176;
+  }
+
+  .copyright {
+    color: #888;
+  }
+
+  /* Breadcrumb dark mode */
+  .breadcrumb ol {
+    color: #b0b0b0;
+  }
+
+  .breadcrumb li[aria-current='page'] {
+    color: #e0e0e0;
+  }
+
+  .breadcrumb li:not(:last-child)::after {
+    color: #666;
+  }
+
+  .image-caption {
+    color: #b0b0b0;
+  }
+
+  .post-meta {
+    border-bottom-color: #333;
+    color: #b0b0b0;
+  }
+
+  .post-published {
+    color: #b0b0b0;
+  }
+
+  .post-updated {
+    color: #d9c176;
+  }
+
+  /* Related posts dark mode */
+  .related-posts {
+    background-color: #1a1a1a;
+    border-top-color: #333;
+  }
+
+  .related-posts-title {
+    color: #e0e0e0;
+  }
+
+  /* 404 dark mode */
+  .error-404-subtitle {
+    color: #e0e0e0;
+  }
+
+  .error-404-text {
+    color: #b0b0b0;
+  }
+
+  .error-404-suggestions {
+    border-top-color: #333;
+  }
+
+  .error-404-suggestions h3 {
+    color: #e0e0e0;
+  }
+
+  /* Search page dark mode */
+  #search-input {
+    background-color: #2a2a2a;
+    border-color: #404040;
+    color: #e0e0e0;
+  }
+
+  #search-input:focus {
+    border-color: #c4ad61;
+  }
+
+  .search-info {
+    color: #b0b0b0;
+  }
+
+  .search-results-count {
+    color: #e0e0e0;
+  }
+
+  .no-results {
+    color: #b0b0b0;
+  }
+
+  .no-results h2 {
+    color: #e0e0e0;
+  }
+
+  .search-highlight {
+    background-color: #ffeb3b;
+    color: #1a1a1a;
+  }
+}

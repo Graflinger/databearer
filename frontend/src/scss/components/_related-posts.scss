@@ -1,0 +1,27 @@
+/* Related Posts Section */
+.related-posts {
+  margin-top: 60px;
+  padding: 40px 0;
+  border-top: 2px solid #e0e0e0;
+  background-color: #fafafa;
+}
+
+.related-posts-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
+  color: #1a1a1a;
+}
+
+.related-posts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.related-posts .blog-card {
+  height: 100%;
+}

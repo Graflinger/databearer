@@ -1,0 +1,39 @@
+---
+permalink: /feed.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ site.title or "Databearer Blog" }}</title>
+  <subtitle>{{ site.description or "Datenbasierte Beiträge zu Themen wie Energie, Wirschaft und Politik" }}</subtitle>
+  <link href="{{ site.url }}/feed.xml" rel="self"/>
+  <link href="{{ site.url }}/"/>
+  <updated>{{ collections.post[0].date | htmlDateString }}</updated>
+  <id>{{ site.url }}/</id>
+  <author>
+    <name>{{ site.author or "Databearer" }}</name>
+  </author>
+
+  {%- for post in (collections.post | reverse).slice(0, 20) %}
+    <entry>
+      <title>{{ post.data.title }}</title>
+      <link href="{{ site.url }}{{ post.url }}"/>
+      <updated>{{ (post.data.lastUpdated or post.date) | htmlDateString }}</updated>
+      <id>{{ site.url }}{{ post.url }}</id>
+      <content type="html">
+        <![CDATA[
+      {%- if post.data.image %}
+      <img src="{{ site.url }}{{ post.data.image }}" alt="{{ post.data.title }}" />
+      {%- endif %}
+      {{ post.templateContent | safe }}
+    ]]>
+      </content>
+      <summary>{{ post.data.excerpt or post.data.description }}</summary>
+      {%- if post.data.topic %}
+        {%- for topicItem in post.data.topic %}
+          <category term="{{ topicItem }}"/>
+        {%- endfor %}
+      {%- endif %}
+    </entry>
+  {%- endfor %}
+</feed>

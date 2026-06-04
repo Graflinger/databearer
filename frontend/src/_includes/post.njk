@@ -1,0 +1,85 @@
+---
+layout: base.njk
+---
+
+{%- if topic and topic.length > 0 %}
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="/themen/{{ topic[0] }}">
+                    {% if topic[0] == 'energie' %}Energie{% elif topic[0] == 'wirtschaft' %}Wirtschaft{% elif topic[0] == 'politik-und-gesellschaft' %}Politik & Gesellschaft{% else %}{{ topic[0] }}
+                    {% endif %}
+                </a>
+            </li>
+            <li aria-current="page">{{ title }}</li>
+        </ol>
+    </nav>
+{%- endif %}
+
+<article class="post-content">
+
+    <h1>{{ title }}</h1>
+    <p>
+        {{ excerpt }}
+    </p>
+
+    <div class="post-meta">
+        <time class="post-published" datetime="{{ date | htmlDateString }}">
+            Veröffentlicht: {{ date | localDate(site.locale) }}
+        </time>
+        {%- if lastUpdated %}
+            <time class="post-updated" datetime="{{ lastUpdated | htmlDateString }}">
+            Aktualisiert: {{ lastUpdated | localDate(site.locale) }}
+            </time>
+        {%- endif %}
+    </div>
+
+    {%- if image %}
+        <div class="post-header-image">
+            <img src="{{ image }}" alt="{{ title }}" loading="eager" width="1200" height="630">
+            {%- if imageText %}
+                <p class="image-caption">{{ imageText }}</p>
+            {%- endif %}
+        </div>
+    {%- endif %}
+
+    {%- if topic and topic.length > 0 %}
+        <p class="post-topics">
+            {%- for topicItem in topic %}
+                <a href="/themen/{{ topicItem }}" class="post-topic-link">
+                    {% if topicItem == 'energie' %}Energie{% elif topicItem == 'wirtschaft' %}Wirtschaft{% elif topicItem == 'politik-und-gesellschaft' %}Politik & Gesellschaft{% else %}{{ topicItem }}{% endif %}
+                </a>
+            {%- endfor %}
+        </p>
+    {%- endif %}
+
+    {{ content | safe }}
+</article>
+
+{%- set relatedPostsList = collections | relatedPosts(page, topic) %}
+{%- if relatedPostsList.length > 0 %}
+    <section class="related-posts">
+        <div class="container">
+            <h2 class="related-posts-title">Verwandte Beiträge</h2>
+            <div class="related-posts-grid">
+                {%- for post in relatedPostsList %}
+                    <a href="{{ post.url }}" class="blog-card-link">
+                        <article class="blog-card blog-card-horizontal">
+                            <div class="blog-card-image-small">
+                                <img src="{{ post.data.image }}" alt="{{ post.data.title }}" loading="lazy" width="1200" height="630">
+                            </div>
+                            <div class="blog-card-content">
+                                <h2>{{ post.data.title }}</h2>
+                                <p class="post-excerpt">{{ post.data.excerpt }}</p>
+                                <p class="post-date">{{ post.data.date | localDate(site.locale) }}</p>
+                            </div>
+                        </article>
+                    </a>
+                {%- endfor %}
+            </div>
+        </div>
+    </section>
+{%- endif %}

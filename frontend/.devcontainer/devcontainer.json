@@ -1,0 +1,94 @@
+{
+  "name": "Databearer Frontend - Eleventy",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": {
+      "CLAUDE_CODE_VERSION": "latest"
+    }
+  },
+
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "upgradePackages": true,
+      "username": "vscode",
+      "userUid": "automatic",
+      "userGid": "automatic"
+    }
+  },
+
+  // Configure tool-specific properties
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "EditorConfig.EditorConfig",
+        "ronnidc.nunjucks",
+        "okitavera.vscode-nunjucks-formatter",
+        "yzhang.markdown-all-in-one",
+        "DavidAnson.vscode-markdownlint",
+        "eamodio.gitlens",
+        "christian-kohler.path-intellisense",
+        "wayou.vscode-todo-highlight",
+        "Anthropic.claude-code"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[nunjucks]": {
+          "editor.defaultFormatter": "okitavera.vscode-nunjucks-formatter"
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+        },
+        "files.associations": {
+          "*.njk": "nunjucks",
+          "*.md": "markdown"
+        }
+      }
+    }
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally
+  "forwardPorts": [8080],
+
+  // Port attributes
+  "portsAttributes": {
+    "8080": {
+      "label": "Eleventy Dev Server",
+      "onAutoForward": "notify"
+    }
+  },
+
+  // Use 'postCreateCommand' to run commands after the container is created
+  "postCreateCommand": "npm install",
+
+  // Use 'postStartCommand' to run commands after the container starts
+  // "postStartCommand": "npm start",
+
+  // Set the default user
+  "remoteUser": "vscode",
+
+  // Mount the local workspace folder
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=claude-code-config-${devcontainerId},target=/home/node/.claude,type=volume"
+  ],
+
+  // Working directory
+  "workspaceFolder": "/workspace",
+
+  // Environment variables
+  "containerEnv": {
+    "NODE_ENV": "development"
+  }
+}

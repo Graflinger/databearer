@@ -1,11 +1,18 @@
-credentials.*
-.venv
-.data
-__pycache__
-*.ipynb
-dbt.log
-.user.yml
+# ===== Monorepo root .gitignore =====
+# Subprojects have their own .gitignore: pipeline/, frontend/, image-generation/
 
-/docs
-
+# OS
 .DS_Store
+
+# Python (cross-cutting)
+**/__pycache__/
+*.pyc
+.venv/
+
+# Secrets — never commit any .env or credentials
+**/.env
+!**/.env.example
+**/credentials.*
+
+# Generated image output (scratch dir, lives outside image-generation/)
+generated-images/
