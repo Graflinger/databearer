@@ -27,9 +27,9 @@ Das will ich hier kombinieren mit meinem Interesse an verschiedenen Themen wie:
 
 Mein Ansatz ist nicht nur das datenbasierte Bloggen über diese Themenfelder. Zusätzlich will ich für maximale **Transparenz** sorgen, indem die ganze Datenanalyse - soweit möglich - aus meinem eigenen Open Source Code besteht.
 
-Den Code zu den Datenanalysen findest du hier: [GitHub - databearer](https://github.com/Graflinger/databearer)
+Den Code zu den Datenanalysen findest du hier: [GitHub - databearer (Pipeline)](https://github.com/Graflinger/databearer/tree/main/pipeline)
 
-Das Frontend hier: [GitHub - databearer frontend](https://github.com/Graflinger/databearer-frontend)
+Das Frontend hier: [GitHub - databearer (Frontend)](https://github.com/Graflinger/databearer/tree/main/frontend)
 
 ## Feedback willkommen
 

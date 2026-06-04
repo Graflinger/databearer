@@ -15,8 +15,7 @@ npm start
 # Production build
 npm run build
 
-# GitHub Pages build (with path prefix)
-npm run build-ghpages
+# Deployment: Cloudflare Pages builds this folder (root dir = frontend) and serves blog.databearer.de
 
 # Generate charts only
 npm run build:charts

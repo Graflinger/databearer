@@ -8,7 +8,6 @@
     "css:watch": "sass --watch src/scss/style.scss src/css/style.css",
     "start": "concurrently \"npm run css:watch\" \"eleventy --serve\"",
     "build": "npm run css:build && eleventy",
-    "build-ghpages": "npm run css:build && npx @11ty/eleventy --output=pages --pathprefix=databearer-frontend",
     "lint": "eslint \"src/**/*.js\" \"tests/**/*.js\" \".eleventy.js\" --ignore-pattern \"src/js/charts/**\" --ignore-pattern \"!/.eleventy.js\"",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write .",

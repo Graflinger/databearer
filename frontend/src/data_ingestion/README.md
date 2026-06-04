@@ -69,8 +69,7 @@ module.exports = [
 Charts are generated automatically when you run:
 
 - `npm start` (development server)
-- `npm run build` (production build)
-- `npm run build-ghpages` (GitHub Pages build)
+- `npm run build` (production build; Cloudflare Pages deploys this)
 
 Or manually with:
 

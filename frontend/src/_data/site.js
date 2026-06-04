@@ -3,6 +3,6 @@ module.exports = {
   author: 'Stefan Graf',
   title: 'Datenjournalismus',
   description: 'Datenjournalismus mit Fokus auf Energie, Politik und Wirtschaft',
-  url: 'https://databearer.de',
-  github: 'https://github.com/Graflinger/databearer-frontend',
+  url: 'https://blog.databearer.de',
+  github: 'https://github.com/Graflinger/databearer',
 };
