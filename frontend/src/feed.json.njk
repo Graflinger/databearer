@@ -1,0 +1,35 @@
+---
+permalink: /feed.json
+eleventyExcludeFromCollections: true
+---
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": {{ (site.title or "Databearer Blog") | dump | safe }},
+  "home_page_url": {{ site.url | dump | safe }},
+  "feed_url": {{ (site.url + "/feed.json") | dump | safe }},
+  "description": {{ site.description | dump | safe }},
+  "language": {{ site.locale | dump | safe }},
+  "authors": [
+    { "name": {{ (site.author or "Databearer") | dump | safe }} }
+  ],
+  "items": [
+{%- for post in collections.post | reverse %}
+    {
+      "id": {{ (site.url + post.url) | dump | safe }},
+      "url": {{ (site.url + post.url) | dump | safe }},
+      "title": {{ post.data.title | dump | safe }},
+      "summary": {{ (post.data.excerpt or post.data.description or "") | dump | safe }},
+      "date_published": {{ post.data.date | htmlDateString | dump | safe }},
+      "date_modified": {{ (post.data.lastUpdated or post.data.date) | htmlDateString | dump | safe }},
+      {%- if post.data.image %}
+      "image": {{ (site.url + post.data.image) | dump | safe }},
+      {%- endif %}
+      {%- if post.data.imageText %}
+      "_image_alt": {{ post.data.imageText | dump | safe }},
+      {%- endif %}
+      "tags": {{ (post.data.topic or []) | dump | safe }},
+      "content_html": {{ post.templateContent | dump | safe }}
+    }{%- if not loop.last -%},{%- endif %}
+{%- endfor %}
+  ]
+}
