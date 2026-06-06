@@ -1,10 +1,6 @@
 # Use Node.js 22 LTS (matches your current version)
 FROM node:22-bookworm
 
-ARG CLAUDE_CODE_VERSION=latest
-
-RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}
-
 # Install additional OS packages if needed
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
