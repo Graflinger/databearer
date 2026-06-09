@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp@latest"],
+      "enabled": true,
+      "timeout": 30000
+    },
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "enabled": true,
+      "timeout": 30000
+    },
+    "dbt": {
+      "type": "local",
+      "command": ["uvx", "dbt-mcp"],
+      "enabled": true,
+      "timeout": 30000,
+      "environment": {
+        "DBT_PROJECT_DIR": "pipeline/src/data_pipelines/databearer_dbt",
+        "DBT_PROFILES_DIR": "pipeline/src/data_pipelines/databearer_dbt"
+      }
+    }
+  }
+}

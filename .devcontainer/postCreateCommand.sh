@@ -13,6 +13,15 @@ if ! command -v opencode >/dev/null 2>&1; then
   curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path
 fi
 
+# uv/uvx: required to launch the dbt MCP server (uvx dbt-mcp)
+if ! command -v uvx >/dev/null 2>&1; then
+  if command -v pipx >/dev/null 2>&1; then
+    pipx install uv
+  else
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+  fi
+fi
+
 if [ -x "$HOME/.opencode/bin/opencode" ] && ! command -v opencode >/dev/null 2>&1; then
   if command -v sudo >/dev/null 2>&1; then
     sudo ln -sf "$HOME/.opencode/bin/opencode" /usr/local/bin/opencode
