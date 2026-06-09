@@ -16,6 +16,31 @@ Public and open-sourced for reproducibility/transparency of the data analysis. A
 Data flow: **pipeline** produces datasets → **frontend** renders them as posts/charts →
 **image-generation** creates header images → finals land in `frontend/src/images/blog_card_images/`.
 
+## Branching & deployment
+
+Production is deployed by **Cloudflare Pages from the `releases/cloudflare` branch** — not from
+`main`. This gives an explicit "publish" gate: `main` can move freely while the live site only
+changes when you promote to `releases/cloudflare`.
+
+| Branch | Role |
+|--------|------|
+| `feature/*`, `bugfix/*` | Day-to-day work. Open a PR into `main`. |
+| `main` | Integration / trunk. Always buildable; PRs merge here. **Not auto-deployed.** |
+| `releases/cloudflare` | **Production.** Cloudflare Pages builds & deploys from here (Root directory = `frontend`). |
+
+**Publish flow:**
+
+```bash
+# 1. develop on a feature branch -> PR -> merge into main
+# 2. when ready to go live, promote main to production:
+git switch releases/cloudflare
+git merge --ff-only main      # fast-forward production to the reviewed main
+git push origin releases/cloudflare   # Cloudflare Pages picks it up and deploys
+```
+
+Keep `releases/cloudflare` a fast-forward of `main` (don't commit directly to it) so production is
+always an exact, reviewed snapshot of trunk.
+
 ## Important: running the pipeline
 
 The pipeline code uses repo-relative paths (`src/config/...`, `.data/output/...`) and
@@ -38,8 +63,9 @@ npm start          # dev server + hot reload
 npm run build      # production build -> _site
 ```
 
-Hosting: **Cloudflare Pages**, built from this repo with **Root directory = `frontend`**,
-served at `blog.databearer.de`.
+Hosting: **Cloudflare Pages**, built from the **`releases/cloudflare`** branch with
+**Root directory = `frontend`**, served at `blog.databearer.de` (see
+[Branching & deployment](#branching--deployment)).
 
 ## Image generation
 
