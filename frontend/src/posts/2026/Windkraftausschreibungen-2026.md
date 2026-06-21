@@ -12,7 +12,7 @@ topic: ["energie", "wirtschaft"]
 
 ## Der Rückenwind hält an
 
-Nach dem Rekordjahr 2025 stellte sich die Frage, ob die starke Dynamik bei den Ausschreibungen für Windenergie an Land auch 2026 anhält. Die erste Ausschreibungsrunde des Jahres mit Gebotstermin am 1. Februar 2026 gibt darauf eine klare Antwort: Das ausgeschriebene Volumen von rund 3,45 Gigawatt wurde vollständig vergeben, die Gebotsmenge übertraf das Volumen um etwa das 2,3-Fache und der durchschnittliche Zuschlagswert fiel auf 5,54 ct/kWh – den niedrigsten Wert seit Februar 2018.
+Nach dem Rekordjahr 2025 stellte sich die Frage, ob die starke Dynamik bei den Ausschreibungen für Windenergie an Land auch 2026 anhält. Die erste Ausschreibungsrunde des Jahres mit Gebotstermin am 1. Februar 2026 gibt darauf eine klare Antwort: Das ausgeschriebene Volumen von rund 3,45 Gigawatt wurde vollständig vergeben, die Gebotsmenge übertraf das Volumen um etwa das 2,3-Fache und der durchschnittliche Zuschlagswert fiel auf 5,54 ct/kWh und somit den niedrigsten Wert seit Februar 2018.
 
 Damit setzt sich das Muster fort, das wir bereits in den [Einblicken in die Ausschreibungen 2025](/posts/2026/Windenergiezukunft/) beschrieben haben: Eine hohe Nachfrage trifft auf ein großes Ausschreibungsvolumen, und genau diese Konkurrenz drückt den Preis. Zur Einordnung lohnt zunächst ein Blick auf die vergebene Menge der vergangenen Jahre.
 
@@ -33,7 +33,7 @@ Damit setzt sich das Muster fort, das wir bereits in den [Einblicken in die Auss
 
 ## Die Nachfrage zieht weiter an
 
-Entscheidend für gute Ergebnisse ist, dass mehr Gebote eingehen, als Volumen ausgeschrieben wird. Genau das ist derzeit der Fall – und der Trend verstärkt sich sogar. In der Februarrunde 2026 standen einem Ausschreibungsvolumen von rund 3,45 Gigawatt Gebote über rund 7,86 Gigawatt gegenüber. Im Vergleich zur Februarrunde 2025, in der knapp 4,9 Gigawatt geboten wurden, ist die Nachfrage damit um rund 60 Prozent gewachsen.
+Entscheidend für gute Ergebnisse ist, dass mehr Gebote eingehen, als Volumen ausgeschrieben wird. Genau das ist derzeit der Fall und der Trend verstärkt sich sogar. In der Februarrunde 2026 standen einem Ausschreibungsvolumen von rund 3,45 Gigawatt Gebote über rund 7,86 Gigawatt gegenüber. Im Vergleich zur Februarrunde 2025, in der knapp 4,9 Gigawatt geboten wurden, ist die Nachfrage damit um rund 60 Prozent gewachsen.
 
 Im folgenden Diagramm ist gut zu erkennen, wie die Gebotsmenge (die Nachfrage) in den jüngsten Runden deutlich über das Ausschreibungsvolumen hinausgeschossen ist, während die Zuschlagsmenge nahezu vollständig dem ausgeschriebenen Volumen entspricht. Das bedeutet: Es gibt genug konkurrenzfähige Projekte, um die Ausschreibungen voll auszuschöpfen.
 
@@ -56,7 +56,7 @@ Im folgenden Diagramm ist gut zu erkennen, wie die Gebotsmenge (die Nachfrage) i
 
 Mehr Konkurrenz um die Zuschläge bedeutet niedrigere Preise – und damit geringere Förderkosten für den erzeugten Windstrom. Nach dem Anstieg auf über 7 ct/kWh in den Jahren 2023 und 2024 sinkt der durchschnittliche Zuschlagswert seit Anfang 2025 kontinuierlich: von 7,00 ct/kWh in der Februarrunde 2025 über 6,06 ct/kWh im November 2025 bis auf 5,54 ct/kWh in der Februarrunde 2026.
 
-Damit liegt der Zuschlagswert erstmals seit Februar 2018 wieder unter der Marke von 5,60 ct/kWh. Bemerkenswert ist, dass dieser niedrige Preis bei einem zugleich deutlich größeren Ausschreibungsvolumen als in den Jahren vor 2023 zustande kommt. Die Vervielfachung der vergebenen Mengen geht also nicht zulasten der Kosten – im Gegenteil. Ein starkes Signal!
+Damit liegt der Zuschlagswert erstmals seit Februar 2018 wieder unter der Marke von 5,60 ct/kWh. Bemerkenswert ist, dass dieser niedrige Preis bei einem zugleich deutlich größeren Ausschreibungsvolumen als in den Jahren vor 2023 zustande kommt. Die Vervielfachung der vergebenen Mengen geht also nicht zulasten der Kosten. Ganz im Gegenteil. Ein starkes Signal!
 
 <div class="chart-section">
   <h3>Preisentwicklung bei Windkraftausschreibungen</h3>
@@ -77,7 +77,7 @@ Damit liegt der Zuschlagswert erstmals seit Februar 2018 wieder unter der Marke 
 
 Mit der Februarrunde ist erst eine von vier regulären Ausschreibungen des Jahres abgeschlossen; die Gebotstermine im Mai, August und November stehen noch aus. Der Auftakt deutet aber darauf hin, dass 2026 an die starke Entwicklung von 2025 anknüpfen könnte: Die Nachfrage steigt, die Mengen werden voll vergeben und der Preis sinkt.
 
-Wie nachhaltig dieser Trend ist, liegt am Ende auch in den Händen der Politik. Damit aus den Zuschlägen tatsächlich Anlagen werden, müssen die Projekte innerhalb der vorgesehenen Fristen ans Netz gehen – und der Ausbau darf nicht erneut ausgebremst werden, wie damals bei der berüchtigten Altmaierdelle. Die Voraussetzungen sind jedenfalls selten so gut gewesen wie zu Beginn dieses Jahres. Weitere Einordnungen zu diesem Thema finden sich in unserem Themenbereich [Energie](/themen/energie/) und [Wirtschaft](/themen/wirtschaft/).
+Wie nachhaltig dieser Trend ist, liegt am Ende auch in den Händen der Politik. Damit aus den Zuschlägen tatsächlich Anlagen werden, müssen die Projekte innerhalb der vorgesehenen Fristen ans Netz gehen – und der Ausbau darf nicht erneut ausgebremst werden, wie damals bei der berüchtigten Altmaierdelle. Die Voraussetzungen sind jedenfalls selten so gut gewesen wie zu Beginn dieses Jahres. Weitere Einordnungen zu diesem Thema finden sich im Themenbereich [Energie](/themen/energie/) und [Wirtschaft](/themen/wirtschaft/).
 
 ## Methodik und Datenquellen
 
