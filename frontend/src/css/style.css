@@ -445,22 +445,6 @@ a {
   font-size: 14px;
 }
 
-.github-link {
-  display: inline-block;
-  margin-left: 10px;
-  vertical-align: middle;
-  color: #999;
-  transition: color 0.2s ease;
-}
-
-.github-link:hover {
-  color: #333;
-}
-
-.github-link svg {
-  display: block;
-}
-
 /* Breadcrumb Navigation */
 .breadcrumb {
   max-width: 680px;
@@ -1117,6 +1101,9 @@ a {
   .blog-card h2 {
     color: #e0e0e0;
   }
+  .topic-intro {
+    color: #e0e0e0;
+  }
   .blog-card p {
     color: #b4a4a4;
   }
@@ -1339,5 +1326,3 @@ a {
     color: #e0e0e0;
   }
 }
-
-/*# sourceMappingURL=style.css.map */
