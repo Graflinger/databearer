@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: fact_battery_storage_germany_units
+    description: "Analysis-ready MaStR battery storage units in Germany with decoded location, status, technology, power, capacity and solar co-registration flags."
+  - name: fact_battery_storage_germany_yearly
+    description: "Yearly Germany battery storage additions and cumulative totals by commissioning year, based on MaStR Stromspeicher records."
+  - name: fact_battery_storage_germany_by_state
+    description: "Germany battery storage stock by federal state, based on MaStR Stromspeicher records."

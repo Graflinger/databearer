@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: mastr_katalogwerte
+    description: "Decoded MaStR catalog values. Used to translate numeric IDs in MaStR XML exports into labels."
+  - name: mastr_stromspeicher_einheiten
+    description: "Cleaned MaStR electricity storage unit records from EinheitenStromSpeicher.xml, with catalog IDs decoded where possible."
+  - name: mastr_stromspeicher_anlagen
+    description: "Cleaned MaStR electricity storage plant records from AnlagenStromSpeicher.xml, including usable storage capacity."
+  - name: mastr_eeg_speicher_anlagen
+    description: "Cleaned MaStR EEG storage plant records from AnlagenEegSpeicher.xml."

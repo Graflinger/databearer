@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: mastr_einheiten_strom_speicher
+        description: "MaStR - public electricity storage unit records from EinheitenStromSpeicher.xml"
+      - name: mastr_anlagen_strom_speicher
+        description: "MaStR - public electricity storage plant records from AnlagenStromSpeicher.xml"
+      - name: mastr_anlagen_eeg_speicher
+        description: "MaStR - public EEG storage plant records from AnlagenEegSpeicher.xml"
+      - name: mastr_katalogwerte
+        description: "MaStR - catalog values used to decode numeric IDs in the export"
+      - name: mastr_katalogkategorien
+        description: "MaStR - catalog categories used to decode numeric IDs in the export"
