@@ -26,6 +26,18 @@ node "src/data_ingestion/generate-charts.js" industriepolitik.js
 
 ## Architecture
 
+### Live Dashboards
+
+Read [dashboard_architecture.md](../docs/dashboard_architecture.md) before adding dashboard
+pages, chart data, freshness metadata, or refresh/deployment automation. It specifies
+the planned daily, stateless pipeline using the existing stack. Keep live dashboard
+datasets separate from frozen blog-post snapshots, and render prepared exports rather
+than fetching raw upstream data in visitors' browsers.
+
+Read [plan_b.md](../docs/plan_b.md) when evaluating independent data publishing, durable
+history, databases, or servers. These are optional future alternatives, not prerequisites
+for the first dashboard. Neither document means that a refresh workflow already exists.
+
 ### Directory Structure
 - `src/` - Source files (Eleventy input)
 - `src/_includes/` - Nunjucks layouts (`base.njk` for site shell, `post.njk` for blog posts)

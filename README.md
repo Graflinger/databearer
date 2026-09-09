@@ -5,6 +5,14 @@ Monorepo for the **databearer** data-journalism blog (https://blog.databearer.de
 Public and open-sourced for reproducibility/transparency of the data analysis. A separate
 **private** `video-generator` project (not in this repo) consumes the published site to produce videos.
 
+## Documentation
+
+- [Dashboard architecture](docs/dashboard_architecture.md): the planned stateless daily dashboard.
+- [Plan B](docs/plan_b.md): alternatives for persistent history, independent publishing, and servers.
+- [Agent guidance](AGENTS.md): repository-wide working conventions.
+
+Paths and shell commands below are relative to the repository root.
+
 ## Structure
 
 | Folder | What | Stack |
