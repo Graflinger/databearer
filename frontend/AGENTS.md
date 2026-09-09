@@ -38,6 +38,7 @@ Read [plan_b.md](../docs/plan_b.md) when evaluating independent data publishing,
 history, databases, or servers. These are optional future alternatives, not prerequisites
 for the first dashboard. Neither document means that a refresh workflow already exists.
 
+
 ### Directory Structure
 - `src/` - Source files (Eleventy input)
 - `src/_includes/` - Nunjucks layouts (`base.njk` for site shell, `post.njk` for blog posts)
