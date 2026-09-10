@@ -15,6 +15,13 @@ pagination:
   {%- if intro %}
     <p class="topic-intro">{{ intro }}</p>
   {%- endif %}
+  {% if showElectricityDashboard and pagination.pageNumber == 0 %}
+    <a class="electricity-discovery" href="/dashboards/strom/">
+      <span>Dashboard / Deutschland</span>
+      <h2>Ein Tag im Stromnetz <span aria-hidden="true">↗</span></h2>
+      <p>Strommix, Netzlast und Börsenpreis. Den letzten vollständigen Tag und 7 oder 30 Tage im Zusammenhang entdecken.</p>
+    </a>
+  {% endif %}
   <div class="grid">
     {%- for post in pagination.items %}
       <a href="{{ post.url }}" class="blog-card-link">

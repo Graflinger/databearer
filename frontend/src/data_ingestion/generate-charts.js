@@ -43,6 +43,7 @@ const chartConfigs = loadChartConfigs(CHARTS_DIR, specificFile);
 if (chartConfigs.length === 0) {
   console.log('⚠ No chart configurations found in charts/ directory');
   console.log('  Create .js files in src/data_ingestion/charts/ to define your charts');
+  // No direct configs is legitimate: existing nested configs are explicitly selected.
   process.exit(0);
 }
 
@@ -71,6 +72,7 @@ for (const config of chartConfigs) {
     // Load data
     const dataPath = path.join(DATA_DIR, config.dataFile);
     const data = loadData(dataPath);
+    if (!data.length) throw new Error(`No data in ${config.dataFile}`);
 
     // Select builder based on type
     let buildFn;
@@ -87,6 +89,7 @@ for (const config of chartConfigs) {
 
     // Generate chart JavaScript
     const chartJS = buildFn(data, chartOptions);
+    if (typeof chartJS !== 'string' || !chartJS.trim()) throw new Error('Builder returned empty chart JavaScript');
 
     // Save chart with subdirectory based on source file
     const outputSubDir = _sourceFile || 'default';
@@ -105,4 +108,5 @@ console.log(`\n✨ Chart generation complete!`);
 console.log(`   ✓ ${successCount} chart(s) generated successfully`);
 if (errorCount > 0) {
   console.log(`   ✗ ${errorCount} chart(s) failed`);
+  process.exitCode = 1;
 }
