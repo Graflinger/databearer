@@ -165,7 +165,7 @@
     provenance.hidden = !historical;
     if (historical) {
       const entry = manifest.years.find((item) => item.year === selection.year);
-      provenance.textContent = `Jahr ${entry.year} · ${entry.frozen ? 'eingefrorener Datenstand' : 'Korrekturfenster: 35 Tage'} · ${entry.last_date.endsWith('-12-31') ? 'bis Jahresende' : `Teiljahr bis ${entry.last_date}`} · ${summary.zone} · ${summary.derivedZeroDays} Tage mit ergänztem Kernkraftwert 0.`;
+      provenance.textContent = `Jahr ${entry.year} · ${entry.frozen ? 'eingefrorener Datenstand' : 'Korrekturfenster: 35 Tage'} · ${entry.last_date.endsWith('-12-31') ? 'bis Jahresende' : `Teiljahr bis ${entry.last_date}`} · ${summary.zone}.`;
       document.getElementById('electricity-history-download').href = entry.url;
     }
     const download = document.getElementById('electricity-history-download');
@@ -185,7 +185,7 @@
         });
       }
       options(summary).forEach((option, index) => charts[index].setOption(option, { notMerge: true }));
-      if (announce) status.textContent = `${summary.label} · ${historical ? `${summary.completeDays}/${summary.days} vollständige Tage (tägliche Quellwerte)` : `${data.number(summary.hours, 0)} vollständige Stunden`}. Alle Ansichten aktualisiert.`;
+      if (announce) status.textContent = `${summary.label} · ${historical ? `${summary.completeDays}/${summary.days} vollständige Tage (tägliche Quellwerte)` : `${data.number(summary.hours, 0)} vollständige Stunden`}. Zeitraum-Ansichten aktualisiert; Langfristvergleich unverändert.`;
     } catch (error) {
       hideCharts();
       if (announce) status.textContent = `${summary.label}: Diagramme konnten nicht dargestellt werden. Kennzahlen, Quellenmix und Textzusammenfassungen sind verfügbar. Bitte die Seite neu laden, um die Diagramme erneut zu versuchen.`;

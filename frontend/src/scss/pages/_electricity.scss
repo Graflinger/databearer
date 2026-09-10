@@ -1,4 +1,20 @@
 // Inherit Databearer's system font and gold identity; scoped tokens also feed ECharts.
+.electricity-trade-key {
+  --trade-key-color: var(--electricity-ink);
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 0.65rem;
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  background: var(--trade-key-color);
+  &-import { --trade-key-color: var(--electricity-muted); }
+  &-export { --trade-key-color: var(--electricity-accent); }
+  &-line { height: 0; background: none; border-top: 3px solid var(--trade-key-color); }
+  &-dashed { border-top-style: dashed; }
+  &-point { width: 0.6rem; height: 0.6rem; margin-inline: 0.45rem 0.9rem; transform: rotate(45deg); }
+  &-area { background: none; border-top: 1px solid var(--trade-key-color); box-shadow: inset 0 0 0 1rem color-mix(in srgb, var(--trade-key-color) 12%, transparent); }
+}
 .electricity-dashboard,
 .electricity-discovery,
 .dashboard-overview {
@@ -100,6 +116,55 @@
 .electricity-chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
 .electricity-legend { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.75rem; color: var(--electricity-muted); }
 .electricity-method { border-top: 3px solid var(--electricity-accent); margin-top: 3rem; padding-top: 1.5rem; font-size: 0.9rem; }
+.electricity-progress {
+  border-top: 3px solid var(--electricity-accent); margin-top: 3rem; padding-top: 1.5rem;
+  > header { margin-bottom: 1.5rem; }
+  > header h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 0.8rem; }
+  .electricity-panel h3 { font-size: 1.15rem; }
+  .electricity-chart-grid { gap: 1rem; }
+  .electricity-chart-grid .electricity-panel { display: flex; flex-direction: column; }
+  .electricity-chart-grid .electricity-chart { margin-top: auto; flex-shrink: 0; }
+  summary { cursor: pointer; padding: 0.8rem 0; font-weight: 650; }
+  summary:focus-visible { outline: 3px solid var(--electricity-accent); outline-offset: 4px; }
+}
+.electricity-progress-targets { margin: 0 0 2rem; font-size: 0.88rem; }
+.electricity-progress-cards {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0;
+  > div { border: 1px solid var(--electricity-line); border-top: 3px solid var(--electricity-accent); border-radius: 6px; padding: 1rem; }
+  h4 { margin: 0 0 1rem; }
+  p { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 0.75rem; }
+  .electricity-progress-target-main { font-size: 1.05rem; }
+  .electricity-note { display: block; margin: 1rem 0 0; }
+  @media (max-width: 650px) { grid-template-columns: 1fr; }
+}
+.electricity-progress-legend { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; font-size: 0.78rem; }
+.electricity-progress-key {
+  display: inline-block; width: 1.6rem; height: 0; margin-right: 0.45rem; vertical-align: middle;
+  border-top: 3px solid var(--electricity-accent);
+  &-dashed { border-top-style: dashed; border-color: var(--electricity-ink); }
+  &-dotted { border-top-style: dotted; border-color: var(--electricity-muted); }
+}
+.electricity-progress-method { border-top: 1px solid var(--electricity-line); font-size: 0.85rem; }
+.electricity-trends {
+  border-top: 3px solid var(--electricity-accent); margin-top: 3rem; padding-top: 1.5rem;
+  > header { margin-bottom: 1.5rem; }
+  > header h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 0.8rem; }
+  .electricity-section-heading h3 { font-size: 1.3rem; line-height: 1.3; }
+  details { margin-top: 1rem; }
+  summary { cursor: pointer; padding: 0.75rem 0; font-weight: 600; }
+  summary:focus-visible { outline: 3px solid var(--electricity-accent); outline-offset: 4px; }
+}
+.electricity-trends-legend { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.75rem; color: var(--electricity-muted); }
+.electricity-trends-table {
+  width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 1rem;
+  caption { text-align: left; color: var(--electricity-muted); padding: 0.75rem 0; }
+  th, td { padding: 0.65rem 0.7rem; border-bottom: 1px solid var(--electricity-line); text-align: right; }
+  th:first-child { text-align: left; }
+  thead { color: var(--electricity-muted); }
+  tbody th { font-weight: 500; }
+  td { white-space: nowrap; }
+}
+.electricity-trends-partial { background: var(--electricity-surface); border-top: 2px dashed var(--electricity-accent); }
 .electricity-method-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 2.5rem; margin: 1.8rem 0 0.8rem; }
 .electricity-method-grid p { color: var(--electricity-muted); }
 .electricity-attribution { background: var(--electricity-surface); border-radius: 8px; padding: 1.5rem; margin-top: 1.5rem; font-size: 0.8rem; }
@@ -116,22 +181,57 @@
   a { color: var(--electricity-accent-text); text-underline-offset: 4px; }
   a:focus-visible { outline: 3px solid var(--electricity-accent); outline-offset: 4px; }
 }
-.dashboard-catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+.dashboard-catalog { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; margin-top: 1.5rem; }
 .dashboard-card {
+  display: flex; align-items: center; gap: clamp(1rem, 3vw, 2rem);
   border: 1px solid var(--electricity-line); border-top: 4px solid var(--electricity-accent);
-  border-radius: 10px; background: var(--electricity-surface); padding: 1.8rem;
-  h2 { font-size: 1.6rem; line-height: 1.3; margin: 0.8rem 0; }
+  border-radius: 10px; background: var(--electricity-surface); padding: 1rem;
+  h2 { font-size: clamp(1.1rem, 2vw, 1.45rem); line-height: 1.3; margin: 0.4rem 0; }
   h2 a { color: var(--electricity-ink); }
-  p { color: var(--electricity-muted); margin-bottom: 1rem; }
+  p { color: var(--electricity-muted); margin-bottom: 0.5rem; }
   .dashboard-card-cadence { font-size: 0.8rem; }
   .dashboard-card-link { display: inline-block; font-weight: 650; padding: 0.5rem 0; }
+}
+.dashboard-card-content { flex: 1; min-width: 0; }
+.dashboard-card-image {
+  display: block;
+  flex: 0 0 25%;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #1a1a1a;
+  img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; transition: transform 220ms ease; }
+}
+@media (hover: hover) {
+  .dashboard-card:hover .dashboard-card-image img { transform: scale(1.04); }
+}
+.dashboard-card:focus-within .dashboard-card-image img { transform: scale(1.04); }
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-card-image img { transition: none; }
+  .dashboard-card:hover .dashboard-card-image img,
+  .dashboard-card:focus-within .dashboard-card-image img { transform: none; }
+}
+.electricity-dashboard {
+  padding-top: 1rem;
+  > .electricity-hero {
+    padding: 0.75rem 0 0.5rem;
+    h1 { font-size: clamp(1.65rem, 3.5vw, 2.65rem); margin: 0.5rem 0; }
+    .electricity-eyebrow { margin-bottom: 0.4rem; }
+    .electricity-intro { margin-bottom: 0.25rem; font-size: 0.95rem; }
+  }
+  .electricity-period { padding-top: 0.75rem; gap: 0.6rem; }
+  .electricity-kpis { margin: 0.5rem 0 1rem; }
 }
 @media (max-width: 850px) {
   .electricity-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .electricity-chart-grid { grid-template-columns: 1fr; gap: 0; }
 }
 @media (max-width: 540px) {
-  .electricity-dashboard { padding-top: 1.5rem; }
+  .electricity-dashboard { padding-top: 0.5rem; }
+  .dashboard-card { align-items: flex-start; padding: 0.75rem; gap: 0.75rem; }
+  .dashboard-card-image { flex-basis: 27%; }
+  .dashboard-card-image img { aspect-ratio: 1; }
+  .dashboard-card p { font-size: 0.85rem; }
+  .dashboard-card .dashboard-card-cadence { font-size: 0.7rem; }
   .electricity-hero h1 { font-size: 2.4rem; }
   .electricity-meta { display: block; }
   .electricity-panel { padding: 1rem 0.75rem; }

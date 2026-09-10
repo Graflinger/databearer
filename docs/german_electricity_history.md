@@ -4,7 +4,10 @@ Implemented locally on 10 September 2026. The approved history extension stores
 validated yearly JSON in Git, with rolling current-year corrections and frozen
 closed years. This is an explicit exception to the default stateless-export rule
 in [dashboard architecture](dashboard_architecture.md). It uses no persistent
-database. Scheduling, committing, and deployment remain separate operations.
+database. The [daily publication workflow](dashboard_publication.md) now authorizes
+current-year data-only updates from an already released main commit; activation
+awaits merge to `main` and first live deployment verification. Closed-year
+reconciliation remains explicit and manually promoted.
 
 ## Commands and update policy
 
@@ -236,11 +239,17 @@ intact. A process kill may leave unreferenced files but cannot advance a partial
 manifest; this is process-failure atomicity, not a power-loss durability guarantee.
 
 After a successful manifest replacement, remove only strictly named version files
-not referenced by the new or immediately preceding manifest. Thus there are at
-most **two versions per year** after successful cleanup, not daily accumulation.
+not referenced by the new or immediately preceding manifest, within eligible years.
+Routine refresh cleans only the current year according to `--as-of`; explicit
+backfill/reconciliation may clean the selected years it fetched. Thus there are at
+most **two versions per eligible year** after successful cleanup, not daily
+accumulation. Closed years may retain both versions after reconciliation or rollover;
+routine refresh never deletes either. Their cleanup waits for a subsequent explicit
+manual reconciliation.
 Cleanup errors are reported as deferred cleanup after successful publication.
 No-change runs preserve bytes/mtime and perform no cleanup. Interrupted/failed
-cleanup may leave extras until the next successful changed publication.
+cleanup may leave extras until the next successful changed publication eligible to
+clean that year.
 
 Readers/builds must reload the manifest and retry a missing superseded partition;
 they must not combine files from different manifests. Serve the manifest with
@@ -300,7 +309,12 @@ The frontend starts on YTD, with recent 1/7/30-day views and a year selector bac
 source gaps stay visible; affected energy summaries report covered days and partial
 sums rather than presenting incomplete observations as full-year totals.
 
-The manual validation workflow tests both pipeline paths, refreshes recent first,
-then current-year history, validates the frontend, and retains both snapshots and
-all referenced history files in its short-lived review artifact. It does not
-automatically reconcile closed years, commit data, or publish production.
+The daily/manual workflow tests all electricity pipeline paths, refreshes recent
+first, then current-year history and monthly trade, validates the frontend, and
+retains snapshots and referenced history files in its short-lived review artifact.
+Scheduled runs publish validated allowlisted data from an already released `main`
+base; manual dispatch defaults to `publish=false`. Both refs advance atomically,
+without force, and public deployment is checked even when no data changed. See
+[publication guards and recovery](dashboard_publication.md). Closed years are never
+automatically reconciled; first rollover may need manual completion and promotion
+of the prior year's history and December trade before daily runs can resume.

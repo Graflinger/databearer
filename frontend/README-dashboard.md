@@ -2,6 +2,10 @@
 
 Route: `/dashboards/strom/` (standalone, outside post collections).
 The menu opens `/dashboards/`, which lists pages tagged `dashboard` automatically.
+Optional `dashboardImage` and `dashboardImageAlt` frontmatter provide a card
+illustration. Cards form compact horizontal rows with 25–27% image width; the
+text-free SVG supports a 4:3 or square crop on smaller screens. The electricity SVG is an original decorative illustration, not a
+plot of source observations. Cards without images still render normally.
 Add `dashboardTopic`, `dashboardSummary`, and `dashboardCadence` frontmatter to new
 dashboard pages for their overview cards. The overview itself is not tagged.
 Dashboard chrome uses the site's gold/neutral palette, with a darker gold for
@@ -58,8 +62,20 @@ initial YTD view remains readable and prepared JSON remains downloadable.
 
 The freshness warning uses `data_through`, not snapshot creation time, and updates
 in the browser every minute and when the tab becomes visible. Future timestamps
-are rejected. This is not scheduler monitoring. The page describes a daily refresh
-target and explicitly states that automatic publication is not enabled yet.
+are rejected. This is not scheduler monitoring. Public copy describes automatic
+daily updates and points to actual observation dates; capacity/congestion retains
+its separate manual/monthly cadence and statutory targets their manual review date.
+
+The [publication workflow](../docs/dashboard_publication.md) authorizes daily
+09:17 UTC recent/history/trade publication only from an already released `main`
+commit. Manual dispatch defaults to `publish=false`; activation awaits merge to
+`main` and the first live deployment verification remains pending. Unpublished main
+changes stop before source fetching/build. Changed validated exports alone advance
+both refs atomically without force; normal code/blog promotion is manual.
+`verify_dashboard_deployment.py` checks public recent data, history manifest/latest
+partition, trends/progress and HTML for up to 240 seconds, including no-change
+publishing runs. A push or validation artifact is not proof of Cloudflare deployment;
+the verifier does not automatically retry an external build.
 
 ## YTD and yearly daily history
 
@@ -101,7 +117,7 @@ versions may be copied but never become extra selectable years.
 `src/_headers` sets the public manifest to `Cache-Control: no-cache` and hashed
 year files to immutable one-year caching on Cloudflare Pages. The local Eleventy
 server does not apply these hosting rules; deployment headers need host-side
-verification when publication is enabled. Browser manifest retries explicitly
+verification during the first live rollout. Browser manifest retries explicitly
 request revalidation; partition hashes are always verified, even on cache hits.
 
 The small validated manifest is safely escaped into a non-executable
@@ -149,7 +165,7 @@ chart that would require downloading the entire history.
 
 ## Verification
 
-Run from `frontend/`:
+Run from `frontend/` using Node 20:
 
 ```sh
 npm test -- --runInBand

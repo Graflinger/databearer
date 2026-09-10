@@ -87,14 +87,15 @@
   }
   // Preserve Python numeric tokens; reject duplicate keys, whitespace, unsorted keys
   // and trailing newlines without reserializing floating-point observations.
-  function parseRaw(bytes, limit) {
+  function parseCanonical(bytes, limit, omitRoot = []) {
     assert(ArrayBuffer.isView(bytes) && bytes.BYTES_PER_ELEMENT === 1 && bytes.byteLength > 0 && bytes.byteLength <= limit, 'Ungültige Dateigröße');
     const raw = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
     const parsed = JSON.parse(raw);
     const tokens = raw.match(/"(?:[^"\\]|\\.)*"|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null|[{}[\],:]/g);
     let index = 0;
+    let semantic;
     function consume(expected) { assert(tokens[index++] === expected, 'Ungültige JSON-Struktur'); }
-    function value() {
+    function value(root = false) {
       const token = tokens[index++];
       if (token === '{') {
         const entries = new Map();
@@ -107,7 +108,10 @@
           consume(',');
         }
         consume('}');
-        return `{${[...entries.keys()].sort().map((key) => `${JSON.stringify(key)}:${entries.get(key)}`).join(',')}}`;
+        const keys = [...entries.keys()].sort();
+        const encode = (selected) => `{${selected.map((key) => `${JSON.stringify(key)}:${entries.get(key)}`).join(',')}}`;
+        if (root) semantic = encode(keys.filter((key) => !omitRoot.includes(key)));
+        return encode(keys);
       }
       if (token === '[') {
         const items = [];
@@ -121,9 +125,10 @@
       }
       return token.startsWith('"') ? JSON.stringify(JSON.parse(token)) : token;
     }
-    assert(value() === raw && index === tokens.length, 'JSON muss kompakt, sortiert und ohne Zeilenumbruch sein');
-    return parsed;
+    assert(value(true) === raw && index === tokens.length, 'JSON muss kompakt, sortiert und ohne Zeilenumbruch sein');
+    return { parsed, semantic };
   }
+  function parseRaw(bytes, limit) { return parseCanonical(bytes, limit).parsed; }
   async function verifyPartition(bytes, entry, subtle = globalThis.crypto && globalThis.crypto.subtle) {
     validateEntry(entry);
     assert(bytes.byteLength <= 250000 && subtle, 'SHA-256-Prüfung nicht verfügbar oder Datei zu groß');
@@ -215,6 +220,6 @@
   function safeJSON(value) {
     return JSON.stringify(value).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
   }
-  return { PREFIX, POLICY, SOURCES, ENERGY, date, hours, complete, parseRaw, validateManifest, validatePartition,
+  return { PREFIX, POLICY, SOURCES, ENERGY, date, hours, complete, parseRaw, parseCanonical, validateManifest, validatePartition,
     verifyPartition, createLoader, summarize, presentation, freshness, safeJSON };
 });

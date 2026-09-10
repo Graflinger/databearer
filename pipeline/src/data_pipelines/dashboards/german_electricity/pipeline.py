@@ -110,6 +110,7 @@ class SmardClient:
     MAX_TOTAL_BYTES = 24_000_000
     MAX_ATTEMPTS = 273  # 13 indices + at most 6*13 weeks, each tried at most 3 times
     FETCH_TIMEOUT = 240
+    JSON_DECODER = staticmethod(json.loads)
 
     def __init__(self):
         self.requests = 0
@@ -145,7 +146,7 @@ class SmardClient:
                             raise ValidationError("SMARD fetch time budget exhausted")
                         chunks.append(chunk)
                 try:
-                    return json.loads(b"".join(chunks))
+                    return self.JSON_DECODER(b"".join(chunks))
                 except (ValueError, UnicodeError) as exc:
                     raise ValidationError(f"Malformed SMARD JSON: {url}") from exc
             except HTTPError as exc:

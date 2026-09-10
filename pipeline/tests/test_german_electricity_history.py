@@ -309,6 +309,56 @@ class RefreshTests(StorageFixture):
         self.run_history("backfill", start_year=2025, end_year=2025, reconcile=True)
         self.assertEqual(h.load_history(self.directory)[1][2025]["rows"][0]["energy_gwh"]["gas"], 24)
 
+    def test_refresh_preserves_closed_versions_after_reconcile(self):
+        self.parts[2025]["rows"][0]["energy_gwh"]["gas"] = 1
+        self.parts[2026]["rows"][-1]["energy_gwh"]["gas"] = 1
+        self.manifest = h.make_manifest(self.parts, AS_OF)
+        self.publish()
+        old_closed = self.directory / Path(self.manifest["years"][0]["url"]).name
+        old_current = self.directory / Path(self.manifest["years"][-1]["url"]).name
+        old_closed_raw = old_closed.read_bytes()
+        result, _ = self.run_history("backfill", start_year=2025, end_year=2025, reconcile=True)
+        self.assertEqual(result["status"], "changed")
+        self.assertEqual(old_closed.read_bytes(), old_closed_raw)
+        closed = {p.name: (p.read_bytes(), p.stat().st_mtime_ns)
+                  for p in self.directory.glob("2025.*.json")}
+        self.assertEqual(len(closed), 2)
+
+        for cutoff, status in ((CUTOFF, "changed"), (CUTOFF, "unchanged"),
+                               (CUTOFF + timedelta(days=1), "changed")):
+            with self.subTest(cutoff=cutoff, status=status):
+                before = self.files()
+                result, _ = self.run_history(cutoff=cutoff)
+                self.assertEqual(result["status"], status)
+                self.assertEqual(result["years_fetched"], [2026])
+                self.assertEqual(closed, {p.name: (p.read_bytes(), p.stat().st_mtime_ns)
+                                         for p in self.directory.glob("2025.*.json")})
+                self.assertEqual(old_closed.read_bytes(), old_closed_raw)
+                if status == "unchanged":
+                    self.assertEqual(self.files(), before)
+                self.assertEqual(len(list(self.directory.glob("2026.*.json"))), 2)
+        self.assertFalse(old_current.exists())
+
+    def test_explicit_reconcile_cleans_superseded_closed_versions(self):
+        self.parts[2025]["rows"][0]["energy_gwh"]["gas"] = 1
+        self.manifest = h.make_manifest(self.parts, AS_OF)
+        self.publish()
+        old_closed = self.directory / Path(self.manifest["years"][0]["url"]).name
+        self.run_history("backfill", start_year=2025, end_year=2025, reconcile=True)
+        previous = h.load_history(self.directory)[0]
+        previous_closed = self.directory / Path(previous["years"][0]["url"]).name
+        self.assertTrue(old_closed.exists())
+        values = source([2025])
+        values[2025]["gas"][date(2025, 1, 1)] = 25000
+        with patch.object(h, "fetch_daily", return_value=values), \
+             patch("sys.stdout", new_callable=io.StringIO):
+            result = h.run("backfill", AS_OF, self.directory,
+                           start_year=2025, end_year=2025, reconcile=True)
+        self.assertEqual(result["status"], "changed")
+        self.assertFalse(old_closed.exists())
+        self.assertTrue(previous_closed.exists())
+        self.assertEqual(len(list(self.directory.glob("2025.*.json"))), 2)
+
     def test_missing_history_gaps_stale_snapshot_fail(self):
         with self.assertRaisesRegex(h.ValidationError, "Missing history"):
             self.run_history()

@@ -407,8 +407,11 @@ def atomic_write(path, data):
             temporary.unlink(missing_ok=True)
 
 
-def publish_history(directory, manifest, partitions, expected_raw):
-    """Caller holds writer_lock. Immutable blobs first; manifest is the commit point."""
+def publish_history(directory, manifest, partitions, expected_raw, *, cleanup_years=None):
+    """Caller holds writer_lock. Immutable blobs first; manifest is the commit point.
+
+    cleanup_years limits retention cleanup; None keeps the direct writer's all-year default.
+    """
     blobs = {year: canonical_bytes(value) for year, value in partitions.items()}
     validate_history(manifest, blobs)
     previous, _, actual_raw = load_history(directory)
@@ -442,13 +445,14 @@ def publish_history(directory, manifest, partitions, expected_raw):
         if not committed:
             for path in created:
                 path.unlink(missing_ok=True)
-    # Keep this and the preceding manifest's blobs, at most two versions per year.
+    # Keep this and the preceding manifest's blobs, at most two per cleanup-eligible year.
     # Old cached readers must retry the current manifest on a missing version.
     keep = {Path(entry["url"]).name for entry in manifest["years"]}
     if previous:
         keep.update(Path(entry["url"]).name for entry in previous["years"])
     for path in directory.iterdir():
-        if VERSION_FILE.fullmatch(path.name) and path.name not in keep:
+        if (VERSION_FILE.fullmatch(path.name) and path.name not in keep
+                and (cleanup_years is None or int(path.name[:4]) in cleanup_years)):
             try:
                 path.unlink()
             except OSError as exc:
@@ -511,7 +515,11 @@ def run(mode, as_of, directory=DEFAULT_DIRECTORY, *, start_year=2015, end_year=N
             if not partitions:
                 raise ValidationError("No history to publish")
             manifest = make_manifest(partitions, as_of, previous)
-            changed = publish_history(directory, manifest, partitions, previous_raw)
+            # Routine refresh must preserve even unreferenced closed-year versions.
+            # Explicit backfill/reconcile may clean only the years it fetched.
+            cleanup_years = {as_of.year} if mode == "refresh" else set(years)
+            changed = publish_history(directory, manifest, partitions, previous_raw,
+                                      cleanup_years=cleanup_years)
             metrics.update(status="changed" if changed else "unchanged", years_fetched=years,
                            first_date=manifest["first_date"], last_date=manifest["last_date"],
                            days=sum(item["days"] for item in manifest["years"]),

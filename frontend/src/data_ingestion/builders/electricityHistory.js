@@ -66,7 +66,9 @@ function readHistory(directory = DIRECTORY, recentRaw = readBounded(RECENT_PATH,
       if (!raw.equals(readBounded(path.join(directory, 'manifest.json'), 20000))) continue;
       const overlap = compareOverlap(manifest, partitions, recent);
       const summary = history.summarize(partitions[partitions.length - 1]);
-      return { manifest, manifestJSON: history.safeJSON(manifest), overlap, summary: { ...summary, text: history.presentation(summary) } };
+      return { manifest, manifestJSON: history.safeJSON(manifest), partitions,
+        manifestHash: createHash('sha256').update(raw).digest('hex'),
+        overlap, summary: { ...summary, text: history.presentation(summary) } };
     } catch (error) {
       if (error.code !== 'ENOENT' || attempt) throw error;
     }

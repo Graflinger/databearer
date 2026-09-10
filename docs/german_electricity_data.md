@@ -1,7 +1,9 @@
 # Germany electricity dashboard data
 
-Status: local pipeline and initial real-data snapshot implemented. **Production
-scheduling and publication are not enabled.** This document describes the bounded
+Status: pipeline and real-data snapshot implemented. **Daily data-only publication
+is authorized and enabled in the workflow; activation awaits merge to `main` and
+first live deployment verification.** See [publication and recovery](dashboard_publication.md).
+This document describes the bounded
 recent hourly snapshot. The approved, separately implemented
 [daily history extension](german_electricity_history.md) covers 2015 onward with
 durable yearly JSON, frozen closed years, and rolling corrections. Architecture:
@@ -246,21 +248,25 @@ One shared JSON export replaces per-chart CSV duplication for synchronized perio
 controls, while retaining Eleventy, ECharts, and static hosting. Historical blog
 datasets are unchanged. Production rendering checks the snapshot's semantic hash.
 
-`.github/workflows/dashboard-refresh.yml` is **manual validation only**: it runs
-offline pipeline tests, a fresh real-data refresh, frontend tests/lint/build, and
-retains the validated JSON as a seven-day review artifact. It has read-only repository
-permissions and does not commit, push, or deploy. It becomes dispatchable through
-GitHub once present on the default branch. A ten-minute timeout bounds the job;
-package caches are optional and never contain the DuckDB database. Unlike a future
-scheduled publisher, this manual verification intentionally builds even on unchanged
-data so code changes are checked too.
+`.github/workflows/dashboard-refresh.yml` schedules **09:17 UTC daily**, plus manual
+dispatch with boolean **`publish=false`** by default. It runs all offline electricity
+tests, refreshes recent data → current-year history with overlap validation → monthly
+trade, then frontend tests/lint/build on Node 20. Annual supplements stay frozen;
+capacity/congestion remains a separate manual/monthly refresh. Review artifacts are
+retained for seven days. The ten-minute total job budget includes public verification;
+package caches never contain the DuckDB database. The workflow also validates/builds
+unchanged data.
 
-**Publication decision still required:** the repository publishes only promoted
-`releases/cloudflare` commits, not `main`. Daily automatic data publication must
-not silently bypass that gate or promote unrelated code. No daily schedule is enabled
-until the owner agrees how data-only updates coexist with manual code promotion.
-Do not interpret a successful validation artifact as a published update. The initial
-tracked snapshot remains static until deliberately refreshed and published.
+Publishing is authorized only on the `main` ref with
+`HEAD == origin/main == origin/releases/cloudflare`, checked before source fetching.
+Unpublished code stops the run before refresh/build. With `contents: write`, only
+validated recent/current-year-history/trade allowlist changes may be committed and
+pushed to both refs atomically, without force. Normal code/blog releases retain
+manual promotion after release ancestry has been merged into main where needed.
+Public data and HTML are polled for up to 240 seconds, including on no-change
+publishing runs; a review artifact or successful push is not proof of deployment.
+See [the publication runbook](dashboard_publication.md) for rollout, the pending
+first Cloudflare Git-integration check, and explicit recovery.
 
 Local verification passed 17 pipeline tests (including real dbt integration), 84
 frontend Jest tests, `npm run lint`, and `npm run build`. Browser checks cover period

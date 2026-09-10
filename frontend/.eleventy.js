@@ -3,6 +3,8 @@ const { execSync } = require('child_process');
 const electricity = require('./src/js/dashboards/electricity-data');
 const { validateBuildSnapshot } = require('./src/data_ingestion/builders/electricitySnapshot');
 const { verifyPublished } = require('./src/data_ingestion/builders/electricityHistory');
+const { verifyPublishedTrends } = require('./src/data_ingestion/builders/electricityTrends');
+const { verifyPublishedProgress } = require('./src/data_ingestion/builders/electricityProgress');
 
 module.exports = function (eleventyConfig) {
   // Generate charts before Eleventy build
@@ -31,6 +33,8 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ 'src/data-history/german-electricity': 'data/history/german-electricity' });
   eleventyConfig.addPassthroughCopy('src/_headers');
   eleventyConfig.on('eleventy.after', ({ dir }) => verifyPublished(dir.output));
+  eleventyConfig.on('eleventy.after', ({ dir }) => verifyPublishedTrends(dir.output));
+  eleventyConfig.on('eleventy.after', ({ dir }) => verifyPublishedProgress(dir.output));
 
   // Exclude generated charts from watch to prevent rebuild loop
   eleventyConfig.watchIgnores.add('src/js/charts/**');

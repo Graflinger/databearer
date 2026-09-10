@@ -13,11 +13,18 @@ permalink: /dashboards/
   <div class="dashboard-catalog">
     {% for dashboard in collections.dashboard %}
     <article class="dashboard-card">
+      {% if dashboard.data.dashboardImage %}
+      <a class="dashboard-card-image" href="{{ dashboard.url }}" tabindex="-1" aria-hidden="true">
+        <img src="{{ dashboard.data.dashboardImage }}" alt="{{ dashboard.data.dashboardImageAlt or '' }}" width="960" height="540" loading="lazy" decoding="async">
+      </a>
+      {% endif %}
+      <div class="dashboard-card-content">
       <p class="electricity-eyebrow">{{ dashboard.data.dashboardTopic }}</p>
       <h2><a href="{{ dashboard.url }}">{{ dashboard.data.title }}</a></h2>
       <p>{{ dashboard.data.dashboardSummary }}</p>
       <p class="dashboard-card-cadence">{{ dashboard.data.dashboardCadence }} · Datenstand und Quellen im Dashboard</p>
       <a class="dashboard-card-link" href="{{ dashboard.url }}">Dashboard öffnen <span aria-hidden="true">→</span></a>
+      </div>
     </article>
     {% endfor %}
   </div>
