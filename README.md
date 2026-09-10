@@ -9,6 +9,8 @@ Public and open-sourced for reproducibility/transparency of the data analysis. A
 
 - [Dashboard architecture](docs/dashboard_architecture.md): the planned stateless daily dashboard.
 - [Plan B](docs/plan_b.md): alternatives for persistent history, independent publishing, and servers.
+- [German electricity dashboard](docs/german_electricity_data.md): SMARD licensing, methodology, refresh commands, and validation.
+- [Electricity history](docs/german_electricity_history.md): yearly data from 2015, YTD, rolling corrections, and reconciliation.
 - [Agent guidance](AGENTS.md): repository-wide working conventions.
 
 Paths and shell commands below are relative to the repository root.

@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: smard
+    schema: staging
+    config:
+      enabled: "{{ target.name == 'dashboard' }}"
+    description: Public SMARD hourly MWh and DE-LU EUR/MWh, reconstructed per run.
+    tables:
+      - name: smard_hourly
+      - name: smard_window

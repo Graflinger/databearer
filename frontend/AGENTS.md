@@ -38,6 +38,11 @@ Read [plan_b.md](../docs/plan_b.md) when evaluating independent data publishing,
 history, databases, or servers. These are optional future alternatives, not prerequisites
 for the first dashboard. Neither document means that a refresh workflow already exists.
 
+The electricity dashboard now has approved [persistent daily history](../docs/german_electricity_history.md).
+Preserve raw hashed partition bytes, source gaps, nuclear-era and price-zone metadata.
+Load historical years lazily; never interpret missing observations as zero or daily
+price averages as negative-hour counts. Automatic publication remains disabled.
+
 
 ### Directory Structure
 - `src/` - Source files (Eleventy input)

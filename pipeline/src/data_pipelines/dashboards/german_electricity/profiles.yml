@@ -1,0 +1,9 @@
+# Used only by this entry point; the ordinary blog profile is independent.
+databearer_dbt:
+  target: dashboard
+  outputs:
+    dashboard:
+      type: duckdb
+      path: "{{ env_var('GERMAN_ELECTRICITY_DB') }}"
+      schema: dashboard
+      threads: 1

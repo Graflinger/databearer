@@ -1,0 +1,24 @@
+---
+layout: base.njk
+title: Dashboards
+description: Die Databearer-Dashboards im Überblick – Daten, Entwicklungen und Zusammenhänge interaktiv erkunden.
+permalink: /dashboards/
+---
+<section class="dashboard-overview" aria-labelledby="dashboard-overview-title">
+  <header class="electricity-hero">
+    <p class="electricity-eyebrow">Databearer / Daten entdecken</p>
+    <h1 id="dashboard-overview-title">Unsere Dashboards<span>Daten im Überblick.</span></h1>
+    <p class="electricity-intro">Interaktive Einblicke in die Themen unseres Blogs. Entdecke Entwicklungen, vergleiche Zeiträume und erfahre, was hinter den Zahlen steckt.</p>
+  </header>
+  <div class="dashboard-catalog">
+    {% for dashboard in collections.dashboard %}
+    <article class="dashboard-card">
+      <p class="electricity-eyebrow">{{ dashboard.data.dashboardTopic }}</p>
+      <h2><a href="{{ dashboard.url }}">{{ dashboard.data.title }}</a></h2>
+      <p>{{ dashboard.data.dashboardSummary }}</p>
+      <p class="dashboard-card-cadence">{{ dashboard.data.dashboardCadence }} · Datenstand und Quellen im Dashboard</p>
+      <a class="dashboard-card-link" href="{{ dashboard.url }}">Dashboard öffnen <span aria-hidden="true">→</span></a>
+    </article>
+    {% endfor %}
+  </div>
+</section>

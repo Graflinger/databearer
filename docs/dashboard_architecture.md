@@ -4,6 +4,15 @@ Repository paths in this document are relative to the repository root.
 
 Status: agreed direction; implementation plan, not an implemented dashboard or workflow.
 
+**Approved exception, September 2026:** the German electricity dashboard now has
+a [durable daily-history extension](german_electricity_history.md). Its yearly JSON
+exports are authoritative refresh inputs, closed years are frozen, and only the
+current year's latest 35 complete days are corrected. Full reconstruction remains
+an explicit bounded backfill (182 daily-source requests for 2015–2026). This
+exception changes export-state retention and the total history-size budget; it
+does not persist DuckDB, enable scheduling, or authorize publication. The recent
+hourly snapshot retains the stateless design below.
+
 Start with **one dashboard, one daily refresh, and the existing Python/DuckDB/dbt →
 Eleventy/ECharts → Cloudflare Pages stack**. No rented server, persistent database,
 or browser requests to upstream data providers are required.

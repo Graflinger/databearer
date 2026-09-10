@@ -1,0 +1,66 @@
+name: Electricity dashboard validation
+
+# Manual-only until the production promotion policy is agreed.
+# This workflow never commits, pushes, or deploys a snapshot.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: electricity-dashboard-validation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: pipeline/requirements-dashboard.txt
+      - name: Install narrow pipeline runtime
+        working-directory: pipeline
+        run: python -m pip install -r requirements-dashboard.txt
+      - name: Test recent pipeline and persistent history
+        working-directory: pipeline
+        env:
+          PYTHONPATH: .
+        run: python -m unittest discover -s tests -p 'test_german_electricity*.py' -v
+      - name: Refresh and validate real SMARD data
+        working-directory: pipeline
+        env:
+          PYTHONPATH: .
+        run: python -m src.data_pipelines.dashboards.german_electricity
+      - name: Update current-year history and validate overlap
+        working-directory: pipeline
+        env:
+          PYTHONPATH: .
+        run: python -m src.data_pipelines.dashboards.german_electricity.history refresh
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Validate frontend and build snapshot
+        working-directory: frontend
+        run: |
+          npm ci
+          npm test -- --runInBand
+          npm run lint
+          npm run build
+      - name: Retain validated export for review (not publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: german-electricity-validated-snapshot
+          path: |
+            frontend/src/_data/germanElectricity.json
+            frontend/src/data-history/german-electricity/*.json
+          if-no-files-found: error
+          retention-days: 7

@@ -18,12 +18,17 @@ publication, read:
 - [Plan B](docs/plan_b.md): optional paths for independent publishing, durable history,
   managed databases, scheduled compute, or a server. Do not introduce these without
   an explicit need and agreement on the trade-offs.
+- [German electricity history](docs/german_electricity_history.md): approved exception
+  storing validated daily history in yearly Git-tracked partitions. Refresh only the
+  current year's correction window; closed years require explicit reconciliation.
 
-Dashboard runs must reconstruct their required data from scratch, remain idempotent,
-and select only necessary sources/models. Do not persist the DuckDB database between
+Dashboard runs are stateless by default; the approved electricity history uses validated
+repository snapshots as durable state. All runs must remain idempotent and select only
+necessary sources/models. Do not persist the DuckDB database between
 runs. Keep dependencies, source requests, and runtime bounded; publish only validated,
 compact exports. Preserve frozen blog-post datasets and the last working dashboard
-on failure. The architecture documents describe planned work, not existing automation.
+on failure. Refresh recent electricity data before history and validate their overlap.
+Automatic production publication is not enabled; preserve the manual release gate.
 
 ## Working conventions
 
