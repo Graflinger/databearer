@@ -71,6 +71,12 @@ Charts are auto-generated before each Eleventy build via `.eleventy.js` hook:
 2. **Config files**: Create JS config in `src/data_ingestion/charts/` exporting an array of chart configs
 3. **Output**: Generated JS files go to `src/js/charts/{config-name}/`
 
+Frozen article datasets use `src/data_ingestion/data/<article-year>/<topic>/`,
+for example `data/2026/battery_storage/`. Set `dataFile` relative to `data/`
+(including year/topic); keep manifest entries as local basenames. Allowlist only
+the required directories and validated CSV/JSON files in the data `.gitignore`.
+Legacy datasets and historical config references retain their existing paths.
+
 Chart config structure:
 ```javascript
 {

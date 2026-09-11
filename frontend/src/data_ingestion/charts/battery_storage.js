@@ -8,7 +8,7 @@ validateBatteryStorage();
 module.exports = [
   {
     type: 'line',
-    dataFile: 'battery_storage_cohorts.csv',
+    dataFile: '2026/battery_storage/battery_storage_cohorts.csv',
     outputFile: 'cohorts.js',
     containerId: 'battery-storage-cohorts',
     xKey: 'Jahr',
@@ -20,7 +20,7 @@ module.exports = [
   },
   {
     type: 'bar',
-    dataFile: 'battery_storage_segments.csv',
+    dataFile: '2026/battery_storage/battery_storage_segments.csv',
     outputFile: 'segments.js',
     containerId: 'battery-storage-segments',
     xKey: 'Jahr',
@@ -32,7 +32,7 @@ module.exports = [
   },
   {
     type: 'line',
-    dataFile: 'battery_storage_duration.csv',
+    dataFile: '2026/battery_storage/battery_storage_duration.csv',
     outputFile: 'duration.js',
     containerId: 'battery-storage-duration',
     xKey: 'Jahr',
@@ -43,7 +43,7 @@ module.exports = [
   },
   {
     type: 'line',
-    dataFile: 'battery_storage_daily_profile.csv',
+    dataFile: '2026/battery_storage/battery_storage_daily_profile.csv',
     outputFile: 'daily-price.js',
     containerId: 'battery-storage-daily-price',
     xKey: 'Stunde',
@@ -54,7 +54,7 @@ module.exports = [
   },
   {
     type: 'line',
-    dataFile: 'battery_storage_daily_profile.csv',
+    dataFile: '2026/battery_storage/battery_storage_daily_profile.csv',
     outputFile: 'daily-solar.js',
     containerId: 'battery-storage-daily-solar',
     xKey: 'Stunde',
