@@ -15,6 +15,15 @@ publication, read:
 
 - [Dashboard architecture](docs/dashboard_architecture.md): the default design and
   acceptance checklist for one daily, stateless dashboard using the existing stack.
+- [Plan B](docs/plan_b.md): optional paths for independent publishing, durable history,
+  managed databases, scheduled compute, or a server. Do not introduce these without
+  an explicit need and agreement on the trade-offs.
+
+Dashboard runs must reconstruct their required data from scratch, remain idempotent,
+and select only necessary sources/models. Do not persist the DuckDB database between
+runs. Keep dependencies, source requests, and runtime bounded; publish only validated,
+compact exports. Preserve frozen blog-post datasets and the last working dashboard
+on failure. The architecture documents describe planned work, not existing automation.
 - [Dashboard publication](docs/dashboard_publication.md): authorized daily data-only
   publication, released-base guards, public verification, and recovery.
 - [Plan B](docs/plan_b.md): optional paths for independent publishing, durable history,
@@ -60,5 +69,5 @@ history/trade reconciliation at rollover; never auto-correct closed years.
 - Run frontend commands from `frontend/`; use `npm test` and `npm run build` for
   frontend changes. Follow pipeline skill guidance for focused dbt selection/tests.
 - Keep `.data/`, raw downloads, and credentials out of Git. Preserve unrelated work.
-- Do not commit, push, or deploy unless requested; the authorized scheduled workflow
-  does not authorize an agent to publish during an unrelated task.
+- Do not commit, push, or deploy unless requested; documenting a future automated
+  publication workflow does not authorize publishing during the current task.

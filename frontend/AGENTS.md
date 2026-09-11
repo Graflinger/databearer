@@ -30,7 +30,7 @@ node "src/data_ingestion/generate-charts.js" industriepolitik.js
 
 Read [dashboard_architecture.md](../docs/dashboard_architecture.md) before adding dashboard
 pages, chart data, freshness metadata, or refresh/deployment automation. It specifies
-the daily pipeline using the existing stack. Keep live dashboard
+the planned daily, stateless pipeline using the existing stack. Keep live dashboard
 datasets separate from frozen blog-post snapshots, and render prepared exports rather
 than fetching raw upstream data in visitors' browsers.
 

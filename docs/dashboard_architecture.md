@@ -53,6 +53,10 @@ Daily/manual GitHub Actions run
   → fetch only the required source data
   → fresh DuckDB: staging → selected cleaned/curated dbt models
   → validate and export deterministic chart data
+  → compare with the tracked dashboard snapshot
+      unchanged: no new commit/build; failed publication has a separate recovery path
+      changed: validate frontend → commit only allowlisted exports → push normally
+  → Cloudflare Pages builds and publishes a complete site deployment
   → electricity: refresh current-year history with recent overlap checks, then monthly trade
   → frontend tests/lint/build (including unchanged data in the current workflow)
   → compare with the tracked dashboard snapshot
