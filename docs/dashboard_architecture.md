@@ -2,7 +2,21 @@
 
 Repository paths in this document are relative to the repository root.
 
-Status: agreed direction; implementation plan, not an implemented dashboard or workflow.
+Status: implemented for the German electricity dashboard. Daily data-only
+publication is authorized and enabled in the workflow; activation awaits merge to
+`main` and first live deployment verification. See
+[dashboard publication](dashboard_publication.md) for the operational policy and
+recovery; the design/checklist below also guides future dashboards.
+
+**Approved exception, September 2026:** the German electricity dashboard now has
+a [durable daily-history extension](german_electricity_history.md). Its yearly JSON
+exports are authoritative refresh inputs, closed years are frozen, and only the
+current year's latest 35 complete days are corrected. Full reconstruction remains
+an explicit bounded backfill (182 daily-source requests for 2015–2026). This
+exception changes export-state retention and the total history-size budget; it
+does not persist DuckDB. Scheduling/publication is separately authorized by the
+publication policy linked above. The recent hourly snapshot retains the stateless
+design below; monthly trade also uses a bounded durable snapshot.
 
 Start with **one dashboard, one daily refresh, and the existing Python/DuckDB/dbt →
 Eleventy/ECharts → Cloudflare Pages stack**. No rented server, persistent database,
@@ -33,6 +47,7 @@ incremental ingestion, a workflow orchestrator, and a warehouse of historical sn
 
 ```text
 Daily/manual GitHub Actions run
+  → publishing only: require main ref and HEAD == origin/main == origin/releases/cloudflare
   → resolve explicit dashboard ID and reporting window
   → install minimal, pinned runtime dependencies
   → fetch only the required source data
@@ -42,6 +57,13 @@ Daily/manual GitHub Actions run
       unchanged: no new commit/build; failed publication has a separate recovery path
       changed: validate frontend → commit only allowlisted exports → push normally
   → Cloudflare Pages builds and publishes a complete site deployment
+  → electricity: refresh current-year history with recent overlap checks, then monthly trade
+  → frontend tests/lint/build (including unchanged data in the current workflow)
+  → compare with the tracked dashboard snapshot
+      unchanged: no new commit or Git-triggered Cloudflare build
+      changed + publishing: commit only allowlisted exports → atomic non-force push to both refs
+  → publishing: verify public data/HTML, including no-change runs (up to 240 seconds)
+  → Cloudflare Git integration handles the external build; failed deployment needs manual recovery
   → browser loads static chart assets from the CDN
 ```
 
@@ -55,25 +77,26 @@ Existing integration points:
 - Chart configs/builders: `frontend/src/data_ingestion/charts/` and `builders/`.
 - `.eleventy.js` generates chart JavaScript on build; the ingestion directory itself
   is excluded from the published site.
-- `.github/workflows/frontend-ci.yml` currently tests the frontend; it does not
-  refresh data or deploy the site.
+- `.github/workflows/frontend-ci.yml` runs PR checks; it does not refresh live data
+  or deploy the site. The refresh workflow runs its own validation before publishing.
 
-Suggested new locations (not yet created):
+Implemented electricity locations:
 
-| Purpose | Proposed location |
+| Purpose | Location |
 | --- | --- |
-| Dashboard entry point and narrow source/model selection | `pipeline/src/data_pipelines/dashboards/<dashboard_id>/` |
+| Dashboard entry point and narrow source/model selection | `pipeline/src/data_pipelines/dashboards/german_electricity/` |
 | Pinned dashboard runtime dependency set | `pipeline/requirements-dashboard.txt` |
 | Scheduled/manual workflow | `.github/workflows/dashboard-refresh.yml` |
-| Evergreen dashboard page, outside post collections | `frontend/src/dashboards/<dashboard_id>.md` |
-| Dedicated chart config | `frontend/src/data_ingestion/charts/dashboards/<dashboard_id>.js` |
-| Tracked chart exports | `frontend/src/data_ingestion/data/dashboard_<dashboard_id>_<dataset>.csv` |
-| Build-time freshness/provenance metadata | `frontend/src/_data/dashboards/<dashboard_id>.json` |
+| Evergreen dashboard page, outside post collections | `frontend/src/dashboards/strom.njk` |
+| Dedicated chart controllers | `frontend/src/js/dashboards/` |
+| Tracked recent export with freshness/provenance | `frontend/src/_data/germanElectricity.json` |
+| Durable yearly history | `frontend/src/data-history/german-electricity/` |
+| Guarded Git publisher / public verifier | `scripts/dashboard_publish.py`, `scripts/verify_dashboard_deployment.py` |
 
-Validate config discovery and Eleventy data access when implementing these proposed
-locations. Prefer the current CSV-to-chart-JS path for the first dashboard. If it
-needs runtime JSON later, add an explicit public data directory/passthrough rule;
-placing JSON in the ignored ingestion directory does not make it browser-accessible.
+Electricity uses one shared prepared JSON snapshot rather than duplicated per-chart
+CSVs, with explicit public JSON routes and history passthrough. See the
+[frontend implementation](../frontend/README-dashboard.md). Placing JSON in the
+ignored ingestion directory alone does not make it browser-accessible.
 
 ## 3. Statelessness and idempotency
 
@@ -90,9 +113,11 @@ optional explicit as-of date for manual reruns. Use stable keys, sorting, column
 order, date formats, numeric precision, null encoding, and serialization. Keep the
 wall clock and unordered query results out of chart-data output.
 
-The tracked previous export is used only for change detection and presentation
-continuity, never as an ingestion input. A new checkout with an empty `.data/`
-must succeed. Avoid incremental dbt models that depend on last run's tables.
+For the stateless recent snapshot, the tracked previous export is used only for
+change detection and presentation continuity, never as an ingestion input. The
+approved history/trade exceptions use validated repository snapshots as durable
+inputs. A new checkout with an empty `.data/` must succeed. Avoid incremental dbt
+models that depend on last run's tables.
 
 Historical time series are allowed: fetch the bounded history from the provider
 on every run. This does **not** preserve what the provider reported on an earlier
@@ -119,10 +144,12 @@ Make the job small by construction, not merely by caching a large pipeline:
    query `prod_curated`; do not rely on the profile's `dev` default.
 5. Cache package downloads using dependency-file/platform keys, never the DuckDB
    database for correctness. A cold cache must still work within the timeout.
-6. Compare validated exports before installing Node dependencies or running frontend
-   checks. If nothing changed, skip the frontend build and publication.
+6. No-change output creates no data commit or Git-triggered deployment. The current
+   electricity workflow deliberately runs frontend validation/build on unchanged
+   data too, then verifies the public deployment on publishing runs.
 7. On changed output, run the relevant frontend tests and one production build before
-   pushing. Cloudflare will build again for deployment; accept that small duplication
+   pushing. Cloudflare's Git integration is expected to build again for deployment;
+   verify this on the first live bot push and accept that small duplication
    initially rather than remove the pre-publication quality gate.
 8. Record stage durations, request count, bytes downloaded, rows exported, and export
    size in the Actions job summary. Never log tokens or credential-bearing URLs.
@@ -130,7 +157,7 @@ Make the job small by construction, not merely by caching a large pipeline:
 Initial engineering targets, to measure and revise after the first cold run:
 
 - Typical refresh under **5 minutes**, with a **10-minute job timeout** including
-  installation and changed-output validation.
+  installation, validation, and up to 240 seconds of public deployment verification.
 - Initial published dashboard data at most **1 MB uncompressed** in total; aggregate
   or bound the display window before increasing it. Avoid loading all history just
   to display recent values.
@@ -187,19 +214,22 @@ copy the complete data/metadata set into the frontend and validate its build. A
 multi-source snapshot must not silently mix a failed refresh with new data unless
 an explicit per-source freshness contract permits it.
 
-**Implementation prerequisite:** the current Eleventy hook catches chart-generation
-errors, and the generator also has error-catching paths. Ensure failures propagate
-to a nonzero CI result and check expected chart assets. A superficially successful
-site build is not sufficient validation.
+**Implemented build prerequisite:** chart-generation failures propagate to a nonzero
+CI result; build checks validate expected dashboard assets and data/HTML consistency.
+Preserve these checks. A superficially successful site build is not sufficient validation.
 
 For the commit-based MVP:
 
 - Serialize refresh runs with a concurrency group; avoid overlapping publications.
 - Use least-privilege workflow permissions (`contents: write` only where needed),
   repository secrets for source credentials, and reviewed/pinned actions.
-- Stage only the explicit dashboard CSV/metadata allowlist. Never use `git add .`;
+- Require the `main` ref and identical HEAD/origin main/origin release commits before
+  source fetching; unpublished main changes stop before refresh/build.
+- Stage only the explicit recent/current-year-history/trade allowlist. Never use `git add .`;
   never stage generated chart JS, unrelated posts, databases, or raw responses.
-- Create a commit only when the validated snapshot changes. Push without force.
+- Create a commit only when the validated snapshot changes. Push both refs with
+  `git push --atomic`, without force. Normal blog/code changes retain manual promotion;
+  merge release ancestry into main first if branches have diverged.
   If the branch advances, fail/retry from the new head rather than overwrite work.
 - Do not bypass branch protection. If automated pushes are disallowed, explicitly
   choose an approved PR or deployment strategy before implementation.
@@ -225,10 +255,12 @@ hash/coverage afterward. Document and test that operation during rollout; do not
 manufacture a data change or timestamp-only commit to trigger deployment. If a newer
 commit supersedes the failed one, deploy the intended current version rather than
 blindly replaying an outdated snapshot. Automated deployment reconciliation can be
-added later, but a successful no-change refresh must not be reported as evidence
-that the site is current.
+added later. The implemented read-only verifier checks public data/HTML even on
+no-change publishing runs and fails on an old remote snapshot after 240 seconds;
+it does not automatically retry Cloudflare. See [recovery](dashboard_publication.md).
 
-Use a daily cron away from the start of the hour plus `workflow_dispatch`. GitHub
+The workflow uses **09:17 UTC daily** plus `workflow_dispatch` with boolean
+`publish=false` by default. GitHub
 scheduling is best effort, runs from the default branch, and may be delayed or
 dropped under load. Public-repository schedules can be disabled after 60 days of
 repository inactivity. Do not promise an exact update time or rely on successful
@@ -251,7 +283,9 @@ and preview builds in the budget. Recheck limits before increasing cadence:
    layout/theme. Add provenance, loading/error states where needed, and freshness UI.
 4. Add the scheduled/manual workflow and guarded commit-based publication; verify
    token permissions, branch rules, Cloudflare behavior, and failure notifications.
-5. Enable the daily schedule only after these checks pass:
+5. Complete and record rollout checks below. The implementation contains the daily
+   schedule; actual activation awaits merge to `main`, and first live deployment
+   verification remains pending:
 
 - [ ] A cold run succeeds without any previous database, data artifact, or cache.
 - [ ] Running twice against fixed input fixtures/window produces byte-identical

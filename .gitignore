@@ -16,3 +16,10 @@
 
 # Generated image output (scratch dir, lives outside image-generation/)
 generated-images/
+
+# Local browser inspection artifacts
+/.playwright-mcp/
+/german-electricity-dashboard.png
+
+# Local duplicate README
+/README 2.md

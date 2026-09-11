@@ -1,0 +1,4 @@
+# Narrow runtime, aligned with requirements.txt; Python 3.11 recommended.
+dbt-core==1.8.8
+dbt-duckdb==1.9.0
+duckdb==1.1.1

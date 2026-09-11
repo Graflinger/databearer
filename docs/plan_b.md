@@ -2,8 +2,16 @@
 
 Repository paths in this document are relative to the repository root.
 
-Status: alternatives for later evaluation; none is required or implemented by this
-document. The default remains [the stateless daily architecture](dashboard_architecture.md).
+Status: alternatives for evaluation; this document does not itself implement them.
+The default remains [the stateless daily architecture](dashboard_architecture.md).
+The approved [German electricity daily history](german_electricity_history.md)
+now implements a narrow durable-partition variant: yearly compact JSON in the
+repository, rolling current-year corrections, frozen closed years, manifest-last
+publication, and bounded version retention. It adds no object store/server or
+persistent database. Daily data-only publication is separately authorized in
+[the publication workflow](dashboard_publication.md), with an already released-base
+guard and atomic Git updates; activation awaits merge to `main` and first live
+deployment verification. Independent publishing options below remain alternatives.
 
 Add infrastructure only for a demonstrated need. **Keeping history does not require
 a server, and renting a server does not require making the website dynamic.** Keep

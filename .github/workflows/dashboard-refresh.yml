@@ -1,0 +1,99 @@
+name: Electricity dashboard refresh
+
+# Only data from an already released main commit may be published.
+on:
+  schedule:
+    - cron: '17 9 * * *'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish validated data to main and production (requires aligned branches)
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: electricity-dashboard-publication
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Verify publication starts from an already released main commit
+        if: env.PUBLISH == 'true'
+        id: release
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || { echo "Publication requires the main ref" >&2; exit 1; }
+          base=$(python3 scripts/dashboard_publish.py check)
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: pipeline/requirements-dashboard.txt
+      - name: Install narrow pipeline runtime
+        working-directory: pipeline
+        run: python -m pip install -r requirements-dashboard.txt
+      - name: Test recent pipeline and persistent history
+        working-directory: pipeline
+        env:
+          PYTHONPATH: .
+        run: python -m unittest discover -s tests -p 'test_german_electricity*.py' -v
+      - name: Refresh and validate real SMARD data
+        working-directory: pipeline
+        env:
+          PYTHONPATH: .
+        run: python -m src.data_pipelines.dashboards.german_electricity
+      - name: Update current-year history and validate overlap
+        working-directory: pipeline
+        env:
+          PYTHONPATH: .
+        run: python -m src.data_pipelines.dashboards.german_electricity.history refresh
+      - name: Update monthly DE-LU commercial trade
+        working-directory: pipeline
+        env:
+          PYTHONPATH: .
+        run: python -m src.data_pipelines.dashboards.german_electricity.trade refresh
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Validate frontend and build snapshot
+        working-directory: frontend
+        run: |
+          npm ci
+          npm test -- --runInBand
+          npm run lint
+          npm run build
+      - name: Retain validated export for review (not publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: german-electricity-validated-snapshot
+          path: |
+            frontend/src/_data/germanElectricity.json
+            frontend/src/_data/germanElectricityTrade.json
+            frontend/src/_data/germanElectricityAnnual.json
+            frontend/src/_data/germanElectricityProgress.json
+            frontend/src/data-history/german-electricity/*.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish only allowed data changes atomically
+        if: env.PUBLISH == 'true'
+        env:
+          RELEASE_BASE: ${{ steps.release.outputs.base }}
+        run: python3 scripts/dashboard_publish.py publish --base "$RELEASE_BASE"
+      - name: Confirm the public deployment matches the validated snapshots
+        if: env.PUBLISH == 'true'
+        run: python3 scripts/verify_dashboard_deployment.py --timeout 240 --interval 10

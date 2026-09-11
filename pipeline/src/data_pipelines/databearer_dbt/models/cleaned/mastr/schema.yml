@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: mastr_battery_freshness
+    description: "Ephemeral all-row provenance guard: aborts curated-only rebuilds if any cleaned snapshot_date/archive_sha256 differs from current atomic source provenance."
+  - name: mastr_battery_snapshot
+    description: "Exactly one complete source provenance row, requiring explicit battery_snapshot_date to equal the ingested date. Mismatch aborts before plant materialization."
+    columns:
+      - name: snapshot_date
+        tests: [not_null, unique]
+      - name: archive_sha256
+        tests: [not_null]
+  - name: mastr_katalogwerte
+    description: "Source catalogue, not a hard-coded replacement. Carries snapshot_date/archive_sha256 from snapshot dependency. Duplicate IDs fail testing and cannot multiply joins."
+    columns:
+      - name: katalogwert_id
+        tests: [not_null, unique]
+      - name: katalogkategorie_id
+        tests: [not_null]
+      - name: katalogkategorie
+        tests: [not_null]
+  - name: mastr_stromspeicher_einheiten
+    description: "Source-grain electricity storage units; tolerant casts and catalogue-validated battery/status flags. Unknown values stay NULL. Carries snapshot_date/archive_sha256 and rejects stale catalogue provenance."
+    columns:
+      - name: source_row_number
+        tests: [not_null, unique]
+  - name: mastr_stromspeicher_anlagen
+    description: "Source-grain storage plants with raw usable kWh and snapshot_date/archive_sha256. Duplicate/missing identifiers remain visible in the curated quality report."
+    columns:
+      - name: source_row_number
+        tests: [not_null, unique]

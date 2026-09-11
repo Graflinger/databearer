@@ -1,0 +1,5 @@
+snapshot_date,operating_status,size_segment,plant_count,unit_count,power_gw,energy_gwh,median_duration_hours,network_verified_plant_count
+2026-06-30,operating,large,557,557,3.47610878,5.907248323,2,320
+2026-06-30,operating,medium,25234,25234,0.732126596,1.561172914,2.604166667,16669
+2026-06-30,operating,overall,2566415,2566416,18.162091618,29.480829592,1.84,1894056
+2026-06-30,operating,small,2540624,2540625,13.953856242,22.012408355,1.84,1877067
