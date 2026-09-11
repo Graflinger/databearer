@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: smard_hourly_cleaned
+    description: Hourly Germany net public-grid generation/load in average GW; DE-LU price in EUR/MWh.
+    columns:
+      - name: series
+        tests:
+          - not_null
+          - accepted_values:
+              values: [biomass, hydro, wind_offshore, wind_onshore, solar, other_renewables, lignite, hard_coal, gas, other_conventional, pumped_storage, load, price]
+      - name: timestamp_ms
+        tests: [not_null]
+      - name: value
+        tests: [not_null]
+  - name: german_electricity_hourly
+    description: One row per actual UTC hour in 30 complete Europe/Berlin calendar days. See docs/german_electricity_data.md.
+    columns:
+      - name: timestamp
+        description: UTC epoch milliseconds at inclusive start of a one-hour interval.
+        tests: [not_null, unique]

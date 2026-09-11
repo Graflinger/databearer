@@ -5,12 +5,12 @@ sources:
     schema: staging
     tables:
       - name: mastr_einheiten_strom_speicher
-        description: "MaStR - public electricity storage unit records from EinheitenStromSpeicher.xml"
+        description: "MaStR public electricity storage units (EinheitenStromSpeicher.xml); source-shaped nullable VARCHAR columns."
       - name: mastr_anlagen_strom_speicher
-        description: "MaStR - public electricity storage plant records from AnlagenStromSpeicher.xml"
-      - name: mastr_anlagen_eeg_speicher
-        description: "MaStR - public EEG storage plant records from AnlagenEegSpeicher.xml"
+        description: "MaStR storage plants (AnlagenStromSpeicher.xml); usable kWh occurs once per plant."
       - name: mastr_katalogwerte
-        description: "MaStR - catalog values used to decode numeric IDs in the export"
+        description: "Actual export catalogue: Id, Wert, KatalogKategorieId. Required even for a battery-only extract."
       - name: mastr_katalogkategorien
-        description: "MaStR - catalog categories used to decode numeric IDs in the export"
+        description: "Actual export catalogue categories: Id, Name."
+      - name: mastr_snapshot
+        description: "Single provenance row atomically ingested with all four MaStR tables: snapshot_date, source_url, archive_sha256, filename."

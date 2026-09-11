@@ -26,6 +26,35 @@ node "src/data_ingestion/generate-charts.js" industriepolitik.js
 
 ## Architecture
 
+### Live Dashboards
+
+Read [dashboard_architecture.md](../docs/dashboard_architecture.md) before adding dashboard
+pages, chart data, freshness metadata, or refresh/deployment automation. It specifies
+the daily pipeline using the existing stack. Keep live dashboard
+datasets separate from frozen blog-post snapshots, and render prepared exports rather
+than fetching raw upstream data in visitors' browsers.
+
+Read [plan_b.md](../docs/plan_b.md) when evaluating independent data publishing, durable
+history, databases, or servers. These are optional future alternatives, not prerequisites
+for the first dashboard. Read [dashboard_publication.md](../docs/dashboard_publication.md)
+for the implemented daily workflow, released-base guard, and rollout status.
+
+The electricity dashboard now has approved [persistent daily history](../docs/german_electricity_history.md).
+Preserve raw hashed partition bytes, source gaps, nuclear-era and price-zone metadata.
+Load historical years lazily; never interpret missing observations as zero or daily
+price averages as negative-hour counts. Daily data-only publication is authorized at
+09:17 UTC, with activation upon merge to `main`; first live deployment verification
+is pending. Publishing requires the `main` ref and identical HEAD/origin main/origin
+release commits before source fetching. Only recent/current-year-history/trade
+exports may be committed and pushed atomically to both branches, without force.
+Normal code/blog changes require manual release promotion; reconcile release ancestry
+in main first. Monthly/manual progress and frozen annual supplements are excluded
+from daily source refreshes. Public copy describes automatic daily updates with
+actual observation dates, while progress retains its separate cadence. Run frontend
+tests/lint/build on Node 20; public verification must also run on no-change publishing
+runs. An atomic Git push is not proof that Cloudflare deployed the snapshot.
+
+
 ### Directory Structure
 - `src/` - Source files (Eleventy input)
 - `src/_includes/` - Nunjucks layouts (`base.njk` for site shell, `post.njk` for blog posts)

@@ -1,0 +1,1 @@
+"""Bounded, stateless dashboard refreshes."""

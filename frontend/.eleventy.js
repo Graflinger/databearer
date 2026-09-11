@@ -1,21 +1,40 @@
 const { HtmlBasePlugin } = require('@11ty/eleventy');
 const { execSync } = require('child_process');
+const electricity = require('./src/js/dashboards/electricity-data');
+const { validateBuildSnapshot } = require('./src/data_ingestion/builders/electricitySnapshot');
+const { verifyPublished } = require('./src/data_ingestion/builders/electricityHistory');
+const { verifyPublishedTrends } = require('./src/data_ingestion/builders/electricityTrends');
+const { verifyPublishedProgress } = require('./src/data_ingestion/builders/electricityProgress');
 
 module.exports = function (eleventyConfig) {
   // Generate charts before Eleventy build
   eleventyConfig.on('eleventy.before', async () => {
     console.log('🎨 Generating charts...');
-    try {
-      execSync('node "src/data_ingestion/generate-charts.js"', {
-        stdio: 'inherit',
-      });
-    } catch (error) {
-      console.error('Chart generation failed:', error.message);
-    }
+    execSync('node "src/data_ingestion/generate-charts.js"', {
+      stdio: 'inherit',
+    });
+  });
+
+  eleventyConfig.addFilter('electricitySummary', (snapshot) => {
+    validateBuildSnapshot(snapshot);
+    const summary = electricity.summarize(snapshot);
+    return { ...summary, text: electricity.presentation(summary),
+      createdLabel: electricity.timestampLabel(Date.parse(snapshot.snapshot_created_at)),
+      stale: electricity.freshness(snapshot).stale };
+  });
+  eleventyConfig.addFilter('electricityNumber', electricity.number);
+  eleventyConfig.addFilter('electricityJSON', (snapshot) => {
+    validateBuildSnapshot(snapshot);
+    return JSON.stringify(snapshot).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
   });
 
   // Ignore data ingestion folder
   eleventyConfig.ignores.add('src/data_ingestion/**');
+  eleventyConfig.addPassthroughCopy({ 'src/data-history/german-electricity': 'data/history/german-electricity' });
+  eleventyConfig.addPassthroughCopy('src/_headers');
+  eleventyConfig.on('eleventy.after', ({ dir }) => verifyPublished(dir.output));
+  eleventyConfig.on('eleventy.after', ({ dir }) => verifyPublishedTrends(dir.output));
+  eleventyConfig.on('eleventy.after', ({ dir }) => verifyPublishedProgress(dir.output));
 
   // Exclude generated charts from watch to prevent rebuild loop
   eleventyConfig.watchIgnores.add('src/js/charts/**');

@@ -11,12 +11,12 @@ function loadChartConfigs(chartsDir, specificFile = null) {
   const configs = [];
 
   if (!fs.existsSync(chartsDir)) {
-    console.warn(`Charts directory not found: ${chartsDir}`);
-    return configs;
+    throw new Error(`Charts directory not found: ${chartsDir}`);
   }
 
   let files;
   if (specificFile) {
+    if (!specificFile.endsWith('.js')) throw new Error('Chart config must be a .js file');
     // Load only the specific file
     files = [specificFile];
     console.log(`Loading specific file: ${specificFile}`);
@@ -43,17 +43,20 @@ function loadChartConfigs(chartsDir, specificFile = null) {
 
       if (Array.isArray(chartConfigs)) {
         // Add source file metadata to each config
-        const configsWithMetadata = chartConfigs.map((config) => ({
-          ...config,
-          _sourceFile: sourceFileName,
-        }));
+        if (!chartConfigs.length) throw new Error('Chart config array is empty');
+        const configsWithMetadata = chartConfigs.map((config) => {
+          if (!config || typeof config !== 'object' || Array.isArray(config)) {
+            throw new Error('Each chart config must be an object');
+          }
+          return { ...config, _sourceFile: sourceFileName };
+        });
         configs.push(...configsWithMetadata);
         console.log(`✓ Loaded ${chartConfigs.length} chart(s) from ${file}`);
       } else {
-        console.warn(`⚠ Skipping ${file}: does not export an array of charts`);
+        throw new Error('Module does not export an array of charts');
       }
     } catch (error) {
-      console.error(`✗ Error loading ${file}:`, error.message);
+      throw new Error(`Error loading ${file}: ${error.message}`);
     }
   }
 

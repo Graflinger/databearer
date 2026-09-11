@@ -1,139 +1,70 @@
-WITH stromspeicher AS (
+-- Focused recovery of 53b4954's source contract. Preserve bad values for audit.
+WITH typed AS (
     SELECT
-        "EinheitMastrNummer",
-        "DatumLetzteAktualisierung",
-        "LokationMaStRNummer",
-        "NetzbetreiberpruefungStatus",
-        "NetzbetreiberpruefungDatum",
-        "AnlagenbetreiberMastrNummer",
-        "Land",
-        "Bundesland",
-        "Landkreis",
-        "Gemeinde",
-        "Gemeindeschluessel",
-        "Postleitzahl",
-        "Ort",
-        "Laengengrad",
-        "Breitengrad",
-        "Registrierungsdatum",
-        "Inbetriebnahmedatum",
-        "GeplantesInbetriebnahmedatum",
-        "DatumEndgueltigeStilllegung",
-        "DatumBeginnVoruebergehendeStilllegung",
-        "DatumWiederaufnahmeBetrieb",
-        "EinheitSystemstatus",
-        "EinheitBetriebsstatus",
-        "NameStromerzeugungseinheit",
-        "Energietraeger",
-        "Bruttoleistung",
-        "Nettonennleistung",
-        "FernsteuerbarkeitNb",
-        "FernsteuerbarkeitDv",
-        "Einspeisungsart",
-        "Einsatzort",
-        "AcDcKoppelung",
-        "Batterietechnologie",
-        "Notstromaggregat",
-        "NettonennleistungDeutschland",
-        "ZugeordnenteWirkleistungWechselrichter",
-        "SpeMastrNummer",
-        "EegMaStRNummer",
-        "EegAnlagentyp",
-        "Technologie",
-        "GemeinsamRegistrierteSolareinheitMastrNummer",
-        "NetzreserveZugeordnet",
-        "DatumNetzreserve",
-        "KapazitaetsreserveZugeordnet",
-        "DatumKapazitaetsreserve",
-        "InbetriebnahmedatumAmAktuellenStandort"
-    FROM
-        {{ source('staging', 'mastr_einheiten_strom_speicher') }}
-),
-katalogwerte AS (
-    SELECT * FROM {{ ref('mastr_katalogwerte') }}
+        ROW_NUMBER() OVER () AS source_row_number,
+        NULLIF(TRIM("EinheitMastrNummer"), '') AS einheit_mastr_nummer,
+        NULLIF(TRIM("SpeMastrNummer"), '') AS spe_mastr_nummer,
+        "Nettonennleistung" AS raw_nettonennleistung,
+        TRY_CAST(NULLIF(TRIM("Nettonennleistung"), '') AS DOUBLE) AS nettonennleistung_kw,
+        "Inbetriebnahmedatum" AS raw_inbetriebnahmedatum,
+        TRY_CAST("Inbetriebnahmedatum" AS DATE) AS inbetriebnahmedatum,
+        TRY_CAST("GeplantesInbetriebnahmedatum" AS DATE) AS geplantes_inbetriebnahmedatum,
+        TRY_CAST("DatumLetzteAktualisierung" AS TIMESTAMP) AS datum_letzte_aktualisierung,
+        "Land" AS raw_land,
+        "Technologie" AS raw_technologie,
+        "EinheitSystemstatus" AS raw_systemstatus,
+        "EinheitBetriebsstatus" AS raw_betriebsstatus,
+        TRY_CAST("Land" AS INTEGER) AS land_id,
+        TRY_CAST("Technologie" AS INTEGER) AS technologie_id,
+        TRY_CAST("EinheitSystemstatus" AS INTEGER) AS einheit_systemstatus_id,
+        TRY_CAST("EinheitBetriebsstatus" AS INTEGER) AS einheit_betriebsstatus_id,
+        TRY_CAST("Bundesland" AS INTEGER) AS bundesland_id,
+        TRY_CAST("NetzbetreiberpruefungStatus" AS INTEGER) AS netzbetreiberpruefung_status_id
+    FROM {{ source('staging', 'mastr_einheiten_strom_speicher') }}
+), catalogue AS (
+    -- An ambiguous catalogue ID must never multiply units or decode by accident.
+    SELECT katalogwert_id, MIN(katalogwert) AS label, MIN(katalogkategorie_id) AS category
+    FROM {{ ref('mastr_katalogwerte') }}
+    GROUP BY katalogwert_id
+    HAVING COUNT(*) = 1 AND MIN(category_row_count) = 1
+), catalogue_freshness AS (
+    SELECT CASE WHEN COUNT(*) > 0 AND BOOL_AND(
+        k.snapshot_date IS NOT DISTINCT FROM p.snapshot_date
+        AND k.archive_sha256 IS NOT DISTINCT FROM p.archive_sha256
+    ) THEN TRUE ELSE ERROR('Stale MaStR catalogue provenance; rebuild cleaned models') END AS is_fresh
+    FROM {{ ref('mastr_katalogwerte') }} AS k
+    CROSS JOIN {{ ref('mastr_battery_snapshot') }} AS p
 )
 SELECT
-    stromspeicher."EinheitMastrNummer" AS einheit_mastr_nummer,
-    CAST(NULLIF(stromspeicher."DatumLetzteAktualisierung", '') AS TIMESTAMP) AS datum_letzte_aktualisierung,
-    stromspeicher."LokationMaStRNummer" AS lokation_mastr_nummer,
-    CAST(NULLIF(stromspeicher."NetzbetreiberpruefungStatus", '') AS INTEGER) AS netzbetreiberpruefung_status_id,
-    netzbetreiberpruefung_status.katalogwert AS netzbetreiberpruefung_status,
-    CAST(NULLIF(stromspeicher."NetzbetreiberpruefungDatum", '') AS DATE) AS netzbetreiberpruefung_datum,
-    stromspeicher."AnlagenbetreiberMastrNummer" AS anlagenbetreiber_mastr_nummer,
-    CAST(NULLIF(stromspeicher."Land", '') AS INTEGER) AS land_id,
-    land.katalogwert AS land,
-    CAST(NULLIF(stromspeicher."Bundesland", '') AS INTEGER) AS bundesland_id,
-    bundesland.katalogwert AS bundesland,
-    stromspeicher."Landkreis" AS landkreis,
-    stromspeicher."Gemeinde" AS gemeinde,
-    stromspeicher."Gemeindeschluessel" AS gemeindeschluessel,
-    stromspeicher."Postleitzahl" AS postleitzahl,
-    stromspeicher."Ort" AS ort,
-    CAST(NULLIF(stromspeicher."Laengengrad", '') AS DOUBLE) AS laengengrad,
-    CAST(NULLIF(stromspeicher."Breitengrad", '') AS DOUBLE) AS breitengrad,
-    CAST(NULLIF(stromspeicher."Registrierungsdatum", '') AS DATE) AS registrierungsdatum,
-    CAST(NULLIF(stromspeicher."Inbetriebnahmedatum", '') AS DATE) AS inbetriebnahmedatum,
-    CAST(NULLIF(stromspeicher."GeplantesInbetriebnahmedatum", '') AS DATE) AS geplantes_inbetriebnahmedatum,
-    CAST(NULLIF(stromspeicher."DatumEndgueltigeStilllegung", '') AS DATE) AS datum_endgueltige_stilllegung,
-    CAST(NULLIF(stromspeicher."DatumBeginnVoruebergehendeStilllegung", '') AS DATE) AS datum_beginn_voruebergehende_stilllegung,
-    CAST(NULLIF(stromspeicher."DatumWiederaufnahmeBetrieb", '') AS DATE) AS datum_wiederaufnahme_betrieb,
-    CAST(NULLIF(stromspeicher."EinheitSystemstatus", '') AS INTEGER) AS einheit_systemstatus_id,
-    einheit_systemstatus.katalogwert AS einheit_systemstatus,
-    CAST(NULLIF(stromspeicher."EinheitBetriebsstatus", '') AS INTEGER) AS einheit_betriebsstatus_id,
-    einheit_betriebsstatus.katalogwert AS einheit_betriebsstatus,
-    stromspeicher."NameStromerzeugungseinheit" AS name_stromspeichereinheit,
-    CAST(NULLIF(stromspeicher."Energietraeger", '') AS INTEGER) AS energietraeger_id,
-    energietraeger.katalogwert AS energietraeger,
-    CAST(NULLIF(stromspeicher."Bruttoleistung", '') AS DOUBLE) AS bruttoleistung_kw,
-    CAST(NULLIF(stromspeicher."Nettonennleistung", '') AS DOUBLE) AS nettonennleistung_kw,
-    CAST(NULLIF(stromspeicher."FernsteuerbarkeitNb", '') AS BOOLEAN) AS fernsteuerbarkeit_nb,
-    CAST(NULLIF(stromspeicher."FernsteuerbarkeitDv", '') AS BOOLEAN) AS fernsteuerbarkeit_dv,
-    CAST(NULLIF(stromspeicher."Einspeisungsart", '') AS INTEGER) AS einspeisungsart_id,
-    einspeisungsart.katalogwert AS einspeisungsart,
-    CAST(NULLIF(stromspeicher."Einsatzort", '') AS INTEGER) AS einsatzort_id,
-    einsatzort.katalogwert AS einsatzort,
-    CAST(NULLIF(stromspeicher."AcDcKoppelung", '') AS INTEGER) AS ac_dc_koppelung_id,
-    ac_dc_koppelung.katalogwert AS ac_dc_koppelung,
-    CAST(NULLIF(stromspeicher."Batterietechnologie", '') AS INTEGER) AS batterietechnologie_id,
-    batterietechnologie.katalogwert AS batterietechnologie,
-    CAST(NULLIF(stromspeicher."Notstromaggregat", '') AS BOOLEAN) AS notstromaggregat,
-    CAST(NULLIF(stromspeicher."NettonennleistungDeutschland", '') AS DOUBLE) AS nettonennleistung_deutschland_kw,
-    CAST(NULLIF(stromspeicher."ZugeordnenteWirkleistungWechselrichter", '') AS DOUBLE) AS zugeordnete_wirkleistung_wechselrichter_kw,
-    stromspeicher."SpeMastrNummer" AS spe_mastr_nummer,
-    stromspeicher."EegMaStRNummer" AS eeg_mastr_nummer,
-    CAST(NULLIF(stromspeicher."EegAnlagentyp", '') AS INTEGER) AS eeg_anlagentyp_id,
-    eeg_anlagentyp.katalogwert AS eeg_anlagentyp,
-    CAST(NULLIF(stromspeicher."Technologie", '') AS INTEGER) AS technologie_id,
-    technologie.katalogwert AS technologie,
-    stromspeicher."GemeinsamRegistrierteSolareinheitMastrNummer" AS gemeinsam_registrierte_solareinheit_mastr_nummer,
-    CAST(NULLIF(stromspeicher."NetzreserveZugeordnet", '') AS BOOLEAN) AS netzreserve_zugeordnet,
-    CAST(NULLIF(stromspeicher."DatumNetzreserve", '') AS TIMESTAMP) AS datum_netzreserve,
-    CAST(NULLIF(stromspeicher."KapazitaetsreserveZugeordnet", '') AS BOOLEAN) AS kapazitaetsreserve_zugeordnet,
-    CAST(NULLIF(stromspeicher."DatumKapazitaetsreserve", '') AS TIMESTAMP) AS datum_kapazitaetsreserve,
-    CAST(NULLIF(stromspeicher."InbetriebnahmedatumAmAktuellenStandort", '') AS TIMESTAMP) AS inbetriebnahmedatum_am_aktuellen_standort
-FROM
-    stromspeicher
-LEFT JOIN katalogwerte AS netzbetreiberpruefung_status
-    ON CAST(NULLIF(stromspeicher."NetzbetreiberpruefungStatus", '') AS INTEGER) = netzbetreiberpruefung_status.katalogwert_id
-LEFT JOIN katalogwerte AS land
-    ON CAST(NULLIF(stromspeicher."Land", '') AS INTEGER) = land.katalogwert_id
-LEFT JOIN katalogwerte AS bundesland
-    ON CAST(NULLIF(stromspeicher."Bundesland", '') AS INTEGER) = bundesland.katalogwert_id
-LEFT JOIN katalogwerte AS einheit_systemstatus
-    ON CAST(NULLIF(stromspeicher."EinheitSystemstatus", '') AS INTEGER) = einheit_systemstatus.katalogwert_id
-LEFT JOIN katalogwerte AS einheit_betriebsstatus
-    ON CAST(NULLIF(stromspeicher."EinheitBetriebsstatus", '') AS INTEGER) = einheit_betriebsstatus.katalogwert_id
-LEFT JOIN katalogwerte AS energietraeger
-    ON CAST(NULLIF(stromspeicher."Energietraeger", '') AS INTEGER) = energietraeger.katalogwert_id
-LEFT JOIN katalogwerte AS einspeisungsart
-    ON CAST(NULLIF(stromspeicher."Einspeisungsart", '') AS INTEGER) = einspeisungsart.katalogwert_id
-LEFT JOIN katalogwerte AS einsatzort
-    ON CAST(NULLIF(stromspeicher."Einsatzort", '') AS INTEGER) = einsatzort.katalogwert_id
-LEFT JOIN katalogwerte AS ac_dc_koppelung
-    ON CAST(NULLIF(stromspeicher."AcDcKoppelung", '') AS INTEGER) = ac_dc_koppelung.katalogwert_id
-LEFT JOIN katalogwerte AS batterietechnologie
-    ON CAST(NULLIF(stromspeicher."Batterietechnologie", '') AS INTEGER) = batterietechnologie.katalogwert_id
-LEFT JOIN katalogwerte AS eeg_anlagentyp
-    ON CAST(NULLIF(stromspeicher."EegAnlagentyp", '') AS INTEGER) = eeg_anlagentyp.katalogwert_id
-LEFT JOIN katalogwerte AS technologie
-    ON CAST(NULLIF(stromspeicher."Technologie", '') AS INTEGER) = technologie.katalogwert_id
+    u.*,
+    provenance.snapshot_date,
+    provenance.archive_sha256,
+    COUNT(*) OVER (PARTITION BY einheit_mastr_nummer) AS identifier_row_count,
+    land.label AS land,
+    technology.label AS technologie,
+    system_status.label AS einheit_systemstatus,
+    operating_status.label AS einheit_betriebsstatus,
+    state.label AS bundesland,
+    verification.label AS netzbetreiberpruefung_status,
+    COALESCE(land_id = 84 AND land.label = 'Deutschland'
+        AND technologie_id = 524 AND technology.label = 'Batterie'
+        AND einheit_systemstatus_id = 472 AND system_status.label = 'Aktiviert', FALSE)
+        AS is_active_german_battery,
+    CASE
+        WHEN einheit_betriebsstatus_id = 35 AND operating_status.label = 'In Betrieb' THEN 'operating'
+        WHEN einheit_betriebsstatus_id = 31 AND operating_status.label = 'In Planung' THEN 'planned'
+        ELSE 'other_or_unknown'
+    END AS operating_status,
+    CASE WHEN verification.label IS NOT NULL
+        THEN netzbetreiberpruefung_status_id = 2954 AND verification.label = 'Geprüft'
+    END AS is_network_verified
+FROM typed AS u
+LEFT JOIN catalogue AS land ON u.land_id = land.katalogwert_id AND land.category = 6
+LEFT JOIN catalogue AS technology ON u.technologie_id = technology.katalogwert_id AND technology.category = 29
+LEFT JOIN catalogue AS system_status ON u.einheit_systemstatus_id = system_status.katalogwert_id AND system_status.category = 19
+LEFT JOIN catalogue AS operating_status ON u.einheit_betriebsstatus_id = operating_status.katalogwert_id AND operating_status.category = 4
+LEFT JOIN catalogue AS state ON u.bundesland_id = state.katalogwert_id AND state.category = 101
+LEFT JOIN catalogue AS verification ON u.netzbetreiberpruefung_status_id = verification.katalogwert_id AND verification.category = 175
+CROSS JOIN {{ ref('mastr_battery_snapshot') }} AS provenance
+CROSS JOIN catalogue_freshness
+WHERE catalogue_freshness.is_fresh
