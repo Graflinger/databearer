@@ -12,7 +12,7 @@ with one execution thread. To explicitly write the complete article export set:
 
 ```sh
 PYTHONPATH=. python src/data_pipelines/export_data/2026/batteries_germany/export.py \
-  --output-dir ../frontend/src/data_ingestion/data
+  --output-dir ../frontend/src/data_ingestion/data/2026/battery_storage
 ```
 
 `--electricity-snapshot` (legacy alias `--electricity-input`) defaults to `frontend/src/_data/germanElectricity.json`

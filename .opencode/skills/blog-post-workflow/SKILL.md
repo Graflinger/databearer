@@ -108,9 +108,13 @@ Every chart needs:
 - source link below the chart
 - generated JS under `frontend/src/js/charts/<config-name>/`
 - matching config under `frontend/src/data_ingestion/charts/`
-- CSV input under `frontend/src/data_ingestion/data/`
+- CSV input under `frontend/src/data_ingestion/data/<article-year>/<topic>/`, with
+  supporting aggregates and the validated provenance manifest in the same folder
 
-Use `frontend-visualization` for exact commands and config fields.
+Use `frontend-visualization` for exact commands, config fields and the **Organize a
+frozen data entity** workflow. Use the article year even when data spans many years;
+keep frozen article evidence separate from live dashboard snapshots. A refresh must
+update chart inputs, provenance, article numbers/dates and tests together.
 
 ## Workflow
 

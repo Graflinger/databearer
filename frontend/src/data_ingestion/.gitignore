@@ -1,7 +1,17 @@
-# Ignore all data files
-data/*
+# Ignore data at every level; allow only explicitly frozen article evidence.
+data/**
 
 # Frozen, validated evidence for the battery-storage article (no raw records).
-!data/battery_storage_*.csv
-!data/battery_storage_metadata.json
-!data/battery_storage_quality.json
+!data/2026/
+!data/2026/battery_storage/
+!data/2026/battery_storage/battery_storage_cohorts.csv
+!data/2026/battery_storage/battery_storage_segments.csv
+!data/2026/battery_storage/battery_storage_duration.csv
+!data/2026/battery_storage/battery_storage_daily_profile.csv
+!data/2026/battery_storage/battery_storage_yearly.csv
+!data/2026/battery_storage/battery_storage_monthly.csv
+!data/2026/battery_storage/battery_storage_by_state.csv
+!data/2026/battery_storage/battery_storage_summary.csv
+!data/2026/battery_storage/battery_storage_duration_distribution.csv
+!data/2026/battery_storage/battery_storage_metadata.json
+!data/2026/battery_storage/battery_storage_quality.json

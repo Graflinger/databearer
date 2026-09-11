@@ -32,7 +32,7 @@
 
     const colors = getThemeColors();
     const xData = [2019,2020,2021,2022,2023,2024,2025];
-    const seriesData = [{"key":"Median_Stunden","name":"Median E/P (Stunden)","data":[2.166666667,2,1.961538462,1.964285714,1.617647059,1.646090535,1.92],"color":null}];
+    const seriesData = [{"key":"Median_Stunden","name":"Median E/P (Stunden)","data":[2.166666667,2,1.964285714,1.964285714,1.625,1.655172414,1.92],"color":null}];
 
     const option = {
       backgroundColor: colors.backgroundColor,

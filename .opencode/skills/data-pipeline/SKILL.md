@@ -33,7 +33,7 @@ External APIs / files
   → dbt curated models
   → Python export scripts (`src/data_pipelines/export_data/`)
   → `.data/output/*.csv`
-  → frontend `src/data_ingestion/data/`
+  → frontend `src/data_ingestion/data/<article-year>/<topic>/`
 ```
 
 The local DuckDB database location is configured in `src/config/parameters.yaml` as
@@ -96,8 +96,13 @@ exporting unless you also adapt the export SQL to the dev schema.
      thematic folder pattern.
    - Use DuckDB `COPY (...) TO '.data/output/<name>.csv' (HEADER, DELIMITER ',');`.
    - Keep exported column names stable because frontend chart configs reference them exactly.
-   - Copy the final CSV into `databearer/frontend/src/data_ingestion/data/` when it should be
-     tracked with the frontend.
+   - Package chart CSVs, supporting aggregates, quality reports and provenance in
+     `databearer/frontend/src/data_ingestion/data/<article-year>/<topic>/`.
+     The folder year is the article year, not the observation year.
+   - Follow the `frontend-visualization` skill's **Organize a frozen data entity**
+     workflow for manifests, narrow ignore exceptions, safe promotion, migrations
+     and build-time validation. Export to ignored staging first; preserve last-good
+     evidence on failure. Keep raw data and live dashboard exports separate.
 
 ## Running the pipeline
 

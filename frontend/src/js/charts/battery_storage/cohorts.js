@@ -32,7 +32,7 @@
 
     const colors = getThemeColors();
     const xData = [2019,2020,2021,2022,2023,2024,2025];
-    const seriesData = [{"key":"Anzahl_Index","name":"Anlagenzahl","data":[7.354226452,15.131141678,24.739940862,38.361405008,105.882229801,100,97.519516429],"color":null},{"key":"Energie_Index","name":"Speicherkapazität","data":[7.438527198,14.385957557,22.40141118,42.495236238,98.632807474,100,108.682791865],"color":null}];
+    const seriesData = [{"key":"Anzahl_Index","name":"Anlagenzahl","data":[7.335771447,15.106256566,24.704804152,38.333731167,105.882660413,100,97.951008902],"color":null},{"key":"Energie_Index","name":"Speicherkapazität","data":[7.411729057,14.349751283,22.345556641,42.407292459,98.537408801,100,109.038604651],"color":null}];
 
     const option = {
       backgroundColor: colors.backgroundColor,
