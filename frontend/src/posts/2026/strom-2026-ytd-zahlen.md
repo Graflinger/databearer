@@ -126,7 +126,7 @@ Zwei Tage hatten 2026 bisher einen negativen Tagesdurchschnitt. Das zählt keine
 
 ## Methodik und Datenquellen
 
-Grundlage sind die eingefrorenen SMARD-Tagesdaten des Databearer-Strom-Dashboards aus Commit `dd0c7f8deef858a844be777a5fd1e78949386413` vom 10. September 2026. Der Beobachtungsstand endet am **9. September 2026**. Der Beitrag bleibt auf diesem Stand; die Überarbeitung vom 14. September ergänzt Vergleiche und Einordnung.
+Grundlage sind die SMARD-Tagesdaten aus dem Strom-Dashboard, gespeichert am 10. September 2026. Sie reichen bis einschließlich **9. September 2026**. Der Beitrag bleibt auf diesem Datenstand; die Überarbeitung vom 14. September ergänzt Vergleiche und Einordnung.
 
 - **Zeiträume:** In jedem Jahr 2019–2026 vom 1. Januar bis einschließlich 9. September, Zeitzone Europe/Berlin. 2025 und 2026 enthalten jeweils 252 Tage und 6.047 Stunden. Die Schaltjahre 2020 und 2024 enthalten 253 Tage und 6.071 Stunden; der zusätzliche Tag bleibt enthalten. Kalendergleich bedeutet daher nicht in jedem Jahr gleich viele Stunden.
 - **Erzeugung:** Tagesenergien von GWh in TWh umgerechnet und summiert. Erfasst ist die öffentliche Nettoerzeugung in Deutschland, einschließlich Pumpspeichern und der damaligen Kernenergie. Nicht enthalten sind unter anderem PV-Eigenverbrauch, Industrie- und Bahnstromnetze. Die Netzlast ist eine eigene Kennzahl; die Differenz zur Erzeugung ist kein Maß für den kommerziellen Stromhandel.
