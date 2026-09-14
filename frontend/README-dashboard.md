@@ -67,15 +67,39 @@ daily updates and points to actual observation dates; capacity/congestion retain
 its separate manual/monthly cadence and statutory targets their manual review date.
 
 The [publication workflow](../docs/dashboard_publication.md) authorizes daily
-09:17 UTC recent/history/trade publication only from an already released `main`
-commit. Manual dispatch defaults to `publish=false`; activation awaits merge to
-`main` and the first live deployment verification remains pending. Unpublished main
-changes stop before source fetching/build. Changed validated exports alone advance
-both refs atomically without force; normal code/blog promotion is manual.
+09:17 UTC recent/history/trade publication using released scripts/runtime/frontend.
+Manual dispatch defaults to `publish=false`, refreshing/validating only the selected
+ref. Publishing requires the `main` event ref, followed by explicit
+`releases/cloudflare` checkout. Before source fetching, the guard requires
+`HEAD == origin/releases/cloudflare` and ignores main; unpublished main changes do
+not block production refreshes. Changed validated allowlisted exports alone advance
+**release only, without force**.
 `verify_dashboard_deployment.py` checks public recent data, history manifest/latest
 partition, trends/progress and HTML for up to 240 seconds, including no-change
 publishing runs. A push or validation artifact is not proof of Cloudflare deployment;
 the verifier does not automatically retry an external build.
+
+Only the production job's verified release SHA output enables `sync-main` using the
+released sync script. It checks the exact release SHA and prepares a worktree on
+current main with real release ancestry merged. Changed candidates must pass offline
+electricity/script tests and frontend tests/lint/build on Node 20 without live source
+fetching before rechecking refs and pushing **main only, without force**. Bot main
+pushes cannot rely on push CI. Conflicts/races and validation failures make the
+workflow red but leave verified production intact and future refreshes possible;
+no-change publishing runs retry outstanding sync. There is no two-ref atomic promise.
+Production retains its ten-minute budget including the verifier; sync has its own
+ten-minute cap and extra validation/build cost. The runbook distinguishes recovery
+for public verification failure from sync conflict/race recovery.
+
+Normal code/blog promotion remains manual: incorporate latest release ancestry into
+reviewed main through sync or explicit real-merge reconciliation, preserve newer
+snapshots, pass checks, then fast-forward release without force. Do not silently
+overwrite main conflicts or change schemas to make integration pass. Main and release
+need not routinely equal. **New rollout is pending:** deliberately promote this
+implementation to **both branches** before the main schedule uses released scripts.
+The September 10 manual run succeeded under the old both-ref design (including public
+verification, about 5m47s); September 11/12 old guards stopped with main ahead. See
+the runbook for the historical run link and pending new rollout checks.
 
 ## YTD and yearly daily history
 
@@ -117,7 +141,7 @@ versions may be copied but never become extra selectable years.
 `src/_headers` sets the public manifest to `Cache-Control: no-cache` and hashed
 year files to immutable one-year caching on Cloudflare Pages. The local Eleventy
 server does not apply these hosting rules; deployment headers need host-side
-verification during the first live rollout. Browser manifest retries explicitly
+verification during the new release-first rollout. Browser manifest retries explicitly
 request revalidation; partition hashes are always verified, even on cache hits.
 
 The small validated manifest is safely escaped into a non-executable
