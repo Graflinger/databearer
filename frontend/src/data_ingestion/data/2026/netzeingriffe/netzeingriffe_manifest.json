@@ -1,0 +1,44 @@
+{
+  "contract": {
+    "schema_version": 1,
+    "entity": "2026/netzeingriffe",
+    "methodology": "netzeingriffe-frozen-v1",
+    "source_commit": "dd0c7f8deef858a844be777a5fd1e78949386413",
+    "source_path": "frontend/src/_data/germanElectricityProgress.json",
+    "source_sha256": "cb434822ce5f16e9f6603875cbeff5d50a26b04415a9c9e0ad3e54cebfd801fd",
+    "source_url": "https://www.smard.de/resource/blob/217306/-/data-csv-data.csv",
+    "attribution": "Bundesnetzagentur | SMARD.de",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "license_evidence": "https://www.smard.de/resource/blob/221462/078c832e6e821e841b522f6d46d499af/smard-benutzerhandbuch-09-2026-data.pdf",
+    "reviewed_on": "2026-09-14",
+    "upstream_retrieved_at": null,
+    "timezone": "Europe/Berlin",
+    "annual_window": ["2015", "2025"],
+    "monthly_window": ["2022-07", "2026-05"],
+    "partial_years_monthly": [2022, 2026],
+    "units": { "energy": "GWh", "cost": "million EUR nominal", "change": "percent" },
+    "missing_values": "Forbidden; never replaced by zero",
+    "transformation": "Select and rename annual/monthly fields from pinned JSON; annual integer and monthly two-decimal CSV; summary changes rounded to six decimals. Annual aggregates are independent of monthly sums."
+  },
+  "files": {
+    "netzeingriffe_jahre_2015_2025.csv": {
+      "bytes": 217,
+      "sha256": "f204d1b9f8ba9d45b225ca682f6dfbdb74dc6f66614939755f6fb61905a0519e",
+      "rows": 11,
+      "columns": ["jahr", "massnahmenenergie_gwh", "kosten_mio_eur"]
+    },
+    "netzeingriffe_monate_2022_2026.csv": {
+      "bytes": 1173,
+      "sha256": "9846b809705ba21a03830e2ba9eed65bd8a282b13f3abf0f0f3d704fb1012eb1",
+      "rows": 47,
+      "columns": ["monat", "gesamt_gwh", "redispatch_marktkraftwerke_gwh"]
+    },
+    "netzeingriffe_summary.json": {
+      "bytes": 267,
+      "sha256": "757886d9f5b39e98b6958747f4e4cd49caf06a0dd24577c0892bb1671ba78ef4",
+      "rows": 1,
+      "columns": ["energy_change_2022_2025_gwh", "energy_change_2022_2025_pct", "energy_change_2024_2025_gwh", "cost_change_2024_2025_million_eur", "cost_change_2024_2025_pct", "december_2024_gwh", "may_2026_gwh"]
+    }
+  }
+}

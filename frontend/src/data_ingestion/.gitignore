@@ -5,3 +5,12 @@ data/*
 !data/battery_storage_*.csv
 !data/battery_storage_metadata.json
 !data/battery_storage_quality.json
+
+!data/2026/
+data/2026/*
+!data/2026/netzeingriffe/
+data/2026/netzeingriffe/*
+!data/2026/netzeingriffe/netzeingriffe_jahre_2015_2025.csv
+!data/2026/netzeingriffe/netzeingriffe_monate_2022_2026.csv
+!data/2026/netzeingriffe/netzeingriffe_summary.json
+!data/2026/netzeingriffe/netzeingriffe_manifest.json
