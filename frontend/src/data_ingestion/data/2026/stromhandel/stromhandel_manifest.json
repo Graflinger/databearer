@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "methodology_version": "stromhandel-jahre-v1",
+  "frozen_on": "2026-09-14",
+  "source_commit": "dd0c7f8deef858a844be777a5fd1e78949386413",
+  "source_path": "frontend/src/_data/germanElectricityTrade.json",
+  "source_raw_sha256": "27b037e57cb4f75d9642cb66209b514d0f8df49e76d57aa3e1d56236a922fdee",
+  "source_content_hash": "134552fef7dbc71fd1b0e763bc4b81fd31fcac77217aab35ea566a8f9ffe679a",
+  "source_acquired_at": null,
+  "acquisition_note": "Original retrieval timestamp not recorded; frozen from Git, no live refresh.",
+  "source_url": "https://www.smard.de/home/marktdaten",
+  "attribution": "Bundesnetzagentur | SMARD.de",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "explanation_url": "https://www.smard.de/page/home/wiki-article/518/548/grenzueberschreitender-stromhandel",
+  "explanation_reviewed_on": "2026-09-14",
+  "source_model": "pipeline/src/data_pipelines/dashboards/german_electricity/trade.py",
+  "exporter": "frontend/scripts/freeze-stromhandel.js",
+  "region": "DE-LU",
+  "measure": "scheduled commercial exchanges; not physical flows",
+  "timezone": "Europe/Berlin",
+  "source_window": {
+    "first_month": "2019-01",
+    "last_month": "2026-08",
+    "rows": 92,
+    "unit": "GWh",
+    "key": "month"
+  },
+  "article_window": {
+    "first_month": "2019-01",
+    "last_month": "2025-12",
+    "months": 84,
+    "rows": 7,
+    "unit": "TWh",
+    "key": "jahr"
+  },
+  "transformation": "Sum 12 complete months per calendar year; divide GWh by 1000; net = exports minus imports before rounding; fixed 3 decimals; UTF-8 LF.",
+  "missing_values": "Reject missing article months/totals; preserve source missing/structural-zero flags. Never replace unknowns with zero.",
+  "source_adjustments": "Bilateral MWh sums converted to GWh, import signs reversed; BE/NO2 pre-trading structural zeros and bounded 2020 startup daily fallback retained.",
+  "net_crosscheck": "Gross-derived net retained; documented source net discrepancies in 2021-12, 2022-01, 2022-10, 2022-12. Monthly completeness does not certify hourly completeness.",
+  "quality": {
+    "complete_article_years": 7,
+    "complete_article_months": 84,
+    "missing_article_months": 0,
+    "excluded_months": 8
+  },
+  "payloads": {
+    "stromhandel_jahre_2019_2025.csv": {
+      "sha256": "5b2eca8f9106081299f2179dc51d274389bc77f7b59220d6cd6a4d070fc97636",
+      "bytes": 230,
+      "rows": 7,
+      "columns": [
+        "jahr",
+        "importe_twh",
+        "exporte_twh",
+        "nettoexport_twh"
+      ]
+    },
+    "stromhandel_source.json": {
+      "sha256": "27b037e57cb4f75d9642cb66209b514d0f8df49e76d57aa3e1d56236a922fdee",
+      "bytes": 15129,
+      "rows": 92,
+      "columns": [
+        "exports_gwh",
+        "imports_gwh",
+        "missing_series",
+        "month",
+        "net_exports_gwh",
+        "structural_zero_series"
+      ]
+    }
+  }
+}

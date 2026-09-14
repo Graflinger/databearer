@@ -5,3 +5,11 @@ data/*
 !data/battery_storage_*.csv
 !data/battery_storage_metadata.json
 !data/battery_storage_quality.json
+
+!data/2026/
+data/2026/*
+!data/2026/stromhandel/
+data/2026/stromhandel/*
+!data/2026/stromhandel/stromhandel_jahre_2019_2025.csv
+!data/2026/stromhandel/stromhandel_source.json
+!data/2026/stromhandel/stromhandel_manifest.json
