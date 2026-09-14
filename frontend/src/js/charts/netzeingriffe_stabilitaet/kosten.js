@@ -32,7 +32,7 @@
 
     const colors = getThemeColors();
     const xData = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
-    const seriesData = [{"key":"kosten_mio_eur","name":"Mio. €","data":[1141,893,1511,1477,1279,1432,2286,3916,3335,2954,3058],"color":null}];
+    const seriesData = [{"key":"kosten_mio_eur","name":"Nominale Kosten","data":[1141,893,1511,1477,1279,1432,2286,3916,3335,2954,3058],"color":"#cb6573"}];
 
     const option = {
       backgroundColor: colors.backgroundColor,
@@ -45,7 +45,13 @@
           color: colors.textColor
         }
       },
-      
+      legend: {
+        data: seriesData.map(s => s.name),
+        top: '5%',
+        textStyle: {
+          color: colors.textColor
+        }
+      },
       xAxis: {
         type: 'category',
         data: xData,
@@ -95,7 +101,7 @@
         name: series.name,
         data: series.data,
         type: 'line',
-        smooth: true,
+        smooth: false,
         lineStyle: {
           width: 2,
           color: series.color || colors.defaultColors[index % colors.defaultColors.length]
@@ -109,7 +115,7 @@
         left: '10%',
         right: '10%',
         bottom: '15%',
-        top: '10%'
+        top: '18%'
       },
       animation: true,
       animationDuration: 1000,

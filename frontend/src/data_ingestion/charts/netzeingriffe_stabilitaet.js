@@ -1,32 +1,38 @@
+const { validateNetzeingriffe } = require('../utils/netzeingriffeValidation');
+
+validateNetzeingriffe();
+
 module.exports = [
   {
     type: 'bar',
-    dataFile: 'netzeingriffe_jahre_2015_2025.csv',
+    dataFile: '2026/netzeingriffe/netzeingriffe_jahre_2015_2025.csv',
     outputFile: 'massnahmenenergie.js',
     containerId: 'netzeingriffe-jahre-massnahmenenergie',
     title: '',
     xAxisLabel: 'Jahr',
     yAxisLabel: 'GWh',
     xKey: 'jahr',
-    yKey: 'massnahmenenergie_gwh',
-    color: '#d5a62c',
+    seriesKeys: ['massnahmenenergie_gwh'],
+    seriesNames: ['Maßnahmenenergie'],
+    colors: ['#d5a62c'],
   },
   {
     type: 'line',
-    dataFile: 'netzeingriffe_jahre_2015_2025.csv',
+    dataFile: '2026/netzeingriffe/netzeingriffe_jahre_2015_2025.csv',
     outputFile: 'kosten.js',
     containerId: 'netzeingriffe-jahre-kosten',
     title: '',
     xAxisLabel: 'Jahr',
     yAxisLabel: 'Mio. €',
     xKey: 'jahr',
-    yKey: 'kosten_mio_eur',
-    smooth: true,
+    seriesKeys: ['kosten_mio_eur'],
+    seriesNames: ['Nominale Kosten'],
+    smooth: false,
     colors: ['#cb6573'],
   },
   {
     type: 'line',
-    dataFile: 'netzeingriffe_monate_2022_2026.csv',
+    dataFile: '2026/netzeingriffe/netzeingriffe_monate_2022_2026.csv',
     outputFile: 'monate.js',
     containerId: 'netzeingriffe-monate',
     title: '',
@@ -34,8 +40,9 @@ module.exports = [
     yAxisLabel: 'GWh',
     xKey: 'monat',
     seriesKeys: ['gesamt_gwh', 'redispatch_marktkraftwerke_gwh'],
-    seriesNames: ['Netzengpassmanagement insgesamt', 'davon Redispatch mit Marktkraftwerken'],
+    // Full definitions are immediately above the chart; these labels fit mobile widths.
+    seriesNames: ['Gesamt', 'davon Markt-Redispatch'],
     colors: ['#5470c6', '#469c8a'],
-    smooth: true,
+    smooth: false,
   },
 ];

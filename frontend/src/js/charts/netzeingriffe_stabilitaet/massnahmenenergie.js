@@ -32,7 +32,7 @@
 
     const colors = getThemeColors();
     const xData = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
-    const seriesData = [{"key":"massnahmenenergie_gwh","name":"GWh","data":[20709,16427,26103,21182,20235,23342,27503,36455,34298,30318,30327],"color":"#d5a62c"}];
+    const seriesData = [{"key":"massnahmenenergie_gwh","name":"Maßnahmenenergie","data":[20709,16427,26103,21182,20235,23342,27503,36455,34298,30318,30327],"color":"#d5a62c"}];
     const stacked = false;
 
     const option = {
@@ -49,7 +49,13 @@
           color: colors.textColor
         }
       },
-      
+      legend: {
+        data: seriesData.map(s => s.name),
+        top: '5%',
+        textStyle: {
+          color: colors.textColor
+        }
+      },
       xAxis: {
         type: 'category',
         data: xData,
@@ -108,7 +114,7 @@
         left: '10%',
         right: '10%',
         bottom: '15%',
-        top: '10%'
+        top: '18%'
       },
       animation: true,
       animationDuration: 1000,
