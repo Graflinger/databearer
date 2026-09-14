@@ -9,17 +9,36 @@ Built with [Eleventy](https://www.11ty.dev/) and [Apache ECharts](https://echart
 ## Daily dashboard publication
 
 The authorized `dashboard-refresh.yml` runs daily at **09:17 UTC**; manual dispatch
-defaults to **`publish=false`**. Publishing requires the `main` ref and
-`HEAD == origin/main == origin/releases/cloudflare` before source fetching.
-Unpublished main changes stop before refresh/build. Validated recent data,
-current-year history, and monthly trade alone may be committed and pushed atomically
-to both refs without force. Normal code/blog promotion remains manual, with release
-ancestry merged into main before promotion if branches diverge.
+defaults to **`publish=false`**, refreshing/validating the selected ref only.
+Publishing requires the `main` **event ref**, then explicitly checks out
+`releases/cloudflare` for released scripts, runtime, and frontend. The guard requires
+`HEAD == origin/releases/cloudflare` before source fetching and ignores main's
+position. Validated recent data, current-year history, and monthly trade alone may
+be committed and pushed **release only, without force**. Publishing runs then poll
+public snapshots/HTML for up to 240 seconds, including on no-change runs.
 
-Implementation is enabled in the workflow; activation awaits merge to `main` and
-the first live Cloudflare Git-integration verification is pending. Publishing runs
-poll public snapshots/HTML for up to 240 seconds, including on no-change runs.
-An atomic push is not a deployment guarantee. See the
+Only verified release SHA output enables a separate `sync-main` job using the
+released script. It checks the exact release SHA, merges real release ancestry into
+a worktree on current main, runs offline electricity/script tests and frontend
+tests/lint/build on Node 20, then rechecks refs before a **main-only non-force push**.
+Sync fetches no live source data, and bot main pushes cannot rely on push CI.
+Conflicts/races or failed candidate checks make the workflow red while leaving
+verified production intact and future refreshes possible. No-change publishing
+runs retry outstanding sync. Production has a ten-minute budget including verification;
+sync has its own ten-minute cap and extra validation/build cost. There is no two-ref
+atomic promise.
+
+Normal code/blog promotion remains manual: incorporate latest release ancestry into
+reviewed main via sync or explicit real-merge reconciliation, preserve newer snapshots
+without silently overwriting conflicts or changing schemas, pass checks, then
+fast-forward release without force. Main and release need not routinely equal.
+
+**New rollout verification is pending.** Deliberately promote this implementation to
+**both branches** before the main schedule relies on released scripts. The
+[September 10 manual run](https://github.com/Graflinger/databearer/actions/runs/34532806712)
+succeeded under the old both-ref design with public verification in about 5m47s;
+September 11/12 old guards stopped with main ahead. Those results do not verify the
+new design. A push is not a deployment guarantee. See the
 [publication runbook](../docs/dashboard_publication.md) and
 [frontend dashboard checks](README-dashboard.md); tests/lint/build use Node 20.
 

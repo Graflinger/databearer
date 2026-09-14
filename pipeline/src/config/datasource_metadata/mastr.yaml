@@ -1,0 +1,73 @@
+source: Marktstammdatenregister (Bundesnetzagentur)
+purpose: Manual battery-storage article snapshot; never part of the daily dashboard refresh
+download_page: https://www.marktstammdatenregister.de/MaStR/Datendownload
+allowed_https_hosts:
+  - www.marktstammdatenregister.de
+  - download.marktstammdatenregister.de
+database_default: .data/mastr_battery.duckdb
+protected_database: .data/duckdb.db
+snapshot_table: staging.mastr_snapshot
+snapshot_columns: [snapshot_date, source_url, archive_sha256, filename]
+archive_manifest: '<archive>.manifest.json'
+provenance:
+  snapshot_date: Date encoded in official dated export URL; explicit for local imports
+  archive_sha256: SHA-256 of the actual local subset or supplied ZIP, not the full remote export
+  local_input: User-supplied URL/date; verification time only, no invented retrieval history
+  downloaded_input: Bounded HTTP range acquisition time, request/byte totals and remote ETag if available
+  cache: Never reuse solely because a nonempty ZIP exists; local imports always rehash and parse
+tables:
+  mastr_einheiten_strom_speicher:
+    family: EinheitenStromSpeicher.xml
+    key: EinheitMastrNummer
+    required_columns: [EinheitMastrNummer, EinheitBetriebsstatus, Nettonennleistung, Batterietechnologie, SpeMastrNummer]
+  mastr_anlagen_strom_speicher:
+    family: AnlagenStromSpeicher.xml
+    key: MaStRNummer
+    required_columns: [MaStRNummer, NutzbareSpeicherkapazitaet]
+  mastr_anlagen_eeg_speicher:
+    family: AnlagenEegSpeicher.xml
+    key: EegMaStRNummer
+    required_columns: [EegMaStRNummer, VerknuepfteEinheitenMaStRNummern]
+  mastr_katalogwerte:
+    family: Katalogwerte.xml
+    key: Id
+    required_columns: [Id, Wert, KatalogKategorieId]
+  mastr_katalogkategorien:
+    family: Katalogkategorien.xml
+    key: Id
+    required_columns: [Id, Name]
+contract:
+  required_columns: Present at least once per family; optional source values remain nullable
+  keys: Nonempty and unique across all parts of each family
+  row_counts: Each member and family must be nonempty; table count equals parsed count
+  replacement: One transaction replaces all five tables plus snapshot metadata; rollback on any failure
+  zip: Classic and ZIP64, single disk, stored/deflated, no encryption; numeric split suffixes accepted
+  integrity: Exact Content-Range and Content-Length, stable totals/ETag, streamed CRC and SHA-256
+  xml: Streaming Expat; reject DTD/entities, unexpected roots/records and duplicate fields
+limits:
+  download_seconds: 600
+  max_bytes: 900000000
+  max_requests: 96
+  retries: 1
+  parse_seconds: 1800
+  max_uncompressed_bytes: 20000000000
+  max_rows_per_table: 10000000
+  max_members: 256
+  metadata_read_bytes: 16777216
+  discovery_bytes: 2000000
+  remote_archive_bytes: 100000000000
+  chunk_bytes: 65536
+  field_characters: 1000000
+  record_characters: 4000000
+  record_fields: 512
+  xml_depth: 32
+  batch_rows: 10000
+  batch_flush_characters: 8000000
+  connect_seconds: 5
+  socket_read_seconds: 15
+limitations:
+  - Deadlines are cooperative between chunks/batches; a socket operation or DuckDB statement may overshoot.
+  - No resume, full-export fallback, redirected requests, or live download in offline tests.
+  - Local URL/date provenance is a user assertion, not proof of historical retrieval.
+  - The ZIP and its manifest are individually atomic; a crash between replacements fails subsequent verification closed.
+  - Limits and contracts are implemented in mastr_export.py; this YAML documents them for reviewers.
