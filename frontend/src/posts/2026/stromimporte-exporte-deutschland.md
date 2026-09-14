@@ -1,8 +1,8 @@
 ---
-title: "Vom Nettoexporteur zum Nettoimporteur: Deutschlands Stromhandel seit 2019"
+title: "Stromhandel seit 2019: vom Export- zum Importüberschuss"
 date: 2026-09-11
-lastUpdated: 2026-09-11
-excerpt: "Deutschlands kommerzieller Stromhandel hat sich gedreht: Seit 2023 übersteigen die Importe die Exporte deutlich."
+lastUpdated: 2026-09-14
+excerpt: "Seit 2023 importiert das Marktgebiet Deutschland–Luxemburg mehr Strom, als es exportiert. Was die Jahresbilanz über Handel, Kosten und Sicherheit aussagt."
 image: "/images/dashboards/strommarkt-deutschland.svg"
 imageText: "Der deutsche Stromhandel hat sich seit 2019 sichtbar verschoben."
 fullWidthCard: false
@@ -12,9 +12,9 @@ topic: ["energie", "wirtschaft"]
 
 ## Der Saldo hat sich gedreht
 
-Deutschland war in den Dashboard-Daten von 2019 bis 2022 im kommerziellen Stromhandel klarer Nettoexporteur. Seit 2023 sieht das anders aus: Die Importe liegen über den Exporten. 2024 war der Nettoimport mit **31,9 TWh** besonders groß, 2025 blieb Deutschland mit **25,4 TWh** netto ebenfalls Importeur.
+Von 2019 bis 2022 exportierte das Marktgebiet **Deutschland–Luxemburg (DE–LU)** im Jahresverlauf mehr Strom, als es importierte. Seit 2023 ist es umgekehrt. Der Importüberschuss erreichte 2024 **31,9 TWh** und betrug 2025 **25,4 TWh**. Das ist eine deutliche Verschiebung im Handel. Ob Strom damit günstiger oder die Versorgung sicherer wurde, ist eine andere Frage.
 
-Wichtig ist die Abgrenzung: Diese Werte beschreiben geplante kommerzielle Austauschmengen im Marktgebiet Deutschland–Luxemburg. Sie sind keine physischen Stromflüsse und auch keine Bilanz aus Erzeugung minus Netzlast.
+Die Reihe erfasst **geplante kommerzielle Austauschmengen zwischen Gebotszonen**. DE–LU umfasst auch Luxemburg; die Zahlen sind deshalb keine geografische Strombilanz Deutschlands. Gehandelte Mengen und physikalische Stromflüsse sind unterschiedliche Größen. Ebenso wenig lässt sich dieser Handel aus Erzeugung minus Netzlast berechnen.
 
 <div class="chart-section">
   <h3>Importe und Exporte im Jahresvergleich</h3>
@@ -32,9 +32,9 @@ Wichtig ist die Abgrenzung: Diese Werte beschreiben geplante kommerzielle Austau
 
 ## Die Verschiebung ist deutlich
 
-2019 standen **62,8 TWh** Exporten nur **31,9 TWh** Importe gegenüber. Der Nettoexport betrug damit **30,8 TWh**. 2022 war Deutschland mit **23,0 TWh** Nettoexport noch klar im Plus.
+2019 standen **62,8 TWh** Exporten **31,9 TWh** Importe gegenüber. Der Exportüberschuss betrug **30,8 TWh**. Auch 2022 überwogen die Exporte noch um **23,0 TWh**.
 
-Danach kippt der Saldo: 2023 übersteigen die Importe die Exporte um **15,3 TWh**. 2024 steigt der Nettoimport auf **31,9 TWh**, während die Exporte auf **45,3 TWh** fallen und die Importe auf **77,2 TWh** steigen. 2025 entspannte sich der Saldo etwas, blieb aber mit **25,4 TWh Nettoimport** klar negativ.
+2023 überstiegen die Importe die Exporte erstmals in dieser Reihe, um **15,3 TWh**. 2024 stiegen die Importe auf **77,2 TWh**, während die Exporte auf **45,3 TWh** sanken. 2025 lagen die Importe mit **76,7 TWh** fast auf Vorjahresniveau; die Exporte nahmen auf **51,3 TWh** zu. Der kleinere Importüberschuss ging damit vor allem auf höhere Exporte zurück.
 
 <div class="chart-section">
   <h3>Nettoexport: positiv bedeutet Exportüberschuss</h3>
@@ -50,18 +50,32 @@ Danach kippt der Saldo: 2023 übersteigen die Importe die Exporte um **15,3 TWh*
   </div>
 </div>
 
-## Nettoimport ist nicht automatisch Knappheit
+Die vollständige Reihe lässt sich auch ohne interaktive Diagramme lesen. Alle Mengen in TWh; Nettoexport = Export minus Import.
 
-Ein Importüberschuss bedeutet nicht automatisch, dass Deutschland „zu wenig Strom“ hätte. Stromhandel folgt Preisen, Grenzkuppelkapazitäten, Kraftwerksverfügbarkeit, Wetter, Nachfrage und europäischen Marktregeln. Wenn Strom im Ausland günstiger verfügbar ist, kann Import wirtschaftlich sinnvoll sein – gerade in einem gekoppelten europäischen Strommarkt.
+| Jahr | Importe | Exporte | Nettoexport |
+| --- | ---: | ---: | ---: |
+| 2019 | 31,923 | 62,756 | 30,833 |
+| 2020 | 40,817 | 55,531 | 14,714 |
+| 2021 | 47,173 | 61,037 | 13,864 |
+| 2022 | 43,815 | 66,773 | 22,958 |
+| 2023 | 63,701 | 48,450 | −15,251 |
+| 2024 | 77,210 | 45,342 | −31,868 |
+| 2025 | 76,693 | 51,280 | −25,413 |
 
-Gleichzeitig ist die Entwicklung politisch und ökonomisch relevant. Sie zeigt, dass Deutschlands Rolle im europäischen Stromsystem flexibler geworden ist: weniger dauerhafter Exportüberschuss, mehr Austausch je nach Marktlage. Wer daraus Versorgungssicherheit, Kosten oder Klimawirkung ableiten will, braucht zusätzliche Daten – etwa Erzeugungsmix, Last, Preise und Emissionen.
+## Zwei Fragen: Was kostet Strom, und ist er verfügbar?
 
-## 2026 ist bewusst nicht in den Jahrescharts
+**Wirtschaftlich zählt, zu welchen Kosten die Nachfrage gedeckt wird.** Die Bundesnetzagentur erklärt auf SMARD die [Marktkopplung](https://www.smard.de/page/home/wiki-article/518/548/grenzueberschreitender-stromhandel): Nachfrage wird auch durch günstigere Angebote anderer Gebotszonen bedient, soweit die Übertragungskapazitäten reichen. Ein Import kann deshalb teurere Erzeugung im Inland ersetzen. Weniger Nettoimporte sind für sich genommen kein wirtschaftlicher Erfolg – mehr Nettoimporte kein Beleg für einen Strommangel.
 
-Das Dashboard enthält bereits Handelsdaten bis August 2026. Für diesen Beitrag zeigen die Diagramme aber nur vollständige Kalenderjahre bis 2025. Das vermeidet eine irreführende Gegenüberstellung eines Acht-Monats-Zwischenstands mit ganzen Jahren. Der laufende Stand 2026 bleibt im [Strom-Dashboard](/dashboards/strom/) sichtbar.
+Die Jahressummen enthalten aber keine Preise und keine Aufteilung nach Handelspartnern oder Energieträgern. Woher die Importe kamen, aus welchen Kraftwerken sie stammten und wie günstig sie waren, lässt sich daraus nicht ablesen. Dafür braucht es Handels- und Preisdaten zu den jeweiligen Lieferzeiten sowie Informationen zur Erzeugung.
+
+**Für die physische Versorgung zählt, ob Strom im benötigten Moment verfügbar ist.** Besonders bei hoher Nachfrage und wenig Wind und Sonne kommt es auf verfügbare Kraftwerke, Speicher, flexible Nachfrage und nutzbare Verbindungen zu Nachbarmärkten an. Eine Jahresbilanz zeigt weder, welche Importleistung dann bereitstand, noch ob Nachbarländer gleichzeitig knapp versorgt waren.
+
+Auch eine gewachsene Flexibilität belegt der Wechsel zum Nettoimport nicht. Jahressummen verdecken, wann und wie schnell Erzeugung, Verbrauch und Handel aufeinander reagierten. Die belastbare Aussage dieser Reihe ist konkreter: Seit 2023 überwiegen im Marktgebiet DE–LU die kommerziellen Importe; 2025 wurde der Abstand vor allem durch höhere Exporte kleiner.
 
 ## Methodik und Datenquellen
 
-Grundlage sind die monatlichen DE–LU-Handelsdaten aus dem Databearer-Strom-Dashboard. Betrachtet werden vollständige Kalenderjahre 2019 bis 2025. Importe und Exporte werden jeweils als positive Mengen gezeigt; der Nettoexport ist **Export minus Import**. Positive Werte bedeuten Exportüberschuss, negative Werte Importüberschuss.
+Grundlage sind die monatlichen DE–LU-Handelsdaten der [Bundesnetzagentur / SMARD.de](https://www.smard.de/home/marktdaten), Lizenz [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), aus dem gespeicherten Databearer-Datenstand `dd0c7f8`. Für diesen Beitrag sind die **vollständigen Kalenderjahre 2019–2025** festgehalten. Jeweils zwölf Monatswerte werden summiert, GWh durch 1.000 in TWh umgerechnet und auf drei Nachkommastellen gerundet. Der Saldo wird vor der Rundung als Export minus Import berechnet; deshalb können gerundete Einzelwerte geringfügig abweichen.
 
-Die Daten beschreiben geplante kommerzielle Austauschmengen, keine physischen Flüsse. Geschlossene Jahre bleiben im Dashboard eingefroren; nur die jüngsten Monate des laufenden Jahres werden im normalen Aktualisierungsfenster korrigiert. Daten: [Bundesnetzagentur / SMARD.de](https://www.smard.de/home/marktdaten), Lizenz [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Die Ausgangsreihe summiert bilaterale Handelsmengen. Dokumentierte Anlauf-Lücken beim Handel mit Belgien und Norwegen 2020 wurden aus Tageswerten ergänzt; Zeiten vor Handelsbeginn sind als strukturelle Null behandelt. Alle 84 berücksichtigten Monate sind vorhanden. Der aus Importen und Exporten berechnete Saldo weicht 2021 und 2022 geringfügig von SMARDs separater Nettoreihe ab; hier bleibt er konsequent aus den Bruttomengen abgeleitet. Vollständige Monatsaggregate garantieren keine lückenlose Stundenreihe.
+
+Die aktuellen Monatswerte und weitere Strommarktdaten findest du im [Strom-Dashboard](/dashboards/strom/)

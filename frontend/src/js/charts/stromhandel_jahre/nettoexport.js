@@ -32,7 +32,7 @@
 
     const colors = getThemeColors();
     const xData = [2019,2020,2021,2022,2023,2024,2025];
-    const seriesData = [{"key":"nettoexport_twh","name":"TWh","data":[30.833,14.714,13.864,22.958,-15.251,-31.868,-25.413],"color":null}];
+    const seriesData = [{"key":"nettoexport_twh","name":"Nettoexport","data":[30.833,14.714,13.864,22.958,-15.251,-31.868,-25.413],"color":"#469c8a"}];
 
     const option = {
       backgroundColor: colors.backgroundColor,
@@ -45,7 +45,13 @@
           color: colors.textColor
         }
       },
-      
+      legend: {
+        data: seriesData.map(s => s.name),
+        top: '5%',
+        textStyle: {
+          color: colors.textColor
+        }
+      },
       xAxis: {
         type: 'category',
         data: xData,
@@ -95,7 +101,7 @@
         name: series.name,
         data: series.data,
         type: 'line',
-        smooth: true,
+        smooth: false,
         lineStyle: {
           width: 2,
           color: series.color || colors.defaultColors[index % colors.defaultColors.length]
@@ -109,7 +115,7 @@
         left: '10%',
         right: '10%',
         bottom: '15%',
-        top: '10%'
+        top: '18%'
       },
       animation: true,
       animationDuration: 1000,

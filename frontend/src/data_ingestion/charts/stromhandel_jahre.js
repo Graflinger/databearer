@@ -1,7 +1,11 @@
+const { validateStromhandel } = require('../utils/stromhandelValidation');
+
+validateStromhandel();
+
 module.exports = [
   {
     type: 'bar',
-    dataFile: 'stromhandel_jahre_2019_2025.csv',
+    dataFile: '2026/stromhandel/stromhandel_jahre_2019_2025.csv',
     outputFile: 'importe_exporte.js',
     containerId: 'stromhandel-jahre-importe-exporte',
     title: '',
@@ -15,15 +19,16 @@ module.exports = [
   },
   {
     type: 'line',
-    dataFile: 'stromhandel_jahre_2019_2025.csv',
+    dataFile: '2026/stromhandel/stromhandel_jahre_2019_2025.csv',
     outputFile: 'nettoexport.js',
     containerId: 'stromhandel-jahre-nettoexport',
     title: '',
     xAxisLabel: 'Jahr',
     yAxisLabel: 'TWh',
     xKey: 'jahr',
-    yKey: 'nettoexport_twh',
-    smooth: true,
+    seriesKeys: ['nettoexport_twh'],
+    seriesNames: ['Nettoexport'],
+    smooth: false,
     colors: ['#469c8a'],
   },
 ];

@@ -1,2 +1,9 @@
 # Ignore all data files
 data/*
+!data/2026/
+data/2026/*
+!data/2026/stromhandel/
+data/2026/stromhandel/*
+!data/2026/stromhandel/stromhandel_jahre_2019_2025.csv
+!data/2026/stromhandel/stromhandel_source.json
+!data/2026/stromhandel/stromhandel_manifest.json
