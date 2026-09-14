@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: mastr_einheiten_strom_speicher
+        description: "MaStR public electricity storage units (EinheitenStromSpeicher.xml); source-shaped nullable VARCHAR columns."
+      - name: mastr_anlagen_strom_speicher
+        description: "MaStR storage plants (AnlagenStromSpeicher.xml); usable kWh occurs once per plant."
+      - name: mastr_katalogwerte
+        description: "Actual export catalogue: Id, Wert, KatalogKategorieId. Required even for a battery-only extract."
+      - name: mastr_katalogkategorien
+        description: "Actual export catalogue categories: Id, Name."
+      - name: mastr_snapshot
+        description: "Single provenance row atomically ingested with all four MaStR tables: snapshot_date, source_url, archive_sha256, filename."

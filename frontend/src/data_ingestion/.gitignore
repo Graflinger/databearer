@@ -1,2 +1,7 @@
 # Ignore all data files
 data/*
+
+# Frozen, validated evidence for the battery-storage article (no raw records).
+!data/battery_storage_*.csv
+!data/battery_storage_metadata.json
+!data/battery_storage_quality.json

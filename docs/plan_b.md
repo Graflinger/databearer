@@ -9,9 +9,16 @@ now implements a narrow durable-partition variant: yearly compact JSON in the
 repository, rolling current-year corrections, frozen closed years, manifest-last
 publication, and bounded version retention. It adds no object store/server or
 persistent database. Daily data-only publication is separately authorized in
-[the publication workflow](dashboard_publication.md), with an already released-base
-guard and atomic Git updates; activation awaits merge to `main` and first live
-deployment verification. Independent publishing options below remain alternatives.
+[the publication workflow](dashboard_publication.md). The release-first design runs
+released scripts/runtime/frontend, guards only the current release tip, pushes data
+to release without force, and verifies public content before a separate validated
+ancestry sync to main. Main need not equal release; sync failures do not block future
+production refreshes. This remains Git-integrated full-site publication, with no
+two-ref atomic promise. Production retains a ten-minute budget including its
+240-second verifier; sync adds a separate ten-minute cap and validation/build cost.
+New rollout requires deliberate promotion to both branches and live verification;
+the September 10 success covered the old both-ref design only. Independent data or
+asset publishing options below remain alternatives, not part of this implementation.
 
 Add infrastructure only for a demonstrated need. **Keeping history does not require
 a server, and renting a server does not require making the website dynamic.** Keep
