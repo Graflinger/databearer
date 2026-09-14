@@ -29,7 +29,7 @@ work does not gate production data refreshes.
 
 ## Trigger, branch gate, and publication scope
 
-- Schedule: **09:17 UTC daily**, cron `17 9 * * *` (10:17 MEZ / 11:17 MESZ).
+- Schedule: **06:0 UTC daily**, cron `0 6 * * *` (10:17 MEZ / 11:17 MESZ).
   Scheduling is best effort, not a promised publication time.
 - Manual `workflow_dispatch`: boolean **`publish`, default `false`**. The default
   refreshes/validates the selected ref only and retains a seven-day review artifact;
@@ -106,6 +106,11 @@ installation/test/build cost when a merge candidate changes `main`; the whole wo
 is no longer bounded to ten minutes. No-change publishing runs can still incur that
 sync cost when integration is outstanding. Keep daily cadence and account for
 ordinary blog/preview builds.
+
+See [refresh timing and deferred improvements](dashboard_refresh_improvements.md)
+for the September 14 live timing baseline, SMARD publication-time findings, and
+performance ideas retained for later. These notes do not change the active schedule
+or authorize additional polling.
 
 ## Separate synchronization to main
 

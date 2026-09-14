@@ -85,7 +85,7 @@ class DashboardWorkflowTests(unittest.TestCase):
 
     def test_production_budget_schedule_concurrency_and_manual_default(self):
         triggers = field(self.refresh, "on")
-        self.assertIn("- cron: '17 9 * * *'", field(triggers, "schedule"))
+        self.assertIn("- cron: '0 6 * * *'", field(triggers, "schedule"))
         publish = field(field(field(triggers, "workflow_dispatch"), "inputs"), "publish")
         self.assertEqual(field(publish, "type"), "boolean")
         self.assertEqual(field(publish, "default"), "false")
