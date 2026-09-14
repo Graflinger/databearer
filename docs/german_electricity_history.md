@@ -5,8 +5,10 @@ validated yearly JSON in Git, with rolling current-year corrections and frozen
 closed years. This is an explicit exception to the default stateless-export rule
 in [dashboard architecture](dashboard_architecture.md). It uses no persistent
 database. The [daily publication workflow](dashboard_publication.md) now authorizes
-current-year data-only updates from an already released main commit; activation
-awaits merge to `main` and first live deployment verification. Closed-year
+current-year data-only updates from the release checkout, followed by public
+verification and a separate validated ancestry sync to main. The release-first
+implementation requires deliberate promotion to both branches and new live rollout
+verification; the September 10 success covered the old both-ref design. Closed-year
 reconciliation remains explicit and manually promoted.
 
 ## Commands and update policy
@@ -312,9 +314,18 @@ sums rather than presenting incomplete observations as full-year totals.
 The daily/manual workflow tests all electricity pipeline paths, refreshes recent
 first, then current-year history and monthly trade, validates the frontend, and
 retains snapshots and referenced history files in its short-lived review artifact.
-Scheduled runs publish validated allowlisted data from an already released `main`
-base; manual dispatch defaults to `publish=false`. Both refs advance atomically,
-without force, and public deployment is checked even when no data changed. See
+Publishing requires the main event ref, then explicitly checks out release and
+guards `HEAD == origin/releases/cloudflare`, independent of main's position.
+Released scripts/runtime/frontend validate allowlisted data before a release-only
+non-force push and public verification, even when no data changed. Only verified
+release SHA output enables separate sync: merge exact release ancestry into current
+main, validate offline electricity/script and frontend tests/lint/build without live
+source fetching, recheck refs, then push main only without force. Sync failure makes
+the workflow red but leaves verified production and future refreshes intact;
+no-change publishing runs retry outstanding sync. There is no two-ref atomic promise.
+Manual dispatch defaults to `publish=false`, refreshing/validating only the selected
+ref. Normal promotion first integrates latest release ancestry into reviewed main,
+preserving newer snapshots, then fast-forwards release without force. See
 [publication guards and recovery](dashboard_publication.md). Closed years are never
 automatically reconciled; first rollover may need manual completion and promotion
 of the prior year's history and December trade before daily runs can resume.

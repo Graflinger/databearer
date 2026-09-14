@@ -30,7 +30,7 @@ node "src/data_ingestion/generate-charts.js" industriepolitik.js
 
 Read [dashboard_architecture.md](../docs/dashboard_architecture.md) before adding dashboard
 pages, chart data, freshness metadata, or refresh/deployment automation. It specifies
-the daily pipeline using the existing stack. Keep live dashboard
+the planned daily, stateless pipeline using the existing stack. Keep live dashboard
 datasets separate from frozen blog-post snapshots, and render prepared exports rather
 than fetching raw upstream data in visitors' browsers.
 
@@ -43,16 +43,35 @@ The electricity dashboard now has approved [persistent daily history](../docs/ge
 Preserve raw hashed partition bytes, source gaps, nuclear-era and price-zone metadata.
 Load historical years lazily; never interpret missing observations as zero or daily
 price averages as negative-hour counts. Daily data-only publication is authorized at
-09:17 UTC, with activation upon merge to `main`; first live deployment verification
-is pending. Publishing requires the `main` ref and identical HEAD/origin main/origin
-release commits before source fetching. Only recent/current-year-history/trade
-exports may be committed and pushed atomically to both branches, without force.
-Normal code/blog changes require manual release promotion; reconcile release ancestry
-in main first. Monthly/manual progress and frozen annual supplements are excluded
-from daily source refreshes. Public copy describes automatic daily updates with
-actual observation dates, while progress retains its separate cadence. Run frontend
-tests/lint/build on Node 20; public verification must also run on no-change publishing
-runs. An atomic Git push is not proof that Cloudflare deployed the snapshot.
+09:17 UTC. Deliberately promote the release-first implementation to **both `main`
+and `releases/cloudflare`** before the schedule uses released scripts; new live
+verification is pending. The September 10 success used the old both-ref design.
+Manual `publish=false` defaults to refreshing/validating only the selected ref.
+Publishing requires the `main` event ref, then explicitly checks out release for
+released scripts/runtime/frontend. Guard `HEAD == origin/releases/cloudflare` before
+source fetching; main's position does not gate production. Only validated
+recent/current-year-history/trade exports may be committed and pushed **release
+only, without force**, then publicly verified, including on no-change runs.
+
+Only verified `release_sha` output enables separate `sync-main` using the released
+script: check exact release SHA, create a worktree from current main, merge real
+release ancestry, and run offline electricity/script tests plus frontend
+tests/lint/build on Node 20 before a non-force **main-only** push. Recheck both refs;
+fetch no live source data during sync. Bot main pushes cannot rely on push CI.
+Conflicts, validation failures, and races must fail without silently overwriting
+main or changing schemas. Sync failure makes the workflow red but leaves verified
+production intact and future refreshes possible; no-change publishing runs retry
+outstanding sync. There is no two-ref atomic promise. Production retains a ten-minute
+budget including its 240-second verifier; sync has its own ten-minute cap and extra
+validation/build cost. Follow the runbook's separate public-failure and sync recovery.
+
+Normal code/blog changes require manual promotion: incorporate latest release
+ancestry into reviewed main via sync or explicit real-merge reconciliation, preserve
+newer snapshots, pass checks, then fast-forward release without force. Main and
+release need not routinely equal. Monthly/manual progress and frozen annual
+supplements are excluded from daily source refreshes and the write allowlist.
+Public copy describes automatic daily updates with actual observation dates, while
+progress retains its separate cadence. A Git push is not proof of deployment.
 
 
 ### Directory Structure

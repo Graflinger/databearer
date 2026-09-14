@@ -34,8 +34,9 @@ Data flow: **pipeline** produces datasets → **frontend** renders them as posts
 
 Production is deployed by **Cloudflare Pages from the `releases/cloudflare` branch** — not from
 `main`. Blog/code changes retain an explicit manual promotion gate. The authorized
-daily dashboard publisher can advance both branches with validated data-only changes
-only when they already point at the same released commit.
+daily dashboard publisher advances production with validated data-only changes using
+released code, then separately synchronizes verified release ancestry into current
+`main`. Unpublished main changes do not block production refreshes.
 
 | Branch | Role |
 |--------|------|
@@ -43,33 +44,54 @@ only when they already point at the same released commit.
 | `main` | Integration / trunk. Always buildable; PRs merge here. Code changes require manual production promotion. |
 | `releases/cloudflare` | **Production.** Cloudflare Pages builds & deploys from here (Root directory = `frontend`). |
 
-**Manual blog/code publish flow:** first merge any production-only release ancestry
-into `main` through the reviewed process. The recorded production squash caused
-divergence; another squash will not reconcile that ancestry. After review and checks:
+**Manual blog/code publish flow:** first incorporate the latest release ancestry
+into `main` through successful sync or reviewed manual reconciliation. Use a real
+merge if diverged; a squash does not preserve release ancestry. Preserve newer
+production snapshots and resolve conflicts explicitly, then run offline
+electricity/script tests and frontend tests/lint/build. After review and checks:
 
 ```bash
-# 1. develop on a feature branch -> PR -> merge into main
-# 2. when ready to go live, promote main to production:
+# 1. develop -> reviewed main; integrate and validate latest release ancestry
+# 2. fetch current tips; stop/reconcile again if release advanced since review
+git fetch origin
+# 3. from a clean checkout, promote the reviewed current origin/main:
 git switch releases/cloudflare
-git merge --ff-only main      # fast-forward production to the reviewed main
+git merge --ff-only origin/releases/cloudflare
+git merge --ff-only origin/main # only after latest release is contained in reviewed main
 git push origin releases/cloudflare   # Cloudflare Pages picks it up and deploys
 ```
 
-Keep `releases/cloudflare` a fast-forward of `main` (don't commit directly to it) so production is
-always an exact, reviewed snapshot of trunk.
+Use non-force fast-forward promotion. If either tip moves, fetch, review, integrate
+and validate again rather than overwrite newer snapshots. Daily data commits land
+directly on release through the guarded publisher; `main` and release need not
+routinely be equal. The publisher does not release main's code/blog changes.
 
 **Daily data publication:** `dashboard-refresh.yml` schedules 09:17 UTC daily;
-manual dispatch has `publish=false` by default. Publishing requires the `main` ref
-and `HEAD == origin/main == origin/releases/cloudflare` before source fetching.
-Only validated recent data, current-year history, and monthly trade may be committed
-and pushed to both refs with `git push --atomic`, without force. Unpublished `main`
-changes stop the run before refresh/build. Monthly/manual capacity and congestion
-and frozen annual supplements are outside the daily refresh.
+manual dispatch has `publish=false` by default and refreshes/validates only the
+selected ref. Publishing requires the `main` **event ref**, then explicitly checks
+out `releases/cloudflare` for scripts, runtime, and frontend. The pre-fetch guard
+requires `HEAD == origin/releases/cloudflare` and ignores main. Only validated
+recent data, current-year history, and monthly trade may be committed and pushed
+**to release only, without force**. Monthly/manual capacity and congestion and
+frozen annual supplements are outside the daily refresh and write allowlist.
 
-Implementation is enabled in the workflow; activation awaits merge to `main` and
-the first live Cloudflare Git-integration check remains pending. A successful atomic
-push is not proof of deployment: publishing runs, including no-change runs, verify
-public snapshots/HTML for up to 240 seconds. See the
+Publishing runs verify public snapshots/HTML for up to 240 seconds, including
+no-change runs. Only the verified release SHA permits a separate `sync-main` job:
+merge exact release ancestry into a worktree on current main, run offline
+electricity/script tests and frontend tests/lint/build without live source fetching,
+recheck both tips, then push **main only, without force**. Bot main pushes cannot
+rely on `GITHUB_TOKEN` triggering push CI. A failed sync makes the workflow red but
+leaves verified production intact and does not block future production refreshes.
+No-change publishing runs retry outstanding sync. There is no two-ref atomic promise.
+Production retains its ten-minute job budget including verification; sync has a
+separate ten-minute cap and extra installation/test/build cost.
+
+**New rollout is pending:** deliberately promote this implementation to **both
+branches** before the main schedule relies on released scripts. The
+[September 10 manual run](https://github.com/Graflinger/databearer/actions/runs/34532806712)
+succeeded under the **old both-ref design**, including public verification, in about
+5m47s; September 11/12 old guards stopped because main was ahead. Those runs do not
+verify the new release-first/sync design. A push is not proof of deployment. See the
 [publication runbook](docs/dashboard_publication.md) for rollout and recovery.
 
 ## Important: running the pipeline
