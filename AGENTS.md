@@ -52,16 +52,35 @@ on failure. Refresh recent electricity data before history and validate their ov
 then refresh monthly trade. Build long-term generation trends from existing history
 without additional source requests.
 Daily production data publication is authorized in `dashboard-refresh.yml` at 09:17
-UTC; activation awaits merge to `main` and live deployment verification. Manual
-dispatch defaults to `publish=false`. Publishing requires the `main` ref and
-`HEAD == origin/main == origin/releases/cloudflare` before source fetching. Commit
-only validated recent/current-year-history/trade allowlist changes and push both refs
-atomically, without force. Unpublished main changes must stop before refresh/build.
-Normal blog/code and monthly/manual progress changes retain manual promotion;
-merge release ancestry into main first if branches have diverged. Verify public
-data/HTML after publishing, including no-change runs; Git push success is not a
-deployment guarantee. Preserve the ten-minute total job budget and explicit
-history/trade reconciliation at rollover; never auto-correct closed years.
+UTC. The release-first implementation must be deliberately promoted to **both `main`
+and `releases/cloudflare`** before the schedule relies on released scripts; new live
+rollout verification is pending (the September 10 success used the old both-ref design).
+Manual dispatch defaults to `publish=false`, refreshing/validating only the selected
+ref. Publishing requires the `main` event ref, then explicitly checks out
+`releases/cloudflare` for released scripts, runtime, and frontend. Require
+`HEAD == origin/releases/cloudflare` before source fetching; main's position does
+not gate production. Commit only validated recent/current-year-history/trade
+allowlist changes and push **release only**, without force. Verify public data/HTML,
+including no-change runs; Git push success is not a deployment guarantee.
+
+Only verified `release_sha` output permits the separate `sync-main` job. Using the
+released sync script, check the exact release SHA, prepare a separate worktree from
+current main, and merge real release ancestry. Run offline electricity/script tests
+and frontend tests/lint/build on the candidate before a non-force **main-only** push;
+fetch no live source data during sync. Bot `GITHUB_TOKEN` pushes cannot rely on push
+CI. Fail on conflicts or branch races without silently overwriting main or changing
+schemas. Sync failure makes the workflow red but leaves verified production intact
+and future production refreshes possible; no-change publishing runs retry outstanding
+sync. There is no two-ref atomic update promise. Preserve the ten-minute production
+job budget including the 240-second verifier; sync has its own ten-minute cap and
+additional validation/build cost.
+
+Normal blog/code and monthly/manual progress changes retain manual promotion:
+incorporate latest release ancestry into reviewed main via sync or explicit real-merge
+reconciliation, preserving newer snapshots, then fast-forward release without force.
+Main and release need not routinely equal. Preserve explicit history/trade
+reconciliation at rollover; never auto-correct closed years. Follow the publication
+runbook's separate recovery paths for public verification failures and sync failures.
 
 ## Working conventions
 

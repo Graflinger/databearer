@@ -6,9 +6,9 @@ name: Frontend CI
 on:
   push:
     branches: ['main']
-    paths: ['frontend/**', 'pipeline/**', 'scripts/dashboard_publish.py', 'scripts/verify_dashboard_deployment.py', 'scripts/tests/**', '.github/workflows/**']
+    paths: ['frontend/**', 'pipeline/**', 'scripts/dashboard_publish.py', 'scripts/dashboard_sync.py', 'scripts/verify_dashboard_deployment.py', 'scripts/tests/**', '.github/workflows/**']
   pull_request:
-    paths: ['frontend/**', 'pipeline/**', 'scripts/dashboard_publish.py', 'scripts/verify_dashboard_deployment.py', 'scripts/tests/**', '.github/workflows/**']
+    paths: ['frontend/**', 'pipeline/**', 'scripts/dashboard_publish.py', 'scripts/dashboard_sync.py', 'scripts/verify_dashboard_deployment.py', 'scripts/tests/**', '.github/workflows/**']
   workflow_dispatch:
 
 jobs:
