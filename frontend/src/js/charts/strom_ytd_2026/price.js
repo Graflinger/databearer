@@ -1,7 +1,7 @@
 (function() {
-  const chartDom = document.getElementById('strom-ytd-2026-mix');
+  const chartDom = document.getElementById('strom-ytd-2026-price');
   if (!chartDom) {
-    console.error('Chart container "strom-ytd-2026-mix" not found');
+    console.error('Chart container "strom-ytd-2026-price" not found');
     return;
   }
 
@@ -31,18 +31,14 @@
     if (!chart) return;
 
     const colors = getThemeColors();
-    const xData = [2025,2026];
-    const seriesData = [{"key":"wind_onshore_twh","name":"Wind an Land","data":[62.845803,72.259377],"color":"#3ba272"},{"key":"solar_twh","name":"Solar","data":[62.237127,70.455996],"color":"#d5a62c"}];
-    const stacked = false;
+    const xData = [2019,2020,2021,2022,2023,2024,2025,2026];
+    const seriesData = [{"key":"price_eur_mwh","name":"Day-Ahead-Preis","data":[38.218093,26.245011,63.849643,243.526147,99.428851,70.320631,88.837758,103.918889],"color":"#d5a62c"}];
 
     const option = {
       backgroundColor: colors.backgroundColor,
       title: undefined,
       tooltip: {
         trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        },
         backgroundColor: isDarkMode() ? 'rgba(50, 50, 50, 0.9)' : 'rgba(255, 255, 255, 0.9)',
         borderColor: colors.axisLineColor,
         textStyle: {
@@ -81,7 +77,7 @@
       },
       yAxis: {
         type: 'value',
-        name: "TWh",
+        name: "€/MWh",
         nameLocation: 'middle',
         nameGap: 50,
         nameTextStyle: {
@@ -104,11 +100,16 @@
       series: seriesData.map((series, index) => ({
         name: series.name,
         data: series.data,
-        type: 'bar',
-        stack: stacked ? 'total' : undefined,
+        type: 'line',
+        smooth: false,
+        lineStyle: {
+          width: 2,
+          color: series.color || colors.defaultColors[index % colors.defaultColors.length]
+        },
         itemStyle: {
           color: series.color || colors.defaultColors[index % colors.defaultColors.length]
-        }
+        },
+        symbolSize: 6
       })),
       grid: {
         left: '10%',

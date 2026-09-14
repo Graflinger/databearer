@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "entity": "strom_ytd",
+  "methodology_version": "same-calendar-window-v1",
+  "source_commit": "dd0c7f8deef858a844be777a5fd1e78949386413",
+  "source_commit_time": "2026-09-10T21:36:19Z",
+  "observation_cutoff": "2026-09-09",
+  "prepared_on": "2026-09-14",
+  "upstream_retrieved_at": null,
+  "timezone": "Europe/Berlin",
+  "price_zone": "DE-LU",
+  "source": {
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "name": "Bundesnetzagentur | SMARD.de",
+    "terms_url": "https://www.smard.de/home/datennutzung",
+    "url": "https://www.smard.de/home/marktdaten"
+  },
+  "source_files": [
+    {
+      "path": "frontend/src/data-history/german-electricity/manifest.json",
+      "sha256": "4d2b472acaa595993857af8f2e9ac0fee2a63f606591986303bc68e47d6fb52b",
+      "bytes": 4422
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2019.d7211e250be153c9ff4dbc2bba8e52821204bce116c61a4cf6812316b28dd93f.json",
+      "sha256": "d7211e250be153c9ff4dbc2bba8e52821204bce116c61a4cf6812316b28dd93f",
+      "bytes": 143358
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2020.c2b5b0260c5f71cbd793997cc9ea8f9b5baa464d9f3db00c93341c2b7e5ab596.json",
+      "sha256": "c2b5b0260c5f71cbd793997cc9ea8f9b5baa464d9f3db00c93341c2b7e5ab596",
+      "bytes": 143923
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2021.79059405df894d3bc22ed07540c03e8db6f4fc004f51e5b601726ff1da371403.json",
+      "sha256": "79059405df894d3bc22ed07540c03e8db6f4fc004f51e5b601726ff1da371403",
+      "bytes": 143734
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2022.a2500628fc9af0b9547661db3412ed69eed4464323199aac19cd9b504850a27b.json",
+      "sha256": "a2500628fc9af0b9547661db3412ed69eed4464323199aac19cd9b504850a27b",
+      "bytes": 143506
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2023.9ad85353750c74cb587e7208ca67c1410138e42e6616c7c75e7091c14f7e8ed7.json",
+      "sha256": "9ad85353750c74cb587e7208ca67c1410138e42e6616c7c75e7091c14f7e8ed7",
+      "bytes": 141978
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2024.5aeca1c9781aba47045bcab7a25a7c25d974c93ef00859edcb68248f6ce59540.json",
+      "sha256": "5aeca1c9781aba47045bcab7a25a7c25d974c93ef00859edcb68248f6ce59540",
+      "bytes": 141674
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2025.7e70f946ebf15672021bf207ea2df167d7352b789159dbbb71852e85a4f0fc25.json",
+      "sha256": "7e70f946ebf15672021bf207ea2df167d7352b789159dbbb71852e85a4f0fc25",
+      "bytes": 142414
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2026.7ebbcd858b199b8d1295d5b5f75915eb9a7292732b43a0429a26639bb9808b9e.json",
+      "sha256": "7ebbcd858b199b8d1295d5b5f75915eb9a7292732b43a0429a26639bb9808b9e",
+      "bytes": 99642
+    }
+  ],
+  "editorial_sources": [
+    {
+      "url": "https://www.smard.de/page/home/wiki-article/446/384/so-funktioniert-der-strommarkt",
+      "scope": "Merit order and day-ahead market",
+      "consulted_on": "2026-09-14"
+    },
+    {
+      "url": "https://www.smard.de/page/home/topic-article/444/209624",
+      "scope": "Full year 2022: gas crisis, price-setting gas plants, French nuclear availability",
+      "consulted_on": "2026-09-14"
+    },
+    {
+      "url": "https://www.smard.de/page/home/topic-article/444/217468/mehr-als-zwei-drittel-erneuerbare",
+      "scope": "Full Q2 2025 versus Q2 2024: gas prices up about 16 percent",
+      "consulted_on": "2026-09-14"
+    },
+    {
+      "url": "https://www.smard.de/page/home/topic-article/444/218232/erneuerbare-auf-quartalshoch",
+      "scope": "Full Q3 2025: more high-price evening hours despite a higher renewable share",
+      "consulted_on": "2026-09-14"
+    }
+  ],
+  "exporter": "frontend/src/data_ingestion/freeze_strom_ytd.py",
+  "units": {
+    "energy": "TWh",
+    "source_energy": "GWh",
+    "share": "% of public net generation",
+    "price": "EUR/MWh, nominal",
+    "price_hour_sum": "(EUR/MWh)*h",
+    "hours": "h"
+  },
+  "coverage": {
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "start_month_day": "01-01",
+    "end_month_day": "09-09",
+    "leap_day": "included; 253 days in 2020/2024, otherwise 252",
+    "missing_energy_days": 0,
+    "missing_price_days": 0
+  },
+  "methodology": {
+    "energy": "Sum daily GWh / 1000; generation includes all 12 sources including pumped storage and nuclear, excludes load.",
+    "renewable": "Sum biomass, hydro, wind_offshore, wind_onshore, solar, other_renewables / total generation; no mean of daily shares.",
+    "price": "Sum(daily price_eur_mwh * hours) / sum(hours); source daily prices are rounded; no load weighting.",
+    "missing": "Reject missing dates, energy or prices; no gap filling. Preserve source-derived nuclear zero after 2023-04-15.",
+    "scope": "Public net generation DE; no PV self-consumption, industrial or railway grids. Not gross consumption or retail prices.",
+    "limitations": "Daily source sums can include upstream partial data/interpolation; complete numeric rows do not prove complete intraday coverage. No causal attribution from these aggregates.",
+    "legacy": "strom_ytd_2026_mix.csv is the original rounded 11-source CSV moved byte-for-byte from the first article commit; zero nuclear omitted there only."
+  },
+  "payloads": {
+    "periods.csv": {
+      "sha256": "2bde46bda4b9d00d7f57940d545916ec070b41fe700bae77edf91785aafb3a3c",
+      "bytes": 1062,
+      "rows": 8,
+      "columns": [
+        "year",
+        "start",
+        "end",
+        "days",
+        "energy_days",
+        "price_days",
+        "hours",
+        "generation_twh",
+        "renewable_twh",
+        "renewable_share_pct",
+        "load_twh",
+        "price_hour_sum",
+        "price_eur_mwh",
+        "negative_mean_days"
+      ]
+    },
+    "mix_by_year.csv": {
+      "sha256": "b9b9b705cc74aa06a7e1f6f7384cd8eb6c074f0af2a44c68d479b44eb36a85b4",
+      "bytes": 2464,
+      "rows": 96,
+      "columns": [
+        "year",
+        "source",
+        "generation_twh"
+      ]
+    },
+    "comparison.csv": {
+      "sha256": "b64bdb09f75c05f79609cb5a624a1e5276461660e6024c42f6aad2d342710045",
+      "bytes": 114,
+      "rows": 2,
+      "columns": [
+        "year",
+        "wind_onshore_twh",
+        "solar_twh",
+        "other_twh"
+      ]
+    },
+    "strom_ytd_2026_mix.csv": {
+      "sha256": "0071b2ed6d13193139bd267329777cc523df7a25ca5ff594c2d762df22c14fa3",
+      "bytes": 295,
+      "rows": 11,
+      "columns": [
+        "energietraeger",
+        "strom_twh",
+        "anteil_prozent"
+      ]
+    }
+  }
+}
