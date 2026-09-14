@@ -1,6 +1,6 @@
 ---
 title: "Neu: das tägliche Strom-Dashboard für Deutschland"
-date: 2026-09-11
+date: 2026-09-14
 lastUpdated: 2026-09-14
 excerpt: "Wie viel Strom liefern Wind und Sonne? Wie entwickeln sich Börsenpreise und Stromhandel? Das neue Dashboard zeigt aktuelle Zahlen und langfristige Trends."
 image: "/images/dashboards/strommarkt-deutschland.svg"
@@ -11,7 +11,7 @@ topic: ["energie"]
 
 ## Die Stromdaten auf einen Blick
 
-Wie viel Strom haben Wind und Sonne gestern geliefert? Wie hoch war der Börsenpreis? Und wie hat sich der Strommix über die Jahre verändert? Das neue Strom-Dashboard bringt diese Zahlen auf einer Seite zusammen. Es wird täglich aktualisiert und zeigt jeweils den letzten verfügbaren Datenstand.
+Wie viel Strom haben Wind und Sonne gestern geliefert? Wie hoch war der Börsenpreis? Und wie hat sich der Strommix über die Jahre verändert? Das neue [Strom-Dashboard](/dashboards/strom/) bringt diese Zahlen auf einer Seite zusammen. Es wird täglich aktualisiert und zeigt jeweils den letzten verfügbaren Datenstand.
 
 ## Drei Einstiege zum Ausprobieren
 
