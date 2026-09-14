@@ -1,8 +1,10 @@
 # Germany electricity dashboard data
 
-Status: pipeline and real-data snapshot implemented. **Daily data-only publication
-is authorized and enabled in the workflow; activation awaits merge to `main` and
-first live deployment verification.** See [publication and recovery](dashboard_publication.md).
+Status: pipeline and real-data snapshot implemented. **Release-first daily data-only
+publication is implemented; deliberate promotion to both `main` and
+`releases/cloudflare` and new live rollout verification are pending.** The September 10
+successful manual publication used the old both-ref design. See
+[publication and recovery](dashboard_publication.md) for historical evidence and new rollout.
 This document describes the bounded
 recent hourly snapshot. The approved, separately implemented
 [daily history extension](german_electricity_history.md) covers 2015 onward with
@@ -249,24 +251,38 @@ controls, while retaining Eleventy, ECharts, and static hosting. Historical blog
 datasets are unchanged. Production rendering checks the snapshot's semantic hash.
 
 `.github/workflows/dashboard-refresh.yml` schedules **09:17 UTC daily**, plus manual
-dispatch with boolean **`publish=false`** by default. It runs all offline electricity
+dispatch with boolean **`publish=false`** by default to refresh/validate only the
+selected ref, without publication or sync. It runs all offline electricity and script
 tests, refreshes recent data → current-year history with overlap validation → monthly
 trade, then frontend tests/lint/build on Node 20. Annual supplements stay frozen;
 capacity/congestion remains a separate manual/monthly refresh. Review artifacts are
-retained for seven days. The ten-minute total job budget includes public verification;
-package caches never contain the DuckDB database. The workflow also validates/builds
-unchanged data.
+retained for seven days. The ten-minute production job budget includes up to 240
+seconds of public verification; package caches never contain the DuckDB database.
+The workflow also validates/builds unchanged data.
 
-Publishing is authorized only on the `main` ref with
-`HEAD == origin/main == origin/releases/cloudflare`, checked before source fetching.
-Unpublished code stops the run before refresh/build. With `contents: write`, only
-validated recent/current-year-history/trade allowlist changes may be committed and
-pushed to both refs atomically, without force. Normal code/blog releases retain
-manual promotion after release ancestry has been merged into main where needed.
-Public data and HTML are polled for up to 240 seconds, including on no-change
-publishing runs; a review artifact or successful push is not proof of deployment.
-See [the publication runbook](dashboard_publication.md) for rollout, the pending
-first Cloudflare Git-integration check, and explicit recovery.
+Publishing requires the `main` **event ref**, followed by an explicit checkout of
+`releases/cloudflare` using its released scripts, runtime, and frontend. The guard
+requires `HEAD == origin/releases/cloudflare` before source fetching and ignores
+main's position. With `contents: write`, only validated recent/current-year-history/trade
+allowlist changes may be committed and pushed **to release only, without force**.
+Public data and HTML are then verified, including on no-change publishing runs;
+a review artifact or successful push is not proof of deployment.
+
+Only verified release SHA output enables the separate `sync-main` job. It checks
+the exact release SHA, merges real ancestry into a worktree on current main, and
+validates the candidate with offline electricity/script tests plus frontend
+tests/lint/build before rechecking refs and pushing **main only, without force**.
+Sync does not fetch live source data or change schemas; bot main pushes cannot rely
+on push CI. It has its own ten-minute cap and extra validation/build cost. Conflicts,
+validation failures, or races make the workflow red but leave verified production
+intact and future refreshes possible. No-change publishing runs retry outstanding
+sync; there is no two-ref atomic promise.
+
+Normal code/blog releases retain manual promotion: incorporate latest release
+ancestry through sync or reviewed real-merge reconciliation, preserve newer snapshots,
+pass checks, then fast-forward release to reviewed main without force. Main and
+release need not routinely equal. See [the publication runbook](dashboard_publication.md)
+for new rollout and distinct recovery paths for public failure versus sync conflict/race.
 
 Local verification passed 17 pipeline tests (including real dbt integration), 84
 frontend Jest tests, `npm run lint`, and `npm run build`. Browser checks cover period

@@ -3,8 +3,10 @@
 Repository paths in this document are relative to the repository root.
 
 Status: implemented for the German electricity dashboard. Daily data-only
-publication is authorized and enabled in the workflow; activation awaits merge to
-`main` and first live deployment verification. See
+publication is authorized. The new release-first design requires deliberate promotion
+to **both `main` and `releases/cloudflare`** before the schedule uses released scripts;
+new live rollout verification is pending. The successful September 10 manual run
+covered the old both-ref design; September 11/12 old guards stopped with main ahead. See
 [dashboard publication](dashboard_publication.md) for the operational policy and
 recovery; the design/checklist below also guides future dashboards.
 
@@ -47,7 +49,9 @@ incremental ingestion, a workflow orchestrator, and a warehouse of historical sn
 
 ```text
 Daily/manual GitHub Actions run
-  → publishing only: require main ref and HEAD == origin/main == origin/releases/cloudflare
+  → validation only (default publish=false): refresh/validate selected ref; no push or sync
+  → publishing: require main event ref, explicitly check out releases/cloudflare
+  → publishing: guard HEAD == origin/releases/cloudflare before fetching; ignore main
   → resolve explicit dashboard ID and reporting window
   → install minimal, pinned runtime dependencies
   → fetch only the required source data
@@ -61,11 +65,22 @@ Daily/manual GitHub Actions run
   → frontend tests/lint/build (including unchanged data in the current workflow)
   → compare with the tracked dashboard snapshot
       unchanged: no new commit or Git-triggered Cloudflare build
-      changed + publishing: commit only allowlisted exports → atomic non-force push to both refs
+      changed + publishing: commit only allowlisted exports → non-force release-only push
+  → Cloudflare Git integration handles the external build
   → publishing: verify public data/HTML, including no-change runs (up to 240 seconds)
-  → Cloudflare Git integration handles the external build; failed deployment needs manual recovery
+  → only verified release_sha output permits separate sync-main job:
+      exact release SHA → worktree on current main → merge real release ancestry
+      changed candidate: offline electricity/script tests + frontend tests/lint/build
+      recheck candidate and both tips → non-force main-only push; no live source fetching
+      sync failure: workflow red, verified production intact; later publishing runs retry
   → browser loads static chart assets from the CDN
 ```
+
+Production uses released scripts, runtime, and frontend. Main can hold unpublished
+changes without blocking production refreshes. Public verification failure prevents
+sync; sync failure does not revert production or block future refreshes. No-change
+publishing runs also retry outstanding sync after verification. There is no two-ref
+atomic promise. See the publication runbook for separate recovery paths.
 
 Existing integration points:
 
@@ -92,6 +107,7 @@ Implemented electricity locations:
 | Tracked recent export with freshness/provenance | `frontend/src/_data/germanElectricity.json` |
 | Durable yearly history | `frontend/src/data-history/german-electricity/` |
 | Guarded Git publisher / public verifier | `scripts/dashboard_publish.py`, `scripts/verify_dashboard_deployment.py` |
+| Verified release-to-main ancestry sync | `scripts/dashboard_sync.py` |
 
 Electricity uses one shared prepared JSON snapshot rather than duplicated per-chart
 CSVs, with explicit public JSON routes and history passthrough. See the
@@ -146,23 +162,29 @@ Make the job small by construction, not merely by caching a large pipeline:
    database for correctness. A cold cache must still work within the timeout.
 6. No-change output creates no data commit or Git-triggered deployment. The current
    electricity workflow deliberately runs frontend validation/build on unchanged
-   data too, then verifies the public deployment on publishing runs.
+   data too, then verifies the public deployment on publishing runs. Outstanding
+   sync can still require a main merge commit and candidate validation/build.
 7. On changed output, run the relevant frontend tests and one production build before
    pushing. Cloudflare's Git integration is expected to build again for deployment;
-   verify this on the first live bot push and accept that small duplication
+   verify this on the new release-first rollout and accept that small duplication
    initially rather than remove the pre-publication quality gate.
 8. Record stage durations, request count, bytes downloaded, rows exported, and export
    size in the Actions job summary. Never log tokens or credential-bearing URLs.
 
 Initial engineering targets, to measure and revise after the first cold run:
 
-- Typical refresh under **5 minutes**, with a **10-minute job timeout** including
+- Typical refresh target under **5 minutes**, with a **10-minute production job timeout** including
   installation, validation, and up to 240 seconds of public deployment verification.
+- Separate `sync-main` has **its own 10-minute cap**, with additional dependency
+  installation, offline tests, and frontend tests/lint/build for changed candidates.
+  This cost also applies when unchanged production data still needs synchronization.
 - Initial published dashboard data at most **1 MB uncompressed** in total; aggregate
   or bound the display window before increasing it. Avoid loading all history just
   to display recent values.
 - Daily cadence: roughly 30 runs/month; at 5 minutes each, approximately 150 runner
-  minutes, excluding other CI jobs and separately hosted Cloudflare builds.
+  minutes for production, excluding sync, other CI jobs, and separately hosted
+  Cloudflare builds. The old September 10 both-ref run took about 5m47s; measure both
+  new jobs separately rather than treating that history as new rollout evidence.
 
 The README describes this repository as public. Standard GitHub-hosted runners in
 public repositories are currently free; private repositories have plan-dependent
@@ -223,19 +245,31 @@ For the commit-based MVP:
 - Serialize refresh runs with a concurrency group; avoid overlapping publications.
 - Use least-privilege workflow permissions (`contents: write` only where needed),
   repository secrets for source credentials, and reviewed/pinned actions.
-- Require the `main` ref and identical HEAD/origin main/origin release commits before
-  source fetching; unpublished main changes stop before refresh/build.
+- Require the `main` event ref for publishing, then explicitly check out release.
+  Guard `HEAD == origin/releases/cloudflare` before source fetching and run released
+  scripts/runtime/frontend. Main's position does not gate production.
 - Stage only the explicit recent/current-year-history/trade allowlist. Never use `git add .`;
   never stage generated chart JS, unrelated posts, databases, or raw responses.
-- Create a commit only when the validated snapshot changes. Push both refs with
-  `git push --atomic`, without force. Normal blog/code changes retain manual promotion;
-  merge release ancestry into main first if branches have diverged.
-  If the branch advances, fail/retry from the new head rather than overwrite work.
+- Create a data commit only when the validated snapshot changes. Push **release
+  only, without force**, then verify public data/HTML even on no-change runs.
+- Only verified release SHA output enables separate sync using the released script.
+  Check the exact released checkout/remote SHA, prepare a worktree from current main,
+  and merge real release ancestry (fast-forward, direct merge, or already-integrated
+  no-op). Validate changed candidates offline with electricity/script tests and
+  frontend tests/lint/build, without live source fetching. Recheck candidate and
+  refs before a **main-only non-force push**. Conflicts/races fail; never silently
+  overwrite main or change schemas to make integration pass.
+- Normal blog/code and monthly/manual progress changes retain manual promotion:
+  incorporate latest release ancestry into reviewed main through sync or explicit
+  real-merge reconciliation, preserve newer snapshots, and fast-forward release
+  without force. If either branch advances, review and validate again. Main and
+  release need not routinely equal; there is no two-ref atomic update promise.
 - Do not bypass branch protection. If automated pushes are disallowed, explicitly
   choose an approved PR or deployment strategy before implementation.
-- Validate in the refresh workflow itself: a push using `GITHUB_TOKEN` does not
+- Validate in the production and sync jobs themselves: a push using `GITHUB_TOKEN` does not
   ordinarily trigger another GitHub Actions `push` workflow. Do not depend on the
-  existing frontend CI to validate bot commits or add a broad PAT just to trigger it.
+  existing frontend CI to validate bot commits, including the main sync push, or
+  add a broad PAT just to trigger it.
 - Test that the actual Cloudflare Git integration deploys these bot pushes and
   includes the changed paths in its build settings. A successful Git push is not
   proof of publication; verify deployment status and the public snapshot in rollout.
@@ -259,8 +293,20 @@ added later. The implemented read-only verifier checks public data/HTML even on
 no-change publishing runs and fails on an old remote snapshot after 240 seconds;
 it does not automatically retry Cloudflare. See [recovery](dashboard_publication.md).
 
+Distinguish **verified production** from **main synchronized** too. If public
+verification fails, no verified output permits sync. If sync fails afterward, the
+workflow is red but production remains verified and future production refreshes
+continue. For conflicts or validation failures, reconcile latest release ancestry
+into current main through a reviewed real merge, preserving newer snapshots, and
+run the offline candidate checks. For branch races, discard stale candidate/state
+and start a fresh publishing run to re-verify current release and prepare against
+current main. Never force-push or roll back good production to repair main.
+No-change publishing runs retry outstanding sync after successful public verification.
+
 The workflow uses **09:17 UTC daily** plus `workflow_dispatch` with boolean
-`publish=false` by default. GitHub
+`publish=false` by default, refreshing/validating only the selected ref without
+publication or sync. Publishing requires the main event ref but checks out release.
+GitHub
 scheduling is best effort, runs from the default branch, and may be delayed or
 dropped under load. Public-repository schedules can be disabled after 60 days of
 repository inactivity. Do not promise an exact update time or rely on successful
@@ -284,8 +330,9 @@ and preview builds in the budget. Recheck limits before increasing cadence:
 4. Add the scheduled/manual workflow and guarded commit-based publication; verify
    token permissions, branch rules, Cloudflare behavior, and failure notifications.
 5. Complete and record rollout checks below. The implementation contains the daily
-   schedule; actual activation awaits merge to `main`, and first live deployment
-   verification remains pending:
+   schedule; deliberately promote it to **both branches** before that schedule relies
+   on released scripts. The September 10 success is historical old-design evidence;
+   **new release-first publication and separate sync live verification remain pending**:
 
 - [ ] A cold run succeeds without any previous database, data artifact, or cache.
 - [ ] Running twice against fixed input fixtures/window produces byte-identical
@@ -300,6 +347,13 @@ and preview builds in the budget. Recheck limits before increasing cadence:
 - [ ] A committed-but-unpublished snapshot can be recovered through a deployment
       retry even when the next pipeline run detects no data changes.
 - [ ] A concurrent branch update cannot be overwritten; retries are safe.
+- [ ] Production uses released code while main is ahead; public verification emits
+      the exact SHA before sync, with release-only and main-only pushes in separate jobs.
+- [ ] Sync validates a real-ancestry candidate offline before pushing main; conflict,
+      validation failure, or race makes the workflow red while verified production
+      and future refreshes remain intact. No-change publishing retries outstanding sync.
+- [ ] Manual code promotion preserves latest release ancestry and newer snapshots,
+      passes checks, and fast-forwards release without force.
 - [ ] Cold/warm runtimes and payload size meet the measured budget.
 - [ ] Manual rerun, rollback, and schedule reactivation are documented for the first
       dashboard, with no credentials in source control or logs.

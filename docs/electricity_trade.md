@@ -58,8 +58,10 @@ file intact and removes the temporary file. No-change runs preserve bytes and mt
 Cross-checkout publication uses serialized Git operations in the authorized
 [daily data publisher](dashboard_publication.md). Trade's current-year correction
 window is included after recent/history refresh; normal code and explicit closed-year
-reconciliation retain manual release promotion. Activation awaits merge to `main`
-and first live deployment verification.
+reconciliation retain manual release promotion after integrating latest release
+ancestry into reviewed main and preserving newer snapshots. The release-first
+implementation requires deliberate promotion to both branches and new live rollout
+verification; the September 10 successful run covered the old both-ref design.
 
 ## Official source, definition, units and licensing
 
@@ -292,10 +294,17 @@ is made from monthly or daily averages.
 The daily/manual workflow refreshes recent hourly data, daily history, then monthly
 trade, in that order. Monthly describes the source resolution; this bounded trade
 refresh participates in the daily run. Its review artifact includes the trade
-snapshot. Publishing requires the already released `main` base and validated
-allowlisted changes, with an atomic push to both refs and public verification.
-Manual dispatch defaults to `publish=false`. December completion at rollover still
-requires explicit reconciliation if absent; no previous-year fetch is automatic.
+snapshot. Publishing requires the main event ref, then explicitly checks out release
+and guards `HEAD == origin/releases/cloudflare`, ignoring main's position. Released
+scripts/runtime/frontend validate allowlisted changes before a non-force release-only
+push and public verification, including no-change runs. Verified release SHA output
+alone permits separate sync: merge exact release ancestry into current main, run offline
+electricity/script tests and frontend tests/lint/build without live source fetching,
+recheck refs, then push main only without force. Sync failure makes the workflow red
+but preserves verified production and future refreshes; no-change publishing retries
+outstanding sync. There is no two-ref atomic promise. Manual dispatch defaults to
+`publish=false`, refreshing/validating only the selected ref. December completion at
+rollover still requires explicit reconciliation if absent; no previous-year fetch is automatic.
 Frontend regression checks cover monthly advancement and year rollover without
 hard-coded current snapshot dates. See [publication policy](dashboard_publication.md).
 
