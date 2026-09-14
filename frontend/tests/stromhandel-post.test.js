@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 const { spawnSync } = require('child_process');
+const { JSDOM } = require('jsdom');
+const markdown = require('markdown-it')({ html: true });
 const { DIRECTORY, CSV, SOURCE, MANIFEST, sha256, validateStromhandel } = require('../src/data_ingestion/utils/stromhandelValidation');
 const { loadData } = require('../src/data_ingestion/builders/utils');
 const { buildLineChart } = require('../src/data_ingestion/builders/lineChart');
@@ -110,15 +112,48 @@ test('standard generated line renders exact annual values, straight segments and
   expect(option.series[0].data).toEqual([30.833, 14.714, 13.864, 22.958, -15.251, -31.868, -25.413]);
 });
 
-test('article table matches all CSV values and ends with the dashboard link', () => {
+test('article renders complete evidence in closed disclosures with visible chart sources and final dashboard link', () => {
   const article = fs.readFileSync(path.resolve(__dirname, '../src/posts/2026/stromimporte-exporte-deutschland.md'), 'utf8');
-  for (const row of validateStromhandel().rows) {
-    const values = [row.jahr, ...[row.importe_twh, row.exporte_twh, row.nettoexport_twh].map((value) => value.toFixed(3).replace('.', ',').replace('-', '−'))];
-    expect(article).toContain(`| ${values.join(' | ')} |`);
+  const document = new JSDOM(markdown.render(article.replace(/^---\n[\s\S]*?\n---\n/, ''))).window.document;
+  const data = document.querySelector('details.post-data-details');
+  const methodology = document.querySelector('details.post-methodology');
+  for (const disclosure of [data, methodology]) {
+    expect(disclosure).not.toBeNull();
+    expect(disclosure.classList.contains('stromhandel-disclosure')).toBe(true);
+    expect(disclosure.hasAttribute('open')).toBe(false);
+    expect(disclosure.firstElementChild.tagName).toBe('SUMMARY');
+  }
+  const wrapper = data.querySelector('.electricity-table-wrap');
+  expect(wrapper.getAttribute('tabindex')).toBe('0');
+  expect(wrapper.getAttribute('role')).toBe('region');
+  expect(wrapper.getAttribute('aria-label')).toContain('Terawattstunden');
+  const rows = [...wrapper.querySelectorAll('table tbody tr')];
+  expect(rows.map((row) => [...row.cells].map((cell) => cell.textContent.trim()))).toEqual(
+    validateStromhandel().rows.map((row) => [String(row.jahr), ...[row.importe_twh, row.exporte_twh, row.nettoexport_twh].map((value) => value.toFixed(3).replace('.', ',').replace('-', '−'))]),
+  );
+  const charts = [...document.querySelectorAll('.chart-section')];
+  expect(charts).toHaveLength(2);
+  for (const chart of charts) {
+    expect(chart.closest('details')).toBeNull();
+    expect(chart.querySelector('.chart-sources a').href).toBe('https://www.smard.de/home/marktdaten');
+    expect(chart.compareDocumentPosition(data) & 4).toBe(4);
+  }
+  expect(methodology.querySelector('a[href="https://creativecommons.org/licenses/by/4.0/"]')).not.toBeNull();
+  expect(methodology.textContent).toContain('84');
+  expect(methodology.textContent).toContain('physikalischer Stromfluss');
+  for (const url of [
+    'https://www.bundesnetzagentur.de/SharedDocs/Pressemitteilungen/DE/2025/20250103_smard.html',
+    'https://www.smard.de/page/home/wiki-article/518/548/grenzueberschreitender-stromhandel',
+    'https://www.smard.de/page/home/wiki-article/446/2362/installierte-erzeugungsleistung',
+    'https://www.bundesnetzagentur.de/SharedDocs/Pressemitteilungen/DE/2025/20250903_Versorgungsmonitoring.html',
+  ]) {
+    const source = document.querySelector(`a[href="${url}"]`);
+    expect(source).not.toBeNull();
+    expect(source.closest('details')).toBeNull();
   }
   expect(article).toContain('date: 2026-09-11');
   expect(article).toContain('lastUpdated: 2026-09-14');
-  expect(article.trim()).toMatch(/\[Strom-Dashboard\]\(\/dashboards\/strom\/\)$/);
+  expect(document.body.lastElementChild.lastElementChild.getAttribute('href')).toBe('/dashboards/strom/');
 });
 
 test('ignore exceptions include only the frozen evidence files', () => {

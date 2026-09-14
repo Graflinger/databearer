@@ -55,6 +55,49 @@ subject to transmission capacity; planned commercial exchanges differ from physi
 flows. This is context, not evidence that these annual balances demonstrate improved
 flexibility, lower prices or physical security. The post makes no such causal claim.
 
+Additional primary sources reviewed 2026-09-14:
+
+- [BNetzA, electricity market 2024, 2025-01-03](https://www.bundesnetzagentur.de/SharedDocs/Pressemitteilungen/DE/2025/20250103_smard.html),
+  section “Grenzüberschreitender Stromhandel”: “Deutschland verfügt über ausreichend
+  Stromerzeugungskapazitäten. Strom wird in aller Regel dann importiert, wenn die
+  inländische Produktion teurer wäre.” Together with SMARD's market-coupling
+  explanation this supports economic imports despite domestic capacity, including
+  domestic capacity not being fully dispatched. It does not quantify idle capacity
+  at each import hour or establish perpetual national self-sufficiency. The post
+  explicitly attributes the sufficiency assessment to the 2024 retrospective.
+- [SMARD, installed generation capacity](https://www.smard.de/page/home/wiki-article/446/2362/installierte-erzeugungsleistung):
+  defines maximum/net capacity and explains maintenance, weather and demand-driven
+  underutilisation. Installed capacity is not simultaneously available or firm
+  capacity. Do not reuse the page's blanket security sentence as proof of autarky;
+  a nameplate sum does not establish adequacy at each critical hour.
+- [BNetzA, security monitoring, 2025-09-03](https://www.bundesnetzagentur.de/SharedDocs/Pressemitteilungen/DE/2025/20250903_Versorgungsmonitoring.html):
+  conditional adequacy through 2035, with up to 22.4/35.5 GW gross additions of
+  dispatchable capacity by scenario (before closures), plus flexibility, renewable
+  expansion and network development. This is not a finding of unconditional autarky.
+
+These contextual reports are not the chart inputs. Their differently scoped or
+revised trade totals are not substituted into the frozen DE–LU evidence.
+
+## Disclosure styling handoff
+
+The charts remain primary and their sources stay visible. The seven-row fallback
+table is inside a native, initially closed `details.post-data-details`; methodology
+uses initially closed `details.post-methodology`. The table reuses the existing
+`electricity-table-wrap` horizontal scroller with a keyboard-focusable named region.
+DOM checks cover both rendered page and feed content.
+
+Both disclosures additionally use `stromhandel-disclosure`. The dedicated
+`frontend/src/scss/pages/_trade-post.scss` supplies scoped disclosure spacing,
+summary/scroller focus treatment, padded numeric cells and a `30rem` table minimum
+width. The existing wrapper supplies local horizontal overflow on narrow screens.
+The rules inherit text color and use `currentColor` for borders and focus outlines;
+they do not duplicate the global font-color correction or modify `_post.scss`.
+
+Only the shared **font-color** fix from PR30 (intro commit `e4e9f35`) remains an
+integration dependency. Do not transfer YTD disclosure styles or chart builders.
+Main browser QA should verify mobile scrolling and light/dark contrast with PR30's
+font-color CSS applied; that commit is not included in the trade branch.
+
 Generated assets retain `/js/charts/stromhandel_jahre/importe_exporte.js` and
 `nettoexport.js`. The line uses straight segments and an explicitly named single
 series so the standard builder applies its color. The article also includes the

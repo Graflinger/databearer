@@ -1,0 +1,55 @@
+.post-content .stromhandel-disclosure {
+  margin: 1.5rem 0;
+  padding: 0.9rem 0;
+  border-block: 1px solid currentColor;
+
+  > summary {
+    cursor: pointer;
+    font-weight: 600;
+    line-height: 1.5;
+    padding: 0.25rem;
+  }
+
+  > summary:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  > summary:focus-visible,
+  .electricity-table-wrap:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  &[open] > summary {
+    margin-bottom: 1.25rem;
+  }
+
+  p, ul, ol {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  table {
+    width: 100%;
+    min-width: 30rem;
+    border-collapse: collapse;
+    font-size: 14px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 1rem;
+  }
+
+  th, td {
+    padding: 0.65rem 0.8rem;
+    border-bottom: 1px solid currentColor;
+    text-align: right;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+
+  th:first-child, td:first-child {
+    text-align: left;
+  }
+}
