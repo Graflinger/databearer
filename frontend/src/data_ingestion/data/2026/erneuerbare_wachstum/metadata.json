@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "kind": "frozen_erneuerbare_wachstum",
+  "frozen_on": "2026-09-14",
+  "source_revision": "4be5f678d5d318056ac2f87b720549f75032c4a1",
+  "methodology_version": 1,
+  "extractor": "frontend/src/data_ingestion/extract-erneuerbare-wachstum.js",
+  "provenance": {
+    "attribution": "Bundesnetzagentur | SMARD.de",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "capacity_url": "https://www.smard.de/page/home/topic-article/211972/212382/entwicklung-der-nettonennleistung",
+    "capacity_csv_url": "https://www.smard.de/resource/blob/217306/-/data-csv-data.csv",
+    "capacity_license_evidence": "https://www.smard.de/resource/blob/221462/078c832e6e821e841b522f6d46d499af/smard-benutzerhandbuch-09-2026-data.pdf",
+    "generation_url": "https://www.smard.de/home/downloadcenter/download-marktdaten/",
+    "generation_endpoint": "https://www.smard.de/app/chart_data/{id}/DE/{id}_DE_{resolution}_{timestamp}.json",
+    "generation_ids": {
+      "solar": 4068,
+      "wind_onshore": 4067,
+      "wind_offshore": 1225
+    }
+  },
+  "coverage": {
+    "timezone": "Europe/Berlin",
+    "capacity": {
+      "first_year": 2011,
+      "last_year": 2025,
+      "reference": "year_end",
+      "unit": "GW",
+      "provisional": true,
+      "source_evaluated_on": "2026-06-26",
+      "source_evaluation_verified_on": "2026-09-14",
+      "source_retrieved_at": null,
+      "scope": "Gemeldete Kraftwerksliste: Nettonennleistung am und außerhalb des Strommarktes; einschließlich ausländischer, in das deutsche Netz einspeisender Kraftwerke (Dänemark, Luxemburg, Österreich, Schweiz). Kein rein geografischer Deutschland-Gesamtbestand; keine Länderaufteilung im kompakten Export. Wind/PV und kleine Einheiten aggregiert; Kleinspeicher unter 13,2 kW und überwiegend nicht öffentlich einspeisende Notstromaggregate ausgeschlossen. Keine DC-Modulleistung."
+    },
+    "generation": {
+      "first_year": 2015,
+      "last_year": 2025,
+      "reference": "calendar_year",
+      "unit": "TWh",
+      "source_retrieved_at": null,
+      "daily_history_through": "2026-09-12",
+      "annual_supplement_years": [
+        2016,
+        2018
+      ],
+      "scope": "SMARD DE: Nettostromerzeugung im Netz der allgemeinen Versorgung. Ohne PV-Eigenverbrauch im Haushalt, Bahnnetz, Industrienetze und geschlossene Verteilnetze. Keine Bruttostromerzeugung und keine zu den Kapazitäten deckungsgleiche Anlagenpopulation."
+    },
+    "missing_values": "Unknowns never become zero. Annual supplements replace complete annual mixes, never daily gaps. No capacity-utilization or target-attainment ratios.",
+    "transformation": "Select three technologies. Capacity GW unchanged; generation GWh/1000 via validated trends, rounded to 8 decimals. Summary differences and percentages use unrounded source rows, round to 8 decimals."
+  },
+  "inputs": [
+    {
+      "path": "frontend/src/_data/germanElectricityProgress.json",
+      "sha256": "cb434822ce5f16e9f6603875cbeff5d50a26b04415a9c9e0ad3e54cebfd801fd",
+      "bytes": 11138,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/_data/germanElectricityAnnual.json",
+      "sha256": "4ab6cc9828a11a27a46ea3be6ddc05a4a05e69bc74f0087d484b199da2378785",
+      "bytes": 1153,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/_data/germanElectricityTrade.json",
+      "sha256": "27b037e57cb4f75d9642cb66209b514d0f8df49e76d57aa3e1d56236a922fdee",
+      "bytes": 15129,
+      "role": "validated_ancillary_not_charted"
+    },
+    {
+      "path": "frontend/src/_data/germanElectricity.json",
+      "sha256": "455c22c24b1ef281a03f1cccfd84dc76eff19bc803b5b5bbdf32d4ea0b034d73",
+      "bytes": 107747,
+      "role": "validated_ancillary_not_charted"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/manifest.json",
+      "sha256": "296107ce961a64298df4d9f10f7cb40a196fc7fe55218a70777e1fad94984ee3",
+      "bytes": 4422,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2015.a33a9c994295cc8ded4982c77fe99e954ec0c2aec80c6b25b45507973a8c24b1.json",
+      "sha256": "a33a9c994295cc8ded4982c77fe99e954ec0c2aec80c6b25b45507973a8c24b1",
+      "bytes": 147389,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2016.a10e4f13682ebe63177564a5631ca1685d1cc6b54efc18f8b1a8c8c1cb50de64.json",
+      "sha256": "a10e4f13682ebe63177564a5631ca1685d1cc6b54efc18f8b1a8c8c1cb50de64",
+      "bytes": 147949,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2017.7cc400862c9c477fe74577591dd681fc980198fd5918da5add6be88681d40772.json",
+      "sha256": "7cc400862c9c477fe74577591dd681fc980198fd5918da5add6be88681d40772",
+      "bytes": 147540,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2018.f5b6e0642d345797466cf12f278ed474e05504ae1fee39c140f6b61a2682367f.json",
+      "sha256": "f5b6e0642d345797466cf12f278ed474e05504ae1fee39c140f6b61a2682367f",
+      "bytes": 147424,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2019.d7211e250be153c9ff4dbc2bba8e52821204bce116c61a4cf6812316b28dd93f.json",
+      "sha256": "d7211e250be153c9ff4dbc2bba8e52821204bce116c61a4cf6812316b28dd93f",
+      "bytes": 143358,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2020.c2b5b0260c5f71cbd793997cc9ea8f9b5baa464d9f3db00c93341c2b7e5ab596.json",
+      "sha256": "c2b5b0260c5f71cbd793997cc9ea8f9b5baa464d9f3db00c93341c2b7e5ab596",
+      "bytes": 143923,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2021.79059405df894d3bc22ed07540c03e8db6f4fc004f51e5b601726ff1da371403.json",
+      "sha256": "79059405df894d3bc22ed07540c03e8db6f4fc004f51e5b601726ff1da371403",
+      "bytes": 143734,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2022.a2500628fc9af0b9547661db3412ed69eed4464323199aac19cd9b504850a27b.json",
+      "sha256": "a2500628fc9af0b9547661db3412ed69eed4464323199aac19cd9b504850a27b",
+      "bytes": 143506,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2023.9ad85353750c74cb587e7208ca67c1410138e42e6616c7c75e7091c14f7e8ed7.json",
+      "sha256": "9ad85353750c74cb587e7208ca67c1410138e42e6616c7c75e7091c14f7e8ed7",
+      "bytes": 141978,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2024.5aeca1c9781aba47045bcab7a25a7c25d974c93ef00859edcb68248f6ce59540.json",
+      "sha256": "5aeca1c9781aba47045bcab7a25a7c25d974c93ef00859edcb68248f6ce59540",
+      "bytes": 141674,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2025.7e70f946ebf15672021bf207ea2df167d7352b789159dbbb71852e85a4f0fc25.json",
+      "sha256": "7e70f946ebf15672021bf207ea2df167d7352b789159dbbb71852e85a4f0fc25",
+      "bytes": 142414,
+      "role": "evidence"
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2026.a3835c5dc0dcfc1497fb608a55fa0c1195a7791c3f4c8f4a4787f8d50d275746.json",
+      "sha256": "a3835c5dc0dcfc1497fb608a55fa0c1195a7791c3f4c8f4a4787f8d50d275746",
+      "bytes": 100829,
+      "role": "validated_ancillary_not_charted"
+    }
+  ],
+  "files": {
+    "capacity.csv": {
+      "sha256": "92d9f746142235ab1c22a9075d2dd3009b42a19ea711376f8a86b8e378a86770",
+      "bytes": 420,
+      "columns": [
+        "year",
+        "solar_gw",
+        "wind_onshore_gw",
+        "wind_offshore_gw"
+      ],
+      "rows": 15
+    },
+    "generation.csv": {
+      "sha256": "54279085eced2e3695771f49c87f0c9f02e634d4153dea0f7b1c07922ce65512",
+      "bytes": 735,
+      "columns": [
+        "year",
+        "solar_twh",
+        "wind_onshore_twh",
+        "wind_offshore_twh",
+        "method",
+        "days",
+        "complete_days"
+      ],
+      "rows": 11
+    },
+    "summary.csv": {
+      "sha256": "c65cb8e3405b5715b36e82076dba928f268f79b1148d9bf83a9aa188e25a2d9c",
+      "bytes": 414,
+      "columns": [
+        "technology",
+        "capacity_2020_gw",
+        "capacity_2024_gw",
+        "capacity_2025_gw",
+        "change_2025_gw",
+        "growth_2020_2025_pct",
+        "generation_2024_twh",
+        "generation_2025_twh",
+        "generation_change_pct"
+      ],
+      "rows": 3
+    },
+    "quality.json": {
+      "sha256": "e0d8128cae14e902497dbf869e4013753b604b93e78efaf49b6d9cdb26b32d9d",
+      "bytes": 1212
+    }
+  }
+}

@@ -5,3 +5,14 @@ data/*
 !data/battery_storage_*.csv
 !data/battery_storage_metadata.json
 !data/battery_storage_quality.json
+
+# Frozen renewable-growth article: compact aggregates only.
+!data/2026/
+data/2026/*
+!data/2026/erneuerbare_wachstum/
+data/2026/erneuerbare_wachstum/*
+!data/2026/erneuerbare_wachstum/capacity.csv
+!data/2026/erneuerbare_wachstum/generation.csv
+!data/2026/erneuerbare_wachstum/summary.csv
+!data/2026/erneuerbare_wachstum/quality.json
+!data/2026/erneuerbare_wachstum/metadata.json
