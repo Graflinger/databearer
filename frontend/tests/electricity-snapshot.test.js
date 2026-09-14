@@ -77,7 +77,7 @@ test('both Eleventy rendering filters fail on changed observations with the old 
   const filters = {};
   const config = { on: jest.fn(), ignores: { add: jest.fn() }, watchIgnores: { add: jest.fn() },
     addFilter: (name, fn) => { filters[name] = fn; }, addPassthroughCopy: jest.fn(),
-    addPlugin: jest.fn(), addGlobalData: jest.fn(), addCollection: jest.fn() };
+    addPlugin: jest.fn(), addGlobalData: jest.fn(), addCollection: jest.fn(), addShortcode: jest.fn() };
   require('../.eleventy.js')(config);
   const changed = replaceObservation(raw, '123.456');
   const read = jest.spyOn(fs, 'readFileSync').mockReturnValue(changed);

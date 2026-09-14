@@ -491,6 +491,8 @@ a {
 
 /* Single Post - Modern Minimalist Style */
 .post-content {
+  --post-border: #e0e0e0;
+  --post-muted: #555;
   max-width: 680px;
   margin: 0 auto;
   padding: 10px 15px;
@@ -599,6 +601,84 @@ a {
 
 .post-content li {
   margin-bottom: 12px;
+}
+
+.post-content li p {
+  margin-bottom: 0.5rem;
+}
+
+.post-content li ul,
+.post-content li ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.post-content .post-methodology,
+.post-content .post-data-details {
+  margin: 1.5rem 0;
+  padding: 0.9rem 0;
+  border-block: 1px solid var(--post-border);
+}
+.post-content .post-methodology > summary,
+.post-content .post-data-details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1.5;
+  padding: 0.25rem;
+}
+.post-content .post-methodology > summary:hover,
+.post-content .post-data-details > summary:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.post-content .post-methodology > summary:focus-visible,
+.post-content .post-data-details > summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+.post-content .post-methodology[open] > summary,
+.post-content .post-data-details[open] > summary {
+  margin-bottom: 1.25rem;
+}
+.post-content .post-methodology h3,
+.post-content .post-data-details h3 {
+  font-size: 19px;
+  margin: 1.5rem 0 0.75rem;
+}
+.post-content .post-methodology p, .post-content .post-methodology ul, .post-content .post-methodology ol,
+.post-content .post-data-details p,
+.post-content .post-data-details ul,
+.post-content .post-data-details ol {
+  font-size: 16px;
+  line-height: 1.7;
+}
+.post-content .post-methodology table,
+.post-content .post-data-details table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 1rem;
+}
+.post-content .post-methodology th, .post-content .post-methodology td,
+.post-content .post-data-details th,
+.post-content .post-data-details td {
+  padding: 0.65rem 0.5rem;
+  border-bottom: 1px solid var(--post-border);
+  text-align: right;
+  vertical-align: top;
+}
+.post-content .post-methodology th:first-child, .post-content .post-methodology td:first-child,
+.post-content .post-data-details th:first-child,
+.post-content .post-data-details td:first-child {
+  text-align: left;
+  padding-left: 0;
+}
+.post-content .post-methodology th,
+.post-content .post-data-details th {
+  overflow-wrap: anywhere;
 }
 
 .post-content iframe {
@@ -1115,6 +1195,8 @@ a {
   }
   /* Post content dark mode */
   .post-content {
+    --post-border: #404040;
+    --post-muted: #b0b0b0;
     background-color: #1a1a1a;
   }
   .pagination {
@@ -1305,6 +1387,62 @@ a {
 
 .chart-sources li {
   margin-bottom: 0.15rem;
+}
+
+/* Small editorial comparisons, without a shared scale or success/error colors. */
+.post-content .comparison-section {
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+.post-content .comparison-chart {
+  margin: 1rem 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.post-content .comparison-chart__metric {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--post-border);
+}
+.post-content .comparison-chart dt {
+  font-weight: 500;
+}
+.post-content .comparison-chart dd {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.1rem 0.65rem;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.post-content .comparison-chart__value {
+  white-space: nowrap;
+}
+.post-content .comparison-chart__period {
+  display: block;
+  font-size: 12px;
+  color: var(--post-muted);
+  font-weight: 400;
+}
+.post-content .comparison-chart__arrow {
+  align-self: end;
+  color: var(--post-muted);
+}
+.post-content .comparison-chart__delta {
+  grid-column: 1/-1;
+  font-size: 14px;
+}
+.post-content .comparison-chart__delta .comparison-chart__period {
+  display: inline;
+}
+@media (max-width: 540px) {
+  .post-content .comparison-chart__metric {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* Dark mode chart styles */

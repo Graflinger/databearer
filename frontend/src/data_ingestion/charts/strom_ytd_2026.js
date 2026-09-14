@@ -1,0 +1,63 @@
+const { validateStromYtd } = require('../utils/stromYtdValidation');
+
+validateStromYtd();
+
+module.exports = [
+  {
+    type: 'comparison',
+    dataFile: '2026/strom_ytd/periods.csv',
+    outputFile: 'comparison.js',
+    containerId: 'strom-ytd-2026-comparison',
+    label: 'Stromkennzahlen: 2025 und 2026, jeweils 1. Januar bis 9. September',
+    xKey: 'year',
+    baseline: 2025,
+    current: 2026,
+    metrics: [
+      { key: 'generation_twh', label: 'Öffentliche Erzeugung', unit: 'TWh' },
+      { key: 'renewable_twh', label: 'Davon erneuerbar', unit: 'TWh' },
+      { key: 'renewable_share_pct', label: 'Erneuerbarenanteil an der Erzeugung', unit: '%', delta: 'percentagePoints' },
+      { key: 'load_twh', label: 'Netzlast', unit: 'TWh' },
+      { key: 'price_eur_mwh', label: 'Day-Ahead-Preis, zeitgewichtet', unit: '€/MWh', digits: 2 },
+    ],
+  },
+  {
+    type: 'bar',
+    dataFile: '2026/strom_ytd/comparison.csv',
+    outputFile: 'mix.js',
+    containerId: 'strom-ytd-2026-mix',
+    title: '',
+    xAxisLabel: 'Jeweils 1.1.–9.9.',
+    yAxisLabel: 'TWh',
+    xKey: 'year',
+    seriesKeys: ['wind_onshore_twh', 'solar_twh'],
+    seriesNames: ['Wind an Land', 'Solar'],
+    colors: ['#3ba272', '#d5a62c'],
+    stacked: false,
+  },
+  {
+    type: 'line',
+    dataFile: '2026/strom_ytd/periods.csv',
+    outputFile: 'renewable-share.js',
+    containerId: 'strom-ytd-2026-renewable-share',
+    xKey: 'year',
+    xAxisLabel: 'Jeweils 1.1.–9.9.',
+    yAxisLabel: '%',
+    seriesKeys: ['renewable_share_pct'],
+    seriesNames: ['Erneuerbarenanteil'],
+    colors: ['#3ba272'],
+    smooth: false,
+  },
+  {
+    type: 'line',
+    dataFile: '2026/strom_ytd/periods.csv',
+    outputFile: 'price.js',
+    containerId: 'strom-ytd-2026-price',
+    xKey: 'year',
+    xAxisLabel: 'Jeweils 1.1.–9.9.',
+    yAxisLabel: '€/MWh',
+    seriesKeys: ['price_eur_mwh'],
+    seriesNames: ['Day-Ahead-Preis'],
+    colors: ['#d5a62c'],
+    smooth: false,
+  },
+];

@@ -70,7 +70,7 @@ test('Eleventy before hook rejects when chart generation fails', async () => {
   const hooks = {};
   const config = { on: (name, fn) => { hooks[name] = fn; }, ignores: { add: jest.fn() },
     watchIgnores: { add: jest.fn() }, addFilter: jest.fn(), addPassthroughCopy: jest.fn(),
-    addPlugin: jest.fn(), addGlobalData: jest.fn(), addCollection: jest.fn() };
+    addPlugin: jest.fn(), addGlobalData: jest.fn(), addCollection: jest.fn(), addShortcode: jest.fn() };
   require('../.eleventy.js')(config);
   await expect(hooks['eleventy.before']()).rejects.toThrow('chart command failed');
 });

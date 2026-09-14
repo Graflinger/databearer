@@ -5,8 +5,10 @@ const { validateBuildSnapshot } = require('./src/data_ingestion/builders/electri
 const { verifyPublished } = require('./src/data_ingestion/builders/electricityHistory');
 const { verifyPublishedTrends } = require('./src/data_ingestion/builders/electricityTrends');
 const { verifyPublishedProgress } = require('./src/data_ingestion/builders/electricityProgress');
+const { comparisonEmbed } = require('./src/data_ingestion/builders/comparisonEmbed');
 
 module.exports = function (eleventyConfig) {
+  eleventyConfig.addShortcode('comparisonChart', comparisonEmbed);
   // Generate charts before Eleventy build
   eleventyConfig.on('eleventy.before', async () => {
     console.log('🎨 Generating charts...');

@@ -5,3 +5,13 @@ data/*
 !data/battery_storage_*.csv
 !data/battery_storage_metadata.json
 !data/battery_storage_quality.json
+
+!data/2026/
+data/2026/*
+!data/2026/strom_ytd/
+data/2026/strom_ytd/*
+!data/2026/strom_ytd/strom_ytd_2026_mix.csv
+!data/2026/strom_ytd/periods.csv
+!data/2026/strom_ytd/mix_by_year.csv
+!data/2026/strom_ytd/comparison.csv
+!data/2026/strom_ytd/manifest.json
