@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: fact_battery_storage_germany_plants
+    description: >-
+      One row per SpeMastrNummer (SSE plus 12 digits, despite the source field name)
+      plus separately keyed missing-ID source records.
+      Full source universe retained for audit; only is_included feeds operating metrics.
+      Active German Batterie units require catalogue IDs 84/524/472/35 with matching
+      labels and categories. Net unit kW is summed, usable plant kWh taken once.
+      Ambiguous joins, duplicate IDs, mixed status, nonfinite/missing values, power or
+      energy <=0.3, duration outside inclusive 0.1..12h and invalid operating dates
+      exclude with explicit reasons. Missing state is retained as Unknown in state totals;
+      conflicting states exclude. battery_snapshot_date must be explicit YYYY-MM-DD
+      and match the single staging.mastr_snapshot provenance row. Source URL, archive
+      SHA256 and filename are propagated to plants. Nonempty operating outputs are required.
+      Size segments are size proxies, never owner classes. Commissioning is the earliest
+      linked unit date; whole current plant capacity is assigned to it. Cohorts describe
+      survivors at this snapshot, not historic stock or true annual gross additions.
+      Planned plants have separate is_planned_included and never enter operating cohorts.
+      Network verification is all linked units verified (2954/Geprüft/category175), NULL
+      if any status is unknown; it is informational and not a quality filter.
+    columns:
+      - name: analysis_id
+        tests: [not_null, unique]
+      - name: snapshot_date
+        tests: [not_null]
+      - name: power_kw
+        description: "Sum of raw net kW, NULL if any component is unknown. Invalid finite/nonfinite values remain exposed."
+      - name: energy_kwh
+        description: "Usable kWh from exactly one plant row, NULL for ambiguous/missing plant. See raw_energy_values."
+      - name: duration_hours
+        description: "Plant energy_kwh / power_kw, not mean unit duration."
+      - name: size_segment
+        description: "small: kW<30 AND kWh<30; large: kW>=1000 OR kWh>=1000; medium: remainder."
+        tests:
+          - accepted_values:
+              values: [small, medium, large]
+      - name: is_included
+        tests: [not_null]
+      - name: is_planned_included
+        tests: [not_null]
+      - name: quality_reasons
+        tests: [not_null]
+  - name: fact_battery_storage_germany_yearly
+    description: "Operating survivor cohorts by commissioning_year and size_segment including overall; GW/GWh and median plant E/P. Cumulative fields are surviving cohorts, not historical stock."
+  - name: fact_battery_storage_germany_monthly
+    description: "Operating survivor cohorts by commissioning_month (first day) and size_segment including overall. Unobserved periods are absent, not inferred zeros."
+  - name: fact_battery_storage_germany_by_state
+    description: "Operating snapshot stock by state and size_segment including overall; Unknown preserves plants with missing/undecodable state."
+  - name: fact_battery_storage_germany_summary
+    description: "Snapshot stock by operating_status (operating/planned separately) and size_segment including overall. Median is plant E/P, not aggregate GWh/GW."
+  - name: fact_battery_storage_germany_quality
+    description: >-
+      relation rows are exhaustive disjoint included_operating/included_planned/excluded
+      dispositions. reason rows overlap: do not add them. Counts cover all source rows,
+      including non-batteries and orphans. Known positive finite GW/GWh quantify exclusions
+      without filling unknowns; known_positive_unit_power_gw exposes partial known unit
+      power even when whole-plant power is unknown. Ambiguous duplicate kWh is not summed.
