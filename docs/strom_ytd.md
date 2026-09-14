@@ -21,7 +21,10 @@ npm run build
 The exporter validates source hashes, dates, numeric coverage and DST before writing
 any payload, and writes the manifest last. This is not a directory-level atomic swap;
 the build validator rejects interrupted/mixed packages. Review the diff after export.
-Tests independently recompute from the pinned Git objects, including provenance hashes.
+Tests independently recompute from the pinned Git objects, including provenance hashes,
+when the exact source commit is available. Shallow checkouts skip only that historical
+reproduction test. Frozen-package validation, corruption checks, article/chart checks
+and the original CSV's independently pinned SHA-256 always run.
 Normal builds only read the frozen entity, never the live history or Git objects.
 
 All eight periods are January 1–September 9 inclusive. Leap days remain included.

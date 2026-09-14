@@ -12,6 +12,12 @@ const root = path.resolve(__dirname, '../..');
 const commit = 'dd0c7f8deef858a844be777a5fd1e78949386413';
 const hash = (raw) => createHash('sha256').update(raw).digest('hex');
 const git = (filename) => execFileSync('git', ['show', `${commit}:${filename}`], { cwd: root });
+// Shallow CI checkouts may not contain the frozen source commit. Only the
+// independent historical reproduction depends on it; package checks always run.
+const sourceCommit = spawnSync('git', ['cat-file', '-e', `${commit}^{commit}`], { cwd: root });
+if (sourceCommit.error) throw sourceCommit.error;
+if (![0, 1, 128].includes(sourceCommit.status)) throw new Error('Could not check frozen source commit availability');
+const testWithSourceHistory = sourceCommit.status === 0 ? test : test.skip;
 const { manifest, tables } = validateStromYtd();
 let scratch;
 
@@ -34,7 +40,14 @@ function mutateCsv(name, change, rehash = true) {
   }
 }
 
-test('all supporting aggregates reproduce independently from the exact original Git history', () => {
+test('frozen package validates and preserves the original CSV bytes without Git history', () => {
+  expect(validateStromYtd().manifest.source_commit).toBe(commit);
+  const originalCsv = fs.readFileSync(path.join(STROM_YTD_DIRECTORY, 'strom_ytd_2026_mix.csv'));
+  // Pin the original bytes independently of both Git availability and the manifest.
+  expect(hash(originalCsv)).toBe('0071b2ed6d13193139bd267329777cc523df7a25ca5ff594c2d762df22c14fa3');
+});
+
+testWithSourceHistory('all supporting aggregates reproduce independently from the exact original Git history', () => {
   for (const source of manifest.source_files) {
     const raw = git(source.path);
     expect(hash(raw)).toBe(source.sha256);
@@ -72,8 +85,6 @@ test('all supporting aggregates reproduce independently from the exact original 
     expect(period.negative_mean_days).toBe(rows.filter((r) => r.price_eur_mwh < 0).length);
     for (const row of tables['mix_by_year.csv'].filter((r) => r.year === period.year)) expect(row.generation_twh).toBeCloseTo(energy[row.source], 5);
   }
-  const original = execFileSync('git', ['show', '88a708d:frontend/src/data_ingestion/data/strom_ytd_2026_mix.csv'], { cwd: root });
-  expect(fs.readFileSync(path.join(STROM_YTD_DIRECTORY, 'strom_ytd_2026_mix.csv')).equals(original)).toBe(true);
 });
 
 test.each(Object.keys(manifest.payloads))('rejects missing and corrupt evidence: %s', (name) => {
