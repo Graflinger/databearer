@@ -28,7 +28,7 @@ Combine this skill with:
 - `data-pipeline` for ingestion/dbt/export work
 - `frontend-visualization` for ECharts and CSVs
 - `frontend-page` for Eleventy posts and frontmatter
-- `image-generation` if a blog card image is needed
+- `image-generation` for the required article-specific blog card/header image
 
 ## Editorial style
 
@@ -70,6 +70,36 @@ Allowed topics:
 - `energie`
 - `wirtschaft`
 - `politik-und-gesellschaft`
+
+## Article image — required before handoff
+
+Every new article needs its own topic-appropriate title image. Load
+`image-generation` and use the existing `image-generation/` code, rather than
+silently reusing another post's image or a dashboard illustration. Reuse is an
+exception requiring the user's explicit approval (for example, the dashboard
+introduction may use the approved dashboard illustration).
+
+- Follow the image skill's provider/auth workflow, natural editorial prompts,
+  full-bleed composition and current 1408×800 output specification.
+- Inspect the generated image, put the curated asset in the article-year image
+  folder and wire `image` and a truthful symbolic-image caption in frontmatter.
+- If generation/authentication is unavailable, report the blocker. Do not mark
+  image preparation complete or substitute an unrelated image without approval.
+- Never request credentials in chat or commit authentication/configuration secrets.
+
+## Reading flow and methodology
+
+Keep the main narrative short and evidence-led. Prefer charts or the supported
+comparison chart for headline comparisons; do not place a cramped wide table in
+the reading flow. Keep accessible exact-value evidence, using a labelled,
+scrollable region inside a closed disclosure for long backup tables.
+
+Put detailed technical methodology in native `<details class="post-methodology">`
+with `<summary>Methodik und Datenquellen</summary>` and no `open` attribute. Keep
+sources and interpretation-critical caveats visible near each chart. Verify the
+built HTML: Markdown inside HTML blocks must actually render, not appear as raw
+syntax. Check keyboard operation, spacing and nested-list text contrast in both
+light and dark mode; this disclosure does not need custom JavaScript.
 
 ## Post structure
 
@@ -119,8 +149,10 @@ Use `frontend-visualization` for exact commands and config fields.
 3. Ingest/export data if needed using `data-pipeline`.
 4. Create or update chart CSV/config/scripts using `frontend-visualization`.
 5. Draft the Markdown post using `frontend-page` conventions.
-6. Add internal links to relevant topic pages or previous posts.
-7. Add a Methodik/Datenquellen section.
+6. Generate and review the article-specific image using `image-generation`, unless
+   the user explicitly approved reuse. Treat unavailable generation as a blocker.
+7. Add internal links and concise source notes; put lengthy methodology in a
+   default-closed disclosure. Dashboard-derived stories end with a dashboard link.
 8. Run frontend build from `frontend/`:
 
 ```bash
@@ -137,7 +169,11 @@ Before considering a post complete:
 - Excerpt is clear and not clickbait.
 - The strongest claim is backed by data shown in the post.
 - Every chart has a source.
+- An individually generated title image is inspected and wired, or explicit reuse
+  approval / an unresolved image-generation blocker is recorded.
 - Caveats are explicit.
+- Long methodology is collapsed by default; key caveats remain visible.
+- Mobile comparisons are readable, and nested lists have sufficient dark-mode contrast.
 - Internal links are relevant.
 - `npm run build` passes.
 

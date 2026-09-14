@@ -8,6 +8,8 @@ const { parse } = require('csv-parse/sync');
 const { validateStromYtd, STROM_YTD_DIRECTORY } = require('../src/data_ingestion/utils/stromYtdValidation');
 const { buildLineChart } = require('../src/data_ingestion/builders/lineChart');
 const { buildBarChart } = require('../src/data_ingestion/builders/barChart');
+const { renderComparisonChart } = require('../src/data_ingestion/builders/comparisonChart');
+const { JSDOM } = require('jsdom');
 const root = path.resolve(__dirname, '../..');
 const commit = 'dd0c7f8deef858a844be777a5fd1e78949386413';
 const hash = (raw) => createHash('sha256').update(raw).digest('hex');
@@ -141,8 +143,8 @@ test('config validation failure propagates to the generator process', () => {
 
 test('standard charts retain nested inputs, stable routes, short grouped labels and explicit straight-line colors', () => {
   const configs = require('../src/data_ingestion/charts/strom_ytd_2026');
-  expect(configs.map((c) => c.outputFile)).toEqual(['mix.js', 'renewable-share.js', 'price.js']);
-  for (const config of configs) {
+  expect(configs.map((c) => c.outputFile)).toEqual(['comparison.js', 'mix.js', 'renewable-share.js', 'price.js']);
+  for (const config of configs.filter((c) => c.type !== 'comparison')) {
     expect(config.dataFile.startsWith('2026/strom_ytd/')).toBe(true);
     const data = parse(fs.readFileSync(path.join(STROM_YTD_DIRECTORY, path.basename(config.dataFile))), { columns: true, cast: true });
     const build = config.type === 'line' ? buildLineChart : buildBarChart;
@@ -173,8 +175,16 @@ test('article dates, static tables, comparisons and closing link agree with the 
     expect(article).toContain(`| ${p.year} | ${de(p.generation_twh, 1)} | ${de(p.renewable_share_pct, 1)} | ${de(p.price_eur_mwh, 2)} |`);
   }
   const [a, b] = tables['periods.csv'].slice(-2);
-  expect(article).toContain(`| Öffentliche Erzeugung | ${de(a.generation_twh, 1)} TWh | ${de(b.generation_twh, 1)} TWh | +${de(100 * (b.generation_twh / a.generation_twh - 1), 1)} % |`);
-  expect(article).toContain(`| Day-Ahead-Preis, zeitgewichtet | ${de(a.price_eur_mwh, 2)} €/MWh | ${de(b.price_eur_mwh, 2)} €/MWh | +${de(100 * (b.price_eur_mwh / a.price_eur_mwh - 1), 1)} % |`);
+  const config = require('../src/data_ingestion/charts/strom_ytd_2026')[0];
+  const document = new JSDOM(renderComparisonChart(tables['periods.csv'], config)).window.document;
+  const metrics = [...document.querySelectorAll('.comparison-chart__metric')];
+  expect(metrics).toHaveLength(5);
+  for (const [i, { key, unit, digits = 1, delta }] of config.metrics.entries()) {
+    expect(metrics[i].textContent).toContain(`2025 ${de(a[key], digits)} ${unit}`);
+    expect(metrics[i].textContent).toContain(`2026 ${de(b[key], digits)} ${unit}`);
+    const change = delta === 'percentagePoints' ? b[key] - a[key] : 100 * (b[key] / a[key] - 1);
+    expect(metrics[i].querySelector('.comparison-chart__delta').textContent).toBe(`+${de(change, 1)} ${delta === 'percentagePoints' ? 'Prozentpunkte' : '%'} gegenüber 2025`);
+  }
   expect(article).toContain(`+${de(b.renewable_share_pct - a.renewable_share_pct, 1)} Prozentpunkte`);
   const labels = { biomass: 'Biomasse', hydro: 'Wasserkraft', wind_offshore: 'Wind auf See', wind_onshore: 'Wind an Land', solar: 'Solar', other_renewables: 'Sonstige Erneuerbare', lignite: 'Braunkohle', hard_coal: 'Steinkohle', gas: 'Erdgas', other_conventional: 'Sonstige Konventionelle', pumped_storage: 'Pumpspeicher', nuclear: 'Kernenergie' };
   for (const [source, label] of Object.entries(labels)) {

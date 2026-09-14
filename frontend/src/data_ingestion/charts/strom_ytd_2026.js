@@ -4,6 +4,23 @@ validateStromYtd();
 
 module.exports = [
   {
+    type: 'comparison',
+    dataFile: '2026/strom_ytd/periods.csv',
+    outputFile: 'comparison.js',
+    containerId: 'strom-ytd-2026-comparison',
+    label: 'Stromkennzahlen: 2025 und 2026, jeweils 1. Januar bis 9. September',
+    xKey: 'year',
+    baseline: 2025,
+    current: 2026,
+    metrics: [
+      { key: 'generation_twh', label: 'Öffentliche Erzeugung', unit: 'TWh' },
+      { key: 'renewable_twh', label: 'Davon erneuerbar', unit: 'TWh' },
+      { key: 'renewable_share_pct', label: 'Erneuerbarenanteil an der Erzeugung', unit: '%', delta: 'percentagePoints' },
+      { key: 'load_twh', label: 'Netzlast', unit: 'TWh' },
+      { key: 'price_eur_mwh', label: 'Day-Ahead-Preis, zeitgewichtet', unit: '€/MWh', digits: 2 },
+    ],
+  },
+  {
     type: 'bar',
     dataFile: '2026/strom_ytd/comparison.csv',
     outputFile: 'mix.js',

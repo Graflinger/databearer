@@ -18,15 +18,16 @@ An der Spitze liegen zwei Energieträger fast gleichauf: **Wind an Land mit 72,3
 
 Alle folgenden Vergleiche betrachten jeweils **1. Januar bis einschließlich 9. September**. Kein vollständiges Vorjahr gegen ein laufendes Jahr, keine Hochrechnung.
 
-| Kennzahl | 2025, 1.1.–9.9. | 2026, 1.1.–9.9. | Veränderung |
-| --- | ---: | ---: | ---: |
-| Öffentliche Erzeugung | 295,6 TWh | 317,0 TWh | +7,2 % |
-| Davon erneuerbar | 175,7 TWh | 195,5 TWh | +11,2 % |
-| Erneuerbarenanteil an der Erzeugung | 59,4 % | 61,7 % | +2,2 Prozentpunkte |
-| Netzlast | 315,9 TWh | 320,5 TWh | +1,5 % |
-| Day-Ahead-Preis, zeitgewichtet | 88,84 €/MWh | 103,92 €/MWh | +17,0 % |
+<div class="chart-section comparison-section">
+  <h3>2025 → 2026 im direkten Vergleich</h3>
+  <p class="chart-description">Jeweils 1. Januar bis 9. September. Erzeugung, Erneuerbarenanteil und Börsenpreis steigen.</p>
 
-Quelle: eigene Auswertung der eingefrorenen [SMARD-Tageshistorie](https://www.smard.de/home/marktdaten), Beobachtungen bis 9. September 2026. Veränderungen aus ungerundeten Werten berechnet.
+{% comparisonChart "strom_ytd_2026", "strom-ytd-2026-comparison" %}
+
+  <div class="chart-sources"><strong>Quelle: </strong><a href="https://www.smard.de/home/marktdaten">Bundesnetzagentur / SMARD.de</a>, eingefrorene Tageshistorie, eigene Auswertung. Veränderungen aus ungerundeten Werten berechnet; deshalb ergeben die gerundeten Anteilswerte nicht exakt die ausgewiesenen +2,2 Prozentpunkte.</div>
+</div>
+
+Öffentliche Nettoerzeugung umfasst hier auch Pumpspeicher, aber keinen PV-Eigenverbrauch. Der Erneuerbarenanteil bezieht sich auf diese Erzeugung, nicht auf den Bruttostromverbrauch. Netzlast und Erzeugung haben unterschiedliche Abgrenzungen; ihre Differenz ist kein Maß für den kommerziellen Stromhandel.
 
 ## Solar bleibt Wind an Land dicht auf den Fersen
 
@@ -42,7 +43,7 @@ Wind an Land steigt von **62,8 auf 72,3 TWh**, Solar von **62,2 auf 70,5 TWh**. 
 
 Der übrige Mix zeigt, warum ein höherer Erneuerbarenanteil noch keinen durchgehenden Rückgang fossiler Erzeugung bedeutet. Braunkohle liefert weniger Strom, Erdgas und Steinkohle dagegen mehr. Insgesamt wächst die Erzeugung schneller als die Netzlast.
 
-<details>
+<details class="post-data-details">
 <summary>Alle Energieträger im Vergleich: jeweils 1. Januar bis 9. September, TWh</summary>
 
 | Energieträger | 2025 | 2026 |
@@ -94,7 +95,7 @@ Der längere Vergleich zeigt aber keinen ungebremsten Preisanstieg. Nach **38,22
   <div class="chart-sources"><strong>Quelle: </strong><a href="https://www.smard.de/home/marktdaten">Bundesnetzagentur / SMARD.de</a>, Tagesmittel mit der jeweiligen Tageslänge gewichtet; Marktgebiet Deutschland/Luxemburg.</div>
 </div>
 
-<details>
+<details class="post-data-details">
 <summary>Historische Vergleichswerte: jeweils 1. Januar bis 9. September</summary>
 
 | Jahr | Erzeugung (TWh) | Erneuerbarenanteil (%) | Preis (€/MWh) |
@@ -124,16 +125,26 @@ Die Mechanismen erklären, warum ein steigender Erneuerbarenanteil und ein höhe
 
 Zwei Tage hatten 2026 bisher einen negativen Tagesdurchschnitt. Das zählt keine negativen Stunden: Solche Stunden können auch in einem insgesamt positiven Tag stecken. Und der Börsenpreis ist kein Haushaltstarif. Netzentgelte, Steuern, Vertrieb und die Beschaffung des jeweiligen Versorgers kommen hinzu.
 
-## Methodik und Datenquellen
+<details class="post-methodology">
+<summary>Methodik und Datenquellen</summary>
+
+### Datenstand und Vergleichsfenster
 
 Grundlage sind die SMARD-Tagesdaten aus dem Strom-Dashboard, gespeichert am 10. September 2026. Sie reichen bis einschließlich **9. September 2026**. Der Beitrag bleibt auf diesem Datenstand; die Überarbeitung vom 14. September ergänzt Vergleiche und Einordnung.
 
-- **Zeiträume:** In jedem Jahr 2019–2026 vom 1. Januar bis einschließlich 9. September, Zeitzone Europe/Berlin. 2025 und 2026 enthalten jeweils 252 Tage und 6.047 Stunden. Die Schaltjahre 2020 und 2024 enthalten 253 Tage und 6.071 Stunden; der zusätzliche Tag bleibt enthalten. Kalendergleich bedeutet daher nicht in jedem Jahr gleich viele Stunden.
+- **Zeiträume:** In jedem Jahr 2019–2026 vom 1. Januar bis einschließlich 9. September, Zeitzone Europe/Berlin.
+  - 2025 und 2026 enthalten jeweils 252 Tage und 6.047 Stunden.
+  - Die Schaltjahre 2020 und 2024 enthalten 253 Tage und 6.071 Stunden; der zusätzliche Tag bleibt enthalten. Kalendergleich bedeutet daher nicht in jedem Jahr gleich viele Stunden.
+
+### Berechnung und Abdeckung
+
 - **Erzeugung:** Tagesenergien von GWh in TWh umgerechnet und summiert. Erfasst ist die öffentliche Nettoerzeugung in Deutschland, einschließlich Pumpspeichern und der damaligen Kernenergie. Nicht enthalten sind unter anderem PV-Eigenverbrauch, Industrie- und Bahnstromnetze. Die Netzlast ist eine eigene Kennzahl; die Differenz zur Erzeugung ist kein Maß für den kommerziellen Stromhandel.
 - **Anteil:** Biomasse, Wasserkraft, Wind auf See, Wind an Land, Solar und sonstige Erneuerbare geteilt durch die gesamte erfasste Erzeugung. Keine Mittelung täglicher Prozentwerte, kein Anteil am Bruttostromverbrauch.
 - **Preis:** Summe aus Tagesmittel mal Tagesstunden, geteilt durch die erfassten Stunden. Die Umstellung auf Sommerzeit wird berücksichtigt. Marktgebiet durchgehend Deutschland/Luxemburg, nominale Preise, keine Inflations- oder Lastgewichtung. Die bereits gerundeten Tagesmittel können kleine Abweichungen gegenüber einer direkten Auswertung aller Handelsintervalle verursachen.
 - **Abdeckung:** In allen acht Vergleichsfenstern sind sämtliche Tage, Erzeugungswerte und Tagespreise vorhanden. Das belegt keine lückenlose untertägige Messung: Die historische SMARD-Reihe kann vorgelagerte Teilwerte oder Interpolationen enthalten. Fehlende Werte werden hier nicht zu null; die nach dem Atomausstieg in der Dashboard-Historie ausdrücklich abgeleiteten Kernenergie-Nullwerte bleiben erhalten.
 
 Datenquelle: [Bundesnetzagentur / SMARD.de](https://www.smard.de/home/marktdaten), Lizenz [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Das eingefrorene Datenpaket enthält die Vergleichswerte, den vollständigen Energieträgermix, die ursprüngliche gerundete CSV sowie Quellpfade, Prüfsummen und Rechenmethodik. Die verlinkten SMARD-Artikel liefern die historische Einordnung; ihre Quartals- und Jahreswerte werden nicht mit unseren Teiljahreswerten vermischt.
+
+</details>
 
 Die Zwischenbilanz ist klar: Wind an Land und Solar wachsen kräftig, der Erneuerbarenanteil steigt. Beim Börsenpreis bleibt 2026 bisher teurer als 2025. Wie sich das im weiteren Jahresverlauf entwickelt, zeigt das [Strom-Dashboard](/dashboards/strom/).

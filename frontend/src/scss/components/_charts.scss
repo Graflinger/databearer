@@ -45,6 +45,71 @@
   margin-bottom: 0.15rem;
 }
 
+/* Small editorial comparisons, without a shared scale or success/error colors. */
+.post-content .comparison-section {
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+.post-content .comparison-chart {
+  margin: 1rem 0;
+  font-size: 16px;
+  line-height: 1.5;
+
+  &__metric {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    align-items: center;
+    gap: 0.5rem 1rem;
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--post-border);
+  }
+
+  dt {
+    font-weight: 500;
+  }
+
+  dd {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 0.1rem 0.65rem;
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__value {
+    white-space: nowrap;
+  }
+
+  &__period {
+    display: block;
+    font-size: 12px;
+    color: var(--post-muted);
+    font-weight: 400;
+  }
+
+  &__arrow {
+    align-self: end;
+    color: var(--post-muted);
+  }
+
+  &__delta {
+    grid-column: 1 / -1;
+    font-size: 14px;
+
+    .comparison-chart__period {
+      display: inline;
+    }
+  }
+
+  @media (max-width: 540px) {
+    &__metric {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
 /* Dark mode chart styles */
 @media (prefers-color-scheme: dark) {
   .chart-section {
