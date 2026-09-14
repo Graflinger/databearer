@@ -1,9 +1,11 @@
 /* Single Post - Modern Minimalist Style */
 .post-content {
+  --post-text: #374151;
   max-width: 680px;
   margin: 0 auto;
   padding: 10px 15px;
   background-color: #fff;
+  color: var(--post-text);
 }
 
 .post-header-image {
@@ -93,7 +95,7 @@
   font-size: 18px;
   line-height: 1.8;
   margin-bottom: 15px;
-  color: #374151;
+  color: inherit;
 }
 
 .post-content ul,
@@ -103,11 +105,16 @@
   line-height: 1.8;
   margin-bottom: 28px;
   padding-left: 28px;
-  color: #374151;
+  color: inherit;
 }
 
 .post-content li {
   margin-bottom: 12px;
+  color: inherit;
+}
+
+.post-content li p {
+  color: inherit;
 }
 
 .post-content iframe {
