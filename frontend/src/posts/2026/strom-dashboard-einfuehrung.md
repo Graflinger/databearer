@@ -1,55 +1,34 @@
 ---
 title: "Neu: das tägliche Strom-Dashboard für Deutschland"
 date: 2026-09-11
-lastUpdated: 2026-09-11
-excerpt: "Das neue Strom-Dashboard zeigt Strommix, Netzlast, Börsenpreise und Langfristtrends für Deutschland an einem Ort."
+lastUpdated: 2026-09-14
+excerpt: "Wie viel Strom liefern Wind und Sonne? Wie entwickeln sich Börsenpreise und Stromhandel? Das neue Dashboard zeigt aktuelle Zahlen und langfristige Trends."
 image: "/images/dashboards/strommarkt-deutschland.svg"
 imageText: "Das neue Dashboard bündelt Strommix, Netzlast, Preise und Langfristvergleiche für Deutschland."
 fullWidthCard: false
 topic: ["energie"]
 ---
 
-## Ein schneller Einstieg in die Stromdaten
+## Die Stromdaten auf einen Blick
 
-Das neue [Strom-Dashboard](/dashboards/strom/) bündelt die wichtigsten Kennzahlen zum deutschen Strommarkt an einem Ort: Strommix, Netzlast, Börsenpreise, Jahresverläufe seit 2015, den kommerziellen Stromhandel sowie Ausbau-, Speicher- und Netzeingriffsdaten.
+Wie viel Strom haben Wind und Sonne gestern geliefert? Wie hoch war der Börsenpreis? Und wie hat sich der Strommix über die Jahre verändert? Das neue Strom-Dashboard bringt diese Zahlen auf einer Seite zusammen. Es wird täglich aktualisiert und zeigt jeweils den letzten verfügbaren Datenstand.
 
-Der Zweck ist bewusst praktisch: Wer wissen möchte, wie viel Strom gerade in Deutschland im öffentlichen Netz erzeugt wurde, wie hoch der Anteil der Erneuerbaren war oder wie sich Importe, Exporte und Börsenpreise über die Jahre verschoben haben, soll nicht erst mehrere Quellen und alte Artikel zusammensuchen müssen.
+## Drei Einstiege zum Ausprobieren
 
-## Was das Dashboard zeigt
+- **Einen windreichen Tag einordnen:** Wähle den letzten vollen Tag oder die vergangenen sieben Tage. Du siehst, wie sich Wind- und Solarerzeugung im Stundenverlauf verändert haben und welche Börsenpreise daneben standen.
+- **Das laufende Jahr vergleichen:** Die Startansicht reicht vom Jahresbeginn bis zum letzten verfügbaren Tag. Frühere Jahresverläufe seit 2015 und der Langfristvergleich zeigen, wie sich die Anteile von Erneuerbaren, Kohle und Gas verschoben haben.
+- **Den Stromhandel anschauen:** Vergleiche Importe und Exporte nach Monaten oder Jahren. Die Werte beziehen sich auf vereinbarte Handelsmengen des Marktgebiets Deutschland–Luxemburg, nicht auf gemessene Stromflüsse über Deutschlands Landesgrenzen.
 
-Oben stehen die aktuellen Zeitraumansichten. Standardmäßig zeigt das Dashboard das laufende Jahr bis zum letzten verfügbaren Tag. Zusätzlich lassen sich frühere Jahre seit 2015 sowie die jüngsten 1, 7 und 30 vollständigen Tage auswählen.
+Außerdem findest du Angaben zum Ausbau der Erzeugungsanlagen, zu Speichern und zu Eingriffen gegen Netzengpässe. So kannst du aktuelle Stromzahlen neben die längerfristige Entwicklung stellen. Ein Netzeingriff ist dabei kein Stromausfall.
 
-Die wichtigsten Blöcke sind:
+## Wie aktuell sind die Angaben?
 
-- **Strommix:** öffentliche Nettoerzeugung nach Energieträgern, inklusive Erneuerbarenanteil.
-- **Netzlast:** der Strombedarf im öffentlichen Netz, einschließlich Netzverlusten.
-- **Day-Ahead-Preis:** zeitgewichtete Börsenpreise, inklusive negativer Stunden oder Tage.
-- **Langfristvergleich:** Erneuerbare, Kohle, Gas und gesamte Erzeugung über die Jahre.
-- **Stromhandel:** geplante kommerzielle Importe und Exporte im Marktgebiet Deutschland–Luxemburg.
-- **Ausbau, Speicher & Netze:** Nettonennleistung, gesetzliche Ausbauziele und Netzengpassmanagement.
+Strommix, Netzlast und Börsenpreise werden **automatisch täglich aktualisiert**. Auch die Handelsdaten werden täglich auf neue Angaben geprüft; sie liegen als abgeschlossene Monatswerte vor. Ein neuer Tag bedeutet dort also nicht automatisch einen neuen Wert.
 
-Damit wird das Dashboard zur Datengrundlage für weitere Beiträge. Einzelne Blogartikel können einen Aspekt herausgreifen und genauer erklären, während das Dashboard den jeweils aktuellen Stand und die Methodik transparent macht.
+**Ausbau-, Speicher- und Netzeingriffsdaten werden separat monatlich beziehungsweise nach manueller Prüfung aktualisiert.** Sie gehören nicht zur täglichen Aktualisierung. Den jeweiligen Berichtszeitraum findest du direkt beim Datenblock.
 
-## Warum keine Live-Abfrage im Browser?
+## Quellen und Einordnung
 
-Die Daten werden nicht erst beim Besuch der Seite direkt von SMARD oder anderen Quellen geladen. Stattdessen erzeugt die Pipeline vorbereitete, geprüfte JSON-Dateien, die dann statisch ausgeliefert werden. Das hat drei Vorteile: Die Seite bleibt schnell, Besucherinnen und Besucher brauchen keine Verbindung zu den Ursprungs-APIs, und die veröffentlichten Daten lassen sich reproduzierbar prüfen.
+Die Daten stammen von der [Bundesnetzagentur / SMARD.de](https://www.smard.de/home/marktdaten), Lizenz [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Databearer wählt Zeiträume aus, rechnet Einheiten um und fasst Werte zusammen. Die Erzeugungszahlen erfassen das öffentliche Netz; selbst verbrauchter Solarstrom ist beispielsweise nicht vollständig enthalten. Börsenpreise sind keine Haushaltstarife. Weitere Erklärungen stehen unter „Datenstand & Methodik“.
 
-Die aktuellen Stundendaten, die Tageshistorie des laufenden Jahres und die monatlichen Handelsdaten werden automatisch täglich aktualisiert. Ausbau-, Speicher- und Netzdaten folgen einem separaten, manuell geprüften Rhythmus, weil die Quellen und ihre Aktualität nicht identisch sind.
-
-## Was die Zahlen nicht bedeuten
-
-Gerade bei Stromdaten ist Abgrenzung wichtig. Die Stromerzeugung im Dashboard ist die Einspeisung ins öffentliche Netz, nicht der gesamte deutsche Stromverbrauch. Eigenverbrauch, geschlossene Industrie- oder Bahnnetze und selbst verbrauchter Solarstrom sind darin nicht vollständig enthalten.
-
-Auch der Handel ist sauber getrennt: Importe und Exporte sind geplante kommerzielle Austauschmengen, keine physikalischen Stromflüsse. Man sollte sie deshalb nicht aus Erzeugung minus Netzlast ableiten. Ebenso sind Netzeingriffe kein Maß für Stromausfälle und kein einfacher Indikator für „Netzinstabilität“.
-
-## Wie es weitergeht
-
-Zum Start folgen drei vertiefende Beiträge aus derselben Datenbasis: ein Blick auf die Zahlen des laufenden Jahres, eine Einordnung von Importen und Exporten über die Jahre sowie eine Analyse von Netzeingriffen und Netzstabilität. Die Artikel verwenden eingefrorene Datenausschnitte im normalen Blog-Visualisierungsstil; das Dashboard bleibt der lebendige, täglich aktualisierte Überblick.
-
-Zum Dashboard: [Strom in Deutschland](/dashboards/strom/)
-
-## Methodik und Datenquellen
-
-Grundlage sind vorbereitete Datensätze aus dem Databearer-Dashboard. Die Strommarkt-, Handels- und Netzdaten stammen von der [Bundesnetzagentur / SMARD.de](https://www.smard.de/home/marktdaten) und stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Änderungen durch Databearer: Auswahl der Reihen und Zeiträume, Umrechnung in GW/GWh/TWh, Aggregation zu Kennzahlen und Visualisierung.
-
-Weitere Details stehen direkt im Dashboard unter „Datenstand & Methodik“ sowie in den Download-Links der jeweiligen Datenblöcke.
+[Zum Strom-Dashboard](/dashboards/strom/)
