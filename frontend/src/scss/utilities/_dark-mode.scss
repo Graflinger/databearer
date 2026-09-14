@@ -19,13 +19,13 @@
 
   .post-content h1,
   .post-content h2,
-  .post-content h3,
-  .post-content p {
+  .post-content h3 {
     color: #e0e0e0;
   }
 
   /* Post content dark mode */
   .post-content {
+    --post-text: #e0e0e0;
     background-color: #1a1a1a;
   }
 
