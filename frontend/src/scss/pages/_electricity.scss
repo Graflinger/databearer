@@ -1,4 +1,16 @@
 // Inherit Databearer's system font and gold identity; scoped tokens also feed ECharts.
+.electricity-share-key {
+  display: inline-block;
+  width: 1.6rem;
+  height: 0;
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  border-top: 3px solid;
+  &-renewable { border-color: var(--electricity-accent); }
+  &-coal { border-color: var(--electricity-muted); border-top-style: dashed; }
+  // Match the Erdgas source color in electricity-data.js.
+  &-gas { border-color: #bc7853; border-top-style: dotted; }
+}
 .electricity-trade-key {
   --trade-key-color: var(--electricity-ink);
   display: inline-block;
