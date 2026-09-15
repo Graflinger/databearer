@@ -264,6 +264,8 @@ test.each(cases)('$name: coverage, chart labels and partial-year styling survive
   else expect(summary.trade.years.at(-1).imports_twh).toBeCloseTo(latestRows.reduce((sum, row) => sum + row.imports_gwh, 0) / 1000, 8);
   const charts = options(summary, { ink: '#111', line: '#ddd', accent: '#c4ad61', muted: '#555', font: 'sans-serif' });
   expect(charts.shares.series).toHaveLength(3);
+  expect(charts.shares.series.map((series) => series.lineStyle)).toEqual(Array(3).fill({ type: 'solid', width: 3 }));
+  expect(charts.shares.series.map((series) => series.itemStyle.color)).toEqual(['#c4ad61', '#555', history.SOURCES.find((source) => source.key === 'gas').color]);
   expect(charts.shares.series.every((series) => series.connectNulls === false)).toBe(true);
   expect(charts.shares.series[1].name).toContain('Braun- + Steinkohle');
   expect(charts.mix.series).toHaveLength(12);

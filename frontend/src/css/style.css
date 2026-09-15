@@ -1333,6 +1333,24 @@ a {
     color: #e0e0e0;
   }
 }
+.electricity-share-key {
+  display: inline-block;
+  width: 1.6rem;
+  height: 0;
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  border-top: 3px solid;
+}
+.electricity-share-key-renewable {
+  border-color: var(--electricity-accent);
+}
+.electricity-share-key-coal {
+  border-color: var(--electricity-muted);
+}
+.electricity-share-key-gas {
+  border-color: #bc7853;
+}
+
 .electricity-trade-key {
   --trade-key-color: var(--electricity-ink);
   display: inline-block;
