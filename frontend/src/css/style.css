@@ -1346,11 +1346,9 @@ a {
 }
 .electricity-share-key-coal {
   border-color: var(--electricity-muted);
-  border-top-style: dashed;
 }
 .electricity-share-key-gas {
   border-color: #bc7853;
-  border-top-style: dotted;
 }
 
 .electricity-trade-key {

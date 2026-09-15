@@ -35,14 +35,14 @@
     const tradeFields = ['imports_twh', 'exports_twh', 'net_exports_twh'];
     const tradeNames = ['Import', 'Export', netName];
     const shares = [
-      ['renewable_share', 'Erneuerbare', accent, 'solid'],
-      ['coal_share', 'Kohle (Braun- + Steinkohle)', muted, 'dashed'],
-      ['gas_share', 'Erdgas', history.SOURCES.find((source) => source.key === 'gas').color, 'dotted'],
+      ['renewable_share', 'Erneuerbare', accent],
+      ['coal_share', 'Kohle (Braun- + Steinkohle)', muted],
+      ['gas_share', 'Erdgas', history.SOURCES.find((source) => source.key === 'gas').color],
     ];
     const years = summary.trade.years;
     const months = summary.trade.months;
     return {
-      shares: { ...base('%', labels, summary.notes.energy, coverage), series: shares.map(([key, name, color, type]) => ({ name, type: 'line', connectNulls: false, symbolSize: 7, lineStyle: { type, width: 3 }, itemStyle: { color }, data: summary.energy.map((row) => row[key]) })) },
+      shares: { ...base('%', labels, summary.notes.energy, coverage), series: shares.map(([key, name, color]) => ({ name, type: 'line', connectNulls: false, symbolSize: 7, lineStyle: { type: 'solid', width: 3 }, itemStyle: { color }, data: summary.energy.map((row) => row[key]) })) },
       mix: {
         ...base('TWh', labels, summary.notes.energy, coverage),
         grid: { left: 8, right: 18, top: 35, bottom: 65, containLabel: true },

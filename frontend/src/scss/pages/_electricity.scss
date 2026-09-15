@@ -7,9 +7,9 @@
   vertical-align: middle;
   border-top: 3px solid;
   &-renewable { border-color: var(--electricity-accent); }
-  &-coal { border-color: var(--electricity-muted); border-top-style: dashed; }
+  &-coal { border-color: var(--electricity-muted); }
   // Match the Erdgas source color in electricity-data.js.
-  &-gas { border-color: #bc7853; border-top-style: dotted; }
+  &-gas { border-color: #bc7853; }
 }
 .electricity-trade-key {
   --trade-key-color: var(--electricity-ink);

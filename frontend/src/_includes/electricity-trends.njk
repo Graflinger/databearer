@@ -12,9 +12,9 @@
     <p class="electricity-notice" id="electricity-trends-gaps">{% if trends.notes.annual %}{{ trends.notes.annual }} {% endif %}{% for row in trends.energy %}{% if row.generation_twh == null %}{{ row.year }}: {{ row.complete_days }}/{{ row.days }} Tage mit vollständigen Erzeugungswerten; ohne Jahresaggregat bleibt der Jahreswert als Lücke sichtbar. {% endif %}{% endfor %}Ein noch nicht abgeschlossenes Kalenderjahr wird hier ausgelassen und ist oben in der Jahresauswahl verfügbar.</p>
     <div id="electricity-trends-shares" class="electricity-chart" data-trend-chart="shares" role="img" aria-label="Jahresanteile von Erneuerbaren, Kohle und Gas" aria-describedby="electricity-trends-shares-note electricity-trends-gaps" hidden></div>
     <ul class="electricity-trends-legend" aria-label="Anteilslinien">
-      <li><span class="electricity-share-key electricity-share-key-renewable" aria-hidden="true"></span>Erneuerbare · durchgezogen</li>
-      <li><span class="electricity-share-key electricity-share-key-coal" aria-hidden="true"></span>Kohle · gestrichelt</li>
-      <li><span class="electricity-share-key electricity-share-key-gas" aria-hidden="true"></span>Erdgas · gepunktet</li>
+      <li><span class="electricity-share-key electricity-share-key-renewable" aria-hidden="true"></span>Erneuerbare</li>
+      <li><span class="electricity-share-key electricity-share-key-coal" aria-hidden="true"></span>Kohle</li>
+      <li><span class="electricity-share-key electricity-share-key-gas" aria-hidden="true"></span>Erdgas</li>
     </ul>
   </section>
   <section class="electricity-panel" aria-labelledby="electricity-trends-mix-heading">
