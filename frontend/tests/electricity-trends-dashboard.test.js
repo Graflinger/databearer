@@ -62,6 +62,19 @@ test('annual panels show charts without tables and retain downloadable values an
   expect(sources.querySelector('a[href="/data/german-electricity-trends.json"][download]')).not.toBeNull();
 });
 
+test('share legend shows decorative line swatches with readable series labels', () => {
+  const legend = document.querySelector('[aria-label="Anteilslinien"]');
+  expect(legend.querySelectorAll('.electricity-share-key[aria-hidden="true"]')).toHaveLength(3);
+  for (const [key, label] of [
+    ['renewable', 'Erneuerbare'],
+    ['coal', 'Kohle'],
+    ['gas', 'Erdgas'],
+  ]) {
+    expect(legend.querySelector(`.electricity-share-key-${key}`).parentElement.textContent).toBe(label);
+  }
+  expect(legend.textContent).not.toMatch(/Gold|neutral|Quellenfarbe|durchgezogen|gestrichelt|gepunktet/);
+});
+
 test('daily-only template preserves coverage and visible gaps when the supplement is absent', () => {
   const summary = aggregate(historyData, snapshot);
   const html = env.render('electricity-trends.njk', { germanElectricityTrends: { summary, json: history.safeJSON(summary), sources: history.SOURCES } });
