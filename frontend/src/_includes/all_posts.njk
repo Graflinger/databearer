@@ -27,9 +27,11 @@ pagination:
       <a href="{{ post.url }}" class="blog-card-link">
         {%- if post.data.fullWidthCard and useFullCard %}
           <article class="blog-card blog-card-full">
-            <div class="blog-card-image-full">
-              <img src="{{ post.data.image}}" alt="{{ post.data.title }}" loading="lazy" width="1200" height="630">
-            </div>
+            {%- if post.data.image %}
+              <div class="blog-card-image-full">
+                {% responsiveImage post.data.image, '', 'full', loop.first %}
+              </div>
+            {%- endif %}
             <div class="blog-card-content">
               <h2>{{ post.data.title }}</h2>
               <p class="post-excerpt">{{ post.data.excerpt }}</p>
@@ -38,9 +40,11 @@ pagination:
           </article>
         {%- else %}
           <article class="blog-card blog-card-horizontal">
-            <div class="blog-card-image-small">
-              <img src="{{ post.data.image}}" alt="{{ post.data.title }}" loading="lazy" width="1200" height="630">
-            </div>
+            {%- if post.data.image %}
+              <div class="blog-card-image-small">
+                {% responsiveImage post.data.image, '', 'card', loop.first %}
+              </div>
+            {%- endif %}
             <div class="blog-card-content">
               <h2>{{ post.data.title }}</h2>
               <p class="post-excerpt">{{ post.data.excerpt }}</p>

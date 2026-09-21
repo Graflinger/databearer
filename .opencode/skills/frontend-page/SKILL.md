@@ -47,7 +47,8 @@ Important folders:
    ---
    layout: supporting_sites
    title: Seitentitel
-   excludeFromSitemap: true # only if the page should be hidden from sitemap
+   # noindex: true # public utility page that should not be indexed
+   # excludeFromSitemap: true # sitemap exclusion alone does not prevent indexing
    ---
    ```
 
@@ -66,24 +67,61 @@ Important folders:
    ---
    title: "Post Title"
    date: YYYY-MM-DD
-   excerpt: "140-160 character summary of the key insight."
+   draft: true # boolean; remove or set false only when ready for publication
+   excerpt: "Accurate, concise summary of the key insight and scope."
    image: "/images/blog_card_images/<year>/<file>.png"
-   imageText: "Short descriptive image caption"
+   imageAlt: "" # decorative hero; describe meaningful image content when needed
+   imageText: "Visible editorial image caption"
    topic: ["energie"] # energie, wirtschaft, politik-und-gesellschaft
    fullWidthCard: false
-   lastUpdated: YYYY-MM-DD # set when data or charts change
-   metaTitle: "Optional shorter SEO title"
-   metaDescription: "Optional SEO description"
+   # lastUpdated: YYYY-MM-DD # actual substantive revision date, not build time
+   # metaTitle: "Optional accurate title override"
+   # metaDescription: "Optional accurate description override"
+   # socialImage: "/images/blog_card_images/<year>/<social-file>.png"
+   # socialImageAlt: "Description of the social preview image"
    ---
    ```
 
-4. Follow `docs/post_guidlines.md`:
+4. Follow the [post QA guide](../../../frontend/docs/post_guidlines.md) and
+   [SEO authoring contract](../../../docs/seo.md):
    - The template handles the H1; use H2/H3 in the body.
+   - The layout automatically displays the author from `site.author` with an author link.
    - Start with a concise key takeaway.
-   - Include chart summaries, sources, and a Methodik/Datenquellen section when relevant.
-   - Add a few internal links and authoritative external source links.
+   - Include static chart evidence (summaries or tables), units, periods, source links,
+     and a Methodik/Datenquellen section. Verify legacy citations; never invent them.
+   - Use relevant internal links and authoritative source links with descriptive text.
+     No fixed title/description character quota or keyword list is required.
 5. For posts with charts, also use the `frontend-visualization` skill.
-6. Run `npm run build` and check the post, topic pages, search data, sitemap, and feeds if relevant.
+6. Run `npm test -- --runInBand`, `npm run lint`, and `npm run build`. Follow the
+   generated-output checklist in the SEO guide, run `npm run test:seo-output`
+   after building, and inspect post/topic/search/sitemap/feed output.
+
+### Drafts, dates, and images
+
+- Set `draft: true` as a YAML boolean in post frontmatter. The inherited
+  `src/posts/posts.11tydata.js` computed permalink suppresses HTML output and computed
+  collection exclusion removes discovery references. Do not override these computed
+  fields. Future dates do not make a post a draft.
+- Drafts must be absent from post/topic collections, related posts, sitemap, feeds,
+  and search. A full production build inventories owned HTML and removes stale
+  pages only after Eleventy writes templates successfully. Cleanup is scoped to
+  canonical project `_site`; custom fixture `_site` directories require the explicit
+  ownership marker described in `docs/seo.md`. Dry runs/no-write runs do no cleanup;
+  render failures do not delete stale pages. This is not an atomic-build guarantee.
+  Watch/incremental output is not the production acceptance check.
+- `noindex: true` is for a page that remains publicly reachable; it is not a draft
+  or access-control mechanism. `excludeFromSitemap` only controls sitemap inclusion.
+- Use explicit publication dates and actual substantive `lastUpdated` dates. Omit
+  `lastUpdated` until a real revision; never manufacture freshness from a build date.
+- Local `image` and optional `socialImage` paths resolve under `src/images/` as
+  `/images/...`. The responsive helper in `frontend/lib/responsive-images.js`,
+  requiring `require('./lib/responsive-images').register(eleventyConfig)` registration,
+  builds variants locally, preserves source images, and supplies real dimensions.
+  Generated `/assets/images/` files belong to ignored build output, not source control.
+- `imageAlt` defaults to empty for the hero; use it for meaningful image content.
+  `imageText` is a visible caption, not an automatic hero alt. Cards are decorative.
+  Optional `socialImageAlt` describes the social preview. Metadata uses a raster
+  variant with measured dimensions. Builds do not fetch remote image sources.
 
 ## Topic pages and collections
 
@@ -106,11 +144,15 @@ Topic-specific collections are defined in `.eleventy.js` as `energiePosts`, `wir
 The private `video-generator` consumes the published JSON Feed at `/feed.json`. Do not rename or
 remove existing item fields in `src/feed.json.njk` (`id`, `url`, `title`, `summary`,
 `date_published`, `date_modified`, `image`, `tags`, `content_html`) unless explicitly treating it
-as a breaking change.
+as a breaking change. Preserve the optional `_image_alt` extension and original image
+URL contract as well; responsive/social variants must not silently replace feed fields.
+Verify absolute links and image URLs in `content_html` and exclusion of drafts.
 
 ## Build notes
 
-- `npm run build` runs Sass and Eleventy. It may rewrite `src/css/style.css`; do not commit that
+- `npm run build` runs Sass and a full Eleventy build with HTML cleanup. It may rewrite `src/css/style.css`; do not commit that
   incidental change unless intended.
 - `_site/` and `node_modules/` are generated/ignored.
 - Cloudflare Pages builds from the `frontend` root directory on the deployment branch.
+- Authoring/build checks do not authorize committing, pushing, publishing, or deploying.
+  SEO hygiene improves clarity and discoverability; it does not promise rankings.

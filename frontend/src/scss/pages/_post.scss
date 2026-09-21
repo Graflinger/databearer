@@ -70,6 +70,13 @@
   color: #1a1a1a;
 }
 
+// Long compound words must wrap rather than widen narrow article viewports.
+.post-content h1,
+.post-content h2,
+.post-content h3 {
+  overflow-wrap: anywhere;
+}
+
 .post-content h2 {
   font-family: var(--font-family);
   font-size: 24px;
@@ -115,6 +122,17 @@
 
 .post-content li p {
   color: inherit;
+}
+
+.post-content a {
+  color: var(--prose-link);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.post-content [role='region'][tabindex='0']:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .post-content iframe {

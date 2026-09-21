@@ -1,7 +1,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
-  /* Show hamburger menu button in header */
-  .topics-menu-toggle {
+  /* Only offer a disclosure after its JavaScript is ready. */
+  .nav-enhanced .topics-menu-toggle {
     display: block;
   }
 
@@ -19,18 +19,25 @@
     padding-left: 0px;
   }
 
-  /* Hide the entire topics navigation bar on mobile */
-  .topics-nav {
-    display: none;
+  /* The unenhanced navigation remains in flow and usable without JavaScript. */
+  .topics-menu {
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+  }
+
+  .nav-enhanced .topics-nav {
+    padding: 0;
+    border: 0;
   }
 
   /* Show backdrop on mobile */
-  .menu-backdrop {
+  .nav-enhanced .menu-backdrop {
     display: block;
   }
 
   /* Mobile menu drawer - slides in from left */
-  .topics-menu {
+  .nav-enhanced .topics-menu {
     display: flex;
     position: fixed;
     font-size: 24px;
@@ -39,7 +46,8 @@
     width: 85%;
     max-width: 380px;
     height: 100vh;
-    background-color: #fff;
+    height: 100dvh;
+    background-color: var(--menu-surface);
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
@@ -52,11 +60,11 @@
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
   }
 
-  .topics-menu.active {
+  .nav-enhanced .topics-menu.active {
     transform: translateX(0);
   }
 
-  .topics-menu li {
+  .nav-enhanced .topics-menu li {
     width: 100%;
     opacity: 0;
     transform: translateX(-20px);
@@ -65,7 +73,7 @@
       transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .topics-menu.active li {
+  .nav-enhanced .topics-menu.active li {
     opacity: 1;
     transform: translateX(0);
   }

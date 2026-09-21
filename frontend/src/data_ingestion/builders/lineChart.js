@@ -61,6 +61,7 @@ function buildLineChart(data, options = {}) {
 
   let chart = null;
   let isInitialized = false;
+  const hasAuthoredLabel = chartDom.hasAttribute('aria-labelledby') || chartDom.hasAttribute('aria-label');
 
   // Detect dark mode
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -89,6 +90,13 @@ function buildLineChart(data, options = {}) {
     const seriesData = ${JSON.stringify(seriesData)};
 
     const option = {
+      aria: {
+        enabled: true,
+        // Keep the article's authored accessible name and summary when present.
+        label: {
+          enabled: !hasAuthoredLabel
+        }
+      },
       backgroundColor: colors.backgroundColor,
       title: ${
         title
@@ -197,6 +205,7 @@ function buildLineChart(data, options = {}) {
     if (isInitialized) return;
     isInitialized = true;
 
+    if (!chartDom.hasAttribute('role')) chartDom.setAttribute('role', 'img');
     chart = echarts.init(chartDom);
     updateChart();
 

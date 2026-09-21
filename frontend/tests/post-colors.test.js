@@ -30,3 +30,25 @@ test('post headings retain their separate light and dark colors', () => {
     expect(color(darkRules, `.post-content ${heading}`)).toBe('#e0e0e0');
   }
 });
+
+test('article headings allow long compound words to wrap on narrow screens', () => {
+  for (const heading of ['h1', 'h2', 'h3']) {
+    expect(color(rules, `.post-content ${heading}`, 'overflow-wrap')).toBe('anywhere');
+  }
+});
+
+test.each(['light', 'dark'])('gold controls keep dark foregrounds across interaction states in %s mode', (theme) => {
+  const themeRules = theme === 'dark' ? [...rules, ...darkRules] : rules;
+  // The SVG search icon uses currentColor, so it shares the button foreground.
+  for (const selector of ['.pagination-link', '#search-button', '.error-404-button.primary']) {
+    for (const state of ['', ':hover', ':focus', ':focus-visible', ':active']) {
+      const foreground = color(themeRules, selector + state) || color(themeRules, selector);
+      const background = color(themeRules, selector + state, 'background-color') || color(themeRules, selector, 'background-color');
+      expect(foreground).toBe('#1a1a1a');
+      expect(['#c4ad61', '#d9c176']).toContain(background);
+    }
+  }
+  expect(color(themeRules, '.error-404-button.secondary')).toBe('var(--prose-link)');
+  expect(color(themeRules, '.error-404-button.secondary:hover')).toBe('#1a1a1a');
+  expect(color(themeRules, '.error-404-button.secondary:hover', 'background-color')).toBe('#c4ad61');
+});

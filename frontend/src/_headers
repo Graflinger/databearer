@@ -3,3 +3,12 @@
 
 /data/history/german-electricity/:year.:sha.json
   Cache-Control: public, max-age=31536000, immutable
+
+/search.json
+  X-Robots-Tag: noindex
+
+/suche/
+  X-Robots-Tag: noindex, follow
+
+/404.html
+  X-Robots-Tag: noindex, follow

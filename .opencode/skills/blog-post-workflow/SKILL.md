@@ -56,10 +56,14 @@ Use or preserve this frontmatter shape:
 ---
 title: "Post title"
 date: YYYY-MM-DD
-lastUpdated: YYYY-MM-DD
-excerpt: "140-160 character summary of the key insight."
+draft: true
+# lastUpdated: YYYY-MM-DD # actual substantive revision, only when applicable
+excerpt: "Accurate, concise summary of the key insight and scope."
 image: "/images/blog_card_images/<year>/<file>.png"
-imageText: "Short descriptive image caption"
+imageAlt: "" # describe meaningful hero content; empty for decoration
+imageText: "Visible image caption"
+# socialImage: "/images/blog_card_images/<year>/<social-file>.png"
+# socialImageAlt: "Description of the social preview image"
 fullWidthCard: false
 topic: ["energie"]
 ---
@@ -73,7 +77,24 @@ Allowed topics:
 
 ## Post structure
 
-The layout provides the H1. Body content should use H2/H3 only.
+Use boolean `draft: true` while drafting. Inherited computed permalink/collection
+rules suppress the page and remove it from collections, sitemap, feeds and search;
+do not override those computed fields. A future date is not a draft flag. Check a
+full production rebuild to catch stale formerly published HTML. Public utility
+pages can use `noindex: true`; `excludeFromSitemap` alone does not prevent indexing.
+
+Titles and excerpts must describe the evidence accurately, without fixed character
+quotas or keyword stuffing. Set `lastUpdated` only for a real substantive revision,
+never to a build date. Follow the [post QA guide](../../../frontend/docs/post_guidlines.md)
+and [SEO contract](../../../docs/seo.md). These practices do not promise rankings.
+
+Image paths must be local `/images/...` files under `frontend/src/images/`.
+The responsive helper generates ignored variants and measured raster social
+metadata while preserving source images; builds do not fetch remote images.
+`imageText` is a visible caption, distinct from `imageAlt`; card images are decorative.
+
+The layout provides the H1 and visible linked author from `site.author`. Body content
+should use H2/H3 only and should not duplicate the byline.
 
 Recommended structure:
 
@@ -105,7 +126,11 @@ Every chart needs:
 
 - unique `containerId`
 - one-sentence takeaway above the chart
-- source link below the chart
+- meaningful static HTML evidence (summary or table), including units and period,
+  readable without JavaScript; a blank canvas or tooltip is not sufficient
+- descriptive, verified source link below the chart
+- ECharts loaded once with `defer`, followed by chart scripts with `defer` in dependency
+  order; do not use `async` for this dependency chain
 - generated JS under `frontend/src/js/charts/<config-name>/`
 - matching config under `frontend/src/data_ingestion/charts/`
 - CSV input under `frontend/src/data_ingestion/data/`
@@ -119,15 +144,22 @@ Use `frontend-visualization` for exact commands and config fields.
 3. Ingest/export data if needed using `data-pipeline`.
 4. Create or update chart CSV/config/scripts using `frontend-visualization`.
 5. Draft the Markdown post using `frontend-page` conventions.
-6. Add internal links to relevant topic pages or previous posts.
-7. Add a Methodik/Datenquellen section.
-8. Run frontend build from `frontend/`:
+6. Add descriptively labelled links to relevant topic pages or previous posts.
+7. Add a Methodik/Datenquellen section. Verify claims against original sources;
+   record unresolved legacy citations rather than inventing URLs, dates or provenance.
+8. Run frontend checks from `frontend/`:
 
 ```bash
+npm test -- --runInBand
+npm run lint
 npm run build
 ```
 
-9. Inspect errors, chart output, feed impact, and changed files.
+9. Follow the generated SEO output checklist in `docs/seo.md`, running
+   `npm run test:seo-output` after the build.
+   Inspect errors, chart output, feed impact, and changed files. Preserve published
+   JSON Feed item fields, including optional image fields, for the private
+   `video-generator` downstream consumer.
 
 ## QA checklist
 
@@ -136,10 +168,14 @@ Before considering a post complete:
 - Exactly one H1; post body has no H1.
 - Excerpt is clear and not clickbait.
 - The strongest claim is backed by data shown in the post.
-- Every chart has a source.
+- Every chart has static evidence, units, period and a verified source.
 - Caveats are explicit.
-- Internal links are relevant.
-- `npm run build` passes.
+- Internal links are relevant and descriptive.
+- Hero alt/caption and social metadata match the image; source images are preserved.
+- Draft HTML and discovery references are absent after a full production rebuild.
+- Frontend tests, lint, build and applicable generated SEO output checks pass.
+
+Completing this workflow does not authorize publication, commits, pushes or deployment.
 
 If data or generated chart files change incidentally, call that out in the
 final response.

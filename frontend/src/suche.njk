@@ -1,31 +1,37 @@
 ---
 layout: base.njk
 title: Suche
+noindex: true
+excludeFromSitemap: true
 ---
 
-<main class="container">
-  <div class="search-container">
-    <h1>Suche</h1>
+<div class="search-container">
+  <h1>Suche</h1>
 
+  <form id="search-form" role="search" action="/suche/" method="get">
+    <label for="search-input">Artikel und Dashboards durchsuchen</label>
     <div class="search-box">
       <input
-        type="text"
+        type="search"
         id="search-input"
+        name="q"
+        aria-describedby="search-status"
         placeholder="Suchbegriff eingeben..."
         autocomplete="off"
-/>
-      <button id="search-button" aria-label="Suchen">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      >
+      <button id="search-button" type="submit" aria-label="Suchen">
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <path d="m21 21-4.35-4.35"></path>
         </svg>
       </button>
     </div>
+  </form>
 
-    <div id="search-results", class="grid">
-      <p class="search-info">Geben Sie einen Suchbegriff ein, um Artikel zu finden.</p>
-    </div>
-  </div>
-</main>
+  <p id="search-status" class="search-info" role="status" aria-live="polite" aria-atomic="true">Geben Sie mindestens 2 Zeichen ein, um Artikel und Dashboards zu finden.</p>
+  <div id="search-results" aria-busy="false"></div>
+  <noscript><p>Die Volltextsuche benötigt JavaScript. Nutzen Sie die Themenlinks, um unsere Inhalte zu entdecken.</p></noscript>
+  <p>Direkt entdecken: <a href="/themen/energie/">Energie</a>, <a href="/themen/wirtschaft/">Wirtschaft</a>, <a href="/themen/politik-und-gesellschaft/">Politik &amp; Gesellschaft</a> und <a href="/dashboards/">Dashboards</a>.</p>
+</div>
 
 <script src="/js/search.js"></script>

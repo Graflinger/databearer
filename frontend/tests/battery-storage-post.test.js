@@ -22,9 +22,13 @@ const contracts = {
 
 function optionFor(config, rows) {
   let option;
+  const chartDocument = document.implementation.createHTMLDocument('Chart fixture');
+  const chartContainer = chartDocument.createElement('div');
+  chartContainer.id = config.containerId;
+  chartDocument.body.appendChild(chartContainer);
   const builder = config.type === 'bar' ? buildBarChart : buildLineChart;
   vm.runInNewContext(builder(rows, config), {
-    document: { getElementById: () => ({}) },
+    document: chartDocument,
     window: { addEventListener: () => {} },
     echarts: { init: () => ({ setOption: (value) => { option = value; } }) },
   });
@@ -34,17 +38,21 @@ function optionFor(config, rows) {
 describe('battery storage static contract', () => {
   beforeEach(() => { document.body.innerHTML = markdown.render(post.content); });
 
-  test('draft is collection-excluded with a renderable preview permalink and no missing image', () => {
+  test('explicit draft is collection-excluded and its permalink is suppressed in production', () => {
     expect(post.data.title).toBe('Weniger neue Batteriespeicher, mehr Speicherkapazität');
     expect(post.data.eleventyExcludeFromCollections).toBe(true);
     expect(post.data.excludeFromSitemap).toBe(true);
     expect(post.data.permalink).toBe(route);
+    expect(post.data.draft).toBe(true);
+    const computed = require('../src/posts/posts.11tydata').eleventyComputed;
+    expect(computed.permalink(post.data)).toBe(false);
+    expect(computed.eleventyExcludeFromCollections(post.data)).toBe(true);
     expect(post.data.image).toBeUndefined();
     expect(post.data.excerpt).toContain('Rechercheentwurf');
     expect(post.content).toContain('DRAFT – explorativer Rechercheentwurf');
     expect(document.querySelector('h1')).toBeNull();
     expect(document.querySelectorAll('h2')).toHaveLength(6);
-    const inherited = JSON.parse(fs.readFileSync(path.join(root, 'src/posts/posts.json'), 'utf8'));
+    const inherited = require('../src/posts/posts.11tydata');
     expect(inherited.layout).toBe('post.njk');
   });
 
@@ -294,20 +302,13 @@ describe('battery storage build-time manifest gate', () => {
 
 // Opt in only AFTER the main agent's build; this suite never generates files.
 const builtTest = process.env.BATTERY_STORAGE_BUILD_CHECK === '1' ? test : test.skip;
-builtTest('battery storage built preview has chart assets and stays out of discovery', () => {
+builtTest('battery storage draft has no production HTML and stays out of discovery', () => {
   const site = path.join(root, '_site');
-  document.body.innerHTML = fs.readFileSync(path.join(site, route, 'index.html'), 'utf8');
-  expect(document.querySelectorAll('article.post-content h1')).toHaveLength(1);
-  expect(document.body.textContent).toContain('DRAFT – explorativer Rechercheentwurf');
-  expect(document.querySelectorAll('article.post-content table')).toHaveLength(2);
-  const scripts = [...document.querySelectorAll('article.post-content script[src]')]
-    .map((node) => node.getAttribute('src'));
-  expect(scripts).toEqual(['/js/lib/echarts.min.js', ...configs.map((config) => `/js/charts/battery_storage/${config.outputFile}`)]);
+  expect(fs.existsSync(path.join(site, route, 'index.html'))).toBe(false);
   const echartsAsset = fs.readFileSync(path.join(site, 'js/lib/echarts.min.js'), 'utf8');
   expect(echartsAsset.length).toBeGreaterThan(0);
   expect(() => new vm.Script(echartsAsset)).not.toThrow();
   for (const config of configs) {
-    expect(document.getElementById(config.containerId)).not.toBeNull();
     const script = fs.readFileSync(path.join(site, 'js/charts/battery_storage', config.outputFile), 'utf8');
     expect(script).toContain(`document.getElementById('${config.containerId}')`);
     expect(() => new vm.Script(script)).not.toThrow();

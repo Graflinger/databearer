@@ -109,32 +109,50 @@ generation. If you keep configs in subfolders, either call the generator with th
    - Confirm files appear under `src/js/charts/<config-file-name>/`.
 
 4. **Embed in a post/page**
-   - Load ECharts once per page before chart scripts.
-   - Add a chart section with a unique container ID, short explanation, and source.
+   - Load ECharts once per page before chart scripts; use ordered `defer` for both.
+     Do not use `async` for dependent scripts.
+   - Add a semantic chart section with a unique container ID, static evidence,
+     units, observation period, and a descriptive source link.
 
    ```html
-   <script src="/js/lib/echarts.min.js"></script>
+   <script defer src="/js/lib/echarts.min.js"></script>
 
-   <div class="chart-section">
-     <h3>Chart heading</h3>
-     <p class="chart-description">One-sentence takeaway from the chart.</p>
+   <section class="chart-section" aria-labelledby="my-chart-heading">
+     <h3 id="my-chart-heading">Chart heading: measure and period</h3>
+     <p id="my-chart-summary" class="chart-description">
+       State the verified finding, key values, units and observation period here.
+     </p>
 
-     <div id="my-chart" style="width: 100%; height: 400px;"></div>
-     <script src="/js/charts/my-config/my-chart.js"></script>
+     <div id="my-chart" aria-describedby="my-chart-summary"
+          style="width: 100%; height: 400px;"></div>
+     <script defer src="/js/charts/my-config/my-chart.js"></script>
 
-     <div class="chart-sources">
-       <strong>Quelle: </strong><a href="https://example.com">Source name</a>
-     </div>
-   </div>
+     <p class="chart-sources">
+       <strong>Quelle: </strong><a href="https://example.com/dataset">Publisher – dataset title</a>
+     </p>
+   </section>
    ```
+
+   Replace the example source and summary with verified evidence. Where comparisons
+   need more detail, include a real HTML table with caption, column/row headers,
+   units and period. Summaries/tables must use the same frozen evidence as the chart,
+   be visible without JavaScript, and be updated together. For chart-only annual
+   articles, add a verified annual summary/table rather than relying on canvas text.
+   Inspect any annual-summary helper before documenting its API; do not assume one exists.
 
 5. **Build and inspect**
 
    ```bash
+   npm test -- --runInBand
+   npm run lint
    npm run build
    ```
 
-   Then check the rendered page or dev server and browser console.
+   Follow the [generated SEO output checklist](../../../docs/seo.md), including
+   `npm run test:seo-output` after building. Check the
+   rendered page on desktop/mobile, browser console, and evidence with JavaScript
+   disabled. Confirm drafts are absent from HTML, collections, sitemap, feeds and
+   search after a full production rebuild, not only in watch output.
 
 ## Supported config fields
 
@@ -165,7 +183,13 @@ Common optional fields:
 
 ## Quality expectations
 
-- Every chart should have a textual takeaway and source link in the post.
+- Every chart needs static HTML evidence, units, observation period and a verified
+  descriptive source link. Verify legacy citations instead of fabricating missing
+  provenance; label incomplete coverage and uncertainty.
+- Use semantic headings/sections and accessible tables. Chart tooltip text is not
+  a substitute for visible evidence, and summaries must not overstate results.
+- Keep title/excerpt consistent with the data and set `lastUpdated` only for a real
+  substantive revision, never during an incidental rebuild.
 - Use unique container IDs across the page.
 - Avoid committing generated or copied data unless it is intentionally part of the reproducible
   frontend chart inputs.

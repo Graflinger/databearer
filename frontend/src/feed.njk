@@ -8,26 +8,28 @@ eleventyExcludeFromCollections: true
   <subtitle>{{ site.description or "Datenbasierte Beiträge zu Themen wie Energie, Wirschaft und Politik" }}</subtitle>
   <link href="{{ site.url }}/feed.xml" rel="self"/>
   <link href="{{ site.url }}/"/>
-  <updated>{{ collections.post[0].date | htmlDateString }}</updated>
+  {% set feedPosts = (collections.post | reverse).slice(0, 20) %}
+  <updated>{{ feedPosts | feedUpdated }}</updated>
   <id>{{ site.url }}/</id>
   <author>
     <name>{{ site.author or "Databearer" }}</name>
+    <uri>{{ site.authorUrl | absoluteUrl(site.url) }}</uri>
   </author>
 
-  {%- for post in (collections.post | reverse).slice(0, 20) %}
+  {%- for post in feedPosts %}
     <entry>
       <title>{{ post.data.title }}</title>
       <link href="{{ site.url }}{{ post.url }}"/>
-      <updated>{{ (post.data.lastUpdated or post.date) | htmlDateString }}</updated>
+      <updated>{{ (post.data.lastUpdated or post.data.date) | htmlDateString }}</updated>
+      <published>{{ post.data.date | htmlDateString }}</published>
       <id>{{ site.url }}{{ post.url }}</id>
-      <content type="html">
-        <![CDATA[
+      {% set entryContent %}
       {%- if post.data.image %}
-      <img src="{{ site.url }}{{ post.data.image }}" alt="{{ post.data.title }}" />
+      <img src="{{ post.data.image | absoluteUrl(site.url) }}" alt="{{ post.data.title }}" />
       {%- endif %}
       {{ post.templateContent | safe }}
-    ]]>
-      </content>
+      {% endset %}
+      <content type="html">{{ entryContent | feedHTML(post.url, site.url) | forceescape }}</content>
       <summary>{{ post.data.excerpt or post.data.description }}</summary>
       {%- if post.data.topic %}
         {%- for topicItem in post.data.topic %}

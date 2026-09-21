@@ -6,8 +6,11 @@ const { verifyPublished } = require('./src/data_ingestion/builders/electricityHi
 const { verifyPublishedTrends } = require('./src/data_ingestion/builders/electricityTrends');
 const { verifyPublishedProgress } = require('./src/data_ingestion/builders/electricityProgress');
 const electricityFilters = require('./src/data_ingestion/builders/electricityFilters');
+const seo = require('./src/seo');
 
 module.exports = function (eleventyConfig) {
+  require('./lib/responsive-images').register(eleventyConfig);
+  seo.configure(eleventyConfig);
   // Generate charts before Eleventy build
   eleventyConfig.on('eleventy.before', async () => {
     console.log('🎨 Generating charts...');
@@ -50,9 +53,6 @@ module.exports = function (eleventyConfig) {
   // Copy the images directory to output
   eleventyConfig.addPassthroughCopy('src/images');
 
-  // Copy robots.txt to output
-  eleventyConfig.addPassthroughCopy('src/robots.txt');
-
   // Copy ads.txt to output
   eleventyConfig.addPassthroughCopy('src/ads.txt');
 
@@ -75,45 +75,6 @@ module.exports = function (eleventyConfig) {
     return new Date(date).toISOString();
   });
 
-  // Filter to get related posts
-  eleventyConfig.addFilter('relatedPosts', function (collections, currentPage, currentTopics) {
-    const allPosts = collections.post || [];
-    const topics = currentTopics || [];
-    const currentUrl = (currentPage && currentPage.url) || '';
-
-    // Get posts from the same topic (excluding current post)
-    const sameTopic = allPosts.filter((post) => {
-      if (post.url === currentUrl) return false;
-      const postTopics = post.data.topic || [];
-      return postTopics.some((topic) => topics.includes(topic));
-    });
-
-    // Sort by date (newest first) and get latest 10
-    const latest10SameTopic = sameTopic
-      .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))
-      .slice(0, 10);
-
-    // Randomly select 3 from the latest 10
-    const shuffled = latest10SameTopic.sort(() => 0.5 - Math.random());
-    const randomThree = shuffled.slice(0, 3);
-
-    // Get the newest post from all posts (excluding current post and same topic)
-    const newestAcrossTopics = allPosts
-      .filter(
-        (post) =>
-          post.url !== currentUrl && !sameTopic.some((samePost) => samePost.url === post.url),
-      )
-      .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))[0];
-
-    // Combine: 3 random from same topic + 1 newest across topics
-    const result = [...randomThree];
-    if (newestAcrossTopics) {
-      result.push(newestAcrossTopics);
-    }
-
-    return result;
-  });
-
   // Add global data for helpers
   eleventyConfig.addGlobalData('helpers', {
     year: new Date().getFullYear(),
@@ -121,25 +82,25 @@ module.exports = function (eleventyConfig) {
 
   // Create main post collection from all posts in src/posts
   eleventyConfig.addCollection('post', function (collectionApi) {
-    return collectionApi.getFilteredByGlob('src/posts/**/*.md');
+    return collectionApi.getFilteredByGlob('src/posts/**/*.md').filter(seo.published);
   });
 
   // Create topic-specific collections
   eleventyConfig.addCollection('energiePosts', function (collectionApi) {
     return collectionApi.getFilteredByGlob('src/posts/**/*.md').filter((post) => {
-      return post.data.topic && post.data.topic.includes('energie');
+      return seo.published(post) && post.data.topic && post.data.topic.includes('energie');
     });
   });
 
   eleventyConfig.addCollection('politikPosts', function (collectionApi) {
     return collectionApi.getFilteredByGlob('src/posts/**/*.md').filter((post) => {
-      return post.data.topic && post.data.topic.includes('politik-und-gesellschaft');
+      return seo.published(post) && post.data.topic && post.data.topic.includes('politik-und-gesellschaft');
     });
   });
 
   eleventyConfig.addCollection('wirtschaftPosts', function (collectionApi) {
     return collectionApi.getFilteredByGlob('src/posts/**/*.md').filter((post) => {
-      return post.data.topic && post.data.topic.includes('wirtschaft');
+      return seo.published(post) && post.data.topic && post.data.topic.includes('wirtschaft');
     });
   });
 

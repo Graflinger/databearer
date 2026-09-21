@@ -1,3 +1,5 @@
+{# permalink:false pages are processed by Eleventy but have no navigable URL. #}
+{% if draft != true %}
 <!DOCTYPE html>
 <html lang="de">
     <head>
@@ -5,36 +7,38 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         {# Primary Meta Tags #}
-        {%- set metaTitleValue = metaTitle or title or "Databearer Blog" -%}
-        {%- set metaDescriptionValue = metaDescription or excerpt or description or "Datenjournalismus mit Fokus auf Energie, Politik und Wirtschaft" -%}
-        {%- set metaImageValue = image or site.url ~ "/images/logo_transparent.png" -%}
-        {%- if metaImageValue and metaImageValue.indexOf("http") != 0 -%}
-            {%- set metaImageValue = site.url ~ metaImageValue -%}
-        {%- endif -%}
+        {%- set social = imageMetadata | socialImage(socialImage or image or dashboardImage, socialImageAlt or imageAlt or dashboardImageAlt) -%}
+        {%- set seo = {site: site, page: page, pagination: pagination, title: title, metaTitle: metaTitle, metaDescription: metaDescription, excerpt: excerpt, description: description, image: image, social: social, date: date, lastUpdated: lastUpdated, isPost: isPost, isTopicPage: isTopicPage, topic: topic, draft: draft, noindex: noindex} | seoMetadata -%}
+        {%- set metaTitleValue = seo.title -%}
+        {%- set metaDescriptionValue = seo.description -%}
+        {%- set metaImageValue = seo.image -%}
         <title>{{ metaTitleValue }}</title>
         <meta name="title" content="{{ metaTitleValue }}">
         <meta name="description" content="{{ metaDescriptionValue }}">
         <meta name="author" content="{{ site.author }}">
 
         {# Canonical URL #}
-        <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+        <link rel="canonical" href="{{ seo.url }}">
 
         {# Google Ad Sense #}
+        {% if not seo.noindex and (seo.isPost or pagination) and ads != false %}
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6146112394026755"
      crossorigin="anonymous"></script>
+        {% endif %}
 
         {# Open Graph / Facebook #}
-        <meta property="og:type" content="{{ 'article' if date else 'website' }}">
-        <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+        <meta property="og:type" content="{{ 'article' if seo.isPost else 'website' }}">
+        <meta property="og:url" content="{{ seo.url }}">
         <meta property="og:title" content="{{ metaTitleValue }}">
         <meta property="og:description" content="{{ metaDescriptionValue }}">
         <meta property="og:image" content="{{ metaImageValue }}">
-        <meta property="og:image:width" content="1200">
-        <meta property="og:image:height" content="630">
-        <meta property="og:image:alt" content="{{ metaTitleValue }}">
+        <meta property="og:image:width" content="{{ social.width }}">
+        <meta property="og:image:height" content="{{ social.height }}">
+        <meta property="og:image:type" content="{{ social.type }}">
+        <meta property="og:image:alt" content="{{ social.alt }}">
         <meta property="og:locale" content="de_DE">
         <meta property="og:site_name" content="Databearer">
-        {% if date %}
+        {% if seo.isPost and date %}
             <meta property="article:published_time" content="{{ date | htmlDateString }}">
             {% if lastUpdated %}
                 <meta property="article:modified_time" content="{{ lastUpdated | htmlDateString }}">
@@ -43,11 +47,11 @@
 
         {# Twitter #}
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
+        <meta name="twitter:url" content="{{ seo.url }}">
         <meta name="twitter:title" content="{{ metaTitleValue }}">
         <meta name="twitter:description" content="{{ metaDescriptionValue }}">
         <meta name="twitter:image" content="{{ metaImageValue }}">
-        <meta name="twitter:image:alt" content="{{ metaTitleValue }}">
+        <meta name="twitter:image:alt" content="{{ social.alt }}">
 
         {# Favicon #}
         <link rel="icon" type="image/png" sizes="32x32" href="/images/logo_circle.png">
@@ -55,107 +59,16 @@
         <link rel="apple-touch-icon" sizes="180x180" href="/images/logo_circle.png">
 
         {# Robots #}
-        <meta name="robots" content="index, follow">
+        <meta name="robots" content="{{ 'noindex, follow' if seo.noindex else 'index, follow' }}">
 
         {# RSS Feed #}
         <link rel="alternate" type="application/atom+xml" title="Databearer Blog Feed" href="{{ site.url }}/feed.xml">
+        <link rel="alternate" type="application/feed+json" title="Databearer JSON Feed" href="{{ site.url }}/feed.json">
 
         {# Structured Data (JSON-LD) #}
-        <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@type": "{{ 'Article' if date else (isTopicPage and 'CollectionPage' or 'WebSite') }}",
-                {% if date %}
-                    "headline": "{{ title }}",
-                    "description": "{{ metaDescriptionValue }}",
-                    "image": "{{ metaImageValue }}",
-                    "datePublished": "{{ date | htmlDateString }}",
-                    {% if lastUpdated %}
-                        "dateModified": "{{ lastUpdated | htmlDateString }}",
-                    {% endif %}
-                    "author": {
-                        "@type": "Person",
-                        "name": "{{ site.author }}"
-                    },
-                    "publisher": {
-                        "@type": "Organization",
-                        "name": "Databearer",
-                        "logo": {
-                            "@type": "ImageObject",
-                            "url": "{{ site.url }}/images/logo_transparent.png"
-                        }
-                    }
-                {% elif isTopicPage %}
-                    "name": "{{ title }}",
-                    "url": "{{ site.url }}{{ page.url }}",
-                    "description": "{{ metaDescriptionValue }}"
-                {% else %}
-                    "name": "Databearer Blog",
-                    "url": "{{ site.url }}",
-                    "description": "{{ site.description }}"
-                {% endif %}
-            }
-        </script>
-
-        {# Breadcrumb Structured Data #}
-        <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Home",
-                        "item": "{{ site.url }}"
-                    }
-                    {%- if topic and topic.length > 0 -%}, {
-                            "@type": "ListItem",
-                            "position": 2,
-                            "name": "{% if topic[0] == 'energie' %}Energie{% elif topic[0] == 'wirtschaft' %}Wirtschaft{% elif topic[0] == 'politik-und-gesellschaft' %}Politik & Gesellschaft{% else %}{{ topic[0] }}{% endif %}",
-                            "item": "{{ site.url }}/themen/{{ topic[0] }}"
-                        }
-                    {%- endif -%}
-                    {%- if date -%}, {
-                            "@type": "ListItem",
-                            "position": {{ 3 if (topic and topic.length > 0) else 2 }},
-                            "name": "{{ title }}",
-                            "item": "{{ site.url }}{{ page.url }}"
-                        }
-                    {%- elif page.url != '/' and not topic -%}, {
-                            "@type": "ListItem",
-                            "position": 2,
-                            "name": "{{ title }}",
-                            "item": "{{ site.url }}{{ page.url }}"
-                        }
-                    {%- endif -%}
-                ]
-            }
-        </script>
-
-        {%- if page.url == '/' -%}
-            {# Organization Structured Data for Homepage #}
-            <script type="application/ld+json">
-                {
-                    "@context": "https://schema.org",
-                    "@type": "Organization",
-                    "name": "Databearer",
-                    "url": "{{ site.url }}",
-                    "logo": {
-                        "@type": "ImageObject",
-                        "url": "{{ site.url }}/images/logo_transparent.png",
-                        "width": 1070,
-                        "height": 388
-                    },
-                    "description": "{{ site.description }}",
-                    "founder": {
-                        "@type": "Person",
-                        "name": "{{ site.author }}"
-                    },
-                    "sameAs": ["https://bsky.app/profile/databearer.bsky.social", "https://x.com/databearerde"]
-                }
-            </script>
-        {%- endif -%}
+        {% for entity in seo.structuredData %}
+            <script type="application/ld+json">{{ entity | scriptJSON | safe }}</script>
+        {% endfor %}
 
         <link rel="stylesheet" href="/css/style.css">
     </head>
@@ -182,22 +95,22 @@
                         <a href="/" {% if page.url == "/" %}aria-current="page"{% endif %}>Alle Posts</a>
                     </li>
                     <li>
-                        <a href="/themen/energie" {% if page.url.startsWith("/themen/energie") %}aria-current="page"{% endif %}>Energie</a>
+                        <a href="/themen/energie/" {% if page.url.startsWith("/themen/energie") %}aria-current="page"{% endif %}>Energie</a>
                     </li>
                     <li>
-                        <a href="/themen/politik-und-gesellschaft" {% if page.url.startsWith("/themen/politik-und-gesellschaft") %}aria-current="page"{% endif %}>Politik & Gesellschaft</a>
+                        <a href="/themen/politik-und-gesellschaft/" {% if page.url.startsWith("/themen/politik-und-gesellschaft") %}aria-current="page"{% endif %}>Politik & Gesellschaft</a>
                     </li>
                     <li>
-                        <a href="/themen/wirtschaft" {% if page.url.startsWith("/themen/wirtschaft") %}aria-current="page"{% endif %}>Wirtschaft</a>
+                        <a href="/themen/wirtschaft/" {% if page.url.startsWith("/themen/wirtschaft") %}aria-current="page"{% endif %}>Wirtschaft</a>
                     </li>
                     <li>
                         <a href="/dashboards/" {% if page.url.startsWith("/dashboards/") %}aria-current="page"{% endif %}>Dashboards</a>
                     </li>
                     <li>
-                        <a href="/suche" {% if page.url.startsWith("/suche") %}aria-current="page"{% endif %}>Suche</a>
+                        <a href="/suche/" {% if page.url.startsWith("/suche") %}aria-current="page"{% endif %}>Suche</a>
                     </li>
                     <li>
-                        <a href="/supportme" {% if page.url.startsWith("/supportme") %}aria-current="page"{% endif %}>Supporte mich</a>
+                        <a href="/supportme/" {% if page.url.startsWith("/supportme") %}aria-current="page"{% endif %}>Supporte mich</a>
                     </li>
                 </ul>
             </div>
@@ -242,3 +155,4 @@
         <script src="/js/menu.js"></script>
     </body>
 </html>
+{% endif %}

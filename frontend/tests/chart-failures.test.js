@@ -68,9 +68,16 @@ test('Eleventy before hook rejects when chart generation fails', async () => {
   jest.doMock('@11ty/eleventy', () => ({ HtmlBasePlugin: {} }));
   jest.doMock('child_process', () => ({ execSync: () => { throw new Error('chart command failed'); } }));
   const hooks = {};
-  const config = { on: (name, fn) => { hooks[name] = fn; }, ignores: { add: jest.fn() },
-    watchIgnores: { add: jest.fn() }, addFilter: jest.fn(), addPassthroughCopy: jest.fn(),
-    addPlugin: jest.fn(), addGlobalData: jest.fn(), addCollection: jest.fn() };
+  const filters = {};
+  const registerFilter = (name, fn) => { filters[name] = fn; };
+  const config = { on: (name, fn) => { (hooks[name] ||= []).push(fn); }, ignores: { add: jest.fn() },
+    watchIgnores: { add: jest.fn() }, addFilter: registerFilter, addAsyncFilter: registerFilter,
+    getFilter: (name) => filters[name], addPassthroughCopy: jest.fn(),
+    addPlugin: jest.fn(), addGlobalData: jest.fn(), addCollection: jest.fn(),
+    addWatchTarget: jest.fn(), addNunjucksAsyncShortcode: jest.fn() };
   require('../.eleventy.js')(config);
-  await expect(hooks['eleventy.before']()).rejects.toThrow('chart command failed');
+  // Exercise every registered hook without touching real output directories.
+  const event = { runMode: 'build', outputMode: 'json', incremental: false };
+  await expect(Promise.all(hooks['eleventy.before'].map((hook) => hook(event))))
+    .rejects.toThrow('chart command failed');
 });

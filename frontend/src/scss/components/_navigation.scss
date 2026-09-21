@@ -1,7 +1,14 @@
 /* Topics Navigation */
 .topics-nav {
+  --menu-surface: #fff;
   border-bottom: 1px solid #e0e0e0;
   padding: 20px 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .topics-nav {
+    --menu-surface: #1a1a1a;
+  }
 }
 
 .topics-nav .container {
@@ -87,6 +94,13 @@
   transition: all 0.3s ease;
 }
 
+// Author display rules must not override the disclosure's hidden state.
+.topics-menu[hidden],
+.topics-menu-toggle[hidden],
+.menu-backdrop[hidden] {
+  display: none !important;
+}
+
 .topics-nav a {
   text-decoration: none;
   color: #666;
@@ -100,17 +114,17 @@
 
 .topics-nav a:hover {
   background-color: #d9c176;
-  color: #fff;
+  color: #333;
 }
 
 .topics-nav a:focus {
   background-color: #d9c176;
-  color: #fff;
+  color: #333;
   outline: 2px solid #c4ad61;
   outline-offset: 2px;
 }
 
 .topics-nav a[aria-current='page'] {
   background-color: #c4ad61;
-  color: #fff;
+  color: #333;
 }

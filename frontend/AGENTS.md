@@ -115,13 +115,43 @@ Chart config structure:
 ```yaml
 title: "Post Title"
 date: 2025-01-01
-excerpt: "Short description"
+draft: true                       # boolean; suppresses post output while drafting
+excerpt: "Accurate summary of the key insight and scope"
 image: "/images/blog_card_images/2025/filename.png"
-imageText: "Image caption"
+imageAlt: ""                     # decorative hero; describe informative content
+imageText: "Visible image caption"
+# socialImage: "/images/blog_card_images/2025/social.png"
+# socialImageAlt: "Description of the social preview"
 topic: ["energie", "wirtschaft"]  # array, determines collections
 fullWidthCard: false              # optional
-lastUpdated: 2025-01-15           # optional
+# lastUpdated: 2025-01-15         # actual substantive revision date, when applicable
 ```
+
+Follow the [post QA guide](docs/post_guidlines.md) and [SEO contract](../docs/seo.md).
+Keep titles/excerpts accurate; there is no fixed description-length or keyword quota,
+and no rankings promise. Set `lastUpdated` only for real substantive changes, never
+from build time. The post layout supplies the H1 and visible linked author; use
+H2/H3 in the body, descriptive links, and verified citations.
+
+`src/posts/posts.11tydata.js` computes draft permalink/collection exclusion. Do not
+override those computed fields. Boolean `draft: true` suppresses HTML and discovery
+through collections, sitemap, feeds and search; a future date is not a draft policy.
+Full production builds clean generated HTML first to prevent stale draft pages.
+`noindex: true` keeps utility pages public; `excludeFromSitemap` alone does not
+prevent indexing. Neither flag is access control.
+
+`image` and optional `socialImage` use local `/images/...` paths under `src/images/`.
+`lib/responsive-images.js`, requiring its `register` function in `.eleventy.js`,
+builds responsive variants locally in ignored `_site/assets/images/`, preserving
+source files. Hero `imageAlt` defaults to empty; `imageText` is a visible caption.
+Cards are decorative; social metadata uses raster variants and measured dimensions.
+No source-image network fetch belongs in the build.
+
+Run `npm test -- --runInBand`, `npm run lint`, and `npm run build` from `frontend/`;
+follow the SEO guide's generated-output checks and run `npm run test:seo-output`
+after building. Preserve JSON Feed fields (including original `image`
+and optional `_image_alt`) consumed by the private `video-generator`. These checks
+do not authorize publication or deployment.
 
 ### Collections
 Defined in `.eleventy.js`:
@@ -130,10 +160,21 @@ Defined in `.eleventy.js`:
 
 ### Using Charts in Posts
 ```html
-<script src="/js/lib/echarts.min.js"></script>
-<div id="chart-id" style="width: 100%; height: 400px;"></div>
-<script src="/js/charts/config-name/chart.js"></script>
+<script defer src="/js/lib/echarts.min.js"></script>
+<section aria-labelledby="chart-heading">
+  <h2 id="chart-heading">Measure and observation period</h2>
+  <p id="chart-summary">Replace with a verified finding, key values, units and period.</p>
+  <div id="chart-id" aria-describedby="chart-summary" style="width: 100%; height: 400px;"></div>
+  <script defer src="/js/charts/config-name/chart.js"></script>
+  <p>Quelle: <a href="https://example.com/dataset">Publisher – dataset title</a></p>
+</section>
 ```
+
+Replace the example source with a verified link. Load ECharts once, then dependent
+chart scripts with ordered `defer`, not `async`. Every chart needs static HTML
+evidence, units, period and source links; add tables with captions/headers where
+needed, including chart-only annual summaries. Use the same evidence for prose,
+tables and charts. Verify legacy citations rather than inventing provenance.
 
 Charts support dark mode detection and lazy loading via IntersectionObserver.
 
