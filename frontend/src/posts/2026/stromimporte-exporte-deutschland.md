@@ -3,8 +3,8 @@ title: "Stromhandel seit 2019: vom Export- zum Importüberschuss"
 date: 2026-09-11
 lastUpdated: 2026-09-14
 excerpt: "Seit 2023 importiert das Marktgebiet Deutschland–Luxemburg mehr Strom, als es exportiert. Was die Jahresbilanz über Handel, Kosten und Sicherheit aussagt."
-image: "/images/dashboards/strommarkt-deutschland.svg"
-imageText: "Der deutsche Stromhandel hat sich seit 2019 sichtbar verschoben."
+image: "/images/blog_card_images/2026/stromhandel-europa.png"
+imageText: "KI-generiertes Symbolbild: Hochspannungsleitungen über einer Flusslandschaft als Motiv für den europäischen Stromhandel."
 fullWidthCard: false
 topic: ["energie", "wirtschaft"]
 ---
