@@ -3,8 +3,8 @@ title: "Solar boomt, Wind wächst: Was der Ausbau wirklich zeigt"
 date: 2026-09-14
 lastUpdated: 2026-09-14
 excerpt: "Die gemeldete Solarleistung hat sich seit 2020 mehr als verdoppelt. Warum geht das so schnell – und was kommt bei Solar und Wind tatsächlich im Stromnetz an?"
-image: "/images/blog_card_images/2026/windenergie3.png"
-imageText: "Wind und Sonne: Mehr Leistung bedeutet nicht in jedem Jahr mehr Strom. Symbolbild."
+image: "/images/blog_card_images/2026/solar-wind-wachstum.png"
+imageText: "KI-generiertes Symbolbild: Solarmodule auf einem Hausdach und Windräder am Horizont."
 fullWidthCard: false
 topic: ["energie"]
 ---
