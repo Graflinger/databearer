@@ -3,8 +3,8 @@ title: "Netzeingriffe: 17 Prozent weniger als 2022 – seit 2024 kaum Veränderu
 date: 2026-09-11
 lastUpdated: 2026-09-14
 excerpt: "Die Maßnahmenenergie sank von 2022 bis 2025 um knapp 17 Prozent. Seit 2024 bleibt sie fast gleich. Die Kosten liegen weiter bei rund drei Milliarden Euro."
-image: "/images/dashboards/strommarkt-deutschland.svg"
-imageText: "Netzengpassmanagement: Maßnahmenenergie und Kosten im Zeitverlauf."
+image: "/images/blog_card_images/2026/netzeingriffe-stromnetz.png"
+imageText: "KI-generiertes Symbolbild: Umspannwerk mit Transformatoren und Schaltanlagen."
 fullWidthCard: false
 topic: ["energie"]
 ---
