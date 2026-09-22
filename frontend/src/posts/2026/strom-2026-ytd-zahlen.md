@@ -3,8 +3,8 @@ title: "Strom 2026 bisher: Solar und Wind an Land liegen fast gleichauf"
 date: 2026-09-11
 lastUpdated: 2026-09-14
 excerpt: "Solar und Wind an Land liegen 2026 fast gleichauf. Bis 9. September steigen Erzeugung und Erneuerbarenanteil gegenüber 2025 – aber auch der Börsenpreis."
-image: "/images/dashboards/strommarkt-deutschland.svg"
-imageText: "Wind an Land und Solar sind bisher die größten Einzelquellen im Strommix 2026."
+image: "/images/blog_card_images/2026/strom-ytd-2026.png"
+imageText: "KI-generiertes Symbolbild: Solarpark und Windräder in einer weiten Landschaft."
 fullWidthCard: false
 topic: ["energie"]
 ---
