@@ -51,7 +51,7 @@ Diese Konstellation zeigt für 2025 ein positives Bild. In den folgenden Datenvi
   <div id="zuschlagsmenge_in_kw" role="img" aria-labelledby="zuschlagsmenge_in_kw-heading" aria-describedby="zuschlagsmenge_in_kw-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/ausschreibung_wind_2025/zuschlagsmenge_in_kw.js"></script>
 
-  <div style="overflow-x: auto;" tabindex="0" role="region" aria-labelledby="zuschlagsmenge_in_kw-heading">
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="zuschlagsmenge_in_kw-heading">
     <table id="zuschlagsmenge_in_kw-table">
       <caption>Ausgewählte Gebotstermine, Mengen in kW; Datenstand bis Ende 2025</caption>
       <thead><tr><th scope="col">Gebotstermin</th><th scope="col">Ausschreibungsvolumen (kW)</th><th scope="col">Zuschlagsmenge (kW)</th><th scope="col">Gebotsmenge (kW)</th></tr></thead>

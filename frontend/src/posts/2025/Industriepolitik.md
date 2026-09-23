@@ -29,7 +29,7 @@ PV hat sich als Technologie mittlerweile durchgesetzt, weil die absehbare Preisr
   <div id="industriepolitik_battery_pv" role="img" aria-labelledby="industriepolitik_battery_pv-heading" aria-describedby="industriepolitik_battery_pv-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/industriepolitik/industriepolitik_battery_pv.js"></script>
 
-  <div style="overflow-x: auto;" tabindex="0" role="region" aria-labelledby="industriepolitik_battery_pv-heading">
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="industriepolitik_battery_pv-heading">
   <table id="industriepolitik_battery_pv-table">
     <caption>Ausgewählte Preiswerte des eingefrorenen Diagramms; Einheiten gemäß Diagrammlegende</caption>
     <thead><tr><th scope="col">Jahr</th><th scope="col">PV (USD/kW)</th><th scope="col">Akku (USD/kWh)</th></tr></thead>
@@ -62,7 +62,7 @@ Vor wenigen Jahren waren E-Autos noch eine Randerscheinung und kaum massentaugli
   <div id="industriepolitik_ev_market_share" role="img" aria-labelledby="industriepolitik_ev_market_share-heading" aria-describedby="industriepolitik_ev_market_share-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/industriepolitik/industriepolitik_ev_market_share.js"></script>
 
-  <div style="overflow-x: auto;" tabindex="0" role="region" aria-labelledby="industriepolitik_ev_market_share-heading">
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="industriepolitik_ev_market_share-heading">
   <table id="industriepolitik_ev_market_share-table">
     <caption>Elektrofahrzeug-Anteil an den Neuwagenverkäufen in Prozent, Auswahl aus dem eingefrorenen Diagramm</caption>
     <thead><tr><th scope="col">Region</th><th scope="col">2010</th><th scope="col">2024</th></tr></thead>
@@ -97,7 +97,7 @@ Gepaart mit dem Fakt, dass erneuerbare Energien und insbesondere PV jetzt schon 
   <div id="industriepolitik_electrification_rate" role="img" aria-labelledby="industriepolitik_electrification_rate-heading" aria-describedby="industriepolitik_electrification_rate-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/industriepolitik/industriepolitik_electrification_rate.js"></script>
 
-  <div style="overflow-x: auto;" tabindex="0" role="region" aria-labelledby="industriepolitik_electrification_rate-heading">
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="industriepolitik_electrification_rate-heading">
   <table id="industriepolitik_electrification_rate-table">
     <caption>Elektrifizierungsquote in Prozent, ausgewählte Jahre; auf zwei Nachkommastellen gerundet. — bedeutet fehlender Wert im eingefrorenen Diagramm.</caption>
     <thead><tr><th scope="col">Region</th><th scope="col">2010</th><th scope="col">2023</th><th scope="col">2024</th></tr></thead>
@@ -133,7 +133,7 @@ Das vorherrschende Thema derzeit kann auch in einem solchen Bericht über Indust
   <div id="industriepolitik_flops_compute" role="img" aria-labelledby="industriepolitik_flops_compute-heading" aria-describedby="industriepolitik_flops_compute-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/industriepolitik/industriepolitik_flops_compute.js"></script>
 
-  <div style="overflow-x: auto;" tabindex="0" role="region" aria-labelledby="industriepolitik_flops_compute-heading">
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="industriepolitik_flops_compute-heading">
   <table id="industriepolitik_flops_compute-table">
     <caption>Rechenleistung des schnellsten Supercomputers in gigaFLOPS, Auswahl aus dem eingefrorenen Diagramm</caption>
     <thead><tr><th scope="col">Jahr</th><th scope="col">gigaFLOPS</th></tr></thead>

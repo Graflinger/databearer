@@ -33,7 +33,7 @@ Die Kohorte 2024 umfasst 573.235 Anlagen mit zusammen rund 6,179 GWh Speicherkap
   <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, Marktstammdatenregister (MaStR)</a>; eigene gefilterte Auswertung, Stand 30. Juni 2026.</div>
 </div>
 
-<div style="overflow-x: auto;">
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabelle: Kernwerte der Registerkohorten 2024 und 2025">
   <table id="battery-cohorts-table">
     <caption>Kernwerte der gefilterten Registerkohorten, Stand 30. Juni 2026; keine historischen Jahreszubauten</caption>
     <thead><tr><th scope="col">Kohorte</th><th scope="col">Anlagenzahl</th><th scope="col">Nettonennleistung (GW)</th><th scope="col">Speicherkapazität (GWh)</th><th scope="col">Median E/P (Stunden)</th></tr></thead>
@@ -60,7 +60,7 @@ Diese Gruppen sind **technische Größenklassen**, keine nachgewiesenen Eigentü
   <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, MaStR</a>; eigene Auswertung, Stand 30. Juni 2026. Größenschwellen nach dem <a href="https://battery-charts.de/battery-charts/#methodology">Methodenvergleich mit Battery Charts der RWTH Aachen</a>.</div>
 </div>
 
-<div style="overflow-x: auto;">
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabelle: Speicherkapazität nach Größenklasse">
   <table id="battery-segments-table">
     <caption>Speicherkapazität der Größenklassen in GWh, Registerstand 30. Juni 2026</caption>
     <thead><tr><th scope="col">Größenklasse</th><th scope="col">Kohorte 2024</th><th scope="col">Kohorte 2025</th></tr></thead>

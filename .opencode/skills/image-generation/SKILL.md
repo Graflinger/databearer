@@ -116,7 +116,7 @@ recommend rotating it.
 
    ```yaml
    image: "/images/blog_card_images/<year>/my-post-image.png"
-   imageAlt: "" # decorative hero; describe meaningful image content when needed
+   imageAlt: "Description of what the image shows" # empty only if decorative
    imageText: "Visible editorial image caption"
    # socialImage: "/images/blog_card_images/<year>/my-post-social.png"
    # socialImageAlt: "Description of the social preview image"
@@ -135,44 +135,27 @@ recommend rotating it.
    PY
    ```
 
-4. Run frontend checks from `frontend/`:
+4. Run the [checks](../../../docs/seo.md#checks) from `frontend/`:
+   `npm test -- --runInBand`, `npm run lint`, `npm run build`,
+   `npm run test:seo-output`. Inspect the hero and card rendering on mobile and
+   desktop. Checks do not authorize publication or deployment.
 
-   ```bash
-   npm test -- --runInBand
-   npm run lint
-   npm run build
-   ```
+### Responsive delivery and metadata (summary)
 
-5. Follow the [SEO output checklist](../../../docs/seo.md); run
-   `npm run test:seo-output` after building.
-   Inspect hero/card rendering at mobile and desktop sizes, image metadata and
-   social preview URLs/dimensions. Checks do not authorize publication or deployment.
+The details are in [Images](../../../docs/seo.md#images). In short:
 
-### Responsive delivery and metadata contract
-
-- Preserve the curated source under `frontend/src/images/`; never replace it with
-  a generated thumbnail. Frontmatter `image` and optional `socialImage` accept local
-  `/images/...` paths only, not network URLs, traversal, query strings or fragments.
-- `frontend/lib/responsive-images.js` requires registration in `.eleventy.js` through
-  `require('./lib/responsive-images').register(eleventyConfig)`. It generates WebP
-  plus JPEG/PNG fallback variants under `_site/assets/images/`, which is ignored.
-  Do not commit generated assets or manually author hashed variant URLs.
-- Variants target widths 360, 720, 1200 and 1408, capped at the source width without
-  enlargement. Picture markup includes intrinsic dimensions and responsive sizes.
-  Heroes and the first listing card load eagerly with high priority; later/related
-  cards load lazily. Card images are decorative and use empty alt text.
-- `imageAlt` is the hero's alternative text and defaults to empty. Use a meaningful
-  description for informative images, and empty alt for decoration. `imageText` is
-  a visible caption, not an automatic hero alt. Optional `socialImageAlt` describes
-  the social preview, which can use a separate local `socialImage`.
-- Social metadata uses a measured raster variant (JPEG/PNG), with actual width and
-  height; the default brand preview is generated locally. Do not hard-code 1200x630
-  for every post: curated 1408x800 sources retain their aspect ratio.
-- The helper supports PNG, JPEG, WebP and self-contained SVG sources, with bounded
-  source count/size/pixels and concurrency. Image generation via Azure is a separate
-  authoring action; the frontend build makes no source-image network requests.
-- Preserve JSON Feed's original image URL and optional `_image_alt` field for the
-  private `video-generator` consumer when changing browser/social image delivery.
+- Keep the curated source under `frontend/src/images/`, and reference it as a local
+  `/images/...` path with the exact letter case. A wrong path or case fails the build
+  with a clear `Image not found` error. Unused files are never processed.
+- The build creates WebP plus JPEG/PNG variants in the ignored
+  `_site/assets/images/`. Never commit them or hand-write their hashed URLs.
+- Cards are decorative. `imageAlt` (and optional `socialImageAlt` for a separate
+  `socialImage`) should describe the image, not repeat the caption. When no alt is
+  set, `og:image:alt` is omitted. Pages without an image use the brand preview with
+  alt `Databearer-Logo`.
+- Image generation with Azure is a separate authoring step. The frontend build never
+  fetches images. JSON Feed keeps the original `image` URL, and `_image_alt` there is
+  `imageText` ([Feeds](../../../docs/seo.md#feeds)).
 
 ## Prompt guidance
 

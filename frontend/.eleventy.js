@@ -11,6 +11,11 @@ const seo = require('./src/seo');
 module.exports = function (eleventyConfig) {
   require('./lib/responsive-images').register(eleventyConfig);
   seo.configure(eleventyConfig);
+  // Strict draft policy for every template and run mode (build, serve, watch):
+  // boolean `draft: true` from front matter, directory or global data skips the
+  // template before rendering, so it writes no file and never reaches collections,
+  // feeds, search or the sitemap. Future dates are not drafts.
+  eleventyConfig.addPreprocessor('drafts', '*', (data) => (data.draft === true ? false : undefined));
   // Generate charts before Eleventy build
   eleventyConfig.on('eleventy.before', async () => {
     console.log('🎨 Generating charts...');

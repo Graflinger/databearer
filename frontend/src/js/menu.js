@@ -97,7 +97,11 @@
     });
 
     render();
-    document.documentElement.classList.add('nav-enhanced');
+    // `js` is normally already set by the inline head script (so the collapsed
+    // drawer is painted from the start); set it here too so the drawer and its
+    // toggle never depend on that script. The head script removes `js` on load
+    // when `nav-enhanced` is missing, restoring the in-flow no-JS navigation.
+    document.documentElement.classList.add('js', 'nav-enhanced');
   }
 
   if (document.readyState === 'loading') {

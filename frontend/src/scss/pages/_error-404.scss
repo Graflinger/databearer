@@ -15,7 +15,8 @@
 .error-404-title {
   font-size: 120px;
   font-weight: 700;
-  color: #c4ad61;
+  // Darker gold on light backgrounds (5.2:1); brand gold in dark mode.
+  color: #806b2b;
   margin: 0;
   line-height: 1;
 }
@@ -76,6 +77,11 @@
   text-decoration: none;
 }
 
+// A dark currentColor ring would disappear against the dark page background.
+.error-404-button:focus-visible {
+  outline-color: var(--prose-link);
+}
+
 .error-404-suggestions {
   margin-top: 40px;
   padding-top: 40px;
@@ -103,7 +109,7 @@
 }
 
 .error-404-suggestions a {
-  color: #c4ad61;
+  color: var(--prose-link);
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;

@@ -2,10 +2,17 @@ const fs = require('fs');
 const path = require('path');
 
 const topicNames = { energie: 'Energie', wirtschaft: 'Wirtschaft', 'politik-und-gesellschaft': 'Politik & Gesellschaft' };
+// Measured intrinsic size of src/images/logo_transparent.png (tests verify it).
+const LOGO = { url: '/images/logo_transparent.png', width: 1070, height: 388 };
 
 function isoDate(value) {
   if (!value || !Number.isFinite(new Date(value).getTime())) return undefined;
   return new Date(value).toISOString();
+}
+
+// Sitemap lastmod: UTC calendar date of the explicit editorial revision/publication.
+function sitemapLastmod(item) {
+  return isoDate(item.data.lastUpdated || item.data.date)?.slice(0, 10);
 }
 
 function absoluteUrl(value, origin) {
@@ -21,19 +28,43 @@ function published(post) {
   return post.data.draft !== true && post.data.eleventyExcludeFromCollections !== true && post.data.permalink !== false;
 }
 
+// Utility pages (search, 404) opt out with `noindex: true` data, not URL lists.
 function indexable(item) {
   return published(item) && !item.data.noindex && !item.data.excludeFromSitemap &&
-    typeof item.url === 'string' && (item.url.endsWith('/') || item.url.endsWith('.html')) &&
-    !['/404.html', '/suche/'].includes(item.url);
+    typeof item.url === 'string' && (item.url.endsWith('/') || item.url.endsWith('.html'));
 }
 
+function time(value) {
+  const milliseconds = value === undefined || value === null ? NaN : new Date(value).getTime();
+  return Number.isFinite(milliseconds) ? milliseconds : undefined;
+}
+
+function topicSet(value) {
+  return new Set(Array.isArray(value) ? value : value ? [value] : []);
+}
+
+// Rank by Jaccard similarity of topic sets, so a broad multi-topic post no longer
+// ties an exact match. Ties: closer publication date to the current post, then
+// newer, then URL. Self and drafts are excluded; the input is never mutated.
 function relatedPosts(collections, currentPage, currentTopics = []) {
-  const topics = new Set(currentTopics);
-  const relevance = (post) => new Set((post.data.topic || []).filter((topic) => topics.has(topic))).size;
-  return (collections.post || []).filter((post) => published(post) && post.url !== currentPage?.url)
-    .sort((a, b) => relevance(b) - relevance(a) ||
-      (new Date(b.data.date).getTime() || 0) - (new Date(a.data.date).getTime() || 0) ||
-      (a.url < b.url ? -1 : a.url > b.url ? 1 : 0)).slice(0, 4);
+  const posts = collections?.post || [];
+  const topics = topicSet(currentTopics);
+  const self = posts.find((post) => post.url === currentPage?.url);
+  const current = time(currentPage?.date) ?? time(self?.data?.date) ?? time(self?.date);
+  const ranked = posts.filter((post) => published(post) && post.url !== currentPage?.url).map((post) => {
+    const other = topicSet(post.data.topic);
+    const shared = [...other].filter((topic) => topics.has(topic)).length;
+    const date = time(post.data.date) ?? time(post.date);
+    return {
+      post, shared, union: (topics.size + other.size - shared) || 1, date: date ?? -Infinity,
+      distance: date === undefined || current === undefined ? Infinity : Math.abs(date - current),
+    };
+  });
+  const order = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
+  // Cross-multiplied integers keep equal similarities (1/2 vs 2/4) exact ties.
+  ranked.sort((a, b) => order(b.shared * a.union, a.shared * b.union) ||
+    order(a.distance, b.distance) || order(b.date, a.date) || order(a.post.url, b.post.url));
+  return ranked.slice(0, 4).map((entry) => entry.post);
 }
 
 function metadata(data) {
@@ -43,14 +74,18 @@ function metadata(data) {
     (pagination?.pageNumber > 0 ? ` – Seite ${pagination.pageNumber + 1}` : '');
   const description = data.metaDescription || data.excerpt || data.description || site.description;
   const isPost = data.isPost === true;
-  const noindex = data.draft === true || data.noindex === true || ['/suche/', '/404.html'].includes(page.url);
-  const image = absoluteUrl(data.social?.url || data.image || '/images/logo_transparent.png', site.url);
+  // Data-driven: utility pages such as search and 404 declare `noindex: true`.
+  const noindex = data.draft === true || data.noindex === true;
+  const image = absoluteUrl(data.social?.url || data.image || LOGO.url, site.url);
   const author = { '@type': 'Person', name: site.author, url: absoluteUrl(site.authorUrl || '/about/', site.url) };
   const organization = {
-    '@type': 'Organization', '@id': `${site.url}/#organization`, name: 'Databearer', url: `${site.url}/`,
-    logo: { '@type': 'ImageObject', url: absoluteUrl('/images/logo_transparent.png', site.url) },
+    '@type': 'Organization', '@id': `${site.url}/#organization`, name: site.name, url: `${site.url}/`,
+    logo: { '@type': 'ImageObject', url: absoluteUrl(LOGO.url, site.url), width: LOGO.width, height: LOGO.height },
   };
-  const website = { '@type': 'WebSite', '@id': `${site.url}/#website`, name: site.title, url: `${site.url}/`, publisher: { '@id': organization['@id'] } };
+  const website = {
+    '@type': 'WebSite', '@id': `${site.url}/#website`, name: site.name, alternateName: [site.title],
+    url: `${site.url}/`, publisher: { '@id': organization['@id'] },
+  };
   const entity = {
     '@context': 'https://schema.org',
     '@type': isPost ? 'BlogPosting' : data.isTopicPage || pagination || page.url === '/dashboards/' ? 'CollectionPage' : page.url === '/about/' ? 'AboutPage' : 'WebPage',
@@ -63,7 +98,11 @@ function metadata(data) {
     datePublished: isoDate(data.date), dateModified: isoDate(data.lastUpdated || data.date),
   });
   const structuredData = [entity];
-  if (page.url === '/') structuredData.push({ '@context': 'https://schema.org', ...website }, { '@context': 'https://schema.org', ...organization, founder: author });
+  if (page.url === '/') {
+    structuredData.push({ '@context': 'https://schema.org', ...website }, {
+      '@context': 'https://schema.org', ...organization, description: site.description, sameAs: site.social, founder: author,
+    });
+  }
   if (page.url && page.url !== '/' && !noindex) {
     const crumbs = [{ name: 'Home', item: `${site.url}/` }];
     const topic = isPost && data.topic?.[0];
@@ -156,7 +195,7 @@ function configure(eleventyConfig) {
   eleventyConfig.addFilter('absoluteUrl', absoluteUrl);
   eleventyConfig.addFilter('published', published);
   eleventyConfig.addFilter('indexablePages', (items) => items.filter(indexable));
-  eleventyConfig.addFilter('explicitLastmod', (item) => isoDate(item.data.lastUpdated || item.data.date));
+  eleventyConfig.addFilter('explicitLastmod', sitemapLastmod);
   eleventyConfig.addFilter('feedUpdated', (posts) => posts.reduce((latest, post) => {
     const date = isoDate(post.data.lastUpdated || post.data.date);
     return date && date > latest ? date : latest;
@@ -184,5 +223,5 @@ function configure(eleventyConfig) {
   });
 }
 
-module.exports = { isoDate, absoluteUrl, scriptJSON, published, indexable, relatedPosts, metadata,
+module.exports = { LOGO, isoDate, sitemapLastmod, absoluteUrl, scriptJSON, published, indexable, relatedPosts, metadata,
   OUTPUT_MARKER, OUTPUT_MARKER_CONTENT, htmlOutputSnapshot, cleanHtmlOutput, configure };

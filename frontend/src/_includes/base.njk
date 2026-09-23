@@ -1,13 +1,16 @@
-{# permalink:false pages are processed by Eleventy but have no navigable URL. #}
-{% if draft != true %}
 <!DOCTYPE html>
 <html lang="de">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>document.documentElement.classList.add('js');window.addEventListener('load',function(){if(!document.documentElement.classList.contains('nav-enhanced'))document.documentElement.classList.remove('js');});</script>
 
         {# Primary Meta Tags #}
-        {%- set social = imageMetadata | socialImage(socialImage or image or dashboardImage, socialImageAlt or imageAlt or dashboardImageAlt) -%}
+        {#- Pick the alt from the same field that supplied the preview image; never reuse another image's description. -#}
+        {%- if socialImage -%}{%- set socialAlt = socialImageAlt -%}
+        {%- elif image -%}{%- set socialAlt = imageAlt -%}
+        {%- elif dashboardImage -%}{%- set socialAlt = dashboardImageAlt -%}{%- endif -%}
+        {%- set social = (socialImage or image or dashboardImage) | socialImageMeta(socialAlt) -%}
         {%- set seo = {site: site, page: page, pagination: pagination, title: title, metaTitle: metaTitle, metaDescription: metaDescription, excerpt: excerpt, description: description, image: image, social: social, date: date, lastUpdated: lastUpdated, isPost: isPost, isTopicPage: isTopicPage, topic: topic, draft: draft, noindex: noindex} | seoMetadata -%}
         {%- set metaTitleValue = seo.title -%}
         {%- set metaDescriptionValue = seo.description -%}
@@ -17,14 +20,15 @@
         <meta name="description" content="{{ metaDescriptionValue }}">
         <meta name="author" content="{{ site.author }}">
 
-        {# Canonical URL #}
+        {# Canonical URL: indexable pages only, never on noindex utility pages #}
+        {%- if not seo.noindex %}
         <link rel="canonical" href="{{ seo.url }}">
+        {%- endif %}
 
-        {# Google Ad Sense #}
-        {% if not seo.noindex and (seo.isPost or pagination) and ads != false %}
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6146112394026755"
-     crossorigin="anonymous"></script>
-        {% endif %}
+        {# Google AdSense: controlled only by the site-wide site.adsense.enabled switch #}
+        {%- if site.adsense and site.adsense.enabled %}
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ site.adsense.client | urlencode }}" crossorigin="anonymous"></script>
+        {%- endif %}
 
         {# Open Graph / Facebook #}
         <meta property="og:type" content="{{ 'article' if seo.isPost else 'website' }}">
@@ -35,9 +39,11 @@
         <meta property="og:image:width" content="{{ social.width }}">
         <meta property="og:image:height" content="{{ social.height }}">
         <meta property="og:image:type" content="{{ social.type }}">
+        {%- if social.alt %}
         <meta property="og:image:alt" content="{{ social.alt }}">
+        {%- endif %}
         <meta property="og:locale" content="de_DE">
-        <meta property="og:site_name" content="Databearer">
+        <meta property="og:site_name" content="{{ site.name }}">
         {% if seo.isPost and date %}
             <meta property="article:published_time" content="{{ date | htmlDateString }}">
             {% if lastUpdated %}
@@ -51,7 +57,9 @@
         <meta name="twitter:title" content="{{ metaTitleValue }}">
         <meta name="twitter:description" content="{{ metaDescriptionValue }}">
         <meta name="twitter:image" content="{{ metaImageValue }}">
+        {%- if social.alt %}
         <meta name="twitter:image:alt" content="{{ social.alt }}">
+        {%- endif %}
 
         {# Favicon #}
         <link rel="icon" type="image/png" sizes="32x32" href="/images/logo_circle.png">
@@ -73,6 +81,7 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
+        <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
         <header class="site-header">
             <div class="container">
                 <button class="topics-menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
@@ -155,4 +164,3 @@
         <script src="/js/menu.js"></script>
     </body>
 </html>
-{% endif %}

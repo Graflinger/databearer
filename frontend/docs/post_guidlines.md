@@ -1,78 +1,51 @@
 # Post QA Guide (Pre-Publish)
 
-Use this checklist when preparing or reviewing a post, together with the
-[SEO contract and output checks](../../docs/seo.md). Completing it does not authorize
-publication, commits, pushes or deployment. SEO hygiene does not promise rankings.
+This is a short checklist for preparing or reviewing a post. The rules and their
+reasons live in the [SEO and authoring contract](../../docs/seo.md). Completing the
+checklist does not authorize publication, commits, pushes or deployment, and it does
+not promise rankings.
 
 ## Frontmatter
-- `title`: Clear, accurate claim with timeframe or scope where needed.
-- `date`: Explicit publication date in ISO format (`YYYY-MM-DD`).
-- `draft: true`: Boolean for work in progress. The inherited computed permalink
-  suppresses output; do not override it or the computed collection exclusion.
-  A future date does not hide a post. Remove/set false only when ready to publish.
-- `excerpt`: Concise, accurate summary of the evidence; no fixed character quota.
-- `image`: Local `/images/...` path under `frontend/src/images/`. Curated blog-card
-  sources normally use 1408x800; preserve the source. The build creates responsive
-  variants in ignored `_site/assets/images/` and does not fetch remote sources.
-- `imageAlt`: Meaningful description for informative hero content; default empty
-  for decoration. Card images are decorative with empty alt.
-- `imageText`: Visible caption, distinct from alternative text.
-- `socialImage` / `socialImageAlt`: Optional local image override and description
-  for social previews. Metadata uses a raster variant and its actual dimensions.
-- `topic`: At least one of: `energie`, `wirtschaft`, `politik-und-gesellschaft`.
-- `lastUpdated`: Actual date of a substantive editorial/data/chart revision. Omit
-  until needed; never derive it from build time or refresh it for incidental builds.
-- `metaTitle` / `metaDescription`: Optional accurate overrides, consistent with the
-  visible title, excerpt and evidence. No required keyword list or length quota.
 
-## Page Structure
-- Exactly one H1 (the template handles it).
-- Visible linked author is supplied automatically by the post layout from `site.author`.
-- Body uses H2/H3 (no additional H1 in Markdown).
-- First section includes a 1-2 sentence key takeaway.
-- Use semantic sections, paragraphs, lists and tables, not visual styling alone.
-- Include a short Methodik/Datenquellen section near the end.
+- [ ] `title` is an accurate claim with scope or timeframe and has no brand suffix.
+  `metaTitle`/`metaDescription` are optional and must be accurate.
+- [ ] `excerpt` is plain text in 1–2 sentences, with the key finding first and no
+  draft labels. It becomes the meta description, card text, search excerpt and feed
+  summary ([Content guidance](../../docs/seo.md#content-guidance)).
+- [ ] `date` is explicit (`YYYY-MM-DD`). `lastUpdated` is set only for a real
+  substantive revision.
+- [ ] `draft: true` is present while drafting and removed for publication, together
+  with any extra `eleventyExcludeFromCollections`, `excludeFromSitemap` or
+  `permalink` overrides added while drafting ([Drafts](../../docs/seo.md#drafts)).
+- [ ] `image` and optional `socialImage` are local `/images/...` files with the exact
+  letter case. `imageAlt`/`socialImageAlt` describe the image and are left empty only
+  for decorative images. `imageText` is the visible caption
+  ([Images](../../docs/seo.md#images)).
+- [ ] `topic` includes at least one of `energie`, `wirtschaft`,
+  `politik-und-gesellschaft`.
 
-## Charts & Data
-- Every chart has visible static HTML evidence: a verified summary with key values
-  or a table with caption and headers. It must be useful without JavaScript.
-- State units, observation period, geography/scope and incomplete coverage. Keep
-  prose/table figures consistent with the same frozen evidence used by the chart.
-- Chart-only annual summaries need verified annual findings/tables as well; do not
-  invent figures or assume an annual-summary helper exists.
-- Each chart lists its source with a descriptive link. Verify legacy citations
-  against original sources; record unresolved references instead of fabricating them.
-- Chart container IDs are unique.
-- Load ECharts once, then its dependent chart scripts, all with ordered `defer`.
-  Do not use `async` for this dependency chain.
+## Body
 
-## Links
-- Include relevant internal links to related posts/topic pages and authoritative
-  external data links where they support the argument; do not add links to meet a quota.
-- Use descriptive link text, rather than repeated “hier” or “mehr”. Verify destinations.
+- [ ] There is no H1 in the Markdown; use H2/H3. The key takeaway comes first, and a
+  Methodik/Datenquellen section comes last.
+- [ ] Each chart follows the [chart pattern](../../docs/seo.md#charts-and-evidence):
+  - one deferred ECharts script;
+  - a container with `role="img"`, `aria-labelledby` and `aria-describedby`;
+  - a `chart-description` longer than 40 characters;
+  - static values or a captioned table, units, period and a verified source link.
+- [ ] Wide tables are wrapped in `.table-scroll`
+  ([Styling](../../docs/seo.md#styling-and-navigation)). Datawrapper embeds use
+  `loading="lazy"`, have a `title` and a visible source credit.
+- [ ] Internal links use `/posts/<year>/<slug>/` with a trailing slash. Link text is
+  descriptive (never "hier"). Citations are verified, and unresolved ones are
+  recorded, not invented.
+- [ ] Corrections update `lastUpdated` and add a visible `*Korrektur vom …*` note.
 
-## Output checks
+## Checks
 
-From `frontend/`:
+From `frontend/`, run `npm test -- --runInBand`, `npm run lint`, `npm run build`, then
+`npm run test:seo-output` ([Checks](../../docs/seo.md#checks)). Then:
 
-```bash
-npm test -- --runInBand
-npm run lint
-npm run build
-```
-
-Run `npm run test:seo-output` after building, then follow the generated-output
-checklist in the [SEO guide](../../docs/seo.md).
-
-- Inspect the generated post, topic pages and related links on desktop/mobile,
-  including charts, captions, keyboard access and static evidence without JavaScript.
-- Confirm draft HTML is absent after a full production rebuild, including a post
-  previously built as public. Confirm absence from collections, sitemap, both feeds
-  and search. A watch build alone does not establish stale-output removal.
-- `noindex: true` is for public utility pages; it keeps the page reachable.
-  `excludeFromSitemap` alone is not an indexing prohibition or access control.
-- Inspect canonical URL, accurate title/description, JSON-LD, real dates, and social
-  image URL/type/alt/dimensions in generated HTML.
-- Preserve `/feed.json` item fields for the private `video-generator`, including
-  original `image`, optional `_image_alt`, dates, tags and `content_html` semantics.
-- Review changed files for incidental generated assets/data before reporting results.
+- [ ] Review the post, topic pages and related cards on desktop and mobile, with and
+  without JavaScript.
+- [ ] Review `git status` for incidental CSS, chart or data changes.

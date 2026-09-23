@@ -9,22 +9,34 @@ const enabled = process.env.SEO_OUTPUT_CHECK === '1';
 const output = path.join(__dirname, '../_site');
 const source = path.join(__dirname, '../src');
 const origin = new URL(site.url).origin;
-const batteryRoute = '/posts/2026/batteriespeicher-wandel/';
+const JS_CLASS_SCRIPT = "document.documentElement.classList.add('js');window.addEventListener('load',function(){if(!document.documentElement.classList.contains('nav-enhanced'))document.documentElement.classList.remove('js');});";
+const ADSENSE_SCRIPT = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+const BRAND_ALT = 'Databearer-Logo';
 const html = (text) => new DOMParser().parseFromString(text, 'text/html');
 const read = (file) => fs.readFileSync(path.join(output, file), 'utf8');
 const absolute = (value, base = `${origin}/`) => new URL(value, base).href;
+const trimSlash = (pathname) => pathname.replace(/\/+$/, '') || '/';
 
-function filesBelow(directory, extension) {
+function filesBelow(directory, extension, skip = []) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const file = path.join(directory, entry.name);
-    if (entry.isSymbolicLink()) throw new Error(`Unexpected generated-output symlink: ${file}`);
-    if (entry.isDirectory()) return filesBelow(file, extension);
-    return entry.isFile() && file.endsWith(extension) ? [file] : [];
+    if (entry.isSymbolicLink()) throw new Error(`Unexpected symlink: ${file}`);
+    if (entry.isDirectory()) return skip.includes(entry.name) ? [] : filesBelow(file, extension, skip);
+    return entry.isFile() && extension.test(file) ? [file] : [];
   }).sort();
 }
 
 function routeFor(file) {
   return `/${path.relative(output, file).split(path.sep).join('/')}`.replace(/index\.html$/, '');
+}
+
+// Eleventy's implicit route for a source template, or its explicit permalink.
+function templateRoute(file, data) {
+  if (data.permalink === false) return null;
+  if (typeof data.permalink === 'string') return data.permalink.includes('{') ? null : data.permalink;
+  const stem = path.relative(source, file).split(path.sep).join('/').replace(/\.(md|njk)$/, '')
+    .replace(/(^|\/)index$/, '');
+  return stem ? `/${stem}/` : '/';
 }
 
 function one(document, selector) {
@@ -66,6 +78,16 @@ function imageReferences(document) {
   return urls;
 }
 
+function jsonLd(document) {
+  return [...document.querySelectorAll('script[type="application/ld+json"]')].map((node) => JSON.parse(node.textContent));
+}
+
+function imageObjects(value) {
+  if (!value || typeof value !== 'object') return [];
+  const nested = Object.values(value).flatMap(imageObjects);
+  return value['@type'] === 'ImageObject' ? [value, ...nested] : nested;
+}
+
 function xml(file, root, namespace) {
   const document = new DOMParser().parseFromString(read(file), 'application/xml');
   expect(document.querySelector('parsererror')).toBeNull();
@@ -99,33 +121,46 @@ function feedContent(content, base) {
 
 // Do not inspect _site at all during the ordinary, build-independent Jest suite.
 // The opt-in gate is read-only and never builds or creates a fixture in _site.
-const htmlFiles = enabled ? filesBelow(output, '.html') : [];
-(enabled ? describe : describe.skip)('production generated-output SEO', () => {
-  let pages, posts, jsonFeed, atom, sitemap, search;
+const htmlFiles = enabled && fs.existsSync(output) ? filesBelow(output, /\.html$/) : [];
+if (enabled && !htmlFiles.length) {
+  test('generated output exists', () => {
+    throw new Error(`No generated HTML in ${output}. Run npm run build first.`);
+  });
+}
+
+(htmlFiles.length ? describe : describe.skip)('production generated-output SEO', () => {
+  let pages, texts, posts, drafts, jsonFeed, atom, sitemap, search, brandImage;
   const imageMetadata = new Map();
   const dimensions = (filename) => {
     if (!imageMetadata.has(filename)) imageMetadata.set(filename, sharp(filename).metadata());
     return imageMetadata.get(filename);
   };
+  const noindex = (document) => meta(document, 'robots') === 'noindex, follow';
 
   beforeAll(() => {
-    expect(htmlFiles.length).toBeGreaterThan(0);
-    pages = new Map(htmlFiles.map((file) => [absolute(routeFor(file)), html(fs.readFileSync(file, 'utf8'))]));
-    posts = filesBelow(path.join(source, 'posts'), '.md').map((file) => {
+    texts = new Map(htmlFiles.map((file) => [absolute(routeFor(file)), fs.readFileSync(file, 'utf8')]));
+    pages = new Map([...texts].map(([url, text]) => [url, html(text)]));
+    const templates = filesBelow(source, /\.(md|njk)$/, ['_includes', '_data', 'data_ingestion']).map((file) => {
       const data = matter(fs.readFileSync(file, 'utf8')).data;
-      const route = data.permalink || `/${path.relative(source, file).split(path.sep).join('/').replace(/\.md$/, '/')}`;
-      return { ...data, url: absolute(route) };
+      const route = templateRoute(file, data);
+      return { ...data, file, route, url: route && absolute(route), isPost: file.startsWith(path.join(source, 'posts') + path.sep) };
     });
+    posts = templates.filter((template) => template.isPost && template.file.endsWith('.md'));
+    drafts = templates.filter((template) => template.draft === true);
     jsonFeed = JSON.parse(read('feed.json'));
     atom = xml('feed.xml', 'feed', 'http://www.w3.org/2005/Atom');
     sitemap = xml('sitemap.xml', 'urlset', 'http://www.sitemaps.org/schemas/sitemap/0.9');
     search = JSON.parse(read('search.json'));
+    // The homepage declares no image, so it carries the default brand preview.
+    brandImage = meta(pages.get(absolute('/')), 'og:image');
   });
 
-  test.each(htmlFiles.map((file) => [routeFor(file)]))('%s: canonical, title, H1, description and JSON-LD', (route) => {
+  test.each(htmlFiles.map((file) => [routeFor(file)]))('%s: canonical (indexable only), title, H1, description and JSON-LD', (route) => {
     const url = absolute(route);
     const document = pages.get(url);
-    expect(one(document, 'link[rel="canonical"]').getAttribute('href')).toBe(url);
+    expect(['index, follow', 'noindex, follow']).toContain(meta(document, 'robots'));
+    const canonical = [...document.querySelectorAll('link[rel="canonical"]')].map((node) => node.getAttribute('href'));
+    expect(canonical).toEqual(noindex(document) ? [] : [url]);
     const title = one(document, 'title').textContent.trim();
     expect(title).not.toBe('');
     expect(one(document, 'h1').textContent.trim()).not.toBe(''); // Includes 404.
@@ -135,8 +170,7 @@ const htmlFiles = enabled ? filesBelow(output, '.html') : [];
       expect(meta(document, `${prefix}:title`)).toBe(title);
       expect(meta(document, `${prefix}:description`)).toBe(description);
     }
-    const entities = [...document.querySelectorAll('script[type="application/ld+json"]')]
-      .map((node) => JSON.parse(node.textContent));
+    const entities = jsonLd(document);
     expect(entities.length).toBeGreaterThan(0);
     expect(entities[0]).toMatchObject({ '@context': 'https://schema.org', url });
     for (const entity of entities) expect(entity['@type']).toBeTruthy();
@@ -146,11 +180,44 @@ const htmlFiles = enabled ? filesBelow(output, '.html') : [];
         '@type': 'BlogPosting',
         datePublished: new Date(post.date).toISOString(),
         dateModified: new Date(post.lastUpdated || post.date).toISOString(),
+        publisher: { '@type': 'Organization', name: site.name },
       });
     }
   });
 
-  test.each(htmlFiles.map((file) => [routeFor(file)]))('%s: local images and measured raster social metadata', async (route) => {
+  test.each(htmlFiles.map((file) => [routeFor(file)]))('%s: early JS class, site-wide ad switch and explicit-only social alt', (route) => {
+    const url = absolute(route);
+    const document = pages.get(url);
+    const head = [...document.head.children];
+    const inline = head.filter((node) => node.localName === 'script' && node.textContent === JS_CLASS_SCRIPT);
+    expect(inline).toHaveLength(1);
+    const script = head.indexOf(inline[0]);
+    expect(inline[0].hasAttribute('src')).toBe(false);
+    expect(head[script - 1].getAttribute('name')).toBe('viewport');
+    const stylesheet = head.findIndex((node) => node.localName === 'link' && node.getAttribute('rel') === 'stylesheet');
+    expect(stylesheet).toBeGreaterThan(script);
+    const text = texts.get(url);
+    if (site.adsense?.enabled) {
+      const ads = [...document.querySelectorAll(`script[src^="${ADSENSE_SCRIPT}"]`)];
+      expect(ads).toHaveLength(1);
+      expect(new URL(ads[0].getAttribute('src')).searchParams.get('client')).toBe(site.adsense.client);
+    } else {
+      expect(text).not.toMatch(/pagead2\.googlesyndication\.com|adsbygoogle/);
+    }
+    expect(text).not.toContain('Redaktionelle Illustration');
+    const alts = [...document.querySelectorAll('meta[property="og:image:alt"]')].map((node) => node.content);
+    expect([...document.querySelectorAll('meta[name="twitter:image:alt"]')].map((node) => node.content)).toEqual(alts);
+    expect(alts.length).toBeLessThanOrEqual(1);
+    for (const alt of alts) expect(alt.trim()).not.toBe('');
+    if (meta(document, 'og:image') === brandImage) expect(alts).toEqual([BRAND_ALT]);
+    const post = posts.find((item) => item.url === url);
+    if (post && (post.socialImage || post.image)) {
+      const explicit = post.socialImage ? post.socialImageAlt : post.imageAlt;
+      expect(alts).toEqual(explicit ? [explicit] : []);
+    }
+  });
+
+  test.each(htmlFiles.map((file) => [routeFor(file)]))('%s: local images and measured raster social/structured-data metadata', async (route) => {
     const url = absolute(route);
     const document = pages.get(url);
     for (const value of imageReferences(document)) localFile(value, url);
@@ -169,16 +236,41 @@ const htmlFiles = enabled ? filesBelow(output, '.html') : [];
     expect(meta(document, 'og:image:type')).toBe(`image/${actual.format}`);
     expect({ width: Number(meta(document, 'og:image:width')), height: Number(meta(document, 'og:image:height')) })
       .toEqual({ width: actual.width, height: actual.height });
+    for (const image of jsonLd(document).flatMap(imageObjects)) {
+      expect(new URL(image.url).origin).toBe(origin);
+      const measured = await dimensions(localFile(image.url, url));
+      if ('width' in image || 'height' in image) {
+        expect({ url: image.url, width: image.width, height: image.height })
+          .toEqual({ url: image.url, width: measured.width, height: measured.height });
+      }
+    }
   });
 
-  test('canonical URLs and page titles are unique, including pagination', () => {
-    for (const selector of ['link[rel="canonical"]', 'title']) {
-      const values = [...pages.values()].map((document) => {
-        const node = one(document, selector);
-        return node.getAttribute('href') || node.textContent.trim();
-      });
-      expect(new Set(values).size).toBe(values.length);
-    }
+  test('default brand preview is the measured 1200x630 JPEG named as the logo', async () => {
+    const home = pages.get(absolute('/'));
+    expect(meta(home, 'og:image:alt')).toBe(BRAND_ALT);
+    expect(await dimensions(localFile(brandImage, absolute('/')))).toMatchObject({ width: 1200, height: 630, format: 'jpeg' });
+  });
+
+  test('canonical URLs of indexable pages and all page titles are unique, including pagination', () => {
+    const documents = [...pages.values()];
+    const canonicals = documents.flatMap((document) => [...document.querySelectorAll('link[rel="canonical"]')]
+      .map((node) => node.getAttribute('href')));
+    expect(canonicals).toHaveLength(documents.filter((document) => !noindex(document)).length);
+    expect(new Set(canonicals).size).toBe(canonicals.length);
+    const titles = documents.map((document) => one(document, 'title').textContent.trim());
+    expect(new Set(titles).size).toBe(titles.length);
+  });
+
+  test('homepage structured data names the WebSite and Organization with logo and profiles', () => {
+    const entities = jsonLd(pages.get(absolute('/')));
+    expect(entities.find((entity) => entity['@type'] === 'WebSite'))
+      .toMatchObject({ name: site.name, alternateName: [site.title], url: absolute('/') });
+    expect(entities.find((entity) => entity['@type'] === 'Organization')).toMatchObject({
+      name: site.name, url: absolute('/'), description: site.description, sameAs: site.social,
+      founder: { '@type': 'Person', name: site.author, url: absolute(site.authorUrl) },
+      logo: { '@type': 'ImageObject', url: absolute('/images/logo_transparent.png'), width: expect.any(Number), height: expect.any(Number) },
+    });
   });
 
   test('search includes every published feed article', () => {
@@ -188,24 +280,33 @@ const htmlFiles = enabled ? filesBelow(output, '.html') : [];
     expect(missing).toEqual([]);
   });
 
-  test('battery draft has no HTML or discovery references; search includes the dashboard', () => {
-    const battery = posts.find((post) => post.url === absolute(batteryRoute));
-    expect(battery).toMatchObject({ draft: true });
-    for (const draft of posts.filter((post) => post.draft === true)) {
-      expect(pages.has(draft.url)).toBe(false);
-      const slug = decodeURIComponent(new URL(draft.url).pathname);
-      for (const [url, document] of pages) {
-        expect(document.body.textContent).not.toContain(draft.title);
-        for (const link of document.querySelectorAll('[href]')) {
-          expect(decodeURIComponent(new URL(link.getAttribute('href'), url).pathname)).not.toBe(slug);
+  test('source drafts, if any, have no HTML and no discovery references', () => {
+    const discovery = [JSON.stringify(jsonFeed), JSON.stringify(search), read('feed.xml'), atom.documentElement.textContent,
+      read('sitemap.xml'), sitemap.documentElement.textContent];
+    for (const draft of drafts) {
+      if (draft.url && draft.route !== '/') {
+        const pathname = new URL(draft.url).pathname;
+        expect(pages.has(draft.url)).toBe(false);
+        expect(fs.existsSync(path.join(output, decodeURIComponent(pathname), pathname.endsWith('/') ? 'index.html' : ''))).toBe(false);
+        for (const [url, document] of pages) {
+          for (const link of document.querySelectorAll('[href]')) {
+            expect(trimSlash(decodeURIComponent(new URL(link.getAttribute('href'), url).pathname)))
+              .not.toBe(trimSlash(decodeURIComponent(pathname)));
+          }
+        }
+        for (const text of discovery) {
+          expect(text).not.toContain(decodeURIComponent(pathname));
+          expect(text).not.toContain(pathname);
         }
       }
-      for (const discovery of [JSON.stringify(jsonFeed), JSON.stringify(search), atom.documentElement.textContent, sitemap.documentElement.textContent]) {
-        expect(discovery).not.toContain(slug);
-        expect(discovery).not.toContain(new URL(draft.url).pathname);
-        expect(discovery).not.toContain(draft.title);
+      if (draft.isPost && draft.title) {
+        for (const document of pages.values()) expect(document.body.textContent).not.toContain(draft.title);
+        for (const text of discovery) expect(text).not.toContain(draft.title);
       }
     }
+  });
+
+  test('search lists only public, indexable pages, including the dashboard', () => {
     expect(Array.isArray(search)).toBe(true);
     expect(search.some((item) => item.url === '/dashboards/strom/')).toBe(true);
     expect(new Set(search.map((item) => item.url)).size).toBe(search.length);
@@ -216,9 +317,11 @@ const htmlFiles = enabled ? filesBelow(output, '.html') : [];
     }
   });
 
-  test('sitemap contains only public HTML and explicit content dates; utility pages are noindex', () => {
+  test('sitemap contains only public HTML with date-only explicit content dates; utility pages are noindex', () => {
     for (const route of ['/suche/', '/404.html']) {
-      expect(meta(pages.get(absolute(route)), 'robots')).toBe('noindex, follow');
+      const document = pages.get(absolute(route));
+      expect(meta(document, 'robots')).toBe('noindex, follow');
+      expect(document.querySelector('link[rel="canonical"]')).toBeNull();
     }
     const entries = [...sitemap.querySelectorAll('url')];
     expect(entries.length).toBeGreaterThan(0);
@@ -226,19 +329,27 @@ const htmlFiles = enabled ? filesBelow(output, '.html') : [];
     expect(new Set(urls).size).toBe(urls.length);
     expect(urls).toContain(absolute('/dashboards/strom/'));
     expect(urls).toContain(absolute('/1/'));
+    expect(urls).toContain(absolute('/about/')); // The author URL of every article.
+    for (const route of ['/suche/', '/404.html']) expect(urls).not.toContain(absolute(route));
     for (const entry of entries) {
       const url = absoluteLink(one(entry, 'loc').textContent);
       expect(pages.has(url)).toBe(true); // Rejects feeds, JSON, robots and machine routes.
       expect(meta(pages.get(url), 'robots')).not.toContain('noindex');
       const post = posts.find((item) => item.url === url);
       if (post) {
-        expect(one(entry, 'lastmod').textContent).toBe(new Date(post.lastUpdated || post.date).toISOString());
+        const lastmod = one(entry, 'lastmod').textContent;
+        expect(lastmod).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(lastmod).toBe(new Date(post.lastUpdated || post.date).toISOString().slice(0, 10));
       } else {
         // Current static/dashboard pages have no explicit editorial revision date.
         expect(entry.querySelector('lastmod')).toBeNull();
       }
     }
     expect(read('robots.txt')).toContain(`Sitemap: ${origin}/sitemap.xml`);
+  });
+
+  test('Cloudflare header rules are published unchanged', () => {
+    expect(read('_headers')).toBe(fs.readFileSync(path.join(source, '_headers'), 'utf8'));
   });
 
   test('JSON Feed preserves downstream fields, source image/caption semantics and absolute content links', () => {

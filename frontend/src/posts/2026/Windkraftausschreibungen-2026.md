@@ -1,7 +1,7 @@
 ---
 title: "Windkraftausschreibungen 2026: Starker Jahresauftakt"
 date: 2026-06-21
-lastUpdated: 2026-06-21
+lastUpdated: 2026-09-23
 excerpt: "Die erste Windkraftausschreibung 2026 ist deutlich überzeichnet, die Nachfrage steigt kräftig und der Zuschlagswert fällt auf den niedrigsten Stand seit 2018."
 image: "/images/blog_card_images/2026/windkraftausschreibungen-2026.png"
 imageText: "Die Windkraftausschreibungen starten 2026 mit hoher Nachfrage und niedrigen Preisen"
@@ -58,7 +58,7 @@ Im folgenden Diagramm ist gut zu erkennen, wie die Gebotsmenge (die Nachfrage) i
   <div id="zuschlagsmenge_in_kw_2026" role="img" aria-labelledby="zuschlagsmenge_in_kw_2026-heading" aria-describedby="zuschlagsmenge_in_kw_2026-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/ausschreibung_wind_2026/zuschlagsmenge_in_kw.js"></script>
 
-  <div style="overflow-x: auto;" tabindex="0" role="region" aria-labelledby="zuschlagsmenge_in_kw_2026-heading">
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="zuschlagsmenge_in_kw_2026-heading">
     <table id="zuschlagsmenge_in_kw_2026-table">
       <caption>Ausgewählte Gebotstermine, Mengen in kW; Datenstand Februarrunde 2026</caption>
       <thead><tr><th scope="col">Gebotstermin</th><th scope="col">Ausschreibungsvolumen (kW)</th><th scope="col">Zuschlagsmenge (kW)</th><th scope="col">Gebotsmenge (kW)</th></tr></thead>
@@ -123,3 +123,5 @@ Grundlage dieses Beitrags sind die Ergebnisse der Ausschreibungen für Windenerg
 <div class="chart-sources">
   <strong>Datenquelle: </strong><a href="https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/Ausschreibungen/Wind_Onshore/BeendeteAusschreibungen/start.html">Bundesnetzagentur – Beendete Ausschreibungen Wind an Land</a>
 </div>
+
+*Korrektur vom 23. September 2026: In einer früheren Fassung hieß es im Ausblick, die Gebotstermine im Mai, August und November stünden noch aus. Zum Veröffentlichungszeitpunkt am 21. Juni 2026 war der Gebotstermin am 1. Mai bereits verstrichen. Die ausgewerteten Daten und Zahlen sind unverändert.*

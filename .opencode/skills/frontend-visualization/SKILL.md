@@ -109,50 +109,48 @@ generation. If you keep configs in subfolders, either call the generator with th
    - Confirm files appear under `src/js/charts/<config-file-name>/`.
 
 4. **Embed in a post/page**
-   - Load ECharts once per page before chart scripts; use ordered `defer` for both.
-     Do not use `async` for dependent scripts.
-   - Add a semantic chart section with a unique container ID, static evidence,
-     units, observation period, and a descriptive source link.
+
+   Use this pattern. It passes `tests/article-chart-evidence.test.js`; keep it free of
+   blank lines or indentation of 4+ spaces so Markdown keeps it as HTML:
 
    ```html
    <script defer src="/js/lib/echarts.min.js"></script>
 
-   <section class="chart-section" aria-labelledby="my-chart-heading">
-     <h3 id="my-chart-heading">Chart heading: measure and period</h3>
-     <p id="my-chart-summary" class="chart-description">
-       State the verified finding, key values, units and observation period here.
-     </p>
-
-     <div id="my-chart" aria-describedby="my-chart-summary"
-          style="width: 100%; height: 400px;"></div>
+   <div class="chart-section">
+     <h3 id="my-chart-heading">Measure, geography and observation period</h3>
+     <p class="chart-description" id="my-chart-description">Verified key finding with values, units and period.</p>
+     <div id="my-chart" role="img" aria-labelledby="my-chart-heading" aria-describedby="my-chart-description" style="width: 100%; height: 400px;"></div>
      <script defer src="/js/charts/my-config/my-chart.js"></script>
-
-     <p class="chart-sources">
-       <strong>Quelle: </strong><a href="https://example.com/dataset">Publisher – dataset title</a>
-     </p>
-   </section>
+     <div class="table-scroll" tabindex="0" role="region" aria-labelledby="my-chart-heading">
+       <table id="my-chart-table">
+         <caption>Ausgewählte Werte, Einheit, Datenstand</caption>
+         <thead><tr><th scope="col">Jahr</th><th scope="col">Wert (Einheit)</th></tr></thead>
+         <tbody><tr><th scope="row">2024</th><td>1.234</td></tr></tbody>
+       </table>
+     </div>
+     <div class="chart-sources"><strong>Quelle: </strong><a href="https://example.com/dataset">Publisher – dataset title</a></div>
+   </div>
    ```
 
-   Replace the example source and summary with verified evidence. Where comparisons
-   need more detail, include a real HTML table with caption, column/row headers,
-   units and period. Summaries/tables must use the same frozen evidence as the chart,
-   be visible without JavaScript, and be updated together. For chart-only annual
-   articles, add a verified annual summary/table rather than relying on canvas text.
-   Inspect any annual-summary helper before documenting its API; do not assume one exists.
+   - Include ECharts **once** per page, before any chart script, and give every
+     script `defer`, never `async`.
+   - The container `id` must equal `containerId`. The heading must be an H2–H4 with
+     an `id`, and the `chart-description` must be longer than 40 characters. All
+     `id`s must be unique.
+   - Tables use `id="<containerId>-table"`, a caption containing "Auswahl" or
+     "Ausgewählte", `th scope="col"`/`th scope="row"`, and 2–6 rows. Values must
+     match the frozen chart data (German number format, `—` for gaps).
+   - Replace the placeholders with verified evidence and a verified source.
+
+   The full requirements are in
+   [Charts and evidence](../../../docs/seo.md#charts-and-evidence).
 
 5. **Build and inspect**
 
-   ```bash
-   npm test -- --runInBand
-   npm run lint
-   npm run build
-   ```
-
-   Follow the [generated SEO output checklist](../../../docs/seo.md), including
-   `npm run test:seo-output` after building. Check the
-   rendered page on desktop/mobile, browser console, and evidence with JavaScript
-   disabled. Confirm drafts are absent from HTML, collections, sitemap, feeds and
-   search after a full production rebuild, not only in watch output.
+   Run the [checks](../../../docs/seo.md#checks): `npm test -- --runInBand`,
+   `npm run lint`, `npm run build`, `npm run test:seo-output`. Check the page on
+   desktop and mobile, the browser console, and the evidence with JavaScript
+   disabled.
 
 ## Supported config fields
 
@@ -177,20 +175,21 @@ Common optional fields:
 - **Data load error**: Verify the CSV exists in `src/data_ingestion/data/` and headers match keys.
 - **Chart not visible**: Confirm the container ID matches `containerId`, ECharts is loaded first,
   and the generated script path uses `/js/charts/<config-basename>/<outputFile>`.
+- **Chart evidence test fails**: Compare the markup with the pattern in step 4; the
+  test reads `containerId` from the generated script.
 - **Stale chart**: Re-run `npm run build:charts` and clear browser cache.
 - **Build loop risk**: Generated chart files are watch-ignored; do not remove that setting in
   `.eleventy.js`.
 
 ## Quality expectations
 
-- Every chart needs static HTML evidence, units, observation period and a verified
-  descriptive source link. Verify legacy citations instead of fabricating missing
-  provenance; label incomplete coverage and uncertainty.
-- Use semantic headings/sections and accessible tables. Chart tooltip text is not
-  a substitute for visible evidence, and summaries must not overstate results.
-- Keep title/excerpt consistent with the data and set `lastUpdated` only for a real
-  substantive revision, never during an incidental rebuild.
-- Use unique container IDs across the page.
+- Every chart has static HTML evidence (description plus table where useful), units,
+  period and a verified, descriptive source link. Tooltips and canvas text do not
+  count. Label incomplete coverage, and never invent provenance.
+- Prose, tables and charts use the same frozen data. Do not refresh frozen article
+  data incidentally, and set `lastUpdated` only for a real revision.
+- Builders keep the authored `aria-labelledby`/`aria-describedby` and add ECharts
+  ARIA labels only when none is given.
 - Avoid committing generated or copied data unless it is intentionally part of the reproducible
   frontend chart inputs.
 - Keep frontend CSV column names synchronized with pipeline export scripts.

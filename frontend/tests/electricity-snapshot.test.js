@@ -78,7 +78,7 @@ test('both Eleventy rendering filters fail on changed observations with the old 
   const registerFilter = (name, fn) => { filters[name] = fn; };
   const config = { on: jest.fn(), ignores: { add: jest.fn() }, watchIgnores: { add: jest.fn() },
     addFilter: registerFilter, addAsyncFilter: registerFilter, getFilter: (name) => filters[name], addPassthroughCopy: jest.fn(),
-    addPlugin: jest.fn(), addGlobalData: jest.fn(), addCollection: jest.fn(),
+    addPlugin: jest.fn(), addGlobalData: jest.fn(), addCollection: jest.fn(), addPreprocessor: jest.fn(),
     addWatchTarget: jest.fn(), addNunjucksAsyncShortcode: jest.fn() };
   require('../.eleventy.js')(config);
   const changed = replaceObservation(raw, '123.456');

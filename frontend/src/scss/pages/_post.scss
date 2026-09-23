@@ -1,6 +1,9 @@
 /* Single Post - Modern Minimalist Style */
 .post-content {
   --post-text: #374151;
+  --table-line: #e0e0e0;
+  --table-head: #f3f4f6;
+  --table-muted: #595959;
   max-width: 680px;
   margin: 0 auto;
   padding: 10px 15px;
@@ -55,7 +58,7 @@
 }
 
 .post-updated {
-  color: #c4ad61;
+  color: var(--prose-link);
   font-weight: 500;
 }
 
@@ -124,13 +127,98 @@
   color: inherit;
 }
 
-.post-content a {
-  color: var(--prose-link);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
+// Topic tags are separate links: pills instead of one continuous underlined phrase.
+.post-content .post-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 24px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
-.post-content [role='region'][tabindex='0']:focus-visible {
+.post-topics .post-topic-link {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1px solid #c4ad61;
+  border-radius: 999px;
+  color: var(--prose-link);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.post-topics .post-topic-link:hover {
+  background-color: rgba(196, 173, 97, 0.15);
+}
+
+/* Article tables: compact numeric evidence with row headers (th[scope='row']). */
+.post-content table {
+  width: 100%;
+  margin: 0 0 24px;
+  border-collapse: collapse;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.post-content caption {
+  caption-side: top;
+  padding: 0 0 8px;
+  color: var(--table-muted);
+  font-size: 14px;
+  text-align: left;
+}
+
+.post-content th,
+.post-content td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--table-line);
+  vertical-align: top;
+}
+
+.post-content thead th {
+  background-color: var(--table-head);
+  border-bottom-width: 2px;
+  font-weight: 600;
+  text-align: right;
+  vertical-align: bottom;
+}
+
+.post-content thead th:first-child,
+.post-content tbody th {
+  text-align: left;
+}
+
+.post-content tbody th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.post-content td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+// Text tables without row headers (e.g. Markdown tables on supporting pages)
+// stay left-aligned; browsers without :has() fall back to numeric alignment.
+.post-content table:not(:has(th[scope='row'])) {
+  th,
+  td {
+    text-align: left;
+  }
+}
+
+// Keyboard-focusable wrapper for tables wider than the article column.
+.table-scroll {
+  margin: 0 0 24px;
+  overflow-x: auto;
+}
+
+.table-scroll > table {
+  margin-bottom: 0;
+}
+
+.table-scroll:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }

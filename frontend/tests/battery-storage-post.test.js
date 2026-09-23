@@ -10,6 +10,11 @@ const { buildLineChart } = require('../src/data_ingestion/builders/lineChart');
 const { buildBarChart } = require('../src/data_ingestion/builders/barChart');
 const { validateBatteryStorage } = require('../src/data_ingestion/utils/batteryStorageValidation');
 
+// Jest cannot load Eleventy's ESM entry that .eleventy.js requires; the draft
+// policy is captured from the real production config with a recording config.
+jest.mock('@11ty/eleventy', () => ({ HtmlBasePlugin() {} }));
+const { productionPreprocessors } = require('./fixtures/seo-cleanup.cjs');
+
 const root = path.resolve(__dirname, '..');
 const post = matter(fs.readFileSync(path.join(root, 'src/posts/2026/batteriespeicher-wandel.md'), 'utf8'));
 const route = '/posts/2026/batteriespeicher-wandel/';
@@ -38,21 +43,23 @@ function optionFor(config, rows) {
 describe('battery storage static contract', () => {
   beforeEach(() => { document.body.innerHTML = markdown.render(post.content); });
 
-  test('explicit draft is collection-excluded and its permalink is suppressed in production', () => {
+  test('explicit draft is skipped by the production draft preprocessor before rendering', () => {
     expect(post.data.title).toBe('Weniger neue Batteriespeicher, mehr Speicherkapazität');
     expect(post.data.eleventyExcludeFromCollections).toBe(true);
     expect(post.data.excludeFromSitemap).toBe(true);
     expect(post.data.permalink).toBe(route);
     expect(post.data.draft).toBe(true);
-    const computed = require('../src/posts/posts.11tydata').eleventyComputed;
-    expect(computed.permalink(post.data)).toBe(false);
-    expect(computed.eleventyExcludeFromCollections(post.data)).toBe(true);
+    const inherited = require('../src/posts/posts.11tydata');
+    const [[name, extensions, skip]] = productionPreprocessors();
+    expect([name, extensions]).toEqual(['drafts', '*']);
+    // Boolean `draft: true` suppresses the file and all discovery in every run mode.
+    expect(skip({ ...inherited, ...post.data })).toBe(false);
+    expect(skip({ ...inherited, ...post.data, draft: false })).toBeUndefined();
     expect(post.data.image).toBeUndefined();
     expect(post.data.excerpt).toContain('Rechercheentwurf');
     expect(post.content).toContain('DRAFT – explorativer Rechercheentwurf');
     expect(document.querySelector('h1')).toBeNull();
     expect(document.querySelectorAll('h2')).toHaveLength(6);
-    const inherited = require('../src/posts/posts.11tydata');
     expect(inherited.layout).toBe('post.njk');
   });
 

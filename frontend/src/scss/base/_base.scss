@@ -15,7 +15,19 @@ body {
   background-color: #fff;
 }
 
+// Links use the accessible link colour but no underline by default: cards, topic
+// tags, navigation and dashboard cards are identified by their component styling.
 a {
+  color: var(--prose-link);
+  text-decoration: none;
+}
+
+// Only links inside running text are underlined, so they remain distinguishable
+// from the surrounding text without relying on colour alone.
+.post-content :where(p, li, td, th, dd, dt, blockquote, figcaption, caption) a,
+.post-meta a,
+.chart-sources a,
+.search-fallback a {
   color: var(--prose-link);
   text-decoration: underline;
   text-underline-offset: 0.15em;

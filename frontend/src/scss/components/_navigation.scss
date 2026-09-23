@@ -35,7 +35,7 @@
 }
 
 .topics-menu-toggle:focus {
-  outline: 2px solid #c4ad61;
+  outline: 2px solid var(--prose-link);
   outline-offset: 2px;
   border-radius: 8px;
 }
@@ -120,7 +120,7 @@
 .topics-nav a:focus {
   background-color: #d9c176;
   color: #333;
-  outline: 2px solid #c4ad61;
+  outline: 2px solid var(--prose-link);
   outline-offset: 2px;
 }
 

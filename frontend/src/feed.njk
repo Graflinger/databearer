@@ -25,7 +25,7 @@ eleventyExcludeFromCollections: true
       <id>{{ site.url }}{{ post.url }}</id>
       {% set entryContent %}
       {%- if post.data.image %}
-      <img src="{{ post.data.image | absoluteUrl(site.url) }}" alt="{{ post.data.title }}" />
+      <img src="{{ post.data.image | absoluteUrl(site.url) }}" alt="{{ post.data.imageAlt or '' }}" />
       {%- endif %}
       {{ post.templateContent | safe }}
       {% endset %}

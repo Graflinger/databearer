@@ -113,73 +113,83 @@ Chart config structure:
 
 ### Post Frontmatter
 ```yaml
-title: "Post Title"
+title: "Post Title"                # accurate claim; no brand suffix
 date: 2025-01-01
-draft: true                       # boolean; suppresses post output while drafting
-excerpt: "Accurate summary of the key insight and scope"
+draft: true                        # boolean; remove when publishing
+excerpt: "Key finding first, 1–2 plain-text sentences"
 image: "/images/blog_card_images/2025/filename.png"
-imageAlt: ""                     # decorative hero; describe informative content
-imageText: "Visible image caption"
+imageAlt: ""                       # describe informative heroes; empty if decorative
+imageText: "Visible image caption" # also JSON Feed `_image_alt`
 # socialImage: "/images/blog_card_images/2025/social.png"
-# socialImageAlt: "Description of the social preview"
-topic: ["energie", "wirtschaft"]  # array, determines collections
-fullWidthCard: false              # optional
-# lastUpdated: 2025-01-15         # actual substantive revision date, when applicable
+# socialImageAlt: "Description of the social preview image"
+topic: ["energie", "wirtschaft"]   # determines topic collections
+fullWidthCard: false               # optional
+# lastUpdated: 2025-01-15          # real substantive revision only
+# metaTitle / metaDescription      # optional accurate overrides
 ```
 
-Follow the [post QA guide](docs/post_guidlines.md) and [SEO contract](../docs/seo.md).
-Keep titles/excerpts accurate; there is no fixed description-length or keyword quota,
-and no rankings promise. Set `lastUpdated` only for real substantive changes, never
-from build time. The post layout supplies the H1 and visible linked author; use
-H2/H3 in the body, descriptive links, and verified citations.
+[`docs/seo.md`](../docs/seo.md) is the single detailed contract, and the
+[post QA guide](docs/post_guidlines.md) is the per-article checklist. Summary:
 
-`src/posts/posts.11tydata.js` computes draft permalink/collection exclusion. Do not
-override those computed fields. Boolean `draft: true` suppresses HTML and discovery
-through collections, sitemap, feeds and search; a future date is not a draft policy.
-Full production builds clean generated HTML first to prevent stale draft pages.
-`noindex: true` keeps utility pages public; `excludeFromSitemap` alone does not
-prevent indexing. Neither flag is access control.
-
-`image` and optional `socialImage` use local `/images/...` paths under `src/images/`.
-`lib/responsive-images.js`, requiring its `register` function in `.eleventy.js`,
-builds responsive variants locally in ignored `_site/assets/images/`, preserving
-source files. Hero `imageAlt` defaults to empty; `imageText` is a visible caption.
-Cards are decorative; social metadata uses raster variants and measured dimensions.
-No source-image network fetch belongs in the build.
-
-Run `npm test -- --runInBand`, `npm run lint`, and `npm run build` from `frontend/`;
-follow the SEO guide's generated-output checks and run `npm run test:seo-output`
-after building. Preserve JSON Feed fields (including original `image`
-and optional `_image_alt`) consumed by the private `video-generator`. These checks
-do not authorize publication or deployment.
+- **Drafts:** `draft: true` on any template is skipped by the `drafts` preprocessor
+  in `.eleventy.js` in every run mode, including `npm start`. A draft produces no
+  HTML and does not appear in collections, the sitemap, feeds or search. Stale HTML is
+  deleted only after a successful full production write
+  ([Drafts](../docs/seo.md#drafts)).
+- **Indexing:** `noindex: true` gives `noindex, follow` and no canonical.
+  `excludeFromSitemap` only affects the sitemap
+  ([Indexing and sitemap](../docs/seo.md#indexing-and-sitemap)).
+- **Ads:** AdSense is off site-wide via `site.adsense.enabled`
+  ([Metadata](../docs/seo.md#metadata-and-structured-data)).
+- **Images:** use local `/images/...` sources only. Card images are decorative.
+  `socialImageAlt`/`imageAlt` describe the image
+  ([Images](../docs/seo.md#images)).
+- **Feeds:** keep the `/feed.json` fields used by the private `video-generator`
+  ([Feeds](../docs/seo.md#feeds)).
+- **Styling:** wrap wide tables in `.table-scroll` and keep the inline `html.js`
+  head script ([Styling](../docs/seo.md#styling-and-navigation)).
+- **Checks:** run `npm test -- --runInBand`, `npm run lint`, `npm run build`, then
+  `npm run test:seo-output` ([Checks](../docs/seo.md#checks)). Passing them does not
+  authorize publication.
 
 ### Collections
-Defined in `.eleventy.js`:
-- `post` - All posts from `src/posts/**/*.md`
+Defined in `.eleventy.js` and filtered by `seo.published`:
+- `post` - Published posts from `src/posts/**/*.md`
 - `energiePosts`, `politikPosts`, `wirtschaftPosts` - Filtered by topic array
+
+Tag-based (not defined in `.eleventy.js`): `dashboard` - pages tagged `dashboard` in
+`src/dashboards/`. Drafts never reach any collection because the `drafts`
+preprocessor skips them entirely.
+
+For a new topic, follow [Topics](../docs/seo.md#topics).
 
 ### Using Charts in Posts
 ```html
 <script defer src="/js/lib/echarts.min.js"></script>
-<section aria-labelledby="chart-heading">
-  <h2 id="chart-heading">Measure and observation period</h2>
-  <p id="chart-summary">Replace with a verified finding, key values, units and period.</p>
-  <div id="chart-id" aria-describedby="chart-summary" style="width: 100%; height: 400px;"></div>
+
+<div class="chart-section">
+  <h3 id="chart-id-heading">Measure, geography and observation period</h3>
+  <p class="chart-description" id="chart-id-description">Verified key finding with values, units and period.</p>
+  <div id="chart-id" role="img" aria-labelledby="chart-id-heading" aria-describedby="chart-id-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/config-name/chart.js"></script>
-  <p>Quelle: <a href="https://example.com/dataset">Publisher – dataset title</a></p>
-</section>
+  <div class="chart-sources"><strong>Quelle: </strong><a href="https://example.com/dataset">Publisher – dataset title</a></div>
+</div>
 ```
 
-Replace the example source with a verified link. Load ECharts once, then dependent
-chart scripts with ordered `defer`, not `async`. Every chart needs static HTML
-evidence, units, period and source links; add tables with captions/headers where
-needed, including chart-only annual summaries. Use the same evidence for prose,
-tables and charts. Verify legacy citations rather than inventing provenance.
+Load ECharts once, before the chart scripts, and give every script `defer`, never
+`async`. The container `id` must equal the config's `containerId`. The heading must
+be an H2–H4, the `chart-description` must be longer than 40 characters, and `id`s
+must be unique. Add a captioned `id="<containerId>-table"` for detailed values.
+[Charts and evidence](../docs/seo.md#charts-and-evidence) lists everything that
+`tests/article-chart-evidence.test.js` enforces.
 
 Charts support dark mode detection and lazy loading via IntersectionObserver.
 
 ## Key Files
 - `.eleventy.js` - Eleventy config, filters, collections, chart generation hook
 - `src/_includes/base.njk` - Site layout with SEO meta, structured data, navigation
+- `src/seo.js` - Metadata/JSON-LD, sitemap/feed filters, related posts, stale-HTML cleanup
+- `lib/responsive-images.js` - `responsiveImage`, `socialImageMeta`, `imageThumbnail`
+- `src/search.11ty.js` + `lib/search-text.js` - `/search.json` index
 - `src/data_ingestion/generate-charts.js` - Chart generation entry point
 - `src/data_ingestion/builders/` - Chart builder modules (lineChart.js, barChart.js)

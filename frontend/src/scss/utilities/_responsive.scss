@@ -1,8 +1,21 @@
 /* Responsive Design */
 @media (max-width: 768px) {
-  /* Only offer a disclosure after its JavaScript is ready. */
-  .nav-enhanced .topics-menu-toggle {
+  /*
+   * Mobile navigation states, keyed on classes of <html>:
+   * - none: no JavaScript (or menu.js failed and the head script removed `js`
+   *   on load). The list stays in flow and usable; there is no toggle.
+   * - .js: set by the inline head script before first paint. The drawer is
+   *   collapsed off-canvas and out of flow from the start, so the in-flow list
+   *   never paints and nothing shifts when menu.js enhances it.
+   * - .js.nav-enhanced: menu.js manages hidden/inert/ARIA; .active opens it.
+   */
+  .js .topics-menu-toggle {
     display: block;
+  }
+
+  /* Reserve the toggle's space but keep it unusable until menu.js is ready. */
+  .js:not(.nav-enhanced) .topics-menu-toggle {
+    visibility: hidden;
   }
 
   .blog-card h2 {
@@ -26,7 +39,7 @@
     gap: 0;
   }
 
-  .nav-enhanced .topics-nav {
+  .js .topics-nav {
     padding: 0;
     border: 0;
   }
@@ -37,7 +50,7 @@
   }
 
   /* Mobile menu drawer - slides in from left */
-  .nav-enhanced .topics-menu {
+  .js .topics-menu {
     display: flex;
     position: fixed;
     font-size: 24px;
@@ -60,11 +73,17 @@
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
   }
 
-  .nav-enhanced .topics-menu.active {
+  /* Until menu.js manages hidden/inert, keep the collapsed drawer's links out of
+     the focus order and the accessibility tree. */
+  .js:not(.nav-enhanced) .topics-menu {
+    visibility: hidden;
+  }
+
+  .js .topics-menu.active {
     transform: translateX(0);
   }
 
-  .nav-enhanced .topics-menu li {
+  .js .topics-menu li {
     width: 100%;
     opacity: 0;
     transform: translateX(-20px);
@@ -73,7 +92,7 @@
       transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .nav-enhanced .topics-menu.active li {
+  .js .topics-menu.active li {
     opacity: 1;
     transform: translateX(0);
   }

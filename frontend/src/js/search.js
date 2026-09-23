@@ -1,6 +1,8 @@
 // Search functionality for the site
 (function () {
+  const DEBOUNCE_MS = 300;
   let indexPromise;
+  let indexReady = false;
   let queryVersion = 0;
   let inputTimer;
   let searchInput;
@@ -26,17 +28,19 @@
     }
 
     // Load search index
-    indexPromise = loadSearchIndex();
+    indexPromise = loadSearchIndex().then((index) => {
+      indexReady = true;
+      return index;
+    });
 
     // Event listeners
     searchInput.addEventListener('input', () => {
       // Invalidate pending work immediately, including during the debounce window.
+      // The live region and URL change only when the debounced search runs, so a
+      // screen reader is not interrupted on every keystroke.
       queryVersion += 1;
       clearTimeout(inputTimer);
-      searchResults.innerHTML = '';
-      const hasQuery = searchInput.value.trim().length >= 2;
-      setStatus(hasQuery ? 'Suche läuft …' : 'Bitte geben Sie mindestens 2 Zeichen ein.', hasQuery);
-      inputTimer = setTimeout(performSearch, 300);
+      inputTimer = setTimeout(performSearch, DEBOUNCE_MS);
     });
     searchForm.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -75,17 +79,32 @@
     searchResults.setAttribute('aria-busy', String(busy));
   }
 
+  // Keep ?q= shareable and restorable without adding history entries.
+  function syncUrl(query) {
+    const url = new URL(window.location.href);
+    if (query) url.searchParams.set('q', query);
+    else url.searchParams.delete('q');
+    if (url.href === window.location.href) return;
+    try {
+      window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+    } catch (error) {
+      // The URL is a convenience; searching must not fail without it.
+    }
+  }
+
   async function performSearch() {
     const version = ++queryVersion;
-    const query = searchInput.value.trim().toLowerCase();
+    const rawQuery = searchInput.value.trim();
+    const query = rawQuery.toLowerCase();
     searchResults.innerHTML = '';
+    syncUrl(query.length >= 2 ? rawQuery : '');
 
     if (query.length < 2) {
       setStatus('Bitte geben Sie mindestens 2 Zeichen ein.', false);
       return;
     }
 
-    setStatus('Suchindex wird geladen …', true);
+    setStatus(indexReady ? 'Suche läuft …' : 'Suchindex wird geladen …', true);
     const searchIndex = await indexPromise;
     if (version !== queryVersion) return;
     if (!searchIndex) {
@@ -132,20 +151,16 @@
         : highlightText(truncateText(result.content, 200), query);
 
       const date = formatDate(result.date);
+      const image = thumbnailHtml(result.thumbnail);
 
       html += `
         <a href="${escapeHtml(result.url)}" class="blog-card-link">
           <article class="blog-card blog-card-horizontal">
-            <div class="blog-card-image-small">
-              <img src="${
-                escapeHtml(result.image || '/images/blog_card_images/test_img.png')
-              }" alt="" loading="lazy">
-            </div>
+            ${image ? `<div class="blog-card-image-small">${image}</div>` : ''}
             <div class="blog-card-content">
-            <h2>${title}</h2>
+              <h2>${title}</h2>
               <p>${excerpt}</p>
               ${date ? `<p class="post-date">${date}</p>` : ''}
-              
             </div>
           </article>
         </a>
@@ -154,6 +169,22 @@
 
     html += `</div>`;
     searchResults.innerHTML = html;
+  }
+
+  // Decorative card image from the index's prepared responsive variants; no
+  // image block at all when a result has no thumbnail.
+  function thumbnailHtml(thumbnail) {
+    if (!thumbnail || typeof thumbnail.src !== 'string' || !thumbnail.src) return '';
+    const attribute = (name, value) => (typeof value === 'string' && value !== ''
+      ? ` ${name}="${escapeHtml(value)}"` : '');
+    const dimension = (name, value) => (Number.isInteger(value) && value > 0 ? ` ${name}="${value}"` : '');
+    const sizes = attribute('sizes', thumbnail.sizes);
+    const webp = attribute('srcset', thumbnail.webpSrcset);
+    return '<picture>'
+      + (webp ? `<source type="image/webp"${webp}${sizes}>` : '')
+      + `<img src="${escapeHtml(thumbnail.src)}"${attribute('srcset', thumbnail.srcset)}${sizes}`
+      + `${dimension('width', thumbnail.width)}${dimension('height', thumbnail.height)}`
+      + ' alt="" loading="lazy" decoding="async"></picture>';
   }
 
   function highlightText(text, query) {
@@ -174,6 +205,7 @@
     const date = new Date(dateString);
     if (Number.isNaN(date.getTime())) return '';
     return date.toLocaleDateString('de-DE', {
+      timeZone: 'UTC',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
