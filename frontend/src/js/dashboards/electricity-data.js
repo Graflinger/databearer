@@ -175,20 +175,52 @@
   function summarize(snapshot, days = 1) {
     return summarizeRows(selectRows(snapshot, days), Date.parse(snapshot.window_end));
   }
+  // Headlines keep every incompleteness marker visible; notes only explain definitions.
   function presentation(summary) {
     const n = number;
+    const hours = n(summary.hours, 0);
+    const loadKnown = summary.coverage[11];
+    const priceKnown = summary.coverage[12];
     return {
       label: summary.label,
       generation: n(summary.generationAverage), energy: n(summary.generationEnergy),
       renewable: n(summary.renewableShare), load: n(summary.loadAverage), price: n(summary.priceAverage, 2),
-      hours: n(summary.hours, 0), negative: n(summary.negativeHours, 0),
-      coverage: `Abdeckung: Netzlast ${n(summary.coverage[11], 0)}/${n(summary.hours, 0)}, Preise ${n(summary.coverage[12], 0)}/${n(summary.hours, 0)} Stunden. ${summary.generationComplete ? 'Alle Erzeugungswerte vorhanden.' : `Erzeugung unvollständig: Gesamtsumme und Anteile unterdrückt; Quellenmengen sind bekannte Teilsummen, Mittel nur über bekannte Stunden. ${summary.mix.map((source) => `${source.label}: ${n(source.knownHours, 0)}/${n(summary.hours, 0)}`).join('; ')} Stunden.`}`,
-      generationText: summary.generationComplete ? `In ${n(summary.hours, 0)} Stunden wurden ${n(summary.generationEnergy)} GWh ins öffentliche Netz eingespeist. Erneuerbare lieferten ${n(summary.renewableShare)} % der erfassten Erzeugung einschließlich Pumpspeichern.` : 'Erzeugungsdaten unvollständig. Gesamterzeugung und Erneuerbarenanteil werden nicht ausgewiesen. Unvollständige Stunden bleiben im gestapelten Diagramm als Lücken sichtbar.',
-      loadText: `Netzlast: ${n(summary.coverage[11], 0)}/${n(summary.hours, 0)} bekannte Stunden. Zwischen ${n(summary.loadMin)} und ${n(summary.loadMax)} GW; im Mittel bei ${n(summary.loadAverage)} GW (${n(summary.loadEnergy)} GWh aus bekannten Werten, bei Lücken Teilsumme).`,
-      priceText: `Die Stundenmittel des DE–LU-Day-Ahead-Preises lagen zwischen ${n(summary.priceMin, 2)} und ${n(summary.priceMax, 2)} €/MWh. ${n(summary.negativeHours, 0)} Stunden hatten ein negatives Stundenmittel unter ${n(summary.coverage[12], 0)}/${n(summary.hours, 0)} bekannten Stunden; zeitgewichtetes Mittel nur über bekannte Preise: ${n(summary.priceAverage, 2)} €/MWh.`,
+      hours, negative: n(summary.negativeHours, 0),
+      coverage: `Abdeckung: Netzlast ${n(loadKnown, 0)}/${hours}, Preise ${n(priceKnown, 0)}/${hours} Stunden. ${summary.generationComplete ? 'Alle Erzeugungswerte vorhanden.' : `Erzeugung unvollständig: Gesamtsumme und Anteile unterdrückt; Quellenmengen sind bekannte Teilsummen, Mittel nur über bekannte Stunden. ${summary.mix.map((source) => `${source.label}: ${n(source.knownHours, 0)}/${hours}`).join('; ')} Stunden.`}`,
+      generationText: summary.generationComplete ? `In ${hours} Stunden wurden ${n(summary.generationEnergy)} GWh ins öffentliche Netz eingespeist; Erneuerbare lieferten ${n(summary.renewableShare)} %.` : 'Erzeugungsdaten unvollständig. Gesamterzeugung und Erneuerbarenanteil werden nicht ausgewiesen; unvollständige Stunden bleiben im Diagramm als Lücken sichtbar.',
+      generationNote: 'Stundenmittel der Leistung in GW; Energie = mittlere Leistung × Dauer. Der Erneuerbarenanteil bezieht sich auf die gesamte erfasste Erzeugung einschließlich Pumpspeichern.',
+      loadText: `Netzlast zwischen ${n(summary.loadMin)} und ${n(summary.loadMax)} GW, im Mittel ${n(summary.loadAverage)} GW.${loadKnown < summary.hours ? ` Nur ${n(loadKnown, 0)}/${hours} Stunden bekannt; Energie ist eine Teilsumme.` : ''}`,
+      loadNote: `${n(loadKnown, 0)}/${hours} bekannte Stunden; ${n(summary.loadEnergy)} GWh aus bekannten Werten, bei Lücken Teilsumme. Netzlast enthält Netzverluste.`,
+      priceText: `Stundenmittel zwischen ${n(summary.priceMin, 2)} und ${n(summary.priceMax, 2)} €/MWh, im Mittel ${n(summary.priceAverage, 2)} €/MWh; ${n(summary.negativeHours, 0)} Stunden hatten ein negatives Stundenmittel.${priceKnown < summary.hours ? ` Nur ${n(priceKnown, 0)}/${hours} Stunden mit bekanntem Preis; Mittel nur über bekannte Preise.` : ''}`,
+      priceNote: `DE–LU-Day-Ahead-Preis, ${n(priceKnown, 0)}/${hours} bekannte Stunden. Zeitgewichtetes Mittel nur über bekannte Preise, nicht verbrauchsgewichtet. Gezählt werden Stunden mit negativem Stundenmittel, nicht einzelne negative Viertelstunden.`,
     };
   }
+  function shortDate(key) {
+    const [year, month, day] = key.split('-');
+    return day ? `${day}.${month}.${year}` : `${month}/${year}`;
+  }
+  // Status-only list of affected parts: the static HTML must not depend on the build
+  // clock, and complete components can only age together with the whole snapshot.
+  function dataIssues(snapshot) {
+    if (snapshot.schema_version !== 2) return [];
+    const issues = componentReport(snapshot).filter((component) => component.status !== 'complete').map((component) => {
+      const through = component.source_observed_through ? shortDate(dayKey(iso(component.source_observed_through) - 1)).slice(0, 6) : null;
+      const detail = component.status === 'partial' ? `${component.known_hours}/${component.expected_hours} Std.`
+        : component.status === 'stale' ? `beibehalten${through ? `, Stand ${through}` : ''}` : 'nicht verfügbar';
+      return { key: component.key, text: `${component.label} (${detail})` };
+    });
+    Object.entries(snapshot.refresh_status || {}).filter(([, meta]) => meta.status !== 'ok').forEach(([key, meta]) => {
+      const label = key === 'history' ? 'Tageshistorie' : 'Handel';
+      issues.push({ key, text: `${label} (${meta.status === 'stale' ? `beibehalten, bis ${shortDate(meta.data_through)}` : 'Quellenlücken'})` });
+    });
+    return issues;
+  }
+  function issueText(issues, limit = 4) {
+    const texts = issues.map((issue) => issue.text);
+    return texts.length <= limit ? texts.join(', ') : `${texts.slice(0, limit - 1).join(', ')} und ${texts.length - limit + 1} weitere`;
+  }
   return { HOUR, TIMEZONE, SOURCES, COLUMNS, SOURCE, dayKey, number, freshness, validateSnapshot, componentReport,
+    dataIssues, issueText, shortDate,
     selectRows, summarizeRows, summarize, presentation, dateLabel: (time) => dateFormatter.format(time),
     timestampLabel: (time) => timestampFormatter.format(time) };
 });

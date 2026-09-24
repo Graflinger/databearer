@@ -77,7 +77,7 @@
     const nodes = [...root.querySelectorAll('[data-trend-chart]')];
     const charts = new Map();
     let summary;
-    function failure() { status.textContent = 'Langfristdiagramme konnten nicht dargestellt werden. Alle Langfristwerte stehen im JSON-Download; monatliche Handelswerte bleiben als Tabelle lesbar.'; }
+    function failure() { status.dataset.tone = 'error'; status.textContent = 'Langfristdiagramme konnten nicht dargestellt werden. Alle Langfristwerte stehen im JSON-Download; monatliche Handelswerte bleiben als Tabelle lesbar.'; }
     try { summary = JSON.parse(embedded.textContent); }
     catch (error) { failure(); return; }
     function currentOptions() {

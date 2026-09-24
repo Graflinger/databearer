@@ -145,7 +145,10 @@ Error messages and check times stay in operational logs, not timestamp-only comm
 Build checks require embedded cutoffs to match their actual history/trade files.
 HTML embeds escaped non-executable JSON in `electricity-component-data`; build and
 public verification compare it with the intended recent component/status metadata.
-The component report is available without JavaScript. Visible report labels, status,
+The component report is available without JavaScript. It lives at the top of the
+method section and must expand on partial/retained data; a compact status line next
+to the selected period names only affected parts, keeping the verifier phrases
+“Teilaktualisierung” and “Fehlende Werte sind keine Nullen”. Visible report labels, status,
 coverage and cutoff markers are also checked by the verifier; see the
 [frontend offline release gate](../frontend/README-dashboard.md#offline-partial-refresh-release-gate)
 for its markup checks and limitations. Browser warnings include
