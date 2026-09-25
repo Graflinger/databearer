@@ -1,0 +1,50 @@
+{
+  "frozen_on": "2026-09-14",
+  "capacity_rows": 15,
+  "generation_rows": 11,
+  "summary_rows": 3,
+  "missing_selected_annual_values": 0,
+  "excluded_capacity_years": [
+    2026
+  ],
+  "excluded_generation_years": [
+    2026
+  ],
+  "annual_supplements": [
+    {
+      "year": 2016,
+      "method": "source_annual_aggregate",
+      "days": 366,
+      "complete_days": 365
+    },
+    {
+      "year": 2018,
+      "method": "source_annual_aggregate",
+      "days": 365,
+      "complete_days": 361
+    }
+  ],
+  "preserved_daily_gaps": [
+    {
+      "date": "2016-11-08",
+      "category": "other_renewables"
+    },
+    {
+      "date": "2018-01-21",
+      "category": "pumped_storage"
+    },
+    {
+      "date": "2018-08-02",
+      "category": "pumped_storage"
+    },
+    {
+      "date": "2018-08-03",
+      "category": "pumped_storage"
+    },
+    {
+      "date": "2018-08-23",
+      "category": "pumped_storage"
+    }
+  ],
+  "note": "complete_days refers to all twelve generation categories, not only the three charted series. Official annual aggregates do not certify complete hourly/daily observations. Capacity stock differences include additions, retirements and reporting revisions; not gross commissioning."
+}
