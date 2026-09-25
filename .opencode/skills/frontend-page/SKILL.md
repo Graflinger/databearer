@@ -47,7 +47,8 @@ Important folders:
    ---
    layout: supporting_sites
    title: Seitentitel
-   excludeFromSitemap: true # only if the page should be hidden from sitemap
+   # noindex: true            # reachable utility page: noindex, follow + no canonical
+   # excludeFromSitemap: true  # sitemap only; does not add noindex
    ---
    ```
 
@@ -64,26 +65,49 @@ Important folders:
 
    ```yaml
    ---
-   title: "Post Title"
+   title: "Post Title" # accurate claim; no brand suffix
    date: YYYY-MM-DD
-   excerpt: "140-160 character summary of the key insight."
+   draft: true # boolean; remove when publishing
+   excerpt: "Key finding first, 1–2 plain-text sentences."
    image: "/images/blog_card_images/<year>/<file>.png"
-   imageText: "Short descriptive image caption"
+   imageAlt: "" # describe informative heroes; empty if decorative
+   imageText: "Visible editorial image caption"
    topic: ["energie"] # energie, wirtschaft, politik-und-gesellschaft
    fullWidthCard: false
-   lastUpdated: YYYY-MM-DD # set when data or charts change
-   metaTitle: "Optional shorter SEO title"
-   metaDescription: "Optional SEO description"
+   # lastUpdated: YYYY-MM-DD # real substantive revision only
+   # metaTitle: "Optional accurate title override"
+   # metaDescription: "Optional accurate description override"
+   # socialImage: "/images/blog_card_images/<year>/<social-file>.png"
+   # socialImageAlt: "Description of the social preview image"
    ---
    ```
 
-4. Follow `docs/post_guidlines.md`:
-   - The template handles the H1; use H2/H3 in the body.
-   - Start with a concise key takeaway.
-   - Include chart summaries, sources, and a Methodik/Datenquellen section when relevant.
-   - Add a few internal links and authoritative external source links.
+4. Write the body with H2/H3 only. The layout renders the H1, excerpt and byline.
+   Start with the key takeaway, add static chart evidence, and end with a
+   Methodik/Datenquellen section. Follow the
+   [post QA guide](../../../frontend/docs/post_guidlines.md).
 5. For posts with charts, also use the `frontend-visualization` skill.
-6. Run `npm run build` and check the post, topic pages, search data, sitemap, and feeds if relevant.
+6. Run the [checks](../../../docs/seo.md#checks): `npm test -- --runInBand`,
+   `npm run lint`, `npm run build`, then `npm run test:seo-output`.
+
+### Drafts, indexing, images and feeds (summary)
+
+[`docs/seo.md`](../../../docs/seo.md) is the single detailed source. In short:
+
+- `draft: true` works on any template and in every run mode, including `npm start`.
+  A draft produces no HTML and does not appear in collections, the sitemap, feeds or
+  search. To preview it, set `draft: false` temporarily. Stale HTML is removed only
+  after a successful full `npm run build` ([Drafts](../../../docs/seo.md#drafts)).
+- `noindex: true` gives `noindex, follow`, no canonical, and no sitemap or search
+  entry. `excludeFromSitemap` only affects the sitemap
+  ([Indexing](../../../docs/seo.md#indexing-and-sitemap)).
+- Images must be local `/images/...` files, and only referenced sources are
+  processed. Cards are decorative. `socialImageAlt`/`imageAlt` describe the image;
+  without them `og:image:alt` is omitted ([Images](../../../docs/seo.md#images)).
+- `/feed.json` fields are consumed by the private `video-generator`. Never rename or
+  remove them; `_image_alt` is `imageText` ([Feeds](../../../docs/seo.md#feeds)).
+- AdSense is disabled site-wide in `src/_data/site.js`, and there is no per-page
+  switch ([Metadata](../../../docs/seo.md#metadata-and-structured-data)).
 
 ## Topic pages and collections
 
@@ -94,23 +118,19 @@ Current topics:
 - `politik-und-gesellschaft`
 
 Topic-specific collections are defined in `.eleventy.js` as `energiePosts`, `wirtschaftPosts`, and
-`politikPosts`. If adding a new topic:
+`politikPosts`. A new topic needs:
 
-1. Add or update topic page in `src/themen/`.
-2. Add a collection in `.eleventy.js`.
-3. Update navigation and any topic filters/cards.
-4. Check feed/search behavior.
+- a `topicNames` entry in `src/seo.js`;
+- a collection in `.eleventy.js`;
+- a `src/themen/` page with `isTopicPage: true` and `addAllPagesToCollections: true`;
+- updated labels in `post.njk` and the navigation in `base.njk`.
 
-## Feed contract caution
-
-The private `video-generator` consumes the published JSON Feed at `/feed.json`. Do not rename or
-remove existing item fields in `src/feed.json.njk` (`id`, `url`, `title`, `summary`,
-`date_published`, `date_modified`, `image`, `tags`, `content_html`) unless explicitly treating it
-as a breaking change.
+See [Topics](../../../docs/seo.md#topics).
 
 ## Build notes
 
-- `npm run build` runs Sass and Eleventy. It may rewrite `src/css/style.css`; do not commit that
-  incidental change unless intended.
+- `npm run build` runs Sass and a full Eleventy build, which includes stale-HTML cleanup. It may
+  rewrite `src/css/style.css`; do not commit that incidental change unless intended.
 - `_site/` and `node_modules/` are generated/ignored.
 - Cloudflare Pages builds from the `frontend` root directory on the deployment branch.
+- Authoring/build checks do not authorize committing, pushing, publishing, or deploying.

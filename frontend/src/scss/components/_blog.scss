@@ -50,11 +50,13 @@
   margin: 0 auto;
 }
 
-/* Blog Card Links - Remove default link styling */
-.blog-grid a {
-  text-decoration: none;
-  color: inherit;
+/* Whole-card links (archives, related posts, search results): the heading is the
+   link text, so the card keeps its own colours and is never underlined. Scoped to
+   the card class so pagination and other links keep their own styling. */
+.blog-card-link {
   display: block;
+  color: inherit;
+  text-decoration: none;
 }
 
 .blog-card {
@@ -92,6 +94,13 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+}
+
+.blog-card-image-small picture,
+.blog-card-image-full picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .blog-card:hover .blog-card-image-small img {
@@ -152,7 +161,8 @@
 
 .post-date {
   font-size: 14px;
-  color: #999;
+  // AA on white and on the #fafafa related-posts band.
+  color: #707070;
   margin-top: auto;
   margin-bottom: 0;
 }

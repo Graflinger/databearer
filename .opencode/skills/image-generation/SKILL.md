@@ -116,7 +116,10 @@ recommend rotating it.
 
    ```yaml
    image: "/images/blog_card_images/<year>/my-post-image.png"
-   imageText: "Short descriptive image caption"
+   imageAlt: "Description of what the image shows" # empty only if decorative
+   imageText: "Visible editorial image caption"
+   # socialImage: "/images/blog_card_images/<year>/my-post-social.png"
+   # socialImageAlt: "Description of the social preview image"
    ```
 
 3. Verify the copied image:
@@ -132,11 +135,27 @@ recommend rotating it.
    PY
    ```
 
-4. Run the frontend build from `frontend/`:
+4. Run the [checks](../../../docs/seo.md#checks) from `frontend/`:
+   `npm test -- --runInBand`, `npm run lint`, `npm run build`,
+   `npm run test:seo-output`. Inspect the hero and card rendering on mobile and
+   desktop. Checks do not authorize publication or deployment.
 
-   ```bash
-   npm run build
-   ```
+### Responsive delivery and metadata (summary)
+
+The details are in [Images](../../../docs/seo.md#images). In short:
+
+- Keep the curated source under `frontend/src/images/`, and reference it as a local
+  `/images/...` path with the exact letter case. A wrong path or case fails the build
+  with a clear `Image not found` error. Unused files are never processed.
+- The build creates WebP plus JPEG/PNG variants in the ignored
+  `_site/assets/images/`. Never commit them or hand-write their hashed URLs.
+- Cards are decorative. `imageAlt` (and optional `socialImageAlt` for a separate
+  `socialImage`) should describe the image, not repeat the caption. When no alt is
+  set, `og:image:alt` is omitted. Pages without an image use the brand preview with
+  alt `Databearer-Logo`.
+- Image generation with Azure is a separate authoring step. The frontend build never
+  fetches images. JSON Feed keeps the original `image` URL, and `_image_alt` there is
+  `imageText` ([Feeds](../../../docs/seo.md#feeds)).
 
 ## Prompt guidance
 

@@ -4,7 +4,8 @@
   top: -40px;
   left: 0;
   background: #c4ad61;
-  color: #fff;
+  // Dark text on gold, as for the other gold controls (7.9:1).
+  color: #1a1a1a;
   padding: 8px 16px;
   text-decoration: none;
   font-weight: 600;
@@ -14,6 +15,6 @@
 
 .skip-link:focus {
   top: 0;
-  outline: 2px solid #fff;
+  outline: 2px solid #1a1a1a;
   outline-offset: -4px;
 }

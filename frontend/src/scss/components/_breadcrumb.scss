@@ -25,11 +25,11 @@
 .breadcrumb li:not(:last-child)::after {
   content: '›';
   margin: 0 8px;
-  color: #999;
+  color: #707070;
 }
 
 .breadcrumb a {
-  color: #c4ad61;
+  color: var(--prose-link);
   text-decoration: none;
 }
 

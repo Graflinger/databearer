@@ -1,4 +1,5 @@
 {% set trends = germanElectricityTrends.summary %}
+{% macro energyCoverage(row) %}{% if row.method == 'source_annual_aggregate' %}SMARD-Jahreswerte · Tageshistorie: {{ row.complete_days }}/{{ row.days }} Erzeugungstage{% else %}{{ row.complete_days }}/{{ row.days }} Erzeugungstage{% if row.generation_twh == null %} · Jahreswert fehlt{% endif %}{% endif %}{% endmacro %}
 <section id="electricity-trends" class="electricity-trends" aria-labelledby="electricity-trends-heading">
   <header>
     <p class="electricity-eyebrow">Der Blick über die Jahre</p>

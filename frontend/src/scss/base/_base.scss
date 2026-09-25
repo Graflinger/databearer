@@ -1,3 +1,13 @@
+:root {
+  --prose-link: #705815;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --prose-link: #d9c176;
+  }
+}
+
 body {
   font-family: var(--font-family);
   line-height: 1.6;
@@ -5,12 +15,25 @@ body {
   background-color: #fff;
 }
 
+// Links use the accessible link colour but no underline by default: cards, topic
+// tags, navigation and dashboard cards are identified by their component styling.
 a {
-  color: #c4ad61;
+  color: var(--prose-link);
   text-decoration: none;
 }
 
-/* a:focus {
-  outline: 2px solid #c4ad61;
+// Only links inside running text are underlined, so they remain distinguishable
+// from the surrounding text without relying on colour alone.
+.post-content :where(p, li, td, th, dd, dt, blockquote, figcaption, caption) a,
+.post-meta a,
+.chart-sources a,
+.search-fallback a {
+  color: var(--prose-link);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+a:focus-visible {
+  outline: 2px solid currentColor;
   outline-offset: 2px;
-} */
+}

@@ -7,6 +7,7 @@
 
   let chart = null;
   let isInitialized = false;
+  const hasAuthoredLabel = chartDom.hasAttribute('aria-labelledby') || chartDom.hasAttribute('aria-label');
 
   // Detect dark mode
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -35,6 +36,13 @@
     const seriesData = [{"key":"Solar_GW","name":"Solarerzeugung (GW)","data":[0,0,0,0,0,0.001075,0.531219,4.916353667,13.804925333,23.646180667,31.460477333,36.444304,38.960787667,39.158678333,37.432242333,33.688873333,27.396225667,18.936504333,9.476419667,2.463419667,0.132239,0.000107333,0,0],"color":null}];
 
     const option = {
+      aria: {
+        enabled: true,
+        // Keep the article's authored accessible name and summary when present.
+        label: {
+          enabled: !hasAuthoredLabel
+        }
+      },
       backgroundColor: colors.backgroundColor,
       title: undefined,
       tooltip: {
@@ -123,6 +131,7 @@
     if (isInitialized) return;
     isInitialized = true;
 
+    if (!chartDom.hasAttribute('role')) chartDom.setAttribute('role', 'img');
     chart = echarts.init(chartDom);
     updateChart();
 

@@ -1,12 +1,11 @@
 ---
 layout: supporting_sites
 title: Über mich
-excludeFromSitemap: true
 ---
 
 # Über mich
 
-## Hi, ich bin Stefan
+## Hi, ich bin Stefan Graf
 
 Ich bin der Gründer von **databearer**. Dieser Blog soll als Plattform dienen, um verschiedene Artikel und Beiträge zu teilen, die auf Daten und Fakten basieren.
 
@@ -34,6 +33,8 @@ Das Frontend hier: [GitHub - databearer (Frontend)](https://github.com/Graflinge
 ## Feedback willkommen
 
 Diese Transparenz schließt auch eine gewisse Feedbackkultur mit ein. Falls du Anmerkungen, Verbesserungsvorschläge oder einen sonstigen produktiven Input hast, würde es mich freuen, wenn du ihn auf einem der verschiedenen Kanäle mit mir teilst.
+
+Für Hinweise auf Daten- oder Darstellungsfehler kannst du auch ein [Issue im öffentlichen Projekt](https://github.com/Graflinger/databearer/issues) eröffnen. Bitte nenne den Artikel, die betroffene Zahl oder Aussage und möglichst eine überprüfbare Quelle. Veröffentliche dort keine privaten oder vertraulichen Informationen.
 
 ---
 

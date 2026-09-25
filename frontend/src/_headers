@@ -3,3 +3,18 @@
 
 /data/history/german-electricity/:year.:sha.json
   Cache-Control: public, max-age=31536000, immutable
+
+# Responsive image variants carry a content hash in their filenames.
+/assets/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/search.json
+  X-Robots-Tag: noindex
+
+/suche/
+  X-Robots-Tag: noindex, follow
+
+# Pretty URLs 308-redirect /404.html to /404. Not-found responses on arbitrary
+# paths cannot match a path rule; the page's robots meta (noindex) covers them.
+/404
+  X-Robots-Tag: noindex, follow

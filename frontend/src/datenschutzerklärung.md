@@ -70,6 +70,8 @@ Durch das Nutzen der Website werden folgende notwendige Daten erfasst:
 
 ## Cookies
 
+Derzeit ist keine Werbung aktiv. Die Website lädt aktuell keine AdSense-Skripte, und es wird kein AdSense-Cookieformular angezeigt. Die folgenden Angaben gelten nur, wenn Werbung wieder aktiviert wird.
+
 Folgende Cookies werden benutzt, falls Werbungen aktiv sind:
 
 Für die Services von Google AdSense werden Cookies erhoben. Dies wird durch ein Cookieformular abgefragt. Cookies können jederzeit widerrufen werden. Am Ende jeder Seite taucht links unten ein Kontrollfeld auf, um die Cookieeinstellungen ändern zu können.
