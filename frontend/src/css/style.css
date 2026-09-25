@@ -1568,6 +1568,8 @@ a:focus-visible {
   --electricity-accent: #c4ad61;
   --electricity-accent-text: #806b2b;
   --electricity-green: #376c56;
+  --electricity-warn: #b7791f;
+  --electricity-danger: #b3424f;
   color: var(--electricity-ink);
 }
 @media (prefers-color-scheme: dark) {
@@ -1581,6 +1583,8 @@ a:focus-visible {
     --electricity-accent: #d9c176;
     --electricity-accent-text: #d9c176;
     --electricity-green: #95c8ac;
+    --electricity-warn: #e3a64a;
+    --electricity-danger: #e0717d;
   }
 }
 
@@ -1658,7 +1662,7 @@ a:focus-visible {
 .electricity-period {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: 1rem;
   border-top: 1px solid var(--electricity-line);
@@ -1732,10 +1736,93 @@ a:focus-visible {
   font-size: 0.8rem;
 }
 
-.electricity-notice {
-  border-left: 4px solid var(--electricity-accent);
+.electricity-status[data-tone=quiet] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.electricity-status[data-tone=error] {
+  color: var(--electricity-ink);
+  border-left: 3px solid var(--electricity-danger);
+  padding-left: 0.75rem;
+}
+
+.electricity-period-title {
+  flex: 1 1 22rem;
+  min-width: 0;
+}
+
+.electricity-period-title h2 {
+  margin: 0 0 0.4rem;
+}
+
+.electricity-data-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  max-width: 100%;
+}
+
+.electricity-dashboard .electricity-chip {
+  display: inline-block;
+  margin: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  padding: 0.25rem 0.75rem 0.25rem 1.45rem;
+  position: relative;
+  border: 1px solid var(--electricity-line);
+  border-radius: 999px;
+  color: var(--electricity-muted);
   background: var(--electricity-surface);
-  padding: 1rem;
+}
+.electricity-dashboard .electricity-chip::before {
+  content: "";
+  position: absolute;
+  left: 0.6rem;
+  top: 0.62rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--chip-dot, var(--electricity-green));
+}
+.electricity-dashboard .electricity-chip a {
+  color: inherit;
+  font-weight: 650;
+}
+
+.electricity-dashboard .electricity-chip-warn {
+  --chip-dot: var(--electricity-warn);
+  color: var(--electricity-ink);
+  border-color: color-mix(in srgb, var(--electricity-warn) 55%, var(--electricity-line));
+  border-radius: 12px;
+}
+
+.electricity-dashboard .electricity-chip-error {
+  --chip-dot: var(--electricity-danger);
+  color: var(--electricity-ink);
+  border-color: color-mix(in srgb, var(--electricity-danger) 55%, var(--electricity-line));
+  border-radius: 12px;
+}
+
+.electricity-dashboard .electricity-coverage {
+  margin: -0.4rem 0 1rem;
+}
+
+.electricity-partial-marker {
+  font-size: 0.8rem;
+  color: var(--electricity-muted);
+  border-left: 3px dashed var(--electricity-accent);
+  padding-left: 0.6rem;
 }
 
 .electricity-kpis {
@@ -2083,15 +2170,134 @@ a:focus-visible {
   border-top: 2px dashed var(--electricity-accent);
 }
 
-.electricity-method-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem 2.5rem;
-  margin: 1.8rem 0 0.8rem;
+.electricity-dashboard summary {
+  cursor: pointer;
+  font-weight: 600;
 }
 
-.electricity-method-grid p {
+.electricity-dashboard summary:focus-visible {
+  outline: 3px solid var(--electricity-accent);
+  outline-offset: 4px;
+}
+
+.electricity-dashboard .electricity-hint {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
   color: var(--electricity-muted);
+}
+.electricity-dashboard .electricity-hint > summary {
+  display: inline-block;
+  list-style: none;
+  padding: 0.3rem 0;
+  font-weight: 600;
+  color: var(--electricity-muted);
+}
+.electricity-dashboard .electricity-hint > summary::-webkit-details-marker {
+  display: none;
+}
+.electricity-dashboard .electricity-hint > summary::before {
+  content: "i";
+  display: inline-grid;
+  place-items: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-right: 0.4rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font: italic 700 0.68rem/1 Georgia, serif;
+}
+.electricity-dashboard .electricity-hint > summary:hover {
+  color: var(--electricity-ink);
+}
+.electricity-dashboard .electricity-hint[open] > summary {
+  color: var(--electricity-ink);
+}
+.electricity-dashboard .electricity-hint > p {
+  margin: 0.35rem 0 0.6rem;
+  padding-left: 1.45rem;
+  font-size: 0.8rem;
+}
+
+.electricity-report {
+  border: 1px solid var(--electricity-line);
+  border-radius: 8px;
+  padding: 0 1rem;
+  margin: 1.5rem 0;
+  font-size: 0.82rem;
+}
+.electricity-report > summary {
+  padding: 0.8rem 0;
+}
+.electricity-report[open] > summary {
+  border-bottom: 1px solid var(--electricity-line);
+  margin-bottom: 0.5rem;
+}
+.electricity-report table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.75rem;
+}
+.electricity-report caption {
+  text-align: left;
+  color: var(--electricity-muted);
+  font-size: 0.75rem;
+  padding: 0.4rem 0 0.6rem;
+}
+.electricity-report th, .electricity-report td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--electricity-line);
+  text-align: left;
+  white-space: nowrap;
+}
+.electricity-report thead {
+  color: var(--electricity-muted);
+  font-size: 0.72rem;
+}
+.electricity-report tbody tr[data-status=complete] {
+  color: var(--electricity-muted);
+}
+.electricity-report p[data-status=ok] {
+  color: var(--electricity-muted);
+}
+.electricity-report .electricity-report-issue {
+  background: color-mix(in srgb, var(--electricity-warn) 12%, transparent);
+  color: var(--electricity-ink);
+  font-weight: 600;
+}
+.electricity-report p.electricity-report-issue {
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+}
+
+.electricity-report-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.05rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--electricity-muted);
+  border: 1px solid var(--electricity-line);
+}
+
+.electricity-report-badge-warn {
+  color: var(--electricity-ink);
+  border-color: var(--electricity-warn);
+}
+
+.electricity-accordion {
+  margin: 1.5rem 0 0.5rem;
+  border-top: 1px solid var(--electricity-line);
+}
+.electricity-accordion > details {
+  border-bottom: 1px solid var(--electricity-line);
+}
+.electricity-accordion > details > summary {
+  padding: 0.8rem 0;
+}
+.electricity-accordion > details > p {
+  color: var(--electricity-muted);
+  max-width: 75ch;
 }
 
 .electricity-attribution {
@@ -2104,6 +2310,14 @@ a:focus-visible {
 
 .electricity-attribution p:last-child {
   margin-bottom: 0;
+}
+
+.electricity-attribution details > summary {
+  padding: 0.3rem 0;
+}
+
+.electricity-attribution details[open] > summary {
+  margin-bottom: 0.6rem;
 }
 
 .electricity-discovery {
@@ -2311,9 +2525,5 @@ a:focus-visible {
   }
   .electricity-chart-small {
     height: 270px;
-  }
-  .electricity-method-grid {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
   }
 }

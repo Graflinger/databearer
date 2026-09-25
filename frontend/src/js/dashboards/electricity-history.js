@@ -209,10 +209,14 @@
     return { label: summary.label, generation: n(summary.generationAverage), energy: n(summary.generationEnergy),
       renewable: n(summary.renewableShare), load: n(summary.loadAverage), price: n(summary.priceAverage, 2),
       hours: n(summary.hours, 0), negative: n(summary.negativeDays, 0),
-      coverage: `${coverage} für Erzeugung und Mix. Netzlast: ${summary.loadDays}/${summary.days} Tage. ${summary.completeDays < summary.days ? 'Teilsummen, keine Jahressummen: Erzeugung und Anteile nur über dieselben vollständigen Erzeugungstage.' : 'Vollständig bedeutet: alle täglichen Quellwerte vorhanden; keine Bestätigung lückenloser zugrunde liegender Stunden.'}`,
-      generationText: `${coverage}: ${n(summary.generationEnergy)} GWh öffentliche Erzeugung, ${n(summary.generationAverage)} GW im Mittel; ${n(summary.renewableShare)} % erneuerbar. Tagesenergie / tatsächliche Tagesstunden (23/24/25) ergibt die dargestellte Leistung. Unvollständige Erzeugungstage bleiben als Lücken sichtbar.`,
-      loadText: `Netzlast: ${summary.loadDays}/${summary.days} Tage (${n(summary.loadHours, 0)}/${n(summary.totalHours, 0)} Stunden): ${n(summary.loadEnergy)} GWh aus bekannten Werten, bei Lücken Teilsumme; im Mittel ${n(summary.loadAverage)} GW. Unabhängige Abdeckung von der Erzeugung.`,
-      priceText: `${summary.zone}: ${n(summary.priceAverage, 2)} €/MWh, Tagesmittel nach tatsächlichen Tagesstunden gewichtet. Preisabdeckung: ${summary.priceDays}/${summary.days} Tage (${n(summary.priceHours, 0)}/${n(summary.totalHours, 0)} Stunden). ${n(summary.negativeDays, 0)} ${summary.negativeDays === 1 ? 'Tag' : 'Tage'} mit negativem Tagesmittel unter bekannten Tagen. Negative Preisstunden und stündliche Minima/Maxima sind daraus nicht ableitbar.`,
+      coverage: `${coverage} für Erzeugung und Mix. Netzlast: ${summary.loadDays}/${summary.days} Tage.${summary.completeDays < summary.days ? ' Teilsummen, keine Jahressummen: Erzeugung und Anteile nur über dieselben vollständigen Erzeugungstage.' : ''}`,
+      // Headlines keep every incompleteness marker visible; notes only explain definitions.
+      generationText: `${coverage}: ${n(summary.generationEnergy)} GWh öffentliche Erzeugung, ${n(summary.generationAverage)} GW im Mittel; ${n(summary.renewableShare)} % erneuerbar.${summary.completeDays < summary.days ? ' Unvollständige Erzeugungstage bleiben als Lücken sichtbar.' : ''}`,
+      generationNote: 'Tagesenergie / tatsächliche Tagesstunden (23/24/25) ergibt die dargestellte Leistung. Vollständig bedeutet: alle täglichen Quellwerte vorhanden; keine Bestätigung lückenloser zugrunde liegender Stunden. Unvollständige Erzeugungstage bleiben als Lücken sichtbar.',
+      loadText: `Netzlast: ${summary.loadDays}/${summary.days} Tage, ${n(summary.loadEnergy)} GWh, im Mittel ${n(summary.loadAverage)} GW.${summary.loadDays < summary.days ? ' Teilsumme aus bekannten Werten.' : ''}`,
+      loadNote: `${n(summary.loadHours, 0)}/${n(summary.totalHours, 0)} Stunden mit bekannter Netzlast; bei Lücken Teilsumme. Die Abdeckung der Netzlast ist unabhängig von der Erzeugung.`,
+      priceText: `${summary.zone}: im Mittel ${n(summary.priceAverage, 2)} €/MWh. Preisabdeckung: ${summary.priceDays}/${summary.days} Tage; ${n(summary.negativeDays, 0)} ${summary.negativeDays === 1 ? 'Tag' : 'Tage'} mit negativem Tagesmittel.`,
+      priceNote: `Tagesmittel nach tatsächlichen Tagesstunden gewichtet (${n(summary.priceHours, 0)}/${n(summary.totalHours, 0)} Stunden mit bekanntem Preis). Negative Tage zählen nur unter bekannten Tagen. Negative Preisstunden und stündliche Minima/Maxima sind aus Tagesmitteln nicht ableitbar.`,
     };
   }
   function freshness(manifest, now = Date.now()) {

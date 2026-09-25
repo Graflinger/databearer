@@ -9,6 +9,9 @@
   const yearSelect = document.getElementById('electricity-year');
   const status = document.getElementById('electricity-status');
   const warning = document.getElementById('electricity-freshness');
+  const partialChip = document.getElementById('electricity-partial-warning');
+  const okChip = document.getElementById('electricity-data-ok');
+  const report = document.getElementById('electricity-component-report');
   const buttons = [...root.querySelectorAll('[data-days]')];
   const chartNodes = ['generation', 'load', 'price'].map((name) => document.getElementById(`electricity-${name}`));
   const theme = window.matchMedia('(prefers-color-scheme: dark)');
@@ -21,19 +24,42 @@
   let pending = false;
   let charts = [];
 
+  // Progress/success messages are announced but visually quiet; failures stay visible.
+  function announce(message, tone = 'quiet') {
+    status.textContent = message;
+    status.dataset.tone = tone;
+  }
+  // The healthy chip appears only when no warning chip is visible.
+  function syncDataState() {
+    const warnings = ['electricity-partial-warning', 'electricity-freshness', 'electricity-history-freshness', 'electricity-recent-error']
+      .map((id) => document.getElementById(id)).filter(Boolean);
+    if (okChip) okChip.hidden = warnings.some((node) => !node.hidden);
+  }
   function checkFreshness() {
     try {
       const state = data.freshness({ data_through: root.dataset.through,
         snapshot_created_at: root.dataset.created, stale_after_hours: 96 });
       const statusData = snapshot || (document.getElementById('electricity-component-data') ? JSON.parse(document.getElementById('electricity-component-data').textContent) : null);
-      const components = statusData?.components ? data.componentReport({ ...statusData, schema_version: 2 }) : [];
-      const partial = components.some((component) => component.stale || component.status !== 'complete') || Object.values(statusData?.refresh_status || {}).some((meta) => meta.status !== 'ok');
-      warning.hidden = !state.stale && !partial;
-      warning.textContent = partial ? 'Stundendaten teilweise unvollständig oder veraltet. Separate Quellenstände und Abdeckung stehen im Komponentenbericht. Fehlende Werte sind keine Nullen.' : 'Die aktuellen Stundendaten sind älter als 96 Stunden. Es liegen hier noch keine neueren vollständigen Daten vor.';
+      const input = statusData?.components ? { ...statusData, schema_version: 2 } : null;
+      const issues = input ? data.dataIssues(input) : [];
+      // A whole stale snapshot is reported once; otherwise name components whose last value aged out.
+      if (input && !state.stale) {
+        data.componentReport(input).filter((component) => component.status === 'complete' && component.stale).forEach((component) => {
+          issues.push({ key: component.key, text: `${component.label} (Stand ${data.shortDate(data.dayKey(Date.parse(component.source_observed_through) - 1)).slice(0, 6)})` });
+        });
+      }
+      if (partialChip) {
+        partialChip.hidden = !issues.length;
+        if (issues.length) partialChip.querySelector('[data-issue-list]').textContent = data.issueText(issues);
+      }
+      warning.hidden = !state.stale;
+      warning.textContent = `Stundendaten veraltet: Daten bis ${data.shortDate(data.dayKey(Date.parse(root.dataset.through) - 1))}, älter als 96 Stunden.`;
+      syncDataState();
       return true;
     } catch (error) {
       warning.hidden = false;
-      warning.textContent = 'Die Zeitangaben dieses Snapshots sind ungültig oder liegen in der Zukunft. Bitte auch die Uhrzeit Ihres Geräts prüfen. Die vorgerenderte Übersicht ist nicht als aktuell bestätigt.';
+      warning.textContent = 'Zeitangaben ungültig oder in der Zukunft: Die vorgerenderte Übersicht ist nicht als aktuell bestätigt. Bitte auch die Uhrzeit Ihres Geräts prüfen.';
+      syncDataState();
       return false;
     }
   }
@@ -42,9 +68,13 @@
     const notice = document.getElementById('electricity-history-freshness');
     try {
       notice.hidden = !history.freshness(manifest).stale;
-      notice.textContent = `Die Tageshistorie reicht bis ${manifest.last_date}; ihr neuester Datenstand ist älter als 96 Stunden. Diese Warnung betrifft nicht das Alter eines ausgewählten früheren Jahres.`;
+      notice.textContent = `Tageshistorie veraltet: Daten bis ${manifest.last_date}, älter als 96 Stunden. Betrifft nicht das Alter eines ausgewählten früheren Jahres.`;
     } catch (error) { notice.hidden = false; notice.textContent = error.message; }
+    syncDataState();
   }
+  root.querySelectorAll('[data-report-link]').forEach((link) => {
+    link.addEventListener('click', () => { if (report) report.open = true; });
+  });
   function hideCharts() {
     charts.forEach((chart) => chart.dispose());
     charts = [];
@@ -153,7 +183,7 @@
       legend.append(item);
     });
   }
-  function render(announce = true) {
+  function render(speak = true) {
     if (!view) return;
     const summary = view;
     const historical = summary.kind === 'history';
@@ -188,10 +218,10 @@
         });
       }
       options(summary).forEach((option, index) => charts[index].setOption(option, { notMerge: true }));
-      if (announce) status.textContent = `${summary.label} · ${historical ? `${summary.completeDays}/${summary.days} vollständige Erzeugungstage (tägliche Quellwerte)` : text.coverage}. Zeitraum-Ansichten aktualisiert; Langfristvergleich unverändert.`;
+      if (speak) announce(`${summary.label} · ${historical ? `${summary.completeDays}/${summary.days} vollständige Erzeugungstage (tägliche Quellwerte)` : text.coverage}. Zeitraum-Ansichten aktualisiert; Langfristvergleich unverändert.`);
     } catch (error) {
       hideCharts();
-      if (announce) status.textContent = `${summary.label}: Diagramme konnten nicht dargestellt werden. Kennzahlen, Quellenmix und Textzusammenfassungen sind verfügbar. Bitte die Seite neu laden, um die Diagramme erneut zu versuchen.`;
+      if (speak) announce(`${summary.label}: Diagramme konnten nicht dargestellt werden. Kennzahlen, Quellenmix und Textzusammenfassungen sind verfügbar. Bitte die Seite neu laden, um die Diagramme erneut zu versuchen.`, 'error');
     }
   }
   function chooseRecent(days) {
@@ -208,7 +238,7 @@
     pending = true;
     syncSelection(); // The dropdown continues to describe the committed view while loading.
     root.setAttribute('aria-busy', 'true');
-    status.textContent = `Tageshistorie ${year} wird geladen und geprüft … Die bisherige Auswahl bleibt sichtbar.`;
+    announce(`Tageshistorie ${year} wird geladen und geprüft … Die bisherige Auswahl bleibt sichtbar.`);
     try {
       const partition = await loadYear(year);
       if (id !== requestId) return;
@@ -218,7 +248,7 @@
       render();
     } catch (error) {
       if (id !== requestId) return;
-      status.textContent = `Historie ${year} konnte nicht geladen oder validiert werden. Die bisherige Auswahl bleibt erhalten. Bitte erneut wählen oder die Seite neu laden. ${error.message}`;
+      announce(`Historie ${year} konnte nicht geladen oder validiert werden. Die bisherige Auswahl bleibt erhalten. Bitte erneut wählen oder die Seite neu laden. ${error.message}`, 'error');
       syncSelection();
     } finally {
       if (id === requestId) { pending = false; root.removeAttribute('aria-busy'); }
@@ -226,11 +256,11 @@
   }
   async function load() {
     if (!data || !checkFreshness()) {
-      if (!embedded) status.textContent = 'Interaktive Daten konnten nicht validiert werden. Die vorgerenderte Tagesübersicht bleibt lesbar.';
+      if (!embedded) announce('Interaktive Daten konnten nicht validiert werden. Die vorgerenderte Tagesübersicht bleibt lesbar.', 'error');
       return;
     }
     if (!embedded) {
-      status.textContent = 'Vorbereitete Stromdaten werden geladen …';
+      announce('Vorbereitete Stromdaten werden geladen …');
       root.setAttribute('aria-busy', 'true');
     }
     const controller = new AbortController();
@@ -250,11 +280,12 @@
         button.addEventListener('click', () => chooseRecent(Number(button.dataset.days)));
       });
     } catch (error) {
-      if (!embedded) status.textContent = 'Interaktive Daten konnten nicht geladen oder validiert werden. Die vorgerenderte Tagesübersicht bleibt lesbar. Bitte die Seite neu laden, um es erneut zu versuchen.';
+      if (!embedded) announce('Interaktive Daten konnten nicht geladen oder validiert werden. Die vorgerenderte Tagesübersicht bleibt lesbar. Bitte die Seite neu laden, um es erneut zu versuchen.', 'error');
       else {
         const errorNotice = document.getElementById('electricity-recent-error');
         errorNotice.hidden = false;
-        errorNotice.textContent = 'Aktuelle Stundendaten konnten nicht geladen oder validiert werden; die 1/7/30-Tage-Auswahl ist nicht verfügbar. Bitte die Seite neu laden.';
+        errorNotice.textContent = 'Stundendaten nicht geladen oder validiert: 1/7/30 Tage nicht verfügbar. Bitte die Seite neu laden.';
+        syncDataState();
       }
     } finally {
       clearTimeout(timeout);
@@ -283,7 +314,7 @@
       checkHistoryFreshness();
       chooseHistory(latest);
     } catch (error) {
-      status.textContent = 'Die Historie konnte nicht validiert werden. Die vorgerenderte Übersicht bleibt lesbar. Bitte die Seite neu laden.';
+      announce('Die Historie konnte nicht validiert werden. Die vorgerenderte Übersicht bleibt lesbar. Bitte die Seite neu laden.', 'error');
     }
   }
   load();
