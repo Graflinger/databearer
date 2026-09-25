@@ -8,10 +8,11 @@
     "css:watch": "sass --watch src/scss/style.scss src/css/style.css",
     "start": "concurrently \"npm run css:watch\" \"eleventy --serve\"",
     "build": "npm run css:build && eleventy",
-    "lint": "eslint \"src/**/*.js\" \"tests/**/*.js\" \".eleventy.js\" --ignore-pattern \"src/js/charts/**\" --ignore-pattern \"!/.eleventy.js\"",
+    "lint": "eslint \"lib/**/*.js\" \"src/**/*.js\" \"tests/**/*.js\" \".eleventy.js\" --ignore-pattern \"src/js/charts/**\" --ignore-pattern \"!/.eleventy.js\"",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write .",
     "test": "jest",
+    "test:seo-output": "SEO_OUTPUT_CHECK=1 jest --runInBand --runTestsByPath tests/seo-output.test.js",
     "test:v2": "node tests/fixtures/run-v2-gate.js",
     "test:watch": "jest --watch"
   },
@@ -27,7 +28,8 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.2.5",
-    "sass": "^1.78.0"
+    "sass": "^1.78.0",
+    "sharp": "0.34.5"
   },
   "dependencies": {
     "csv-parse": "^6.1.0",

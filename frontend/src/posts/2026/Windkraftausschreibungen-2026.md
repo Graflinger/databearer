@@ -1,14 +1,14 @@
 ---
 title: "Windkraftausschreibungen 2026: Starker Jahresauftakt"
 date: 2026-06-21
-lastUpdated: 2026-06-21
+lastUpdated: 2026-09-23
 excerpt: "Die erste Windkraftausschreibung 2026 ist deutlich überzeichnet, die Nachfrage steigt kräftig und der Zuschlagswert fällt auf den niedrigsten Stand seit 2018."
 image: "/images/blog_card_images/2026/windkraftausschreibungen-2026.png"
 imageText: "Die Windkraftausschreibungen starten 2026 mit hoher Nachfrage und niedrigen Preisen"
 fullWidthCard: false
 topic: ["energie", "wirtschaft"]
 ---
-<script src="/js/lib/echarts.min.js"></script>
+<script defer src="/js/lib/echarts.min.js"></script>
 
 ## Der Rückenwind hält an
 
@@ -17,14 +17,25 @@ Nach dem Rekordjahr 2025 stellte sich die Frage, ob die starke Dynamik bei den A
 Damit setzt sich das Muster fort, das wir bereits in den [Einblicken in die Ausschreibungen 2025](/posts/2026/Windenergiezukunft/) beschrieben haben: Eine hohe Nachfrage trifft auf ein großes Ausschreibungsvolumen, und genau diese Konkurrenz drückt den Preis. Zur Einordnung lohnt zunächst ein Blick auf die vergebene Menge der vergangenen Jahre.
 
 <div class="chart-section">
-  <h3>Die Zuschlagsmenge der letzten Jahre</h3>
-  <p class="chart-description">
+  <h3 id="zuschlagsmenge_in_kw_yearly_2026-heading">Die Zuschlagsmenge der letzten Jahre</h3>
+  <p class="chart-description" id="zuschlagsmenge_in_kw_yearly_2026-description">
     2025 markierte mit rund 14,4 Gigawatt einen Rekord in der jährlichen Zuschlagsmenge für Windenergie an Land. Die Grafik zeigt vollständige Kalenderjahre – 2026 läuft noch und ist daher bewusst nicht abgebildet.
   </p>
 
 
-  <div id="zuschlagsmenge_in_kw_yearly_2026" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/ausschreibung_wind_2026/zuschlagsmenge_in_kw_yearly.js"></script>
+  <div id="zuschlagsmenge_in_kw_yearly_2026" role="img" aria-labelledby="zuschlagsmenge_in_kw_yearly_2026-heading" aria-describedby="zuschlagsmenge_in_kw_yearly_2026-description" style="width: 100%; height: 400px;"></div>
+  <script defer src="/js/charts/ausschreibung_wind_2026/zuschlagsmenge_in_kw_yearly.js"></script>
+
+  <table id="zuschlagsmenge_in_kw_yearly_2026-table">
+    <caption>Jährliche Zuschlagsmenge in kW, Auswahl vollständiger Kalenderjahre aus dem eingefrorenen Diagramm</caption>
+    <thead><tr><th scope="col">Jahr</th><th scope="col">Zuschlagsmenge (kW)</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">2022</th><td>3.225.149</td></tr>
+      <tr><th scope="row">2023</th><td>6.377.085</td></tr>
+      <tr><th scope="row">2024</th><td>10.996.125</td></tr>
+      <tr><th scope="row">2025</th><td>14.445.230</td></tr>
+    </tbody>
+  </table>
 
   <div class="chart-sources">
     <strong>Quelle: </strong><a href="https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/Ausschreibungen/Wind_Onshore/BeendeteAusschreibungen/start.html">Bundesnetzagentur</a>
@@ -38,14 +49,28 @@ Entscheidend für gute Ergebnisse ist, dass mehr Gebote eingehen, als Volumen au
 Im folgenden Diagramm ist gut zu erkennen, wie die Gebotsmenge (die Nachfrage) in den jüngsten Runden deutlich über das Ausschreibungsvolumen hinausgeschossen ist, während die Zuschlagsmenge nahezu vollständig dem ausgeschriebenen Volumen entspricht. Das bedeutet: Es gibt genug konkurrenzfähige Projekte, um die Ausschreibungen voll auszuschöpfen.
 
 <div class="chart-section">
-  <h3>Zuschlags- und Gebotsmenge im Vergleich zum Ausschreibungsvolumen</h3>
-  <p class="chart-description">
+  <h3 id="zuschlagsmenge_in_kw_2026-heading">Zuschlags- und Gebotsmenge im Vergleich zum Ausschreibungsvolumen</h3>
+  <p class="chart-description" id="zuschlagsmenge_in_kw_2026-description">
     Die Gebotsmenge übersteigt das Ausschreibungsvolumen inzwischen deutlich – ein Zeichen für kräftig gestiegenes Interesse an Windkraftprojekten. <i>(Für bessere Sichtbarkeit können einzelne Datenpunkte auf der Legende abgewählt werden)</i>
   </p>
 
 
-  <div id="zuschlagsmenge_in_kw_2026" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/ausschreibung_wind_2026/zuschlagsmenge_in_kw.js"></script>
+  <div id="zuschlagsmenge_in_kw_2026" role="img" aria-labelledby="zuschlagsmenge_in_kw_2026-heading" aria-describedby="zuschlagsmenge_in_kw_2026-description" style="width: 100%; height: 400px;"></div>
+  <script defer src="/js/charts/ausschreibung_wind_2026/zuschlagsmenge_in_kw.js"></script>
+
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="zuschlagsmenge_in_kw_2026-heading">
+    <table id="zuschlagsmenge_in_kw_2026-table">
+      <caption>Ausgewählte Gebotstermine, Mengen in kW; Datenstand Februarrunde 2026</caption>
+      <thead><tr><th scope="col">Gebotstermin</th><th scope="col">Ausschreibungsvolumen (kW)</th><th scope="col">Zuschlagsmenge (kW)</th><th scope="col">Gebotsmenge (kW)</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">2023-02-01</th><td>3.210.000</td><td>1.441.150</td><td>1.501.530</td></tr>
+        <tr><th scope="row">2024-11-01</th><td>4.093.586</td><td>4.098.060</td><td>6.082.780</td></tr>
+        <tr><th scope="row">2025-02-01</th><td>4.093.586</td><td>4.094.160</td><td>4.896.120</td></tr>
+        <tr><th scope="row">2025-11-01</th><td>3.450.364</td><td>3.456.334</td><td>8.155.380</td></tr>
+        <tr><th scope="row">2026-02-01</th><td>3.445.464</td><td>3.445.520</td><td>7.858.268</td></tr>
+      </tbody>
+    </table>
+  </div>
 
   <div class="chart-sources">
     <strong>Quelle: </strong><a href="https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/Ausschreibungen/Wind_Onshore/BeendeteAusschreibungen/start.html">Bundesnetzagentur</a>
@@ -59,23 +84,35 @@ Mehr Konkurrenz um die Zuschläge bedeutet niedrigere Preise – und damit gerin
 Damit liegt der Zuschlagswert erstmals seit Februar 2018 wieder unter der Marke von 5,60 ct/kWh. Bemerkenswert ist, dass dieser niedrige Preis bei einem zugleich deutlich größeren Ausschreibungsvolumen als in den Jahren vor 2023 zustande kommt. Die Vervielfachung der vergebenen Mengen geht also nicht zulasten der Kosten. Ganz im Gegenteil. Ein starkes Signal!
 
 <div class="chart-section">
-  <h3>Preisentwicklung bei Windkraftausschreibungen</h3>
-  <p class="chart-description">
+  <h3 id="zuschlagwert_wind_2026-heading">Preisentwicklung bei Windkraftausschreibungen</h3>
+  <p class="chart-description" id="zuschlagwert_wind_2026-description">
     Der durchschnittliche Zuschlagswert ist seit Anfang 2025 stetig gesunken und erreicht mit 5,54 ct/kWh den niedrigsten Stand seit Februar 2018.
   </p>
 
 
-  <div id="zuschlagwert_wind_2026" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/ausschreibung_wind_2026/zuschlagwert.js"></script>
+  <div id="zuschlagwert_wind_2026" role="img" aria-labelledby="zuschlagwert_wind_2026-heading" aria-describedby="zuschlagwert_wind_2026-description" style="width: 100%; height: 400px;"></div>
+  <script defer src="/js/charts/ausschreibung_wind_2026/zuschlagwert.js"></script>
+
+  <table id="zuschlagwert_wind_2026-table">
+    <caption>Durchschnittlicher Zuschlagswert in ct/kWh, ausgewählte Gebotstermine; Datenstand Februarrunde 2026</caption>
+    <thead><tr><th scope="col">Gebotstermin</th><th scope="col">Zuschlagswert (ct/kWh)</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">2018-02-01</th><td>4,73</td></tr>
+      <tr><th scope="row">2023-02-01</th><td>7,34</td></tr>
+      <tr><th scope="row">2025-02-01</th><td>7,00</td></tr>
+      <tr><th scope="row">2025-11-01</th><td>6,06</td></tr>
+      <tr><th scope="row">2026-02-01</th><td>5,54</td></tr>
+    </tbody>
+  </table>
 
   <div class="chart-sources">
     <strong>Quelle: </strong><a href="https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/Ausschreibungen/Wind_Onshore/BeendeteAusschreibungen/start.html">Bundesnetzagentur</a>
   </div>
 </div>
 
-## Ausblick: drei Ausschreibungen stehen noch aus
+## Ausblick auf das weitere Ausschreibungsjahr
 
-Mit der Februarrunde ist erst eine von vier regulären Ausschreibungen des Jahres abgeschlossen; die Gebotstermine im Mai, August und November stehen noch aus. Der Auftakt deutet aber darauf hin, dass 2026 an die starke Entwicklung von 2025 anknüpfen könnte: Die Nachfrage steigt, die Mengen werden voll vergeben und der Preis sinkt.
+Dieser Beitrag wertet die Februarrunde aus, eine von vier regulären Ausschreibungen des Jahres. Die weiteren Gebotstermine liegen im Mai, August und November; ihre Ergebnisse sind im eingefrorenen Datenstand dieses Beitrags nicht enthalten. Der Auftakt deutet aber darauf hin, dass 2026 an die starke Entwicklung von 2025 anknüpfen könnte: Die Nachfrage steigt, die Mengen werden voll vergeben und der Preis sinkt.
 
 Wie nachhaltig dieser Trend ist, liegt am Ende auch in den Händen der Politik. Damit aus den Zuschlägen tatsächlich Anlagen werden, müssen die Projekte innerhalb der vorgesehenen Fristen ans Netz gehen – und der Ausbau darf nicht erneut ausgebremst werden, wie damals bei der berüchtigten Altmaierdelle. Die Voraussetzungen sind jedenfalls selten so gut gewesen wie zu Beginn dieses Jahres. Weitere Einordnungen zu diesem Thema finden sich im Themenbereich [Energie](/themen/energie/) und [Wirtschaft](/themen/wirtschaft/).
 
@@ -86,3 +123,5 @@ Grundlage dieses Beitrags sind die Ergebnisse der Ausschreibungen für Windenerg
 <div class="chart-sources">
   <strong>Datenquelle: </strong><a href="https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/Ausschreibungen/Wind_Onshore/BeendeteAusschreibungen/start.html">Bundesnetzagentur – Beendete Ausschreibungen Wind an Land</a>
 </div>
+
+*Korrektur vom 23. September 2026: In einer früheren Fassung hieß es im Ausblick, die Gebotstermine im Mai, August und November stünden noch aus. Zum Veröffentlichungszeitpunkt am 21. Juni 2026 war der Gebotstermin am 1. Mai bereits verstrichen. Die ausgewerteten Daten und Zahlen sind unverändert.*

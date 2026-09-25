@@ -109,32 +109,48 @@ generation. If you keep configs in subfolders, either call the generator with th
    - Confirm files appear under `src/js/charts/<config-file-name>/`.
 
 4. **Embed in a post/page**
-   - Load ECharts once per page before chart scripts.
-   - Add a chart section with a unique container ID, short explanation, and source.
+
+   Use this pattern. It passes `tests/article-chart-evidence.test.js`; keep it free of
+   blank lines or indentation of 4+ spaces so Markdown keeps it as HTML:
 
    ```html
-   <script src="/js/lib/echarts.min.js"></script>
+   <script defer src="/js/lib/echarts.min.js"></script>
 
    <div class="chart-section">
-     <h3>Chart heading</h3>
-     <p class="chart-description">One-sentence takeaway from the chart.</p>
-
-     <div id="my-chart" style="width: 100%; height: 400px;"></div>
-     <script src="/js/charts/my-config/my-chart.js"></script>
-
-     <div class="chart-sources">
-       <strong>Quelle: </strong><a href="https://example.com">Source name</a>
+     <h3 id="my-chart-heading">Measure, geography and observation period</h3>
+     <p class="chart-description" id="my-chart-description">Verified key finding with values, units and period.</p>
+     <div id="my-chart" role="img" aria-labelledby="my-chart-heading" aria-describedby="my-chart-description" style="width: 100%; height: 400px;"></div>
+     <script defer src="/js/charts/my-config/my-chart.js"></script>
+     <div class="table-scroll" tabindex="0" role="region" aria-labelledby="my-chart-heading">
+       <table id="my-chart-table">
+         <caption>Ausgewählte Werte, Einheit, Datenstand</caption>
+         <thead><tr><th scope="col">Jahr</th><th scope="col">Wert (Einheit)</th></tr></thead>
+         <tbody><tr><th scope="row">2024</th><td>1.234</td></tr></tbody>
+       </table>
      </div>
+     <div class="chart-sources"><strong>Quelle: </strong><a href="https://example.com/dataset">Publisher – dataset title</a></div>
    </div>
    ```
 
+   - Include ECharts **once** per page, before any chart script, and give every
+     script `defer`, never `async`.
+   - The container `id` must equal `containerId`. The heading must be an H2–H4 with
+     an `id`, and the `chart-description` must be longer than 40 characters. All
+     `id`s must be unique.
+   - Tables use `id="<containerId>-table"`, a caption containing "Auswahl" or
+     "Ausgewählte", `th scope="col"`/`th scope="row"`, and 2–6 rows. Values must
+     match the frozen chart data (German number format, `—` for gaps).
+   - Replace the placeholders with verified evidence and a verified source.
+
+   The full requirements are in
+   [Charts and evidence](../../../docs/seo.md#charts-and-evidence).
+
 5. **Build and inspect**
 
-   ```bash
-   npm run build
-   ```
-
-   Then check the rendered page or dev server and browser console.
+   Run the [checks](../../../docs/seo.md#checks): `npm test -- --runInBand`,
+   `npm run lint`, `npm run build`, `npm run test:seo-output`. Check the page on
+   desktop and mobile, the browser console, and the evidence with JavaScript
+   disabled.
 
 ## Supported config fields
 
@@ -159,14 +175,21 @@ Common optional fields:
 - **Data load error**: Verify the CSV exists in `src/data_ingestion/data/` and headers match keys.
 - **Chart not visible**: Confirm the container ID matches `containerId`, ECharts is loaded first,
   and the generated script path uses `/js/charts/<config-basename>/<outputFile>`.
+- **Chart evidence test fails**: Compare the markup with the pattern in step 4; the
+  test reads `containerId` from the generated script.
 - **Stale chart**: Re-run `npm run build:charts` and clear browser cache.
 - **Build loop risk**: Generated chart files are watch-ignored; do not remove that setting in
   `.eleventy.js`.
 
 ## Quality expectations
 
-- Every chart should have a textual takeaway and source link in the post.
-- Use unique container IDs across the page.
+- Every chart has static HTML evidence (description plus table where useful), units,
+  period and a verified, descriptive source link. Tooltips and canvas text do not
+  count. Label incomplete coverage, and never invent provenance.
+- Prose, tables and charts use the same frozen data. Do not refresh frozen article
+  data incidentally, and set `lastUpdated` only for a real revision.
+- Builders keep the authored `aria-labelledby`/`aria-describedby` and add ECharts
+  ARIA labels only when none is given.
 - Avoid committing generated or copied data unless it is intentionally part of the reproducible
   frontend chart inputs.
 - Keep frontend CSV column names synchronized with pipeline export scripts.

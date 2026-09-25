@@ -183,6 +183,8 @@
 .electricity-attribution p:last-child { margin-bottom: 0; }
 .electricity-discovery {
   display: block; border: 1px solid var(--electricity-line); border-left: 4px solid var(--electricity-accent); background: var(--electricity-surface); padding: 1.5rem; margin: 0 0 2rem; border-radius: 8px;
+  // Whole-card link: keep the card text unlinked-looking and in the ink colour.
+  text-decoration: none;
   > span { color: var(--electricity-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
   h2 { margin: 0.4rem 0; font-size: 1.6rem; }
   p { color: var(--electricity-muted); max-width: 650px; }
@@ -198,6 +200,9 @@
   display: flex; align-items: center; gap: clamp(1rem, 3vw, 2rem);
   border: 1px solid var(--electricity-line); border-top: 4px solid var(--electricity-accent);
   border-radius: 10px; background: var(--electricity-surface); padding: 1rem;
+  // Card links are identified by the card layout; underline only on hover.
+  a { text-decoration: none; }
+  h2 a:hover, .dashboard-card-link:hover { text-decoration: underline; }
   h2 { font-size: clamp(1.1rem, 2vw, 1.45rem); line-height: 1.3; margin: 0.4rem 0; }
   h2 a { color: var(--electricity-ink); }
   p { color: var(--electricity-muted); margin-bottom: 0.5rem; }

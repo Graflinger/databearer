@@ -11,6 +11,15 @@
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
+:root {
+  --prose-link: #705815;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --prose-link: #d9c176;
+  }
+}
 body {
   font-family: var(--font-family);
   line-height: 1.6;
@@ -19,21 +28,31 @@ body {
 }
 
 a {
-  color: #c4ad61;
+  color: var(--prose-link);
   text-decoration: none;
 }
 
-/* a:focus {
-  outline: 2px solid #c4ad61;
+.post-content :where(p, li, td, th, dd, dt, blockquote, figcaption, caption) a,
+.post-meta a,
+.chart-sources a,
+.search-fallback a {
+  color: var(--prose-link);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+a:focus-visible {
+  outline: 2px solid currentColor;
   outline-offset: 2px;
-} */
+}
+
 /* Skip to Main Content Link */
 .skip-link {
   position: absolute;
   top: -40px;
   left: 0;
   background: #c4ad61;
-  color: #fff;
+  color: #1a1a1a;
   padding: 8px 16px;
   text-decoration: none;
   font-weight: 600;
@@ -43,7 +62,7 @@ a {
 
 .skip-link:focus {
   top: 0;
-  outline: 2px solid #fff;
+  outline: 2px solid #1a1a1a;
   outline-offset: -4px;
 }
 
@@ -91,10 +110,16 @@ a {
 
 /* Topics Navigation */
 .topics-nav {
+  --menu-surface: #fff;
   border-bottom: 1px solid #e0e0e0;
   padding: 20px 0;
 }
 
+@media (prefers-color-scheme: dark) {
+  .topics-nav {
+    --menu-surface: #1a1a1a;
+  }
+}
 .topics-nav .container {
   position: relative;
   display: flex;
@@ -119,7 +144,7 @@ a {
 }
 
 .topics-menu-toggle:focus {
-  outline: 2px solid #c4ad61;
+  outline: 2px solid var(--prose-link);
   outline-offset: 2px;
   border-radius: 8px;
 }
@@ -176,6 +201,12 @@ a {
   transition: all 0.3s ease;
 }
 
+.topics-menu[hidden],
+.topics-menu-toggle[hidden],
+.menu-backdrop[hidden] {
+  display: none !important;
+}
+
 .topics-nav a {
   text-decoration: none;
   color: #666;
@@ -189,19 +220,19 @@ a {
 
 .topics-nav a:hover {
   background-color: #d9c176;
-  color: #fff;
+  color: #333;
 }
 
 .topics-nav a:focus {
   background-color: #d9c176;
-  color: #fff;
-  outline: 2px solid #c4ad61;
+  color: #333;
+  outline: 2px solid var(--prose-link);
   outline-offset: 2px;
 }
 
 .topics-nav a[aria-current=page] {
   background-color: #c4ad61;
-  color: #fff;
+  color: #333;
 }
 
 /* Blog Grid */
@@ -256,11 +287,13 @@ a {
   margin: 0 auto;
 }
 
-/* Blog Card Links - Remove default link styling */
-.blog-grid a {
-  text-decoration: none;
-  color: inherit;
+/* Whole-card links (archives, related posts, search results): the heading is the
+   link text, so the card keeps its own colours and is never underlined. Scoped to
+   the card class so pagination and other links keep their own styling. */
+.blog-card-link {
   display: block;
+  color: inherit;
+  text-decoration: none;
 }
 
 .blog-card {
@@ -297,6 +330,13 @@ a {
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+}
+
+.blog-card-image-small picture,
+.blog-card-image-full picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .blog-card:hover .blog-card-image-small img {
@@ -357,7 +397,7 @@ a {
 
 .post-date {
   font-size: 14px;
-  color: #999;
+  color: #707070;
   margin-top: auto;
   margin-bottom: 0;
 }
@@ -397,7 +437,7 @@ a {
 .pagination-link {
   padding: 10px 20px;
   background-color: #d9c176;
-  color: #fff;
+  color: #1a1a1a;
   text-decoration: none;
   border-radius: 4px;
   transition: background-color 0.3s ease;
@@ -405,6 +445,10 @@ a {
 
 .pagination-link:hover {
   background-color: #c4ad61;
+}
+
+.pagination-link:focus-visible {
+  outline-color: var(--prose-link);
 }
 
 .pagination-info {
@@ -436,12 +480,12 @@ a {
 }
 
 .footer-nav a:hover {
-  color: #d9c176;
+  color: var(--prose-link);
 }
 
 .copyright {
   text-align: center;
-  color: #999;
+  color: #707070;
   font-size: 14px;
 }
 
@@ -472,11 +516,11 @@ a {
 .breadcrumb li:not(:last-child)::after {
   content: "›";
   margin: 0 8px;
-  color: #999;
+  color: #707070;
 }
 
 .breadcrumb a {
-  color: #c4ad61;
+  color: var(--prose-link);
   text-decoration: none;
 }
 
@@ -492,6 +536,9 @@ a {
 /* Single Post - Modern Minimalist Style */
 .post-content {
   --post-text: #374151;
+  --table-line: #e0e0e0;
+  --table-head: #f3f4f6;
+  --table-muted: #595959;
   max-width: 680px;
   margin: 0 auto;
   padding: 10px 15px;
@@ -546,7 +593,7 @@ a {
 }
 
 .post-updated {
-  color: #c4ad61;
+  color: var(--prose-link);
   font-weight: 500;
 }
 
@@ -559,6 +606,12 @@ a {
   font-weight: 700;
   letter-spacing: -1px;
   color: #1a1a1a;
+}
+
+.post-content h1,
+.post-content h2,
+.post-content h3 {
+  overflow-wrap: anywhere;
 }
 
 .post-content h2 {
@@ -606,6 +659,96 @@ a {
 
 .post-content li p {
   color: inherit;
+}
+
+.post-content .post-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 24px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.post-topics .post-topic-link {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1px solid #c4ad61;
+  border-radius: 999px;
+  color: var(--prose-link);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.post-topics .post-topic-link:hover {
+  background-color: rgba(196, 173, 97, 0.15);
+}
+
+/* Article tables: compact numeric evidence with row headers (th[scope='row']). */
+.post-content table {
+  width: 100%;
+  margin: 0 0 24px;
+  border-collapse: collapse;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.post-content caption {
+  caption-side: top;
+  padding: 0 0 8px;
+  color: var(--table-muted);
+  font-size: 14px;
+  text-align: left;
+}
+
+.post-content th,
+.post-content td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--table-line);
+  vertical-align: top;
+}
+
+.post-content thead th {
+  background-color: var(--table-head);
+  border-bottom-width: 2px;
+  font-weight: 600;
+  text-align: right;
+  vertical-align: bottom;
+}
+
+.post-content thead th:first-child,
+.post-content tbody th {
+  text-align: left;
+}
+
+.post-content tbody th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.post-content td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.post-content table:not(:has(th[scope=row])) th,
+.post-content table:not(:has(th[scope=row])) td {
+  text-align: left;
+}
+
+.table-scroll {
+  margin: 0 0 24px;
+  overflow-x: auto;
+}
+
+.table-scroll > table {
+  margin-bottom: 0;
+}
+
+.table-scroll:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .post-content iframe {
@@ -676,9 +819,21 @@ a {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  /* Show hamburger menu button in header */
-  .topics-menu-toggle {
+  /*
+   * Mobile navigation states, keyed on classes of <html>:
+   * - none: no JavaScript (or menu.js failed and the head script removed `js`
+   *   on load). The list stays in flow and usable; there is no toggle.
+   * - .js: set by the inline head script before first paint. The drawer is
+   *   collapsed off-canvas and out of flow from the start, so the in-flow list
+   *   never paints and nothing shifts when menu.js enhances it.
+   * - .js.nav-enhanced: menu.js manages hidden/inert/ARIA; .active opens it.
+   */
+  .js .topics-menu-toggle {
     display: block;
+  }
+  /* Reserve the toggle's space but keep it unusable until menu.js is ready. */
+  .js:not(.nav-enhanced) .topics-menu-toggle {
+    visibility: hidden;
   }
   .blog-card h2 {
     margin-top: 5px;
@@ -691,16 +846,22 @@ a {
   .blog-card-full .blog-card-content {
     padding-left: 0px;
   }
-  /* Hide the entire topics navigation bar on mobile */
-  .topics-nav {
-    display: none;
+  /* The unenhanced navigation remains in flow and usable without JavaScript. */
+  .topics-menu {
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+  }
+  .js .topics-nav {
+    padding: 0;
+    border: 0;
   }
   /* Show backdrop on mobile */
-  .menu-backdrop {
+  .nav-enhanced .menu-backdrop {
     display: block;
   }
   /* Mobile menu drawer - slides in from left */
-  .topics-menu {
+  .js .topics-menu {
     display: flex;
     position: fixed;
     font-size: 24px;
@@ -709,7 +870,8 @@ a {
     width: 85%;
     max-width: 380px;
     height: 100vh;
-    background-color: #fff;
+    height: 100dvh;
+    background-color: var(--menu-surface);
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
@@ -721,16 +883,21 @@ a {
     overflow-y: auto;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
   }
-  .topics-menu.active {
+  /* Until menu.js manages hidden/inert, keep the collapsed drawer's links out of
+     the focus order and the accessibility tree. */
+  .js:not(.nav-enhanced) .topics-menu {
+    visibility: hidden;
+  }
+  .js .topics-menu.active {
     transform: translateX(0);
   }
-  .topics-menu li {
+  .js .topics-menu li {
     width: 100%;
     opacity: 0;
     transform: translateX(-20px);
     transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .topics-menu.active li {
+  .js .topics-menu.active li {
     opacity: 1;
     transform: translateX(0);
   }
@@ -908,13 +1075,14 @@ a {
 
 #search-input:focus {
   outline: none;
-  border-color: #c4ad61;
+  border-color: var(--prose-link);
+  box-shadow: 0 0 0 1px var(--prose-link);
 }
 
 #search-button {
   padding: 12px 20px;
   background-color: #c4ad61;
-  color: white;
+  color: #1a1a1a;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -929,7 +1097,7 @@ a {
 }
 
 #search-button:focus {
-  outline: 2px solid #c4ad61;
+  outline: 2px solid var(--prose-link);
   outline-offset: 2px;
 }
 
@@ -950,12 +1118,6 @@ a {
   display: flex;
   flex-direction: column;
   gap: 30px;
-}
-
-.search-results-grid a {
-  text-decoration: none;
-  color: inherit;
-  display: block;
 }
 
 .search-highlight {
@@ -984,6 +1146,11 @@ a {
   margin-bottom: 12px;
 }
 
+.search-fallback {
+  margin-top: 30px;
+  text-align: center;
+}
+
 /* 404 Error Page */
 .error-404 {
   min-height: 60vh;
@@ -1001,7 +1168,7 @@ a {
 .error-404-title {
   font-size: 120px;
   font-weight: 700;
-  color: #c4ad61;
+  color: #806b2b;
   margin: 0;
   line-height: 1;
 }
@@ -1040,7 +1207,7 @@ a {
 
 .error-404-button.primary {
   background-color: #c4ad61;
-  color: #fff;
+  color: #1a1a1a;
   border: 2px solid #c4ad61;
 }
 
@@ -1052,14 +1219,18 @@ a {
 
 .error-404-button.secondary {
   background-color: transparent;
-  color: #c4ad61;
+  color: var(--prose-link);
   border: 2px solid #c4ad61;
 }
 
 .error-404-button.secondary:hover {
   background-color: #c4ad61;
-  color: #fff;
+  color: #1a1a1a;
   text-decoration: none;
+}
+
+.error-404-button:focus-visible {
+  outline-color: var(--prose-link);
 }
 
 .error-404-suggestions {
@@ -1089,7 +1260,7 @@ a {
 }
 
 .error-404-suggestions a {
-  color: #c4ad61;
+  color: var(--prose-link);
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
@@ -1122,6 +1293,9 @@ a {
   /* Post content dark mode */
   .post-content {
     --post-text: #e0e0e0;
+    --table-line: #404040;
+    --table-head: #333;
+    --table-muted: #b0b0b0;
     background-color: #1a1a1a;
   }
   .pagination {
@@ -1205,7 +1379,7 @@ a {
     color: #e0e0e0;
   }
   .breadcrumb li:not(:last-child)::after {
-    color: #666;
+    color: #999;
   }
   .image-caption {
     color: #b0b0b0;
@@ -1217,9 +1391,6 @@ a {
   .post-published {
     color: #b0b0b0;
   }
-  .post-updated {
-    color: #d9c176;
-  }
   /* Related posts dark mode */
   .related-posts {
     background-color: #1a1a1a;
@@ -1229,6 +1400,9 @@ a {
     color: #e0e0e0;
   }
   /* 404 dark mode */
+  .error-404-title {
+    color: #c4ad61;
+  }
   .error-404-subtitle {
     color: #e0e0e0;
   }
@@ -1246,9 +1420,6 @@ a {
     background-color: #2a2a2a;
     border-color: #404040;
     color: #e0e0e0;
-  }
-  #search-input:focus {
-    border-color: #c4ad61;
   }
   .search-info {
     color: #b0b0b0;
@@ -1943,6 +2114,7 @@ a {
   padding: 1.5rem;
   margin: 0 0 2rem;
   border-radius: 8px;
+  text-decoration: none;
 }
 .electricity-discovery > span {
   color: var(--electricity-muted);
@@ -1991,6 +2163,12 @@ a {
   border-radius: 10px;
   background: var(--electricity-surface);
   padding: 1rem;
+}
+.dashboard-card a {
+  text-decoration: none;
+}
+.dashboard-card h2 a:hover, .dashboard-card .dashboard-card-link:hover {
+  text-decoration: underline;
 }
 .dashboard-card h2 {
   font-size: clamp(1.1rem, 2vw, 1.45rem);

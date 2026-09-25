@@ -7,6 +7,7 @@
 
   let chart = null;
   let isInitialized = false;
+  const hasAuthoredLabel = chartDom.hasAttribute('aria-labelledby') || chartDom.hasAttribute('aria-label');
 
   // Detect dark mode
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -35,6 +36,13 @@
     const seriesData = [{"key":"Preis_EUR_MWh","name":"Day-Ahead-Preis (EUR/MWh)","data":[154.641666667,146.602,140.222333333,137.010666667,136.845333333,145.379,164.011,168.411666667,153.842666667,121.866666667,92.877333333,66.877,48.84,39.052666667,40.691,55.326333333,80.437333333,123.541333333,167.432666667,203.659333333,209.607,193.281333333,178.079666667,161.466333333],"color":null}];
 
     const option = {
+      aria: {
+        enabled: true,
+        // Keep the article's authored accessible name and summary when present.
+        label: {
+          enabled: !hasAuthoredLabel
+        }
+      },
       backgroundColor: colors.backgroundColor,
       title: undefined,
       tooltip: {
@@ -123,6 +131,7 @@
     if (isInitialized) return;
     isInitialized = true;
 
+    if (!chartDom.hasAttribute('role')) chartDom.setAttribute('role', 'img');
     chart = echarts.init(chartDom);
     updateChart();
 
