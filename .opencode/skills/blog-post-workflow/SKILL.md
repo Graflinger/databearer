@@ -29,6 +29,8 @@ Combine this skill with:
 - `frontend-visualization` for ECharts and CSVs
 - `frontend-page` for Eleventy posts and frontmatter
 - `image-generation` if a blog card image is needed
+- `work-tracking` when creating the post's branch or PR, so that the topic appears
+  in `docs/open_work.md`
 
 ## Editorial style
 
