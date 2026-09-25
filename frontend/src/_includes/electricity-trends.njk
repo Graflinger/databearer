@@ -21,6 +21,16 @@
       <p id="electricity-trends-shares-note">Drei Anteile mit demselben Nenner: gesamte erfasste Nettoerzeugung einschließlich Pumpspeichern und Kernkraft. Kohle = Braunkohle + Steinkohle. Die Anteile werden aus Jahressummen berechnet, nicht als Mittel der Tagesanteile.</p>
       <p id="electricity-trends-gaps">{% if trends.notes.annual %}{{ trends.notes.annual }} {% endif %}{% for row in trends.energy %}{% if row.generation_twh == null %}{{ row.year }}: {{ row.complete_days }}/{{ row.days }} Tage mit vollständigen Erzeugungswerten; ohne Jahresaggregat bleibt der Jahreswert als Lücke sichtbar. {% endif %}{% endfor %}Ein noch nicht abgeschlossenes Kalenderjahr wird hier ausgelassen und ist oben in der Jahresauswahl verfügbar.</p>
     </details>
+    <details>
+      <summary>Alle {{ trends.energy.length }} Jahreswerte der Erzeugungsanteile</summary>
+      <div class="electricity-table-wrap" role="region" aria-label="Jährliche Erzeugungsanteile" tabindex="0">
+        <table class="electricity-trends-table">
+          <caption>Anteile an der öffentlichen Nettoerzeugung in % · abgeschlossene Kalenderjahre · – = fehlend</caption>
+          <thead><tr><th scope="col">Jahr</th><th scope="col">Erneuerbare</th><th scope="col">Kohle (Braun- + Steinkohle)</th><th scope="col">Erdgas</th><th scope="col">Methode / Tagesabdeckung</th></tr></thead>
+          <tbody>{% for row in trends.energy %}<tr><th scope="row">{{ row.year }}</th><td>{{ row.renewable_share | electricityNumber(1) }}</td><td>{{ row.coal_share | electricityNumber(1) }}</td><td>{{ row.gas_share | electricityNumber(1) }}</td><td>{{ energyCoverage(row) }}</td></tr>{% endfor %}</tbody>
+        </table>
+      </div>
+    </details>
   </section>
   <section class="electricity-panel" aria-labelledby="electricity-trends-mix-heading">
     <div class="electricity-section-heading"><span aria-hidden="true">06</span><div><h3 id="electricity-trends-mix-heading">Wie sich die Erzeugung zusammensetzt</h3><p>Jährliche öffentliche Nettoerzeugung · Energieträger gestapelt · TWh</p></div></div>
@@ -29,6 +39,16 @@
       <summary>Hinweise zu Methode und Bedienung</summary>
       <p id="electricity-trends-mix-note">Absolute Energiemengen ergänzen die Anteile: Auch die insgesamt erzeugte Menge verändert sich. Alle zwölf Energieträger einschließlich Kernkraft sind enthalten. 1 TWh = 1.000 GWh.</p>
       <p>Legende anklicken, um Energieträger ein- oder auszublenden. Reihenfolge: im Stapel von oben nach unten, in der Legende von links nach rechts. Auf kleinen Bildschirmen lässt sich die Legende mit den Pfeilen durchblättern.</p>
+    </details>
+    <details>
+      <summary>Alle {{ trends.energy.length }} Jahreswerte für zwölf Energieträger</summary>
+      <div class="electricity-table-wrap" role="region" aria-label="Jährlicher Erzeugungsmix" tabindex="0">
+        <table class="electricity-trends-table">
+          <caption>Öffentliche Nettoerzeugung in TWh · abgeschlossene Kalenderjahre · Pumpspeicher: Ausspeisung · – = fehlend</caption>
+          <thead><tr><th scope="col">Jahr</th>{% for source in germanElectricityTrends.sources %}<th scope="col">{{ source.label }}</th>{% endfor %}<th scope="col">Gesamt</th><th scope="col">Methode / Tagesabdeckung</th></tr></thead>
+          <tbody>{% for row in trends.energy %}<tr><th scope="row">{{ row.year }}</th>{% for source in germanElectricityTrends.sources %}<td>{{ row.mix_twh[source.key] | electricityNumber(2) }}</td>{% endfor %}<td>{{ row.generation_twh | electricityNumber(2) }}</td><td>{{ energyCoverage(row) }}</td></tr>{% endfor %}</tbody>
+        </table>
+      </div>
     </details>
   </section>
   <section class="electricity-panel" aria-labelledby="electricity-trends-trade-years-heading">
@@ -45,6 +65,16 @@
       <summary>Hinweise zu Handel und Teiljahren</summary>
       <p id="electricity-trends-trade-years-note">Importe und Exporte sind jeweils positive Mengen. Die Linie zeigt <strong>Nettoexport = Export − Import</strong>: positiv bedeutet Nettoexport, negativ Nettoimport. Das sind geplante Handelsmengen, keine physischen Stromflüsse und keine aus Erzeugung minus Netzlast abgeleitete Bilanz.</p>
       <p>{% for row in trends.trade.years %}{% if row.partial_year %}{{ row.label }}: Hellere, gestrichelt umrandete Balken und ein separater Nettopunkt kennzeichnen diesen kürzeren Zeitraum. Kein vollständiges Jahresergebnis und keine Hochrechnung. {% endif %}{% endfor %}Ein Jahr mit fehlenden Monatswerten erhält keine Jahressumme. Die Quellenabdeckung steht in der Monatstabelle darunter.</p>
+    </details>
+    <details>
+      <summary>Alle {{ trends.trade.years.length }} Jahreswerte des Stromhandels</summary>
+      <div class="electricity-table-wrap" role="region" aria-label="Jährlicher kommerzieller Stromhandel" tabindex="0">
+        <table class="electricity-trends-table">
+          <caption>Kommerzieller Stromhandel DE–LU in TWh · Nettoexport positiv / Nettoimport negativ · Teiljahre ohne Hochrechnung · – = fehlend</caption>
+          <thead><tr><th scope="col">Zeitraum</th><th scope="col">Import</th><th scope="col">Export</th><th scope="col">Nettoexport (+/−)</th><th scope="col">Monatsabdeckung</th></tr></thead>
+          <tbody>{% for row in trends.trade.years %}<tr{% if row.partial_year %} class="electricity-trends-partial"{% endif %}><th scope="row">{{ row.label }}{% if row.partial_year %} · Teiljahr{% endif %}</th><td>{{ row.imports_twh | electricityNumber(2) }}</td><td>{{ row.exports_twh | electricityNumber(2) }}</td><td>{{ row.net_exports_twh | electricityNumber(2) }}</td><td>{{ row.complete_months }}/{{ row.months }} Monate{% if row.complete_months < row.months %} · Fehlende Monatswerte; keine Jahressumme{% endif %}</td></tr>{% endfor %}</tbody>
+        </table>
+      </div>
     </details>
   </section>
   <section class="electricity-panel" aria-labelledby="electricity-trends-trade-months-heading">
@@ -71,6 +101,6 @@
       </div>
     </details>
   </section>
-  <p id="electricity-trends-status" class="electricity-status" role="status" data-tone="quiet">Alle Langfristwerte sind im JSON-Download verfügbar; monatliche Handelswerte zusätzlich als Tabelle. Diagramme benötigen JavaScript und werden erst beim Scrollen in ihre Nähe geladen.</p>
+  <p id="electricity-trends-status" class="electricity-status" role="status" data-tone="quiet">Alle Langfristwerte sind im JSON-Download und in aufklappbaren Jahres- und Monatstabellen verfügbar. Diagramme benötigen JavaScript und werden erst beim Scrollen in ihre Nähe geladen.</p>
 </section>
 <script type="application/json" id="electricity-trends-data">{{ germanElectricityTrends.json | safe }}</script>
