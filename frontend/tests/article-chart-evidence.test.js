@@ -19,12 +19,17 @@ function render(post) {
 
 // These literals are the checked-in published evidence, independent of missing
 // legacy CSVs and of ignored local inputs that may contain newer observations.
+// Scatter charts have no category axis, so xData is optional (null).
 function frozenChart(script) {
   const code = fs.readFileSync(path.join(root, script.getAttribute('src')), 'utf8');
+  const literal = (pattern) => {
+    const match = code.match(pattern);
+    return match ? JSON.parse(match[1]) : null;
+  };
   return {
     containerId: code.match(/document\.getElementById\('([^']+)'\)/)[1],
-    x: JSON.parse(code.match(/const xData = (\[[^\n]+\]);/)[1]),
-    series: JSON.parse(code.match(/const seriesData = (\[[^\n]+\]);/)[1]),
+    x: literal(/const xData = (\[[^\n]+\]);/),
+    series: literal(/const seriesData = (\[[^\n]+\]);/),
   };
 }
 

@@ -1,0 +1,6 @@
+Modell,Zeitraum,Monate,Gas_Koeffizient,Gas_KI95_unten,Gas_KI95_oben,Erneuerbare_Koeffizient,Erneuerbare_KI95_unten,Erneuerbare_KI95_oben,R2
+Gas_Erneuerbare,2019–2025,84,1.6832,1.5445,1.8219,-0.1093,-0.4200,0.2014,0.9453
+Gas_Erneuerbare,2019–2020,24,0.6835,0.3862,0.9808,-0.9453,-1.1764,-0.7143,0.8915
+Gas_Erneuerbare,2021–2022,24,1.7225,1.5604,1.8847,-2.1332,-3.7225,-0.5438,0.9427
+Gas_Erneuerbare,2023–2025,36,0.9134,0.3089,1.5180,-1.5858,-2.0977,-1.0740,0.7865
+Gas_Erneuerbare_Last_Kalendermonat,2019–2025,84,1.6733,1.5621,1.7846,-0.2429,-0.9387,0.4529,0.9551

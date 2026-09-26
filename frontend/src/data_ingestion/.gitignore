@@ -5,3 +5,11 @@ data/*
 !data/battery_storage_*.csv
 !data/battery_storage_metadata.json
 !data/battery_storage_quality.json
+
+# Frozen, validated evidence for the 2026 electricity/gas/renewables correlation article.
+!data/2026/
+data/2026/*
+!data/2026/strompreis-korrelation/
+data/2026/strompreis-korrelation/*
+!data/2026/strompreis-korrelation/strompreis_korrelation_*.csv
+!data/2026/strompreis-korrelation/strompreis_korrelation_metadata.json

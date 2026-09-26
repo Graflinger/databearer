@@ -8,7 +8,7 @@ Maintain it with the `work-tracking` skill (`.opencode/skills/work-tracking/`).
 GitHub is the source of truth for PR state. When this file and GitHub disagree,
 reconcile this file.
 
-**Last reconciled:** 2026-09-25 (against `gh pr list` and `origin/*`)
+**Last reconciled:** 2026-09-26 (against `gh pr list` and `origin/*`)
 
 ## Status values
 
@@ -35,10 +35,10 @@ Rows are sorted by ID so that parallel branches edit different lines.
 | `battery-storage` | story | in review | `feature/battery-storage-analysis` | [#25](https://github.com/Graflinger/databearer/pull/25) | [battery_storage.md](battery_storage.md) | The draft post is already on `main` but hidden (`eleventyExcludeFromCollections`). Editorial work left: residual outliers, operator-type sensitivity, whether to use a fresh MaStR snapshot, headline/copy, card image. Then remove the draft markers. PR is 35 commits behind `main`. |
 | `erneuerbare-wachstum` | story | in review | `feature/dashboard-erneuerbare-wachstum` | [#34](https://github.com/Graflinger/databearer/pull/34) | `docs/erneuerbare_wachstum.md` (on branch) | Review the article `/posts/2026/solar-boomt-wind-waechst/`. Merge `main` in (28 behind), then merge. |
 | `netzeingriffe` | story | in review | `feature/dashboard-netzeingriffe-stabilitaet` | [#33](https://github.com/Graflinger/databearer/pull/33) | `docs/netzeingriffe.md` (on branch) | Review the article `/posts/2026/netzeingriffe-netzstabilitaet/`. Merge `main` in (28 behind). Follow-up idea: the documented BNetzA SAIDI route. |
-| `open-work-tracker` | chore | in review | `docs/open-work-tracker` | [#43](https://github.com/Graflinger/databearer/pull/43) | this file | Review the tracker format and the `work-tracking` skill, then merge. Not public-facing, so remove this row in the merge commit. |
 | `release-promotion` | infra | awaiting release | `main` → `releases/cloudflare` | [#22](https://github.com/Graflinger/databearer/pull/22), [#23](https://github.com/Graflinger/databearer/pull/23), [#26](https://github.com/Graflinger/databearer/pull/26), [#28](https://github.com/Graflinger/databearer/pull/28), [#30](https://github.com/Graflinger/databearer/pull/30), [#35](https://github.com/Graflinger/databearer/pull/35), [#37](https://github.com/Graflinger/databearer/pull/37), [#39](https://github.com/Graflinger/databearer/pull/39), [#41](https://github.com/Graflinger/databearer/pull/41), [#42](https://github.com/Graflinger/databearer/pull/42) | [dashboard publication](dashboard_publication.md), [partial refresh](dashboard_partial_refresh.md) | No manual promotion since 2026-09-11. Every merged PR listed here is on `main` only, and the release only gets bot data commits. Includes release-first (#26) and partial refresh (#39), which still need deliberate promotion plus live acceptance. Promote by the runbook (no force), check the live data/HTML and the next 06:00 UTC run, then empty this row. |
 | `strom-ytd` | story | in review | `feature/dashboard-strom-ytd` | [#31](https://github.com/Graflinger/databearer/pull/31) | `docs/strom_ytd.md` (on branch) | Review the article `/posts/2026/strom-2026-ytd-zahlen/`. The January–September 9 window is time-sensitive, so decide soon whether to publish as-is or refresh. Merge `main` in (28 behind). |
 | `stromhandel` | story | in review | `feature/dashboard-stromhandel-jahre` | [#32](https://github.com/Graflinger/databearer/pull/32) | `docs/stromhandel_post.md` (on branch) | Review the article `/posts/2026/stromimporte-exporte-deutschland/`. Merge `main` in (28 behind), then merge. |
+| `strompreis-korrelation` | story | in progress | `feature/strompreis-gas-erneuerbare-korrelation` | — | [strompreis_korrelation.md](strompreis_korrelation.md) | Open the PR, then review the article `/posts/2026/strompreis-gaspreis-erneuerbare/`: wording of the seasonality caveat and the monthly-TTF scope. |
 
 ## Ideas without a branch
 

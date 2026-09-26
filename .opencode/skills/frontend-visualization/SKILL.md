@@ -156,7 +156,7 @@ generation. If you keep configs in subfolders, either call the generator with th
 
 Required:
 
-- `type`: currently `line` or `bar`.
+- `type`: `line`, `bar` or `scatter`.
 - `dataFile`: CSV filename in `src/data_ingestion/data/`.
 - `outputFile`: generated JS filename.
 - `containerId`: HTML element ID.
@@ -168,6 +168,11 @@ Common optional fields:
 - `seriesKeys`, `seriesNames` for multi-series charts
 - `smooth` for line charts
 - `color`, `colors`, `stacked` for bar/multi-series styling
+- Scatter only: `xKey`/`yKey` (both numeric, required), `labelKey` (tooltip label),
+  `groupKey` + `groupOrder` (one colored series per group), `xUnit`/`yUnit`,
+  `xDecimals`/`yDecimals`, `trendLines` (least-squares line per group). Scatter
+  scripts have no `xData`; test their tables against the CSV (see
+  `tests/strompreis-korrelation-post.test.js`).
 
 ## Troubleshooting
 

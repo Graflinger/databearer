@@ -1,0 +1,26 @@
+# Free-to-reuse monthly sources for the European gas benchmark in EUR/MWh.
+# Used by src/data_pipelines/get_raw_data/ingest_gas_price_data.py.
+sources:
+  world_bank_pink_sheet:
+    description: "World Bank Commodity Price Data (Pink Sheet), monthly nominal prices"
+    url: "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx"
+    landing_page: "https://www.worldbank.org/en/research/commodity-markets"
+    catalog_page: "https://datacatalog.worldbank.org/search/dataset/0038238/commodity-prices-history-and-projections"
+    license: "CC BY 4.0"
+    license_url: "https://creativecommons.org/licenses/by/4.0/"
+    attribution: "World Bank, Commodity Price Data (The Pink Sheet)"
+    sheet: "Monthly Prices"
+    series: "Natural gas, Europe"
+    unit: "($/mmbtu)"
+    # Description sheet: from April 2015 the series is the Netherlands Title
+    # Transfer Facility (TTF). It is a monthly average, not a day-ahead quote.
+    max_bytes: 5000000
+  ecb_usd_eur:
+    description: "ECB euro foreign exchange reference rate, US dollar per euro, monthly average"
+    url: "https://data-api.ecb.europa.eu/service/data/EXR/M.USD.EUR.SP00.A?startPeriod=2019-01&endPeriod=2025-12&format=csvdata"
+    series_key: "EXR.M.USD.EUR.SP00.A"
+    landing_page: "https://data.ecb.europa.eu/data/datasets/EXR/EXR.M.USD.EUR.SP00.A"
+    terms_url: "https://www.ecb.europa.eu/services/disclaimer/html/index.en.html"
+    license: "ECB copyright; free reuse with source attribution and disclosure of modifications"
+    attribution: "Europäische Zentralbank (EZB), Referenzkurs US-Dollar/Euro"
+    max_bytes: 1000000
