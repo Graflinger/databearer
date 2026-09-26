@@ -5,8 +5,10 @@ const { safeJSON } = require('../../js/dashboards/electricity-history');
 function summary(snapshot) {
   const value = data.summarize(snapshot);
   const components = data.componentReport(snapshot);
-  return { ...value, text: data.presentation(value), components,
+  const issues = data.dataIssues(snapshot);
+  return { ...value, text: data.presentation(value), components, issues, issueText: data.issueText(issues),
     partial: components.some((component) => component.status !== 'complete') || Object.values(snapshot.refresh_status || {}).some((meta) => meta.status !== 'ok'),
+    throughLabel: data.shortDate(data.dayKey(Date.parse(snapshot.data_through) - 1)),
     createdLabel: data.timestampLabel(Date.parse(snapshot.snapshot_created_at)),
     stale: data.freshness(snapshot).stale };
 }

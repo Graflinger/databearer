@@ -9,7 +9,7 @@ layout: base.njk
                 <a href="/">Home</a>
             </li>
             <li>
-                <a href="/themen/{{ topic[0] }}">
+                <a href="/themen/{{ topic[0] }}/">
                     {% if topic[0] == 'energie' %}Energie{% elif topic[0] == 'wirtschaft' %}Wirtschaft{% elif topic[0] == 'politik-und-gesellschaft' %}Politik & Gesellschaft{% else %}{{ topic[0] }}
                     {% endif %}
                 </a>
@@ -27,6 +27,7 @@ layout: base.njk
     </p>
 
     <div class="post-meta">
+        <span class="post-author">Von <a href="/about/" rel="author">{{ site.author }}</a></span>
         <time class="post-published" datetime="{{ date | htmlDateString }}">
             Veröffentlicht: {{ date | localDate(site.locale) }}
         </time>
@@ -39,7 +40,7 @@ layout: base.njk
 
     {%- if image %}
         <div class="post-header-image">
-            <img src="{{ image }}" alt="{{ title }}" loading="eager" width="1200" height="630">
+            {% responsiveImage image, imageAlt or '', 'hero', true %}
             {%- if imageText %}
                 <p class="image-caption">{{ imageText }}</p>
             {%- endif %}
@@ -49,7 +50,7 @@ layout: base.njk
     {%- if topic and topic.length > 0 %}
         <p class="post-topics">
             {%- for topicItem in topic %}
-                <a href="/themen/{{ topicItem }}" class="post-topic-link">
+                <a href="/themen/{{ topicItem }}/" class="post-topic-link">
                     {% if topicItem == 'energie' %}Energie{% elif topicItem == 'wirtschaft' %}Wirtschaft{% elif topicItem == 'politik-und-gesellschaft' %}Politik & Gesellschaft{% else %}{{ topicItem }}{% endif %}
                 </a>
             {%- endfor %}
@@ -68,9 +69,11 @@ layout: base.njk
                 {%- for post in relatedPostsList %}
                     <a href="{{ post.url }}" class="blog-card-link">
                         <article class="blog-card blog-card-horizontal">
-                            <div class="blog-card-image-small">
-                                <img src="{{ post.data.image }}" alt="{{ post.data.title }}" loading="lazy" width="1200" height="630">
-                            </div>
+                            {%- if post.data.image %}
+                                <div class="blog-card-image-small">
+                                    {% responsiveImage post.data.image, '', 'card', false %}
+                                </div>
+                            {%- endif %}
                             <div class="blog-card-content">
                                 <h2>{{ post.data.title }}</h2>
                                 <p class="post-excerpt">{{ post.data.excerpt }}</p>

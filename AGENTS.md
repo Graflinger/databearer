@@ -81,6 +81,14 @@ Main and release need not routinely equal. Preserve explicit history/trade
 reconciliation at rollover; never auto-correct closed years. Follow the publication
 runbook's separate recovery paths for public verification failures and sync failures.
 
+## Open work tracking
+
+[Open work](docs/open_work.md) lists every unfinished topic with its branch, PR and
+next step. When you create a branch, open or merge a PR, or promote to
+`releases/cloudflare`, load the `work-tracking` skill. Reconcile the tracker with
+GitHub, add new topics and remove finished ones. A topic is finished only when it
+is merged and, if public-facing, live on `releases/cloudflare`.
+
 ## Working conventions
 
 - Run pipeline commands from `pipeline/`, with that directory on `PYTHONPATH`.

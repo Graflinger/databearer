@@ -40,7 +40,7 @@
     const buttons = [...root.querySelectorAll('[data-progress-metric]')];
     const charts = new Map();
     let snapshot, metric = 'energy';
-    const failure = () => { status.textContent = 'Diagramme konnten nicht dargestellt werden. Die letzten Werte und Ziele bleiben lesbar; alle Reihen stehen im JSON-Download.'; };
+    const failure = () => { status.dataset.tone = 'error'; status.textContent = 'Diagramme konnten nicht dargestellt werden. Die letzten Werte und Ziele bleiben lesbar; alle Reihen stehen im JSON-Download.'; };
     try { snapshot = JSON.parse(embedded.textContent); }
     catch (error) { failure(); return; }
     if (!window.echarts) { failure(); return; }

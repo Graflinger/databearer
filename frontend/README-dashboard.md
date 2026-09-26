@@ -46,7 +46,25 @@ Production and template tests share `electricityFilters.js`. Visible report mark
 status, coverage and cutoffs to the v2 metadata. The public verifier checks the
 actual text and rejects missing, duplicate, hidden/inert or mismatched report markup;
 partial/retained reports must be expanded and have a visible warning. It does not
-evaluate external CSS. Verifier regression tests run from the repository root:
+evaluate external CSS.
+
+The report sits at the top of the “Daten verstehen” method section, directly inside
+the article (never inside another `<details>`), so it can expand on partial days
+without pushing the charts down. Affected rows are listed first with `data-status`.
+Near the charts, a compact status line next to “Ausgewählter Zeitraum”
+(`#electricity-data-state`) shows exactly one of:
+
+- healthy: `#electricity-data-ok` (“Alle Quellen aktuell · Daten bis …”, the hourly
+  data end date);
+- partial/retained: `#electricity-partial-warning`, naming only affected components
+  or history/trade refreshes. It must keep the verbatim phrases “Teilaktualisierung”
+  and “Fehlende Werte sind keine Nullen” in visible text for the verifier;
+- `#electricity-freshness`, `#electricity-history-freshness` and
+  `#electricity-recent-error` as short warning chips.
+
+The healthy chip is hidden whenever any warning chip is visible. Keep the status
+line a sibling of the `data-value` heading, because the controller overwrites every
+`[data-value]` node. Verifier regression tests run from the repository root:
 
 ```bash
 python3 -B -m unittest discover -s scripts/tests -p 'test_verify_dashboard_deployment.py' -v
@@ -97,6 +115,15 @@ Renewable shares use renewable energy / all generation energy, including pumped
 storage in the denominator. Prices are time-weighted, not load-weighted. Source mix
 bars, KPIs and summaries remain available without charts; without JavaScript the
 initial YTD view remains readable and prepared JSON remains downloadable.
+
+Chart texts are split into a short visible headline (`generationText`, `loadText`,
+`priceText`) and a collapsed “Hinweise zur Berechnung” note (`…Note`). Headlines must
+keep every incompleteness marker (coverage below 100 %, Teilsumme, suppressed totals,
+“keine Jahressummen”); notes only explain definitions. Methodology blocks, long-term
+source notes and progress caveats are closed `<details>` by default; CC BY attribution
+remains visible. Successful loading/selection messages in `#electricity-status` and
+the trends/progress status paragraphs are visually hidden (`data-tone="quiet"`) but
+announced; failures switch to `data-tone="error"` and become visible.
 
 The grid freshness warning uses `data_through`, not snapshot creation time, and updates
 in the browser every minute and when the tab becomes visible. Future timestamps
@@ -234,7 +261,7 @@ are pending; `aria-busy` and a live status announce loading and failure.
 
 History freshness uses the **latest manifest date**, never a selected closed year,
 with the same 96-hour delay after the next Berlin midnight. The separate recent
-warning continues to describe current hourly data. Both advance in open tabs.
+warning chip continues to describe current hourly data. Both advance in open tabs.
 The year selector is sufficient for historical exploration; there is no all-years
 chart that would require downloading the entire history.
 

@@ -7,6 +7,7 @@
 
   let chart = null;
   let isInitialized = false;
+  const hasAuthoredLabel = chartDom.hasAttribute('aria-labelledby') || chartDom.hasAttribute('aria-label');
 
   // Detect dark mode
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -35,6 +36,13 @@
     const seriesData = [{"key":"Anzahl_Index","name":"Anlagenzahl","data":[7.354226452,15.131141678,24.739940862,38.361405008,105.882229801,100,97.519516429],"color":null},{"key":"Energie_Index","name":"Speicherkapazität","data":[7.438527198,14.385957557,22.40141118,42.495236238,98.632807474,100,108.682791865],"color":null}];
 
     const option = {
+      aria: {
+        enabled: true,
+        // Keep the article's authored accessible name and summary when present.
+        label: {
+          enabled: !hasAuthoredLabel
+        }
+      },
       backgroundColor: colors.backgroundColor,
       title: undefined,
       tooltip: {
@@ -129,6 +137,7 @@
     if (isInitialized) return;
     isInitialized = true;
 
+    if (!chartDom.hasAttribute('role')) chartDom.setAttribute('role', 'img');
     chart = echarts.init(chartDom);
     updateChart();
 

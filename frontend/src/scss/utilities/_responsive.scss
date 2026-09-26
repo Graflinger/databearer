@@ -1,8 +1,21 @@
 /* Responsive Design */
 @media (max-width: 768px) {
-  /* Show hamburger menu button in header */
-  .topics-menu-toggle {
+  /*
+   * Mobile navigation states, keyed on classes of <html>:
+   * - none: no JavaScript (or menu.js failed and the head script removed `js`
+   *   on load). The list stays in flow and usable; there is no toggle.
+   * - .js: set by the inline head script before first paint. The drawer is
+   *   collapsed off-canvas and out of flow from the start, so the in-flow list
+   *   never paints and nothing shifts when menu.js enhances it.
+   * - .js.nav-enhanced: menu.js manages hidden/inert/ARIA; .active opens it.
+   */
+  .js .topics-menu-toggle {
     display: block;
+  }
+
+  /* Reserve the toggle's space but keep it unusable until menu.js is ready. */
+  .js:not(.nav-enhanced) .topics-menu-toggle {
+    visibility: hidden;
   }
 
   .blog-card h2 {
@@ -19,18 +32,25 @@
     padding-left: 0px;
   }
 
-  /* Hide the entire topics navigation bar on mobile */
-  .topics-nav {
-    display: none;
+  /* The unenhanced navigation remains in flow and usable without JavaScript. */
+  .topics-menu {
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+  }
+
+  .js .topics-nav {
+    padding: 0;
+    border: 0;
   }
 
   /* Show backdrop on mobile */
-  .menu-backdrop {
+  .nav-enhanced .menu-backdrop {
     display: block;
   }
 
   /* Mobile menu drawer - slides in from left */
-  .topics-menu {
+  .js .topics-menu {
     display: flex;
     position: fixed;
     font-size: 24px;
@@ -39,7 +59,8 @@
     width: 85%;
     max-width: 380px;
     height: 100vh;
-    background-color: #fff;
+    height: 100dvh;
+    background-color: var(--menu-surface);
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
@@ -52,11 +73,17 @@
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
   }
 
-  .topics-menu.active {
+  /* Until menu.js manages hidden/inert, keep the collapsed drawer's links out of
+     the focus order and the accessibility tree. */
+  .js:not(.nav-enhanced) .topics-menu {
+    visibility: hidden;
+  }
+
+  .js .topics-menu.active {
     transform: translateX(0);
   }
 
-  .topics-menu li {
+  .js .topics-menu li {
     width: 100%;
     opacity: 0;
     transform: translateX(-20px);
@@ -65,7 +92,7 @@
       transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .topics-menu.active li {
+  .js .topics-menu.active li {
     opacity: 1;
     transform: translateX(0);
   }

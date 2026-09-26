@@ -18,7 +18,7 @@ const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(path.join(__d
 require('../src/data_ingestion/builders/electricityFilters').register(env);
 describe.each(cases)('$name', ({ historyData, snapshot, now, trends }) => {
 const monthlyCount = monthCount(snapshot.first_month, snapshot.last_month);
-const tableCounts = [monthlyCount];
+const tableCounts = [trends.summary.energy.length, trends.summary.energy.length, trends.summary.trade.years.length, monthlyCount];
 let intersect, observe, unobserve, charts, themes;
 beforeEach(() => {
   jest.useFakeTimers();
@@ -35,22 +35,36 @@ const nodes = () => [...document.querySelectorAll('[data-trend-chart]')];
 const show = (node) => intersect([{ target: node, isIntersecting: true }]);
 const flush = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
 
-test('annual panels show charts without tables and retain downloadable values and source notes', () => {
-  expect(document.querySelectorAll('#electricity-trends table')).toHaveLength(1);
+test('annual panels render compact accessible tables and retain downloadable values and source notes', () => {
+  expect(document.querySelectorAll('#electricity-trends table')).toHaveLength(4);
   const tables = [...document.querySelectorAll('#electricity-trends tbody')];
   expect(tables.map((node) => node.children.length)).toEqual(tableCounts);
   expect(nodes().every((node) => node.hidden)).toBe(true);
-   expect(document.querySelector('#electricity-trends-gaps').textContent).toContain('2016 und 2018: veröffentlichte SMARD-Jahresaggregate; übrige Jahre aus Tageswerten summiert. Lücken in Tageshistorie bleiben bestehen.');
-   for (const heading of ['shares', 'mix']) {
-     const panel = document.querySelector(`[aria-labelledby="electricity-trends-${heading}-heading"]`);
-     expect(panel.querySelector('table')).toBeNull();
-     expect(panel.querySelector('[data-trend-chart]')).not.toBeNull();
-   }
+  expect(document.querySelector('#electricity-trends-gaps').textContent).toContain('2016 und 2018: veröffentlichte SMARD-Jahresaggregate; übrige Jahre aus Tageswerten summiert. Lücken in Tageshistorie bleiben bestehen.');
+  for (const heading of ['shares', 'mix']) {
+    const panel = document.querySelector(`[aria-labelledby="electricity-trends-${heading}-heading"]`);
+    expect(panel.querySelector('table')).not.toBeNull();
+    expect(panel.querySelector('[data-trend-chart]')).not.toBeNull();
+  }
   const annualPanel = document.querySelector('[aria-labelledby="electricity-trends-trade-years-heading"]');
-  expect(annualPanel.querySelector('table')).toBeNull();
+  expect(annualPanel.querySelector('table')).not.toBeNull();
   if (!snapshot.last_month.endsWith('-12')) expect(annualPanel.textContent).toContain(annualLabel(snapshot.last_month));
   expect(annualPanel.querySelectorAll('.electricity-trade-key[aria-hidden="true"]')).toHaveLength(4);
   expect(document.querySelectorAll('[aria-label="Legende monatlicher Stromhandel"] .electricity-trade-key')).toHaveLength(3);
+  for (const table of document.querySelectorAll('#electricity-trends table')) {
+    const details = table.closest('details');
+    expect(details.open).toBe(false);
+    expect(details.querySelector('summary').textContent.trim()).not.toBe('');
+    const wrap = table.parentElement;
+    expect(wrap.classList.contains('electricity-table-wrap')).toBe(true);
+    expect(wrap.getAttribute('role')).toBe('region');
+    expect(wrap.getAttribute('aria-label')).toBeTruthy();
+    expect(wrap.tabIndex).toBe(0);
+    expect(table.caption.textContent).toMatch(/%|TWh/);
+    expect(table.caption.textContent).toContain('fehlend');
+    expect([...table.querySelectorAll('thead th')].every((cell) => cell.scope === 'col')).toBe(true);
+    expect([...table.querySelectorAll('tbody th')].every((cell) => cell.scope === 'row')).toBe(true);
+  }
   const script = document.querySelector('#electricity-trends-data');
   expect(script.type).toBe('application/json');
   expect(JSON.parse(script.textContent)).toEqual(trends.summary);
@@ -59,6 +73,33 @@ test('annual panels show charts without tables and retain downloadable values an
   expect(document.querySelector('#electricity-trends').contains(sources)).toBe(false);
   expect(sources.querySelector('a[href="https://creativecommons.org/licenses/by/4.0/"]')).not.toBeNull();
   expect(sources.querySelector('a[href="/data/german-electricity-trends.json"][download]')).not.toBeNull();
+});
+
+test('static annual cells match every summary value, all twelve sources and partial-year labels', () => {
+  const table = (name) => document.querySelector(`[aria-labelledby="electricity-trends-${name}-heading"] table`);
+  const cells = (row) => [...row.querySelectorAll('td')].map((cell) => cell.textContent);
+  const shares = [...table('shares').querySelectorAll('tbody tr')];
+  const mix = [...table('mix').querySelectorAll('tbody tr')];
+  expect(history.SOURCES).toHaveLength(12);
+  expect([...table('mix').querySelectorAll('thead th')].slice(1, 13).map((cell) => cell.textContent)).toEqual(history.SOURCES.map((source) => source.label));
+  trends.summary.energy.forEach((row, index) => {
+    expect(shares[index].querySelector('th').textContent).toBe(String(row.year));
+    expect(mix[index].querySelector('th').textContent).toBe(String(row.year));
+    expect(cells(shares[index]).slice(0, 3)).toEqual([row.renewable_share, row.coal_share, row.gas_share].map((value) => data.number(value, 1)));
+    expect(cells(mix[index]).slice(0, 13)).toEqual([...history.SOURCES.map((source) => row.mix_twh[source.key]), row.generation_twh].map((value) => data.number(value, 2)));
+    for (const rendered of [shares[index], mix[index]]) {
+      expect(cells(rendered).at(-1)).toContain(`${row.complete_days}/${row.days} Erzeugungstage`);
+      expect(cells(rendered).at(-1).includes('SMARD-Jahreswerte')).toBe(row.method === 'source_annual_aggregate');
+    }
+  });
+  const trade = [...table('trade-years').querySelectorAll('tbody tr')];
+  trends.summary.trade.years.forEach((row, index) => {
+    expect(trade[index].querySelector('th').textContent).toBe(`${row.label}${row.partial_year ? ' · Teiljahr' : ''}`);
+    expect(trade[index].classList.contains('electricity-trends-partial')).toBe(row.partial_year);
+    expect(cells(trade[index]).slice(0, 3)).toEqual([row.imports_twh, row.exports_twh, row.net_exports_twh].map((value) => data.number(value, 2)));
+    expect(cells(trade[index]).at(-1)).toBe(`${row.complete_months}/${row.months} Monate${row.complete_months < row.months ? ' · Fehlende Monatswerte; keine Jahressumme' : ''}`);
+  });
+  expect(document.querySelector('#electricity-trends-status').textContent).toContain('Jahres- und Monatstabellen');
 });
 
 test('share legend shows decorative line swatches with readable series labels', () => {
@@ -83,6 +124,46 @@ test('daily-only template preserves coverage and visible gaps when the supplemen
   expect(note).toContain('2018: 361/365');
   expect(note).toContain('ohne Jahresaggregat bleibt der Jahreswert als Lücke sichtbar');
   expect(root.textContent).not.toContain('SMARD-Jahreswerte');
+  for (const name of ['shares', 'mix']) {
+    const rows = [...root.querySelectorAll(`[aria-labelledby="electricity-trends-${name}-heading"] tbody tr`)];
+    for (const year of [2016, 2018]) {
+      const row = rows.find((node) => node.querySelector('th').textContent === String(year));
+      const cells = [...row.querySelectorAll('td')];
+      expect(cells.slice(0, -1).map((cell) => cell.textContent)).toEqual(Array(name === 'shares' ? 3 : 13).fill('–'));
+      expect(cells.at(-1).textContent).toContain('Jahreswert fehlt');
+    }
+    const complete = rows.find((node) => node.querySelector('th').textContent === '2015');
+    expect(complete.textContent).not.toContain('Jahreswert fehlt');
+    expect(complete.querySelector('td').textContent).not.toBe('–');
+  }
+});
+
+test('annual trade tables distinguish true zeros, negative net values and missing months from partial calendar years', () => {
+  const changed = JSON.parse(JSON.stringify(snapshot));
+  for (const row of changed.rows.filter((row) => row.month.startsWith('2019-'))) {
+    Object.assign(row, { imports_gwh: 0, exports_gwh: 0, net_exports_gwh: 0 });
+  }
+  for (const row of changed.rows.filter((row) => row.month.startsWith('2020-'))) {
+    Object.assign(row, { imports_gwh: 2000, exports_gwh: 1000, net_exports_gwh: -1000 });
+  }
+  // Exercise a missing full-year month and the latest (possibly partial) year.
+  for (const row of [changed.rows.find((row) => row.month === '2021-01'), changed.rows.at(-1)]) {
+    Object.assign(row, { imports_gwh: null, exports_gwh: null, net_exports_gwh: null, missing_series: [4486] });
+  }
+  changed.schema_version = 2;
+  const summary = aggregate(historyData, changed, annual);
+  const root = document.createElement('div');
+  root.innerHTML = env.render('electricity-trends.njk', { germanElectricityTrends: { summary, json: history.safeJSON(summary), sources: history.SOURCES } });
+  const rows = [...root.querySelectorAll('[aria-labelledby="electricity-trends-trade-years-heading"] tbody tr')];
+  expect([...rows[0].querySelectorAll('td')].slice(0, 3).map((cell) => cell.textContent)).toEqual(['0,00', '0,00', '0,00']);
+  expect([...rows[1].querySelectorAll('td')].slice(0, 3).map((cell) => cell.textContent)).toEqual(['24,00', '12,00', '-12,00']);
+  for (const index of [2, rows.length - 1]) {
+    const row = summary.trade.years[index];
+    const cells = [...rows[index].querySelectorAll('td')];
+    expect(cells.slice(0, 3).map((cell) => cell.textContent)).toEqual(['–', '–', '–']);
+    expect(cells.at(-1).textContent).toBe(`${row.complete_months}/${row.months} Monate · Fehlende Monatswerte; keine Jahressumme`);
+    expect(rows[index].querySelector('th').textContent).toBe(`${row.label}${row.partial_year ? ' · Teiljahr' : ''}`);
+  }
 });
 
 test('charts initialize independently only near viewport, once, with no requests; theme changes preserve uninitialized charts', () => {
@@ -136,7 +217,8 @@ test('missing ECharts retains all tables and reports fallback', () => {
   mount(); nodes().forEach(show);
   expect(document.querySelectorAll('#electricity-trends tbody tr')).toHaveLength(tableCounts.reduce((sum, count) => sum + count, 0));
   expect(nodes().every((node) => node.hidden)).toBe(true);
-   expect(document.querySelector('#electricity-trends-status').textContent).toContain('JSON-Download');
+  expect(document.querySelector('#electricity-trends-status').textContent).toContain('JSON-Download');
+  expect(document.querySelector('#electricity-trends-status').textContent).toContain('Jahres- und Monatstabellen');
 });
 
 test('no IntersectionObserver falls back to rendering and embedded JSON escapes script boundaries', () => {

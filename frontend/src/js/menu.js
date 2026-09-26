@@ -1,96 +1,112 @@
-// Topics menu toggle functionality
-document.addEventListener('DOMContentLoaded', function () {
-  const menuToggle = document.querySelector('.topics-menu-toggle');
-  const topicsMenu = document.querySelector('.topics-menu');
-  const menuBackdrop = document.querySelector('.menu-backdrop');
-  const topicsNav = document.querySelector('.topics-nav');
-  const topicsNavContainer = document.querySelector('.topics-nav .container');
+// Enhance the existing navigation in place; without JavaScript it stays visible.
+(function () {
+  function init() {
+    const menuToggle = document.querySelector('.topics-menu-toggle');
+    const topicsMenu = document.querySelector('.topics-nav .topics-menu');
+    const menuBackdrop = document.querySelector('.menu-backdrop');
+    if (!menuToggle || !topicsMenu || !menuBackdrop) return;
 
-  if (menuToggle && topicsMenu && menuBackdrop && topicsNav && topicsNavContainer) {
-    // Function to open menu
-    const openMenu = () => {
-      topicsMenu.classList.add('active');
-      menuBackdrop.classList.add('active');
+    let mobile = window.innerWidth <= 768;
+    let open = false;
+    let previousOverflow;
+    const backgroundState = new Map();
+
+    topicsMenu.id ||= 'topics-menu';
+    menuToggle.setAttribute('aria-controls', topicsMenu.id);
+    menuToggle.setAttribute('type', 'button');
+    menuBackdrop.setAttribute('aria-hidden', 'true');
+
+    // Disable only branches outside the menu and its toggle, keeping the nav landmark.
+    function disableBackground(parent) {
+      for (const child of parent.children) {
+        if (child === topicsMenu || child === menuToggle || child === menuBackdrop) continue;
+        if (child.contains(topicsMenu) || child.contains(menuToggle)) {
+          disableBackground(child);
+        } else {
+          backgroundState.set(child, child.hasAttribute('inert'));
+          child.setAttribute('inert', '');
+        }
+      }
+    }
+
+    function render() {
+      topicsMenu.hidden = mobile && !open;
+      topicsMenu.toggleAttribute('inert', mobile && !open);
+      topicsMenu.classList.toggle('active', open);
+      menuBackdrop.hidden = !open;
+      menuBackdrop.classList.toggle('active', open);
+      menuToggle.hidden = !mobile;
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+    }
+
+    function closeMenu(restoreFocus = false) {
+      if (open) {
+        document.body.style.overflow = previousOverflow;
+        backgroundState.forEach((wasInert, element) => element.toggleAttribute('inert', wasInert));
+        backgroundState.clear();
+      }
+      open = false;
+      // Move focus before hiding the drawer.
+      if (mobile && (restoreFocus || topicsMenu.contains(document.activeElement))) {
+        menuToggle.focus();
+      }
+      render();
+    }
+
+    menuToggle.addEventListener('click', () => {
+      if (!mobile) return;
+      if (open) return closeMenu(true);
+      open = true;
+      previousOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-      menuToggle.setAttribute('aria-expanded', 'true');
-      menuToggle.setAttribute('aria-label', 'Menü schließen');
-    };
+      disableBackground(document.body);
+      render();
+      topicsMenu.querySelector('a[href]')?.focus();
+    });
 
-    // Function to close menu
-    const closeMenu = () => {
-      topicsMenu.classList.remove('active');
-      menuBackdrop.classList.remove('active');
-      document.body.style.overflow = '';
-      menuToggle.setAttribute('aria-expanded', 'false');
-      menuToggle.setAttribute('aria-label', 'Menü öffnen');
-    };
+    menuBackdrop.addEventListener('click', () => closeMenu(true));
+    topicsMenu.addEventListener('click', (event) => {
+      if (event.target.closest('a[href]')) closeMenu(true);
+    });
 
-    // Function to handle menu positioning based on screen size
-    const handleMenuPosition = () => {
-      if (window.innerWidth <= 768) {
-        // Mobile: Move menu outside of nav (after body's first child)
-        if (topicsMenu.parentElement === topicsNavContainer) {
-          document.body.insertBefore(topicsMenu, topicsNav.nextSibling);
+    document.addEventListener('keydown', (event) => {
+      if (!open) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMenu(true);
+      } else if (event.key === 'Tab') {
+        const controls = [menuToggle, ...topicsMenu.querySelectorAll('a[href]')];
+        const current = controls.indexOf(document.activeElement);
+        if (current === -1 || (event.shiftKey && current === 0) ||
+            (!event.shiftKey && current === controls.length - 1)) {
+          event.preventDefault();
+          controls[event.shiftKey ? controls.length - 1 : 0].focus();
         }
-      } else {
-        // Desktop: Move menu back inside nav container
-        if (topicsMenu.parentElement !== topicsNavContainer) {
-          topicsNavContainer.appendChild(topicsMenu);
-        }
-        // Ensure menu is closed when switching to desktop
-        closeMenu();
-      }
-    };
-
-    // Initial position setup
-    handleMenuPosition();
-
-    // Toggle menu on button click
-    menuToggle.addEventListener('click', function (event) {
-      event.stopPropagation();
-      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
-
-      if (isExpanded) {
-        closeMenu();
-      } else {
-        openMenu();
       }
     });
 
-    // Close menu when clicking backdrop
-    menuBackdrop.addEventListener('click', function () {
+    window.addEventListener('resize', () => {
+      const nextMobile = window.innerWidth <= 768;
+      if (nextMobile === mobile) return;
+      mobile = nextMobile;
+      if (mobile) menuToggle.hidden = false;
+      const toggleHadFocus = document.activeElement === menuToggle;
       closeMenu();
+      if (!mobile && toggleHadFocus) topicsMenu.querySelector('a[href]')?.focus();
     });
 
-    // Close menu when clicking outside
-    document.addEventListener('click', function (event) {
-      if (!event.target.closest('.topics-menu') && !event.target.closest('.topics-menu-toggle')) {
-        closeMenu();
-      }
-    });
-
-    // Close menu when a link is clicked
-    const menuLinks = topicsMenu.querySelectorAll('a');
-    menuLinks.forEach((link) => {
-      link.addEventListener('click', function () {
-        closeMenu();
-      });
-    });
-
-    // Handle menu position and close on window resize
-    let resizeTimer;
-    window.addEventListener('resize', function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function () {
-        handleMenuPosition();
-      }, 250);
-    });
-
-    // Close menu on escape key
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') {
-        closeMenu();
-      }
-    });
+    render();
+    // `js` is normally already set by the inline head script (so the collapsed
+    // drawer is painted from the start); set it here too so the drawer and its
+    // toggle never depend on that script. The head script removes `js` on load
+    // when `nav-enhanced` is missing, restoring the in-flow no-JS navigation.
+    document.documentElement.classList.add('js', 'nav-enhanced');
   }
-});
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();

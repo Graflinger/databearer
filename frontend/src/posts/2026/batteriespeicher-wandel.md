@@ -5,6 +5,7 @@ lastUpdated: 2026-09-11
 excerpt: "Rechercheentwurf: Die Registerkohorte 2025 umfasst weniger Anlagen als 2024, aber mehr Speicherkapazität. Ein Blick auf Größenklassen und nominale Speicherdauer."
 topic: ["energie", "wirtschaft"]
 fullWidthCard: false
+draft: true
 eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 permalink: /posts/2026/batteriespeicher-wandel/
@@ -16,7 +17,7 @@ In der Inbetriebnahme-Kohorte 2025 stehen **2,48 Prozent weniger Batteriespeiche
 
 Die Überschrift ist eine Kurzfassung dieses **Kohortenvergleichs**: Gezählt werden im Registerstand noch betriebene Anlagen, gruppiert nach dem frühesten Inbetriebnahmedatum ihrer zugeordneten Einheiten. Das sind **keine historisch beobachteten jährlichen Neuinstallationen**. Stillgelegte Anlagen fehlen; spätere Erweiterungen können mit ihrer heutigen Kapazität einem früheren Jahr zugerechnet werden. Die [Methodik unten](#methodik) erläutert diese Grenzen.
 
-<script src="/js/lib/echarts.min.js"></script>
+<script defer src="/js/lib/echarts.min.js"></script>
 
 ## 1. Anlagenzahl und Speicherkapazität erzählen verschiedene Geschichten
 
@@ -28,11 +29,11 @@ Die Kohorte 2024 umfasst 573.235 Anlagen mit zusammen rund 6,179 GWh Speicherkap
   <h3>Anlagenzahl und Energieinhalt, jeweils 2024 = 100</h3>
   <p class="chart-description" id="battery-cohorts-description">Die Kurven vergleichen die Inbetriebnahme-Kohorten 2019–2025 im Registerstand vom 30. Juni 2026. Beide Reihen sind separat auf 2024 = 100 normiert; 2025 liegt die Anlagenzahl bei rund 97,52 und die Speicherkapazität bei 108,68. Der Index vergleicht Veränderungen, keine absoluten Einheiten.</p>
   <div id="battery-storage-cohorts" role="img" aria-label="Index von Anlagenzahl und Speicherkapazität, Basis 2024 gleich 100" aria-describedby="battery-cohorts-description" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/battery_storage/cohorts.js"></script>
+  <script defer src="/js/charts/battery_storage/cohorts.js"></script>
   <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, Marktstammdatenregister (MaStR)</a>; eigene gefilterte Auswertung, Stand 30. Juni 2026.</div>
 </div>
 
-<div style="overflow-x: auto;">
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabelle: Kernwerte der Registerkohorten 2024 und 2025">
   <table id="battery-cohorts-table">
     <caption>Kernwerte der gefilterten Registerkohorten, Stand 30. Juni 2026; keine historischen Jahreszubauten</caption>
     <thead><tr><th scope="col">Kohorte</th><th scope="col">Anlagenzahl</th><th scope="col">Nettonennleistung (GW)</th><th scope="col">Speicherkapazität (GWh)</th><th scope="col">Median E/P (Stunden)</th></tr></thead>
@@ -55,11 +56,11 @@ Diese Gruppen sind **technische Größenklassen**, keine nachgewiesenen Eigentü
   <h3>Speicherkapazität nach Größenklasse</h3>
   <p class="chart-description" id="battery-segments-description">Die gestapelten Balken zeigen den Energieinhalt je Registerkohorte in GWh. Zwischen 2024 und 2025 nimmt die große Klasse deutlich zu, während die kleine Klasse zurückgeht. Die Gesamthöhe zeigt Kapazität, nicht Anlagenzahl.</p>
   <div id="battery-storage-segments" role="img" aria-label="Gestapelte Speicherkapazität in GWh nach kleiner, mittlerer und großer Größenklasse" aria-describedby="battery-segments-description" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/battery_storage/segments.js"></script>
+  <script defer src="/js/charts/battery_storage/segments.js"></script>
   <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, MaStR</a>; eigene Auswertung, Stand 30. Juni 2026. Größenschwellen nach dem <a href="https://battery-charts.de/battery-charts/#methodology">Methodenvergleich mit Battery Charts der RWTH Aachen</a>.</div>
 </div>
 
-<div style="overflow-x: auto;">
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabelle: Speicherkapazität nach Größenklasse">
   <table id="battery-segments-table">
     <caption>Speicherkapazität der Größenklassen in GWh, Registerstand 30. Juni 2026</caption>
     <thead><tr><th scope="col">Größenklasse</th><th scope="col">Kohorte 2024</th><th scope="col">Kohorte 2025</th></tr></thead>
@@ -83,7 +84,7 @@ Der Median dieses Verhältnisses steigt zwischen den Kohorten 2024 und 2025 von 
   <h3>Median der nominalen Speicherdauer je Kohorte</h3>
   <p class="chart-description" id="battery-duration-description">2025 liegt der Median von E/P höher als 2024. Die Linie zeigt nur die Mitte der Anlagenwerte, keine Verteilung: Streuung, Quantile und Unterschiede innerhalb der Größenklassen sind hier nicht dargestellt.</p>
   <div id="battery-storage-duration" role="img" aria-label="Median des nominalen Energie-Leistungs-Verhältnisses in Stunden je Registerkohorte" aria-describedby="battery-duration-description" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/battery_storage/duration.js"></script>
+  <script defer src="/js/charts/battery_storage/duration.js"></script>
   <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, MaStR</a>; eigene Auswertung von Kapazität und Nettonennleistung, Stand 30. Juni 2026.</div>
 </div>
 
@@ -100,10 +101,10 @@ Die Werte werden nach lokaler Stunde (**Europe/Berlin**) zusammengefasst. Für j
   <p class="chart-description" id="battery-profile-description">Illustration für den 11. August bis 9. September 2026: Die Preisreihe zeigt einen deutlich höheren Mittelwert um 20 Uhr als um 13 Uhr; die Solarreihe zeigt den Tagesgang der Erzeugung. Beide Diagramme verwenden dieselben Stunden, aber getrennte y-Achsen und Einheiten. Kurvenhöhen zwischen den Diagrammen sind nicht vergleichbar.</p>
   <h4>DE–LU-Day-Ahead-Preis in EUR/MWh</h4>
   <div id="battery-storage-daily-price" role="img" aria-label="Mittlerer Day-Ahead-Preis je Stunde in EUR pro MWh, 30 Tage" aria-describedby="battery-profile-description" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/battery_storage/daily-price.js"></script>
+  <script defer src="/js/charts/battery_storage/daily-price.js"></script>
   <h4>Solarerzeugung in Deutschland in GW</h4>
   <div id="battery-storage-daily-solar" role="img" aria-label="Mittlere Solarerzeugung je Stunde in GW, derselbe 30-Tage-Zeitraum" aria-describedby="battery-profile-description" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/battery_storage/daily-solar.js"></script>
+  <script defer src="/js/charts/battery_storage/daily-solar.js"></script>
   <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.smard.de/">Bundesnetzagentur, SMARD</a>; eingefrorene Stundendaten aus der Datengrundlage des <a href="/dashboards/strom/">Databearer-Stromdashboards</a>, eigene Mittelwerte für 11. August bis 9. September 2026.</div>
 </div>
 

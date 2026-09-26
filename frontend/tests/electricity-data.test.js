@@ -123,3 +123,46 @@ describe('freshness is measured from exclusive coverage', () => {
     expect(() => data.validateSnapshot(snapshot, now)).toThrow('Zukunft');
   });
 });
+
+describe('compact data state and chart text split', () => {
+  const statusSnapshot = (overrides = {}, refresh = {}) => ({
+    schema_version: 2,
+    components: Object.fromEntries(data.COLUMNS.slice(1).map((key) => [key, {
+      status: 'complete', known_hours: 720, expected_hours: 720,
+      last_successful_window_end: '2026-09-22T22:00:00Z', source_observed_through: '2026-09-22T22:00:00Z', ...overrides[key],
+    }])),
+    refresh_status: { history: { status: 'ok', data_through: '2026-09-22' }, trade: { status: 'ok', data_through: '2026-08' }, ...refresh },
+  });
+
+  test('healthy status has no issues', () => {
+    expect(data.dataIssues(statusSnapshot())).toEqual([]);
+    expect(data.dataIssues({ schema_version: 1 })).toEqual([]);
+  });
+
+  test('lists only affected components and refreshes with their own dates', () => {
+    const issues = data.dataIssues(statusSnapshot({
+      hydro: { status: 'partial', known_hours: 700 },
+      gas: { status: 'stale', source_observed_through: '2026-09-20T22:00:00Z' },
+      price: { status: 'unavailable', known_hours: 0, last_successful_window_end: null, source_observed_through: null },
+    }, { history: { status: 'stale', data_through: '2026-09-18' }, trade: { status: 'partial', data_through: '2026-08' } }));
+    expect(issues.map((issue) => issue.text)).toEqual([
+      'Wasserkraft (700/720 Std.)', 'Erdgas (beibehalten, Stand 20.09.)', 'Day-Ahead-Preis (nicht verfügbar)',
+      'Tageshistorie (beibehalten, bis 18.09.2026)', 'Handel (Quellenlücken)',
+    ]);
+    expect(data.issueText(issues.slice(0, 4))).toBe(issues.slice(0, 4).map((issue) => issue.text).join(', '));
+    expect(data.issueText(issues)).toBe('Wasserkraft (700/720 Std.), Erdgas (beibehalten, Stand 20.09.), Day-Ahead-Preis (nicht verfügbar) und 2 weitere');
+  });
+
+  test('headlines keep incompleteness markers; notes hold definitions', () => {
+    const rows = Array.from({ length: 24 }, (_, hour) => [Date.parse('2026-09-21T22:00:00Z') + hour * data.HOUR, ...Array(11).fill(1), hour === 0 ? null : 50, hour < 2 ? null : 100]);
+    const text = data.presentation(data.summarizeRows(rows, Date.parse('2026-09-22T22:00:00Z')));
+    expect(text.loadText).toContain('Nur 23/24 Stunden bekannt');
+    expect(text.loadText).toContain('Teilsumme');
+    expect(text.priceText).toContain('Nur 22/24 Stunden mit bekanntem Preis');
+    expect(text.priceNote).toContain('nicht einzelne negative Viertelstunden');
+    expect(text.generationNote).toContain('einschließlich Pumpspeichern');
+    const complete = data.presentation(data.summarizeRows(rows.map((row) => [...row.slice(0, 12), 50, 100]), Date.parse('2026-09-22T22:00:00Z')));
+    expect(complete.loadText).not.toContain('Nur');
+    expect(complete.priceText).not.toContain('Nur');
+  });
+});

@@ -135,11 +135,29 @@ test('rendering failure disposes partially initialized charts', async () => {
 test('freshness warning advances in an open tab independently of fetch', async () => {
   jest.setSystemTime(Date.parse(snapshot.data_through) + 96 * data.HOUR);
   await start();
-  const partial = data.componentReport(snapshot).some((component) => component.stale || component.status !== 'complete') || Object.values(snapshot.refresh_status || {}).some((meta) => meta.status !== 'ok');
-  expect(document.getElementById('electricity-freshness').hidden).toBe(!partial);
+  expect(document.getElementById('electricity-freshness').hidden).toBe(true);
   await jest.advanceTimersByTimeAsync(60000);
   expect(document.getElementById('electricity-freshness').hidden).toBe(false);
+  expect(document.getElementById('electricity-freshness').textContent).toContain('älter als 96 Stunden');
+  expect(document.getElementById('electricity-data-ok').hidden).toBe(true);
   expect(window.fetch).toHaveBeenCalledTimes(1);
+});
+
+test('healthy data shows one compact state chip with the hourly data date', async () => {
+  const healthy = data.componentReport(snapshot).every((component) => component.status === 'complete') && Object.values(snapshot.refresh_status || {}).every((meta) => meta.status === 'ok');
+  const chip = document.getElementById('electricity-data-ok');
+  const title = document.querySelector('.electricity-period-title');
+  expect(title.contains(chip)).toBe(true);
+  expect(document.getElementById('electricity-period-heading').contains(chip)).toBe(false);
+  expect(chip.closest('[data-value]')).toBeNull();
+  expect(chip.textContent).toContain(`Daten bis ${data.shortDate(data.dayKey(Date.parse(snapshot.data_through) - 1))}`);
+  if (!healthy) return;
+  expect(chip.hidden).toBe(false);
+  expect(document.getElementById('electricity-partial-warning').hidden).toBe(true);
+  expect(document.getElementById('electricity-component-report').open).toBe(false);
+  await start();
+  expect(chip.hidden).toBe(false);
+  expect(document.getElementById('electricity-status').dataset.tone).toBe('quiet');
 });
 
 test('future HTML snapshot warns even when JSON cannot load', async () => {
@@ -168,12 +186,32 @@ test('v2 source gaps and retained failures are visible without JS; charts never 
   expect(document.getElementById('electricity-history-coverage').hidden).toBe(false);
   expect(document.getElementById('electricity-history-coverage').textContent).toContain('Teilsummen');
   expect(document.querySelector('noscript').textContent).not.toContain('letzten vollständigen Tag');
-  expect(document.getElementById('electricity-partial-warning').hidden).toBe(false);
-  expect(document.getElementById('electricity-component-report').textContent).toContain('beibehalten');
+  const chip = document.getElementById('electricity-partial-warning');
+  expect(chip.hidden).toBe(false);
+  expect(chip.closest('.electricity-period-title')).not.toBeNull();
+  expect(chip.textContent).toContain('Teilaktualisierung');
+  expect(chip.textContent).toContain('Fehlende Werte sind keine Nullen');
+  // Only affected parts are named; complete components are not listed.
+  const issues = data.dataIssues(input);
+  expect(issues.map((issue) => issue.key)).toEqual(expect.arrayContaining(['gas', 'history']));
+  expect(issues.map((issue) => issue.key)).not.toContain('biomass');
+  expect(chip.querySelector('[data-issue-list]').textContent).toBe(data.issueText(issues));
+  expect(chip.textContent).not.toContain('Biomasse');
+  expect(document.getElementById('electricity-data-ok').hidden).toBe(true);
+  const report = document.getElementById('electricity-component-report');
+  expect(report.open).toBe(true);
+  expect(report.closest('.electricity-method')).not.toBeNull();
+  expect(report.querySelector('tbody tr').dataset.status).not.toBe('complete');
+  expect(report.textContent).toContain('beibehalten');
   expect(document.querySelector('[data-value="generation"]').textContent).toBe('–');
   window.fetch.mockResolvedValue({ ok: true, json: async () => input });
   await start();
-  expect(document.getElementById('electricity-freshness').hidden).toBe(false);
+  expect(chip.hidden).toBe(false);
+  expect(chip.textContent).toContain('Fehlende Werte sind keine Nullen');
+  expect(document.getElementById('electricity-data-ok').hidden).toBe(true);
+  report.open = false;
+  chip.querySelector('[data-report-link]').click();
+  expect(report.open).toBe(true);
   const generation = instances[0].setOption.mock.calls.at(-1)[0];
   expect(generation.series.every((series) => series.connectNulls === false && series.data.at(-1) === null)).toBe(true);
   const load = instances[1].setOption.mock.calls.at(-1)[0];
