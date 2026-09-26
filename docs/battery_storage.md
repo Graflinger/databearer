@@ -313,6 +313,6 @@ Earlier acceptance on 11 September, **using June battery data**, recorded:
   battery models without an explicit date failed as intended.
 
 Possible follow-ups: assess residual outliers and operator-type sensitivity,
-optionally add an original card image, and refresh once 2026 is complete.
+and refresh once 2026 is complete. Card image: `frontend/src/images/blog_card_images/2026/batteriespeicher-wandel.png` (Azure MAI-Image-2.5, 1408×800).
 The read-only June–September audit exists; a historical stock time series and a
 full-year electricity profile remain future work.

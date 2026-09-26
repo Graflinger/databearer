@@ -58,6 +58,9 @@ describe('battery storage static contract', () => {
     expect([name, extensions]).toEqual(['drafts', '*']);
     expect(skip({ ...inherited, ...post.data })).toBeUndefined();
     expect(post.data.excerpt).not.toMatch(/Rechercheentwurf|DRAFT/);
+    expect(post.data.image).toBe('/images/blog_card_images/2026/batteriespeicher-wandel.png');
+    expect(fs.existsSync(path.join(root, 'src', post.data.image))).toBe(true);
+    expect(post.data.imageAlt).toBeTruthy();
     expect(post.content).not.toMatch(/Rechercheentwurf|DRAFT/);
     expect(document.querySelector('h1')).toBeNull();
     expect(document.querySelectorAll('h2')).toHaveLength(8);
