@@ -23,7 +23,7 @@ Each `.js` file should export an array of chart configurations:
 module.exports = [
   {
     // Required fields
-    type: 'line', // 'line' or 'bar'
+    type: 'line', // 'line', 'bar' or 'scatter' (see builders/scatterChart.js)
     dataFile: 'my-data.json', // File in data/ directory
     outputFile: 'my-chart.js', // Output filename
     containerId: 'my-chart', // HTML element ID

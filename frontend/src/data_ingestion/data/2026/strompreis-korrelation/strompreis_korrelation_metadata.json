@@ -1,0 +1,188 @@
+{
+  "exporter_sha256": "deb022542359ba556eb82bd7ca8ee702c336484cac96f5f7475df60bed231ac4",
+  "exporter_version": "1.0.0",
+  "files": {
+    "strompreis_korrelation_correlations.csv": {
+      "bytes": 555,
+      "columns": [
+        "Zeitraum",
+        "Monate",
+        "Pearson_Erneuerbare",
+        "Spearman_Erneuerbare",
+        "Pearson_Gas",
+        "Spearman_Gas",
+        "Partiell_Erneuerbare",
+        "Partiell_Gas",
+        "Pearson_Erneuerbare_Gas",
+        "Veraenderungen",
+        "Pearson_Veraenderung_Erneuerbare",
+        "Pearson_Veraenderung_Gas"
+      ],
+      "rows": 4,
+      "sha256": "454a3e16d3a8ee08334bb19ed05438a440dc5b0d9999d815c753f87c6677b550"
+    },
+    "strompreis_korrelation_monthly.csv": {
+      "bytes": 5494,
+      "columns": [
+        "Monat",
+        "Zeitraum",
+        "Strompreis_EUR_MWh",
+        "Erneuerbarenanteil_Prozent",
+        "Gaspreis_EUR_MWh",
+        "Gaspreis_USD_MMBtu",
+        "USD_je_EUR",
+        "Last_GW",
+        "Stunden"
+      ],
+      "rows": 84,
+      "sha256": "f4cb5a92861cbf34ab20006ed855767f9a86e728e25e165d462ac8b0ba9b7e3f"
+    },
+    "strompreis_korrelation_regression.csv": {
+      "bytes": 572,
+      "columns": [
+        "Modell",
+        "Zeitraum",
+        "Monate",
+        "Gas_Koeffizient",
+        "Gas_KI95_unten",
+        "Gas_KI95_oben",
+        "Erneuerbare_Koeffizient",
+        "Erneuerbare_KI95_unten",
+        "Erneuerbare_KI95_oben",
+        "R2"
+      ],
+      "rows": 5,
+      "sha256": "ec0180c04a1718c3dcdc2727176cab12533f8072d52929ca5a638185f93352ea"
+    }
+  },
+  "kind": "frozen_strompreis_korrelation_article",
+  "methodology": {
+    "causality": "Descriptive associations only; monthly correlations are not causal effects or cost shares",
+    "correlations": "Pearson and Spearman (average ranks for ties) on monthly levels; partial correlations control for the other variable; changes are month-to-month differences inside each period",
+    "electricity_price": "Hour-weighted monthly mean of daily DE-LU day-ahead mean prices (EUR/MWh)",
+    "gas_conversion": "EUR/MWh = USD/MMBtu / (USD per EUR) / 0.29307107017 MWh per MMBtu, monthly averages",
+    "non_renewable_generation": [
+      "lignite",
+      "hard_coal",
+      "gas",
+      "other_conventional",
+      "pumped_storage",
+      "nuclear"
+    ],
+    "regression": "OLS with intercept; Newey-West HAC standard errors, Bartlett kernel, lag 3, no small-sample correction; 95 % intervals use z = 1.96",
+    "renewable_share": "Monthly renewable net public generation / total net public generation, in percent",
+    "renewable_sources": [
+      "biomass",
+      "hydro",
+      "wind_offshore",
+      "wind_onshore",
+      "solar",
+      "other_renewables"
+    ],
+    "statistics_input": "Rounded values in strompreis_korrelation_monthly.csv"
+  },
+  "period": {
+    "first_month": "2019-01",
+    "last_month": "2025-12",
+    "months": 84,
+    "sub_periods": [
+      {
+        "first_month": "2019-01",
+        "label": "2019–2020",
+        "last_month": "2020-12"
+      },
+      {
+        "first_month": "2021-01",
+        "label": "2021–2022",
+        "last_month": "2022-12"
+      },
+      {
+        "first_month": "2023-01",
+        "label": "2023–2025",
+        "last_month": "2025-12"
+      }
+    ]
+  },
+  "schema_version": 1,
+  "sources": {
+    "electricity": {
+      "dataset": "Day-ahead price DE-LU, net public generation Germany (daily)",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "name": "Bundesnetzagentur | SMARD.de",
+      "partitions": [
+        {
+          "days": 365,
+          "filename": "2019.d7211e250be153c9ff4dbc2bba8e52821204bce116c61a4cf6812316b28dd93f.json",
+          "schema_version": 1,
+          "sha256": "d7211e250be153c9ff4dbc2bba8e52821204bce116c61a4cf6812316b28dd93f",
+          "year": 2019
+        },
+        {
+          "days": 366,
+          "filename": "2020.c2b5b0260c5f71cbd793997cc9ea8f9b5baa464d9f3db00c93341c2b7e5ab596.json",
+          "schema_version": 1,
+          "sha256": "c2b5b0260c5f71cbd793997cc9ea8f9b5baa464d9f3db00c93341c2b7e5ab596",
+          "year": 2020
+        },
+        {
+          "days": 365,
+          "filename": "2021.79059405df894d3bc22ed07540c03e8db6f4fc004f51e5b601726ff1da371403.json",
+          "schema_version": 1,
+          "sha256": "79059405df894d3bc22ed07540c03e8db6f4fc004f51e5b601726ff1da371403",
+          "year": 2021
+        },
+        {
+          "days": 365,
+          "filename": "2022.a2500628fc9af0b9547661db3412ed69eed4464323199aac19cd9b504850a27b.json",
+          "schema_version": 1,
+          "sha256": "a2500628fc9af0b9547661db3412ed69eed4464323199aac19cd9b504850a27b",
+          "year": 2022
+        },
+        {
+          "days": 365,
+          "filename": "2023.9ad85353750c74cb587e7208ca67c1410138e42e6616c7c75e7091c14f7e8ed7.json",
+          "schema_version": 1,
+          "sha256": "9ad85353750c74cb587e7208ca67c1410138e42e6616c7c75e7091c14f7e8ed7",
+          "year": 2023
+        },
+        {
+          "days": 366,
+          "filename": "2024.5aeca1c9781aba47045bcab7a25a7c25d974c93ef00859edcb68248f6ce59540.json",
+          "schema_version": 1,
+          "sha256": "5aeca1c9781aba47045bcab7a25a7c25d974c93ef00859edcb68248f6ce59540",
+          "year": 2024
+        },
+        {
+          "days": 365,
+          "filename": "2025.7e70f946ebf15672021bf207ea2df167d7352b789159dbbb71852e85a4f0fc25.json",
+          "schema_version": 1,
+          "sha256": "7e70f946ebf15672021bf207ea2df167d7352b789159dbbb71852e85a4f0fc25",
+          "year": 2025
+        }
+      ],
+      "terms_url": "https://www.smard.de/home/datennutzung",
+      "url": "https://www.smard.de/home/marktdaten"
+    },
+    "exchange_rate": {
+      "name": "European Central Bank, euro foreign exchange reference rate (USD per EUR), monthly average",
+      "retrieved_at": "2026-09-25T22:11:01Z",
+      "series_key": "EXR.M.USD.EUR.SP00.A",
+      "sha256": "ad06f04309b75ac60aed6f13d2c6d645e5dbf4ea5de7cdb235dcb3e81602bcf9",
+      "source_url": "https://data-api.ecb.europa.eu/service/data/EXR/M.USD.EUR.SP00.A?startPeriod=2019-01&endPeriod=2025-12&format=csvdata",
+      "terms_url": "https://www.ecb.europa.eu/services/disclaimer/html/index.en.html"
+    },
+    "gas": {
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "name": "World Bank, Commodity Price Data (The Pink Sheet)",
+      "note": "Natural gas, Europe: Netherlands TTF since April 2015; monthly benchmark average, not a day-ahead quote",
+      "release_date": "2026-09-02",
+      "retrieved_at": "2026-09-25T22:11:01Z",
+      "series": "Natural gas, Europe",
+      "sha256": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "source_url": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
+      "unit": "($/mmbtu)"
+    }
+  }
+}
