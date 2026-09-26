@@ -30,7 +30,7 @@ node "src/data_ingestion/generate-charts.js" industriepolitik.js
 
 Read [dashboard_architecture.md](../docs/dashboard_architecture.md) before adding dashboard
 pages, chart data, freshness metadata, or refresh/deployment automation. It specifies
-the daily pipeline using the existing stack. Keep live dashboard
+the default daily, stateless pipeline and approved durable-export exceptions using the existing stack. Keep live dashboard
 datasets separate from frozen blog-post snapshots, and render prepared exports rather
 than fetching raw upstream data in visitors' browsers.
 
@@ -40,19 +40,45 @@ for the first dashboard. Read [dashboard_publication.md](../docs/dashboard_publi
 for the implemented daily workflow, released-base guard, and rollout status.
 
 The electricity dashboard now has approved [persistent daily history](../docs/german_electricity_history.md).
+Read [partial refresh](../docs/dashboard_partial_refresh.md) for the approved durable
+recent per-component exception, v1/v2 compatibility, nullable metrics and explicit
+coverage/statuses, independent daily cutoffs and available overlap checks. Use
+coordinated `.refresh`; source failures retain last-good data, shared errors abort
+the bundle. Keep DuckDB temporary. Implementation/PR authorization does not authorize
+production rollout; feature live acceptance and manual code promotion to both
+branches remain pending. Do not rewrite frozen exports to migrate the code.
 Preserve raw hashed partition bytes, source gaps, nuclear-era and price-zone metadata.
 Load historical years lazily; never interpret missing observations as zero or daily
 price averages as negative-hour counts. Daily data-only publication is authorized at
-09:17 UTC, with activation upon merge to `main`; first live deployment verification
-is pending. Publishing requires the `main` ref and identical HEAD/origin main/origin
-release commits before source fetching. Only recent/current-year-history/trade
-exports may be committed and pushed atomically to both branches, without force.
-Normal code/blog changes require manual release promotion; reconcile release ancestry
-in main first. Monthly/manual progress and frozen annual supplements are excluded
-from daily source refreshes. Public copy describes automatic daily updates with
-actual observation dates, while progress retains its separate cadence. Run frontend
-tests/lint/build on Node 20; public verification must also run on no-change publishing
-runs. An atomic Git push is not proof that Cloudflare deployed the snapshot.
+06:00 UTC. Deliberately promote the release-first implementation to **both `main`
+and `releases/cloudflare`** before the schedule uses released scripts; new live
+verification is pending. The September 10 success used the old both-ref design.
+Manual `publish=false` defaults to refreshing/validating only the selected ref.
+Publishing requires the `main` event ref, then explicitly checks out release for
+released scripts/runtime/frontend. Guard `HEAD == origin/releases/cloudflare` before
+source fetching; main's position does not gate production. Only validated
+recent/current-year-history/trade exports may be committed and pushed **release
+only, without force**, then publicly verified, including on no-change runs.
+
+Only verified `release_sha` output enables separate `sync-main` using the released
+script: check exact release SHA, create a worktree from current main, merge real
+release ancestry, and run offline electricity/script tests plus frontend
+tests/lint/build on Node 20 before a non-force **main-only** push. Recheck both refs;
+fetch no live source data during sync. Bot main pushes cannot rely on push CI.
+Conflicts, validation failures, and races must fail without silently overwriting
+main or changing schemas. Sync failure makes the workflow red but leaves verified
+production intact and future refreshes possible; no-change publishing runs retry
+outstanding sync. There is no two-ref atomic promise. Production retains a ten-minute
+budget including its 240-second verifier; sync has its own ten-minute cap and extra
+validation/build cost. Follow the runbook's separate public-failure and sync recovery.
+
+Normal code/blog changes require manual promotion: incorporate latest release
+ancestry into reviewed main via sync or explicit real-merge reconciliation, preserve
+newer snapshots, pass checks, then fast-forward release without force. Main and
+release need not routinely equal. Monthly/manual progress and frozen annual
+supplements are excluded from daily source refreshes and the write allowlist.
+Public copy describes automatic daily updates with actual observation dates, while
+progress retains its separate cadence. A Git push is not proof of deployment.
 
 
 ### Directory Structure
@@ -93,32 +119,83 @@ Chart config structure:
 
 ### Post Frontmatter
 ```yaml
-title: "Post Title"
+title: "Post Title"                # accurate claim; no brand suffix
 date: 2025-01-01
-excerpt: "Short description"
+draft: true                        # boolean; remove when publishing
+excerpt: "Key finding first, 1–2 plain-text sentences"
 image: "/images/blog_card_images/2025/filename.png"
-imageText: "Image caption"
-topic: ["energie", "wirtschaft"]  # array, determines collections
-fullWidthCard: false              # optional
-lastUpdated: 2025-01-15           # optional
+imageAlt: ""                       # describe informative heroes; empty if decorative
+imageText: "Visible image caption" # also JSON Feed `_image_alt`
+# socialImage: "/images/blog_card_images/2025/social.png"
+# socialImageAlt: "Description of the social preview image"
+topic: ["energie", "wirtschaft"]   # determines topic collections
+fullWidthCard: false               # optional
+# lastUpdated: 2025-01-15          # real substantive revision only
+# metaTitle / metaDescription      # optional accurate overrides
 ```
 
+[`docs/seo.md`](../docs/seo.md) is the single detailed contract, and the
+[post QA guide](docs/post_guidlines.md) is the per-article checklist. Summary:
+
+- **Drafts:** `draft: true` on any template is skipped by the `drafts` preprocessor
+  in `.eleventy.js` in every run mode, including `npm start`. A draft produces no
+  HTML and does not appear in collections, the sitemap, feeds or search. Stale HTML is
+  deleted only after a successful full production write
+  ([Drafts](../docs/seo.md#drafts)).
+- **Indexing:** `noindex: true` gives `noindex, follow` and no canonical.
+  `excludeFromSitemap` only affects the sitemap
+  ([Indexing and sitemap](../docs/seo.md#indexing-and-sitemap)).
+- **Ads:** AdSense is off site-wide via `site.adsense.enabled`
+  ([Metadata](../docs/seo.md#metadata-and-structured-data)).
+- **Images:** use local `/images/...` sources only. Card images are decorative.
+  `socialImageAlt`/`imageAlt` describe the image
+  ([Images](../docs/seo.md#images)).
+- **Feeds:** keep the `/feed.json` fields used by the private `video-generator`
+  ([Feeds](../docs/seo.md#feeds)).
+- **Styling:** wrap wide tables in `.table-scroll` and keep the inline `html.js`
+  head script ([Styling](../docs/seo.md#styling-and-navigation)).
+- **Checks:** run `npm test -- --runInBand`, `npm run lint`, `npm run build`, then
+  `npm run test:seo-output` ([Checks](../docs/seo.md#checks)). Passing them does not
+  authorize publication.
+
 ### Collections
-Defined in `.eleventy.js`:
-- `post` - All posts from `src/posts/**/*.md`
+Defined in `.eleventy.js` and filtered by `seo.published`:
+- `post` - Published posts from `src/posts/**/*.md`
 - `energiePosts`, `politikPosts`, `wirtschaftPosts` - Filtered by topic array
+
+Tag-based (not defined in `.eleventy.js`): `dashboard` - pages tagged `dashboard` in
+`src/dashboards/`. Drafts never reach any collection because the `drafts`
+preprocessor skips them entirely.
+
+For a new topic, follow [Topics](../docs/seo.md#topics).
 
 ### Using Charts in Posts
 ```html
-<script src="/js/lib/echarts.min.js"></script>
-<div id="chart-id" style="width: 100%; height: 400px;"></div>
-<script src="/js/charts/config-name/chart.js"></script>
+<script defer src="/js/lib/echarts.min.js"></script>
+
+<div class="chart-section">
+  <h3 id="chart-id-heading">Measure, geography and observation period</h3>
+  <p class="chart-description" id="chart-id-description">Verified key finding with values, units and period.</p>
+  <div id="chart-id" role="img" aria-labelledby="chart-id-heading" aria-describedby="chart-id-description" style="width: 100%; height: 400px;"></div>
+  <script defer src="/js/charts/config-name/chart.js"></script>
+  <div class="chart-sources"><strong>Quelle: </strong><a href="https://example.com/dataset">Publisher – dataset title</a></div>
+</div>
 ```
+
+Load ECharts once, before the chart scripts, and give every script `defer`, never
+`async`. The container `id` must equal the config's `containerId`. The heading must
+be an H2–H4, the `chart-description` must be longer than 40 characters, and `id`s
+must be unique. Add a captioned `id="<containerId>-table"` for detailed values.
+[Charts and evidence](../docs/seo.md#charts-and-evidence) lists everything that
+`tests/article-chart-evidence.test.js` enforces.
 
 Charts support dark mode detection and lazy loading via IntersectionObserver.
 
 ## Key Files
 - `.eleventy.js` - Eleventy config, filters, collections, chart generation hook
 - `src/_includes/base.njk` - Site layout with SEO meta, structured data, navigation
+- `src/seo.js` - Metadata/JSON-LD, sitemap/feed filters, related posts, stale-HTML cleanup
+- `lib/responsive-images.js` - `responsiveImage`, `socialImageMeta`, `imageThumbnail`
+- `src/search.11ty.js` + `lib/search-text.js` - `/search.json` index
 - `src/data_ingestion/generate-charts.js` - Chart generation entry point
 - `src/data_ingestion/builders/` - Chart builder modules (lineChart.js, barChart.js)

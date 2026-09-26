@@ -1,13 +1,20 @@
 # Germany electricity dashboard data
 
-Status: pipeline and real-data snapshot implemented. **Daily data-only publication
-is authorized and enabled in the workflow; activation awaits merge to `main` and
-first live deployment verification.** See [publication and recovery](dashboard_publication.md).
+Status: pipeline and real-data snapshot implemented. **Release-first daily data-only
+publication is implemented; deliberate promotion to both `main` and
+`releases/cloudflare` and new live rollout verification are pending.** The September 10
+successful manual publication used the old both-ref design. See
+[publication and recovery](dashboard_publication.md) for historical evidence and new rollout.
 This document describes the bounded
 recent hourly snapshot. The approved, separately implemented
 [daily history extension](german_electricity_history.md) covers 2015 onward with
 durable yearly JSON, frozen closed years, and rolling corrections. Architecture:
 [stateless dashboard](dashboard_architecture.md) and [Plan B](plan_b.md).
+
+The uncommitted [partial-refresh contract](dashboard_partial_refresh.md) adds recent
+v2 nullable observations, per-component last-good retention and independent cutoffs.
+It supersedes the old common-complete-window rule; feature live acceptance and manual
+code promotion to both branches remain pending. Earlier measurements below describe v1.
 
 ## Source, permission, and methodology
 
@@ -89,16 +96,18 @@ handle the DST offset change. Each weekly payload is `series: [[epoch_ms, value]
 `--as-of` means the Berlin run date (default: today's Berlin date), not the last
 observation date. Fetch the preceding **35 calendar days**, exclusive of as-of
 midnight. Weekly HTTP payloads can include adjacent out-of-window hours; retain
-only the requested 35-day range in staging. Fetch every index once and only the
+only the requested 35-day range for source-window selection, then stage the aligned
+30-day output grid. Fetch every index once and only the
 five or six intersecting weeks per series: **78–91 successful HTTP requests**.
 
-Choose the latest preceding Berlin day having every hourly value in all 13 series,
-searching `as_of - 1` through `as_of - 4` inclusive. Export 30 consecutive calendar
-days ending with that day. An incomplete newest day can reflect publication lag;
-after choosing the latest complete day, **any hole in its 30-day window fails**.
-Do not shift the window again to hide an older hole, fill missing values with zero,
-or silently drop partial source failures. Fail if no common complete day is within
-the four-day limit. An explicit historical as-of still reads today's source vintage.
+Each series selects its latest structurally reported day from `as_of - 1` through
+`as_of - 4`, then validates its 30-day timestamp grid. Explicit source nulls are
+allowed in v2; omitted internal hours fail that component. Align successful and
+retained components to the latest successful or previous snapshot cutoff. See
+[window alignment and statuses](dashboard_partial_refresh.md#recent-json-v2) for
+failure retention and all-unavailable behavior. Never fill gaps with zero or shift
+a window again to conceal an internal omission. An explicit historical as-of still
+reads today's source vintage.
 
 Build the expected timestamp sequence from Berlin midnight boundaries in UTC
 one-hour increments. This yields 719/720/721 rows around spring/ordinary/autumn
@@ -107,7 +116,7 @@ hours in autumn have distinct epoch timestamps.
 
 Runtime bounds:
 
-- At most three concurrent HTTP requests; indices are sequential.
+- At most three component workers; each fetches its index and required weeks sequentially.
 - At most three attempts per URL, retrying transient connection failures and HTTP
   429/500/502/503/504, with 1/2-second backoff. Permanent HTTP errors fail immediately.
 - Socket timeout 15 seconds; total fetch deadline 240 seconds, checked while reading
@@ -118,14 +127,17 @@ Runtime bounds:
 - dbt subprocess timeout 120 seconds, one thread, no downloaded DuckDB extensions.
 - Final JSON at most **1,000,000 bytes** including newline.
 
-Validation rejects null/missing values, duplicate keys (even identical duplicates),
+V1 requires numeric measurements; v2 permits explicit nulls while rejecting omitted
+required timestamp slots. Validation rejects duplicate keys (even identical duplicates),
 bad timestamps/granularity, unexpected series, nonnumeric values (including numeric
 strings and booleans), NaN/infinity, malformed/empty responses and incomplete
-coverage. Broad sanity limits: each generation/load series 0–200 GW; prices
+timestamp coverage. Source acquisition errors are isolated per component; shared
+validation/dbt/storage failures remain hard errors. Broad sanity limits: each
+generation/load series 0–200 GW; prices
 −10,000 to +10,000 EUR/MWh. These are corruption guards, not forecasts or asserted
 market price limits; out-of-range upstream changes require explicit investigation.
 
-## Stateless implementation and local commands
+## Temporary-database implementation and local commands
 
 From `pipeline/`, use Python 3.11 and the pinned narrow runtime:
 
@@ -133,14 +145,19 @@ From `pipeline/`, use Python 3.11 and the pinned narrow runtime:
 python3.11 -m venv .venv
 .venv/bin/python -m pip install -r requirements-dashboard.txt
 PYTHONPATH=. .venv/bin/python -m src.data_pipelines.dashboards.german_electricity
+PYTHONPATH=. .venv/bin/python -m src.data_pipelines.dashboards.german_electricity.refresh
 PYTHONPATH=. .venv/bin/python -m src.data_pipelines.dashboards.german_electricity --as-of 2026-09-10 --output /existing/directory/germanElectricity.json
-PYTHONPATH=. .venv/bin/python -m unittest discover -s tests -p 'test_german_electricity.py' -v
+PYTHONPATH=. .venv/bin/python -m unittest discover -s tests -p 'test_german_electricity*.py' -v
 ```
 
 Direct runtime dependencies match the main pipeline pins: dbt-core 1.8.8,
 dbt-duckdb 1.9.0, DuckDB 1.1.1. HTTP, calendar handling, hashing, and JSON use the
 standard library. Transitive dependencies are resolved by pip, not fully locked.
 The host needs the Europe/Berlin timezone database. Output parent must exist.
+The first module is the compatible standalone recent command; `.refresh` coordinates
+an existing recent/history/trade bundle. See [CLI and recovery](dashboard_partial_refresh.md#coordinated-cli-failure-boundary-and-recovery).
+Previous validated recent values are an approved durable per-component input, not
+only a no-change comparison; the database remains temporary.
 
 Each run creates a new `TemporaryDirectory` and a dedicated
 `german_electricity.duckdb`. It never connects to `pipeline/.data/duckdb.db`.
@@ -169,14 +186,15 @@ or choose a separate output path. Temporary files/databases/artifacts are cleane
 on normal exit and handled exceptions; forced process termination may leave OS-temp
 files, which are never used as input by a later run.
 
-## Exact frontend contract (schema version 1)
+## Exact frontend contract (schema versions 1 and 2)
 
 Default generated destination: `frontend/src/_data/germanElectricity.json`.
-One compact JSON object, with **exactly** these fields:
+One compact JSON object. The base fields are below; v2 additionally requires
+`components` and `refresh_status` with the exact [partial-refresh metadata contract](dashboard_partial_refresh.md#recent-json-v2).
 
 | Field | Value / meaning |
 | --- | --- |
-| schema_version | integer `1` |
+| schema_version | integer `1` (compatible existing snapshots) or `2` (new recent producer) |
 | source | `{name: "Bundesnetzagentur \| SMARD.de", url: "https://www.smard.de/home/marktdaten", license: "CC BY 4.0", license_url: "https://creativecommons.org/licenses/by/4.0/", terms_url: "https://www.smard.de/home/datennutzung"}` |
 | timezone | `Europe/Berlin` |
 | window_start | ISO UTC seconds with `Z`, inclusive Berlin midnight |
@@ -185,10 +203,10 @@ One compact JSON object, with **exactly** these fields:
 | snapshot_created_at | ISO UTC seconds with `Z`; creation time of the changed snapshot |
 | content_hash | lowercase SHA-256 hex of canonical semantic content |
 | columns | `['timestamp','biomass','hydro','wind_offshore','wind_onshore','solar','other_renewables','lignite','hard_coal','gas','other_conventional','pumped_storage','load','price']` |
-| rows | sorted arrays `[integerEpochMillis, 12 finite GW numbers, finite EUR/MWh price]` |
+| rows | sorted arrays `[integerEpochMillis, 12 GW measurements, EUR/MWh price]`; finite numbers in v1, finite numbers or null in v2 |
 | units | `{power: "GW", price: "EUR/MWh"}` |
 | expected_update | `daily` |
-| stale_after_hours | integer `96`; compare current time with exclusive `data_through` |
+| stale_after_hours | integer `96`; grid age uses exclusive `data_through`; v2 also reports per-component status/observation age |
 
 Canonical encoding: Python `json.dumps(sort_keys=True, separators=(',', ':'),
 ensure_ascii=False, allow_nan=False)`, UTF-8. The hash covers **all** fields except
@@ -237,8 +255,9 @@ periods, latest-common-day lag, duplicate rejection before pivoting, numeric typ
 negative prices, bounded requests/retries/bytes, malformed input, revision detection,
 corrupt snapshots, and atomic-replacement failure. Synthetic fixtures stay in tests
 and OS temporary directories; the generated frontend snapshot comes from live SMARD.
-Each refresh prints one JSON metrics line including status, stage durations,
-request/byte counts, output row count, size, coverage, and hash.
+Recent v2 prints JSON metrics with change status, per-series failures/components,
+request/byte counts, rows, export size and total duration. Coordinated status and
+the additional offline regression fixtures are documented in [partial refresh](dashboard_partial_refresh.md#runtime-verification-and-rollout).
 
 ## Frontend and workflow integration
 
@@ -248,25 +267,41 @@ One shared JSON export replaces per-chart CSV duplication for synchronized perio
 controls, while retaining Eleventy, ECharts, and static hosting. Historical blog
 datasets are unchanged. Production rendering checks the snapshot's semantic hash.
 
-`.github/workflows/dashboard-refresh.yml` schedules **09:17 UTC daily**, plus manual
-dispatch with boolean **`publish=false`** by default. It runs all offline electricity
-tests, refreshes recent data → current-year history with overlap validation → monthly
-trade, then frontend tests/lint/build on Node 20. Annual supplements stay frozen;
+`.github/workflows/dashboard-refresh.yml` schedules **06:00 UTC daily**, plus manual
+dispatch with boolean **`publish=false`** by default to refresh/validate only the
+selected ref, without publication or sync. It runs all offline electricity and script
+tests, runs the coordinated `.refresh` entry point (recent → independent current-year
+history with observed overlap checks → monthly trade), then frontend tests/lint/build
+on Node 20. Source failures may produce validated, visibly degraded components;
+shared errors abort the staged bundle. Annual supplements stay frozen;
 capacity/congestion remains a separate manual/monthly refresh. Review artifacts are
-retained for seven days. The ten-minute total job budget includes public verification;
-package caches never contain the DuckDB database. The workflow also validates/builds
-unchanged data.
+retained for seven days. The ten-minute production job budget includes up to 240
+seconds of public verification; package caches never contain the DuckDB database.
+The workflow also validates/builds unchanged data.
 
-Publishing is authorized only on the `main` ref with
-`HEAD == origin/main == origin/releases/cloudflare`, checked before source fetching.
-Unpublished code stops the run before refresh/build. With `contents: write`, only
-validated recent/current-year-history/trade allowlist changes may be committed and
-pushed to both refs atomically, without force. Normal code/blog releases retain
-manual promotion after release ancestry has been merged into main where needed.
-Public data and HTML are polled for up to 240 seconds, including on no-change
-publishing runs; a review artifact or successful push is not proof of deployment.
-See [the publication runbook](dashboard_publication.md) for rollout, the pending
-first Cloudflare Git-integration check, and explicit recovery.
+Publishing requires the `main` **event ref**, followed by an explicit checkout of
+`releases/cloudflare` using its released scripts, runtime, and frontend. The guard
+requires `HEAD == origin/releases/cloudflare` before source fetching and ignores
+main's position. With `contents: write`, only validated recent/current-year-history/trade
+allowlist changes may be committed and pushed **to release only, without force**.
+Public data and HTML are then verified, including on no-change publishing runs;
+a review artifact or successful push is not proof of deployment.
+
+Only verified release SHA output enables the separate `sync-main` job. It checks
+the exact release SHA, merges real ancestry into a worktree on current main, and
+validates the candidate with offline electricity/script tests plus frontend
+tests/lint/build before rechecking refs and pushing **main only, without force**.
+Sync does not fetch live source data or change schemas; bot main pushes cannot rely
+on push CI. It has its own ten-minute cap and extra validation/build cost. Conflicts,
+validation failures, or races make the workflow red but leave verified production
+intact and future refreshes possible. No-change publishing runs retry outstanding
+sync; there is no two-ref atomic promise.
+
+Normal code/blog releases retain manual promotion: incorporate latest release
+ancestry through sync or reviewed real-merge reconciliation, preserve newer snapshots,
+pass checks, then fast-forward release to reviewed main without force. Main and
+release need not routinely equal. See [the publication runbook](dashboard_publication.md)
+for new rollout and distinct recovery paths for public failure versus sync conflict/race.
 
 Local verification passed 17 pipeline tests (including real dbt integration), 84
 frontend Jest tests, `npm run lint`, and `npm run build`. Browser checks cover period

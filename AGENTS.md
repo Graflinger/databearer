@@ -15,11 +15,16 @@ publication, read:
 
 - [Dashboard architecture](docs/dashboard_architecture.md): the default design and
   acceptance checklist for one daily, stateless dashboard using the existing stack.
-- [Dashboard publication](docs/dashboard_publication.md): authorized daily data-only
-  publication, released-base guards, public verification, and recovery.
+- [Dashboard partial refresh](docs/dashboard_partial_refresh.md): approved durable
+  recent per-component retention, v2 null/status contracts, coordinated `.refresh`,
+  independent history cutoff, hard shared failures and recovery. Feature live
+  acceptance/manual promotion to both branches remain pending; implementation/PR
+  authorization does not authorize production rollout or frozen-export rewrites.
 - [Plan B](docs/plan_b.md): optional paths for independent publishing, durable history,
   managed databases, scheduled compute, or a server. Do not introduce these without
   an explicit need and agreement on the trade-offs.
+- [Dashboard publication](docs/dashboard_publication.md): authorized daily data-only
+  publication, released-base guards, public verification, and recovery.
 - [German electricity history](docs/german_electricity_history.md): approved exception
   storing validated daily history in yearly Git-tracked partitions. Refresh only the
   current year's correction window; closed years require explicit reconciliation.
@@ -34,25 +39,55 @@ publication, read:
   separate; no target-attainment ratios. Do not add this monthly/manual source to
   the daily refresh or treat congestion measures as outages or renewable losses.
 
-Dashboard runs are stateless by default; the approved electricity history uses validated
-repository snapshots as durable state. All runs must remain idempotent and select only
-necessary sources/models. Do not persist the DuckDB database between
-runs. Keep dependencies, source requests, and runtime bounded; publish only validated,
-compact exports. Preserve frozen blog-post datasets and the last working dashboard
-on failure. Refresh recent electricity data before history and validate their overlap,
-then refresh monthly trade. Build long-term generation trends from existing history
+Dashboard runs are stateless by default; approved electricity recent per-component
+retention, history and trade use validated repository snapshots as durable state.
+All runs must remain idempotent and select only necessary sources/models. Do not
+persist the DuckDB database between runs. Keep dependencies, source requests, and
+runtime bounded; publish only validated, compact exports. Preserve frozen blog-post
+datasets and the last working dashboard
+on shared failure. Use coordinated `.refresh`: stage recent, independent daily history
+with available overlapping observations checked, then monthly trade. Isolate source
+failures with explicit statuses; shared corruption/dbt/storage/consistency errors
+abort the bundle. Build long-term generation trends from existing history
 without additional source requests.
-Daily production data publication is authorized in `dashboard-refresh.yml` at 09:17
-UTC; activation awaits merge to `main` and live deployment verification. Manual
-dispatch defaults to `publish=false`. Publishing requires the `main` ref and
-`HEAD == origin/main == origin/releases/cloudflare` before source fetching. Commit
-only validated recent/current-year-history/trade allowlist changes and push both refs
-atomically, without force. Unpublished main changes must stop before refresh/build.
-Normal blog/code and monthly/manual progress changes retain manual promotion;
-merge release ancestry into main first if branches have diverged. Verify public
-data/HTML after publishing, including no-change runs; Git push success is not a
-deployment guarantee. Preserve the ten-minute total job budget and explicit
-history/trade reconciliation at rollover; never auto-correct closed years.
+Daily production data publication is authorized in `dashboard-refresh.yml` at 06:00
+UTC. The release-first implementation must be deliberately promoted to **both `main`
+and `releases/cloudflare`** before the schedule relies on released scripts; new live
+rollout verification is pending (the September 10 success used the old both-ref design).
+Manual dispatch defaults to `publish=false`, refreshing/validating only the selected
+ref. Publishing requires the `main` event ref, then explicitly checks out
+`releases/cloudflare` for released scripts, runtime, and frontend. Require
+`HEAD == origin/releases/cloudflare` before source fetching; main's position does
+not gate production. Commit only validated recent/current-year-history/trade
+allowlist changes and push **release only**, without force. Verify public data/HTML,
+including no-change runs; Git push success is not a deployment guarantee.
+
+Only verified `release_sha` output permits the separate `sync-main` job. Using the
+released sync script, check the exact release SHA, prepare a separate worktree from
+current main, and merge real release ancestry. Run offline electricity/script tests
+and frontend tests/lint/build on the candidate before a non-force **main-only** push;
+fetch no live source data during sync. Bot `GITHUB_TOKEN` pushes cannot rely on push
+CI. Fail on conflicts or branch races without silently overwriting main or changing
+schemas. Sync failure makes the workflow red but leaves verified production intact
+and future production refreshes possible; no-change publishing runs retry outstanding
+sync. There is no two-ref atomic update promise. Preserve the ten-minute production
+job budget including the 240-second verifier; sync has its own ten-minute cap and
+additional validation/build cost.
+
+Normal blog/code and monthly/manual progress changes retain manual promotion:
+incorporate latest release ancestry into reviewed main via sync or explicit real-merge
+reconciliation, preserving newer snapshots, then fast-forward release without force.
+Main and release need not routinely equal. Preserve explicit history/trade
+reconciliation at rollover; never auto-correct closed years. Follow the publication
+runbook's separate recovery paths for public verification failures and sync failures.
+
+## Open work tracking
+
+[Open work](docs/open_work.md) lists every unfinished topic with its branch, PR and
+next step. When you create a branch, open or merge a PR, or promote to
+`releases/cloudflare`, load the `work-tracking` skill. Reconcile the tracker with
+GitHub, add new topics and remove finished ones. A topic is finished only when it
+is merged and, if public-facing, live on `releases/cloudflare`.
 
 ## Working conventions
 
@@ -60,5 +95,5 @@ history/trade reconciliation at rollover; never auto-correct closed years.
 - Run frontend commands from `frontend/`; use `npm test` and `npm run build` for
   frontend changes. Follow pipeline skill guidance for focused dbt selection/tests.
 - Keep `.data/`, raw downloads, and credentials out of Git. Preserve unrelated work.
-- Do not commit, push, or deploy unless requested; the authorized scheduled workflow
-  does not authorize an agent to publish during an unrelated task.
+- Do not commit, push, or deploy unless requested; documenting a future automated
+  publication workflow does not authorize publishing during the current task.

@@ -17,7 +17,7 @@
         <li><span class="electricity-progress-key electricity-progress-key-dashed" aria-hidden="true"></span>Wind an Land</li>
         <li><span class="electricity-progress-key electricity-progress-key-dotted" aria-hidden="true"></span>Wind auf See</li>
       </ul>
-      <p class="electricity-note">Vorläufig · <a href="{{ snapshot.capacity.source_url }}">SMARD / Kraftwerksliste</a> · manuell geprüfte Auswertungsbasis: 26.06.2026. Enthält auch ausländische Anlagen mit Einspeisung ins deutsche Netz; kein rein geografischer Deutschland-Gesamtwert.</p>
+      <details class="electricity-hint"><summary>Vorläufig · Quelle &amp; Abgrenzung</summary><p><a href="{{ snapshot.capacity.source_url }}">SMARD / Kraftwerksliste</a> · manuell geprüfte Auswertungsbasis: 26.06.2026. Enthält auch ausländische Anlagen mit Einspeisung ins deutsche Netz; kein rein geografischer Deutschland-Gesamtwert.</p></details>
     </section>
     <section class="electricity-panel" aria-labelledby="electricity-progress-storage-heading">
       <h3 id="electricity-progress-storage-heading">Erfasste Speicherleistung</h3>
@@ -28,7 +28,7 @@
         <li><span class="electricity-progress-key" aria-hidden="true"></span>Batteriespeicher</li>
         <li><span class="electricity-progress-key electricity-progress-key-dashed" aria-hidden="true"></span>Pumpspeicher</li>
       </ul>
-      <p id="electricity-progress-storage-scope" class="electricity-note">Vorläufig · <a href="{{ snapshot.capacity.source_url }}">SMARD / Kraftwerksliste</a> · manuell geprüfte Auswertungsbasis: 26.06.2026. Kleinspeicher unter 13,2 kW, darunter kleine Heimspeicher, fehlen. Die Liste umfasst auch ausländische Anlagen, was auch die Pumpspeicher-Abgrenzung betrifft. Kein Gesamtbestand deutscher Speicher.</p>
+      <details class="electricity-hint"><summary>Vorläufig · Quelle &amp; Abgrenzung</summary><p id="electricity-progress-storage-scope"><a href="{{ snapshot.capacity.source_url }}">SMARD / Kraftwerksliste</a> · manuell geprüfte Auswertungsbasis: 26.06.2026. Kleinspeicher unter 13,2 kW, darunter kleine Heimspeicher, fehlen. Die Liste umfasst auch ausländische Anlagen, was auch die Pumpspeicher-Abgrenzung betrifft. Kein Gesamtbestand deutscher Speicher.</p></details>
     </section>
   </div>
   <section class="electricity-progress-targets" aria-labelledby="electricity-progress-targets-heading">
@@ -46,20 +46,20 @@
   <header class="electricity-progress-networks">
     <h3>Netzengpässe ausgleichen</h3>
     <p>Netzbetreiber passen Einspeisung und Handel an, um überlastete Leitungen zu entlasten. Die Zahlen beschreiben solche Korrektureingriffe – keine Stromausfälle und keinen Indikator für Netzinstabilität.</p>
-    <p class="electricity-note">Maßnahmenenergie zählt Hoch- und Herunterregeln; beide Seiten können zusammen gezählt werden. Sie ist weder verlorene Erzeugung noch allein abgeregelter Ökostrom. Kosten in nominalen Mio. €.</p>
+    <details class="electricity-hint"><summary>Was die Zahlen messen</summary><p>Maßnahmenenergie zählt Hoch- und Herunterregeln; beide Seiten können zusammen gezählt werden. Sie ist weder verlorene Erzeugung noch allein abgeregelter Ökostrom. Kosten in nominalen Mio. €.</p></details>
   </header>
   <div class="electricity-chart-grid">
     <section class="electricity-panel" aria-labelledby="electricity-progress-annual-energy-heading">
       <h3 id="electricity-progress-annual-energy-heading">Maßnahmenenergie pro Jahr</h3>
       <p id="electricity-progress-annual-energy-note"><strong>{{ progress.annualLatest.year }}: {{ progress.annualLatest.energy_gwh | electricityNumber(0) }} GWh</strong> · Netzengpassmanagement insgesamt</p>
       <div id="electricity-progress-annual-energy" class="electricity-chart electricity-chart-small" data-progress-chart="annual-energy" role="img" aria-label="Jährliche Maßnahmenenergie des Netzengpassmanagements in GWh" aria-describedby="electricity-progress-annual-energy-note" hidden></div>
-      <p class="electricity-note">Jahreswerte bis {{ progress.annualDate }} · <a href="https://www.smard.de/page/home/topic-article/211972/217842/entwicklung-des-netzengpassmanagements">SMARD</a>. Methodikwechsel ab Oktober 2021; seit 2022 ist früheres Einspeisemanagement in Redispatch 2.0 enthalten.</p>
+      <details class="electricity-hint"><summary>Quelle &amp; Methodikwechsel</summary><p>Jahreswerte bis {{ progress.annualDate }} · <a href="https://www.smard.de/page/home/topic-article/211972/217842/entwicklung-des-netzengpassmanagements">SMARD</a>. Methodikwechsel ab Oktober 2021; seit 2022 ist früheres Einspeisemanagement in Redispatch 2.0 enthalten.</p></details>
     </section>
     <section class="electricity-panel" aria-labelledby="electricity-progress-annual-cost-heading">
       <h3 id="electricity-progress-annual-cost-heading">Kosten pro Jahr</h3>
       <p id="electricity-progress-annual-cost-note"><strong>{{ progress.annualLatest.year }}: {{ progress.annualLatest.cost_million_eur | electricityNumber(0) }} Mio. €</strong> · Netzengpassmanagement insgesamt</p>
       <div id="electricity-progress-annual-cost" class="electricity-chart electricity-chart-small" data-progress-chart="annual-cost" role="img" aria-label="Jährliche nominale Kosten des Netzengpassmanagements in Millionen Euro" aria-describedby="electricity-progress-annual-cost-note" hidden></div>
-      <p class="electricity-note">Jahreswerte bis {{ progress.annualDate }} · <a href="https://www.smard.de/page/home/topic-article/211972/217842/entwicklung-des-netzengpassmanagements">SMARD</a>. Nicht inflationsbereinigt; teils saldierte Kosten, einschließlich Netzreserve. Methodikwechsel 2021/2022 beachten.</p>
+      <details class="electricity-hint"><summary>Quelle &amp; Kostenabgrenzung</summary><p>Jahreswerte bis {{ progress.annualDate }} · <a href="https://www.smard.de/page/home/topic-article/211972/217842/entwicklung-des-netzengpassmanagements">SMARD</a>. Nicht inflationsbereinigt; teils saldierte Kosten, einschließlich Netzreserve. Methodikwechsel 2021/2022 beachten.</p></details>
     </section>
   </div>
   <section class="electricity-panel" aria-labelledby="electricity-progress-monthly-heading">
@@ -75,9 +75,9 @@
       <li><span class="electricity-progress-key" aria-hidden="true"></span>Netzengpassmanagement insgesamt</li>
       <li><span class="electricity-progress-key electricity-progress-key-dashed" aria-hidden="true"></span>Davon Redispatch mit Marktkraftwerken</li>
     </ul>
-    <p class="electricity-note">Juli 2022 bis {{ progress.monthlyDate }} · <a href="https://www.smard.de/page/home/topic-article/211972/213328/netzengpassmanagement">SMARD: insgesamt</a> · <a href="https://www.smard.de/page/home/topic-article/211972/213270/redispatch-mit-marktkraftwerken">Marktkraftwerke</a>. Redispatch umfasst konventionelle und erneuerbare Anlagen, hier ohne Netzreservekosten. Monatswerte werden nicht zu Jahreswerten hochgerechnet.</p>
+    <details class="electricity-hint"><summary>Quelle &amp; Abgrenzung</summary><p>Juli 2022 bis {{ progress.monthlyDate }} · <a href="https://www.smard.de/page/home/topic-article/211972/213328/netzengpassmanagement">SMARD: insgesamt</a> · <a href="https://www.smard.de/page/home/topic-article/211972/213270/redispatch-mit-marktkraftwerken">Marktkraftwerke</a>. Redispatch umfasst konventionelle und erneuerbare Anlagen, hier ohne Netzreservekosten. Monatswerte werden nicht zu Jahreswerten hochgerechnet.</p></details>
   </section>
-  <p id="electricity-progress-status" class="electricity-note" role="status">Diagramme benötigen JavaScript und laden erst im sichtbaren Bereich. Die letzten Werte und Ziele stehen im Text; alle Reihen im JSON-Download.</p>
+  <p id="electricity-progress-status" class="electricity-status" role="status" data-tone="quiet">Diagramme benötigen JavaScript und laden erst im sichtbaren Bereich. Die letzten Werte und Ziele stehen im Text; alle Reihen im JSON-Download.</p>
   <p><a href="/data/german-electricity-progress.json" download>Ausbau, Speicher & Netze herunterladen (JSON)</a></p>
   <details class="electricity-progress-method">
     <summary>Datenstand, Abgrenzung & Quellen</summary>

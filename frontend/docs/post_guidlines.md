@@ -1,34 +1,51 @@
 # Post QA Guide (Pre-Publish)
 
-Use this checklist before publishing any post. It is also safe for AI-based validation.
+This is a short checklist for preparing or reviewing a post. The rules and their
+reasons live in the [SEO and authoring contract](../../docs/seo.md). Completing the
+checklist does not authorize publication, commits, pushes or deployment, and it does
+not promise rankings.
 
 ## Frontmatter
-- title: Clear, specific, includes timeframe or scope.
-- date: ISO format (YYYY-MM-DD).
-- excerpt: 140-160 characters, describes the key insight.
-- image: Use a 1200x630 image where possible.
-- imageText: Short descriptive caption.
-- topic: At least one of: energie, wirtschaft, politik-und-gesellschaft.
-- lastUpdated: Set when data or charts change.
-- metaTitle: Optional override if title is long.
-- metaDescription: Optional override if excerpt is not a good meta description.
 
-## Page Structure
-- Exactly one H1 (the template handles it).
-- Body uses H2/H3 (no additional H1 in Markdown).
-- First section includes a 1-2 sentence key takeaway.
-- Include a short Methodik/Datenquellen section near the end.
+- [ ] `title` is an accurate claim with scope or timeframe and has no brand suffix.
+  `metaTitle`/`metaDescription` are optional and must be accurate.
+- [ ] `excerpt` is plain text in 1–2 sentences, with the key finding first and no
+  draft labels. It becomes the meta description, card text, search excerpt and feed
+  summary ([Content guidance](../../docs/seo.md#content-guidance)).
+- [ ] `date` is explicit (`YYYY-MM-DD`). `lastUpdated` is set only for a real
+  substantive revision.
+- [ ] `draft: true` is present while drafting and removed for publication, together
+  with any extra `eleventyExcludeFromCollections`, `excludeFromSitemap` or
+  `permalink` overrides added while drafting ([Drafts](../../docs/seo.md#drafts)).
+- [ ] `image` and optional `socialImage` are local `/images/...` files with the exact
+  letter case. `imageAlt`/`socialImageAlt` describe the image and are left empty only
+  for decorative images. `imageText` is the visible caption
+  ([Images](../../docs/seo.md#images)).
+- [ ] `topic` includes at least one of `energie`, `wirtschaft`,
+  `politik-und-gesellschaft`.
 
-## Charts & Data
-- Every chart has a short text summary (what to learn from it).
-- Each chart lists its source with a link.
-- Chart container IDs are unique.
+## Body
 
-## Links
-- 2-5 internal links to related posts or topic pages.
-- 1-3 external authoritative data links.
+- [ ] There is no H1 in the Markdown; use H2/H3. The key takeaway comes first, and a
+  Methodik/Datenquellen section comes last.
+- [ ] Each chart follows the [chart pattern](../../docs/seo.md#charts-and-evidence):
+  - one deferred ECharts script;
+  - a container with `role="img"`, `aria-labelledby` and `aria-describedby`;
+  - a `chart-description` longer than 40 characters;
+  - static values or a captioned table, units, period and a verified source link.
+- [ ] Wide tables are wrapped in `.table-scroll`
+  ([Styling](../../docs/seo.md#styling-and-navigation)). Datawrapper embeds use
+  `loading="lazy"`, have a `title` and a visible source credit.
+- [ ] Internal links use `/posts/<year>/<slug>/` with a trailing slash. Link text is
+  descriptive (never "hier"). Citations are verified, and unresolved ones are
+  recorded, not invented.
+- [ ] Corrections update `lastUpdated` and add a visible `*Korrektur vom …*` note.
 
-## SEO Hygiene
-- Title length under 60 characters where possible.
-- Meta description 140-160 characters.
-- Avoid keyword stuffing; use natural language.
+## Checks
+
+From `frontend/`, run `npm test -- --runInBand`, `npm run lint`, `npm run build`, then
+`npm run test:seo-output` ([Checks](../../docs/seo.md#checks)). Then:
+
+- [ ] Review the post, topic pages and related cards on desktop and mobile, with and
+  without JavaScript.
+- [ ] Review `git status` for incidental CSS, chart or data changes.

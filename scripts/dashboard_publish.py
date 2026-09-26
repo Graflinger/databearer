@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Publish validated daily exports from an already released main checkout.
+"""Publish validated daily exports from the releases/cloudflare checkout.
 
 Run from the repository root. ``check`` prints only the base commit SHA; pass it
 to ``publish --base SHA`` after the existing pipeline and frontend validations.
 This standard-library guard checks publication scope, not the data contracts.
+Only the freshly fetched release base matters; main is never read or pushed.
+``--expected-branch`` is an assertion, not an override: only releases/cloudflare
+is accepted, so a different checkout can never be published to production.
 It never reconciles branches, retries a failed push, or verifies Cloudflare builds.
 """
 
@@ -25,7 +28,7 @@ TRADE = "frontend/src/_data/germanElectricityTrade.json"
 HISTORY = "frontend/src/data-history/german-electricity"
 MANIFEST = f"{HISTORY}/manifest.json"
 PUBLIC_HISTORY = "/data/history/german-electricity/"
-BRANCHES = ("main", "releases/cloudflare")
+RELEASE = "releases/cloudflare"
 MESSAGE = "data: refresh German electricity dashboard"
 BOT_NAME = "github-actions[bot]"
 BOT_EMAIL = "41898282+github-actions[bot]@users.noreply.github.com"
@@ -82,19 +85,22 @@ def status():
     return result
 
 
-def guard_refs(base=None, expected_branch="main"):
+def guard_checkout():
+    require(git("symbolic-ref", "--quiet", "HEAD").decode().strip() == f"refs/heads/{RELEASE}",
+            f"Expected checkout branch {RELEASE!r}")
+
+
+def guard_refs(base=None, expected_branch=RELEASE):
+    require(expected_branch == RELEASE, f"Expected branch must be {RELEASE!r}")
     require(git("rev-parse", "--show-prefix") == b"\n",
             "Run from the repository root")
-    branch = git("symbolic-ref", "--quiet", "--short", "HEAD").decode().strip()
-    require(branch == expected_branch, f"Expected checkout branch {expected_branch!r}")
-    git("fetch", "--atomic", "--no-tags", "origin", *[
-        f"refs/heads/{branch}:refs/remotes/origin/{branch}" for branch in BRANCHES
-    ])
+    guard_checkout()
+    git("fetch", "--atomic", "--no-tags", "origin",
+        f"refs/heads/{RELEASE}:refs/remotes/origin/{RELEASE}")
     head = sha("HEAD")
     require(base is None or head == base, "HEAD no longer equals the checked base")
-    require(all(sha(f"refs/remotes/origin/{branch}") == head for branch in BRANCHES),
-            "HEAD, origin/main and origin/releases/cloudflare must equal the base; "
-            "unpublished main commits require a separate reviewed release")
+    require(sha(f"refs/remotes/origin/{RELEASE}") == head,
+            "HEAD and origin/releases/cloudflare must equal the base")
     return head
 
 
@@ -246,13 +252,13 @@ def validate_changes(base, year):
     return payloads
 
 
-def check(expected_branch="main"):
+def check(expected_branch=RELEASE):
     base = guard_refs(expected_branch=expected_branch)
     require(not status(), "Check requires a clean tracked/untracked working tree (ignored files are allowed)")
     return base
 
 
-def publish(base, expected_branch="main"):
+def publish(base, expected_branch=RELEASE):
     require(re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", base), "Base must be a full commit SHA")
     guard_refs(base, expected_branch)
     payloads = validate_changes(base, datetime.now(ZoneInfo("Europe/Berlin")).year)
@@ -260,6 +266,7 @@ def publish(base, expected_branch="main"):
         return f"unchanged {base}"
 
     # Recheck immediately before taking ownership of the previously empty index.
+    guard_checkout()
     require(sha("HEAD") == base, "HEAD changed during validation")
     require(set(status()) == set(payloads), "Working paths changed during validation")
     git("add", "--all", "--", *payloads)
@@ -283,9 +290,8 @@ def publish(base, expected_branch="main"):
     git("merge-base", "--is-ancestor", base, "HEAD")
     require(sha("HEAD^{tree}") == tree, "Commit tree differs from validated index")
     require(not status(), "Working tree or index changed during commit")
-    require(git("symbolic-ref", "--quiet", "--short", "HEAD").decode().strip() == expected_branch,
-            "Checkout branch changed during commit")
-    git("push", "--atomic", "origin", *[f"HEAD:refs/heads/{branch}" for branch in BRANCHES])
+    guard_checkout()
+    git("push", "--atomic", "--no-follow-tags", "origin", f"{commit}:refs/heads/{RELEASE}")
     return f"published {commit}"
 
 
@@ -293,9 +299,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     check_parser = commands.add_parser("check", help="Check the released base before refresh; print its SHA")
-    publish_parser = commands.add_parser("publish", help="Commit and atomically push fully validated daily exports")
+    publish_parser = commands.add_parser("publish", help="Commit validated daily exports and push only the release branch")
     for command in (check_parser, publish_parser):
-        command.add_argument("--expected-branch", default="main")
+        command.add_argument("--expected-branch", default=RELEASE,
+                             help=f"Checkout assertion; must be {RELEASE}")
     publish_parser.add_argument("--base", required=True)
     args = parser.parse_args(argv)
     try:

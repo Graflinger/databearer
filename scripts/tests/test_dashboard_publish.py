@@ -62,6 +62,7 @@ class DashboardPublishTests(unittest.TestCase):
         }
         self.write_json(MANIFEST, self.manifest)
         self.seed()
+        self.git("switch", "-c", RELEASE)
 
     def run_process(self, command, *, cwd=None, input=None):
         return subprocess.run(command, cwd=cwd or self.repo, env=self.env, input=input,
@@ -155,8 +156,15 @@ class DashboardPublishTests(unittest.TestCase):
         self.assertEqual(result.stdout, f"unchanged {self.base}\n")
         self.assert_unpublished()
 
-    def test_allowlisted_changes_commit_and_push_both_branches_with_retention(self):
+    def test_allowlisted_changes_commit_and_push_release_only_with_retention(self):
         self.assertEqual(self.cli("check").stdout.strip(), self.base)
+        # Explicit publication must ignore configured extra push refs and tags.
+        self.git("config", "remote.origin.push", "HEAD:refs/heads/main")
+        self.git("config", "push.followTags", "true")
+        self.git("tag", "-a", "unpublished-tag", "-m", "local tag")
+        self.hook("pre-push", 'while read local_ref local_sha remote_ref remote_sha; do\n'
+                  f'  test "$remote_ref" = "refs/heads/{RELEASE}"\n'
+                  f'  test "$remote_sha" = "{self.base}"\ndone')
         self.change_recent()
         self.write(TRADE, '{"fixture":2}')
         fresh = self.refreshed_history()
@@ -166,8 +174,10 @@ class DashboardPublishTests(unittest.TestCase):
         self.assertEqual(result.stdout, f"published {commit}\n")
         self.assertNotEqual(commit, self.base)
         self.assertEqual(self.git("rev-list", "--parents", "-n", "1", "HEAD"), f"{commit} {self.base}")
-        for branch in ("main", RELEASE):
-            self.assertEqual(self.remote_sha(branch), commit)
+        self.assertEqual(self.remote_sha(RELEASE), commit)
+        self.assertEqual(self.remote_sha("main"), self.base)
+        self.assertEqual(self.git("rev-parse", "refs/heads/main"), self.base)
+        self.assertEqual(self.git("tag", "--list", cwd=self.origin), "")
         changed = set(self.git("diff", "--name-only", self.base, commit).splitlines())
         self.assertEqual(changed, {RECENT, TRADE, MANIFEST, self.path(fresh), self.path(self.retained)})
         self.assertEqual(self.git("log", "-1", "--format=%s"), "data: refresh German electricity dashboard")
@@ -180,17 +190,51 @@ class DashboardPublishTests(unittest.TestCase):
     def test_recent_only_change_is_allowed(self):
         self.change_recent()
         self.cli("publish", "--base", self.base)
-        self.assertEqual(self.remote_sha("main"), self.git("rev-parse", "HEAD"))
+        self.assertEqual(self.remote_sha(RELEASE), self.git("rev-parse", "HEAD"))
+        self.assertEqual(self.remote_sha("main"), self.base)
 
-    def test_main_ahead_is_rejected_before_refresh(self):
+    def test_main_ahead_does_not_block_or_publish_unreleased_source(self):
+        self.git("switch", "main")
         self.write("new source.py", "unpublished")
         self.git("add", "--all")
         self.git("commit", "-m", "unpublished main")
         self.git("push", "origin", "HEAD:refs/heads/main")
         main = self.remote_sha("main")
-        self.assertIn("must equal the base", self.cli("check", success=False).stderr)
-        self.assertEqual(self.remote_sha(RELEASE), self.base)
+        self.git("switch", RELEASE)
+        self.assertEqual(self.cli("check").stdout.strip(), self.base)
+        self.change_recent()
+        self.cli("publish", "--base", self.base)
+        self.assertEqual(self.remote_sha(RELEASE), self.git("rev-parse", "HEAD"))
         self.assertEqual(self.remote_sha("main"), main)
+        self.assertEqual(self.git("rev-parse", "refs/heads/main"), main)
+        self.assertEqual(self.git("ls-tree", "HEAD", "--", "new source.py"), "")
+
+    def test_divergent_main_does_not_block_or_change_either_main_ref(self):
+        other = self.competing_commit()
+        self.git("update-ref", "refs/heads/main", other, self.base, cwd=self.origin)
+        self.git("fetch", "origin", "refs/heads/main:refs/heads/main")
+        self.change_recent()
+        self.cli("publish", "--base", self.base)
+        self.base = self.git("rev-parse", "HEAD")
+        divergent = self.run_process(["git", "merge-base", "--is-ancestor", other, self.base])
+        self.assertEqual(divergent.returncode, 1)
+        self.assertEqual(self.cli("check").stdout.strip(), self.base)
+        self.write(RECENT, '{"fixture":3}')
+        self.cli("publish", "--base", self.base)
+        self.assertEqual(self.remote_sha(RELEASE), self.git("rev-parse", "HEAD"))
+        self.assertEqual(self.remote_sha("main"), other)
+        self.assertEqual(self.git("rev-parse", "refs/heads/main"), other)
+
+    def test_missing_main_refs_do_not_block_publication(self):
+        self.git("update-ref", "-d", "refs/heads/main", cwd=self.origin)
+        self.git("update-ref", "-d", "refs/heads/main")
+        self.git("update-ref", "-d", "refs/remotes/origin/main")
+        self.assertEqual(self.cli("check").stdout.strip(), self.base)
+        self.change_recent()
+        self.cli("publish", "--base", self.base)
+        self.assertEqual(self.remote_sha(RELEASE), self.git("rev-parse", "HEAD"))
+        self.assertEqual(self.git("for-each-ref", "refs/heads/main", cwd=self.origin), "")
+        self.assertEqual(self.git("for-each-ref", "refs/heads/main", "refs/remotes/origin/main"), "")
 
     def test_production_ahead_is_rejected_before_refresh(self):
         other = self.competing_commit()
@@ -199,15 +243,15 @@ class DashboardPublishTests(unittest.TestCase):
         self.assertEqual(self.remote_sha("main"), self.base)
         self.assertEqual(self.remote_sha(RELEASE), other)
 
-    def test_refetch_detects_main_advance_after_check(self):
+    def test_main_advance_after_check_does_not_block_or_update_main_tracking_ref(self):
         self.cli("check")
         self.change_recent()
         other = self.competing_commit()
         self.git("update-ref", "refs/heads/main", other, self.base, cwd=self.origin)
-        self.assertIn("must equal the base", self.cli("publish", "--base", self.base, success=False).stderr)
-        self.assertEqual(self.git("rev-parse", "HEAD"), self.base)
-        self.assertEqual(self.remote_sha(RELEASE), self.base)
+        self.cli("publish", "--base", self.base)
+        self.assertEqual(self.remote_sha(RELEASE), self.git("rev-parse", "HEAD"))
         self.assertEqual(self.remote_sha("main"), other)
+        self.assertEqual(self.git("rev-parse", "refs/remotes/origin/main"), self.base)
 
     def test_refetch_detects_production_advance_after_check(self):
         self.cli("check")
@@ -217,17 +261,64 @@ class DashboardPublishTests(unittest.TestCase):
         self.assertIn("must equal the base", self.cli("publish", "--base", self.base, success=False).stderr)
         self.assertEqual(self.git("rev-parse", "HEAD"), self.base)
         self.assertEqual(self.remote_sha("main"), self.base)
+        self.assertEqual(self.remote_sha(RELEASE), other)
+
+    def test_no_change_still_rejects_release_advance_after_check(self):
+        self.cli("check")
+        other = self.competing_commit()
+        self.git("update-ref", f"refs/heads/{RELEASE}", other, self.base, cwd=self.origin)
+        self.assertIn("must equal the base", self.cli("publish", "--base", self.base, success=False).stderr)
+        self.assertEqual(self.git("rev-parse", "HEAD"), self.base)
+        self.assertEqual(self.remote_sha(RELEASE), other)
+        self.assertEqual(self.remote_sha("main"), self.base)
+
+    def test_no_change_ignores_main_advance_without_commit_or_push(self):
+        self.cli("check")
+        other = self.competing_commit()
+        self.git("update-ref", "refs/heads/main", other, self.base, cwd=self.origin)
+        self.hook("pre-push", "exit 1")
+        result = self.cli("publish", "--base", self.base)
+        self.assertEqual(result.stdout, f"unchanged {self.base}\n")
+        self.assertEqual(self.git("rev-parse", "HEAD"), self.base)
+        self.assertEqual(self.remote_sha(RELEASE), self.base)
+        self.assertEqual(self.remote_sha("main"), other)
 
     def test_wrong_branch_and_detached_head_are_rejected(self):
+        self.git("switch", "main")
+        self.assertIn("Expected checkout branch", self.cli("check", success=False).stderr)
+        self.rejected("Expected checkout branch")
         self.git("switch", "-c", "review")
         self.assertIn("Expected checkout branch", self.cli("check", success=False).stderr)
+        self.rejected("Expected checkout branch")
         self.git("checkout", "--detach", self.base)
         self.cli("check", success=False)
+        self.cli("publish", "--base", self.base, success=False)
         self.assert_unpublished()
 
-    def test_expected_branch_override(self):
+    def test_expected_branch_is_only_a_release_assertion_not_an_override(self):
+        # Keep the CLI option for explicit callers, but never allow it to select
+        # an arbitrary checkout whose commits would then be sent to production.
+        self.assertEqual(self.cli("check", "--expected-branch", RELEASE).stdout.strip(), self.base)
+        self.change_recent()
+        for branch in ("main", "review"):
+            with self.subTest(branch=branch):
+                self.assertIn("Expected branch must be", self.cli(
+                    "check", "--expected-branch", branch, success=False).stderr)
+                self.assertIn("Expected branch must be", self.cli(
+                    "publish", "--base", self.base, "--expected-branch", branch, success=False).stderr)
+                self.assert_unpublished()
         self.git("switch", "-c", "review")
-        self.assertEqual(self.cli("check", "--expected-branch", "review").stdout.strip(), self.base)
+        self.assertIn("Expected branch must be", self.cli(
+            "check", "--expected-branch", "review", success=False).stderr)
+        self.assertIn("Expected branch must be", self.cli(
+            "publish", "--base", self.base, "--expected-branch", "review", success=False).stderr)
+        self.assertIn("Expected checkout branch", self.cli(
+            "publish", "--base", self.base, "--expected-branch", RELEASE, success=False).stderr)
+        self.assert_unpublished()
+        self.git("switch", RELEASE)
+        self.cli("publish", "--base", self.base, "--expected-branch", RELEASE)
+        self.assertEqual(self.remote_sha(RELEASE), self.git("rev-parse", "HEAD"))
+        self.assertEqual(self.remote_sha("main"), self.base)
 
     def test_missing_remote_release_ref_is_rejected(self):
         self.git("update-ref", "-d", f"refs/heads/{RELEASE}", cwd=self.origin)
@@ -433,7 +524,7 @@ class DashboardPublishTests(unittest.TestCase):
         for branch in ("main", RELEASE):
             self.assertEqual(self.remote_sha(branch), self.base)
 
-    def test_atomic_push_race_updates_neither_branch_from_this_run(self):
+    def test_release_push_race_preserves_competing_commit(self):
         self.change_recent()
         other = self.competing_commit()
         # The pre-push hook runs after fetch and remote advertisement, creating an
@@ -448,18 +539,42 @@ class DashboardPublishTests(unittest.TestCase):
         self.assertNotEqual(self.remote_sha(RELEASE), local)
         self.assertIn("HEAD no longer", self.cli("publish", "--base", self.base, success=False).stderr)
 
-    def test_non_fast_forward_main_race_leaves_production_at_base(self):
+    def test_main_advance_during_commit_does_not_block_release_push(self):
         self.change_recent()
         other = self.competing_commit()
         self.git("fetch", "origin", other)
-        # Advance main after the final fetch but before push advertisement, so
-        # Git rejects it as non-fast-forward and atomically refuses production.
+        # Main advances after the final fetch but before push advertisement.
         self.hook("post-commit", f'git --git-dir="{self.origin}" update-ref refs/heads/main {other} {self.base}')
+        self.cli("publish", "--base", self.base)
+        self.assertEqual(self.remote_sha("main"), other)
+        self.assertEqual(self.remote_sha(RELEASE), self.git("rev-parse", "HEAD"))
+
+    def test_main_advance_during_push_does_not_block_release_push(self):
+        self.change_recent()
+        other = self.competing_commit()
+        self.hook("pre-push", f'git --git-dir="{self.origin}" update-ref refs/heads/main {other} {self.base}')
+        self.cli("publish", "--base", self.base)
+        self.assertEqual(self.remote_sha("main"), other)
+        self.assertEqual(self.remote_sha(RELEASE), self.git("rev-parse", "HEAD"))
+
+    def test_non_fast_forward_release_race_preserves_production(self):
+        self.change_recent()
+        other = self.competing_commit()
+        self.git("fetch", "origin", other)
+        self.hook("post-commit", f'git --git-dir="{self.origin}" update-ref refs/heads/{RELEASE} {other} {self.base}')
         result = self.cli("publish", "--base", self.base, success=False)
         self.assertIn("git push failed", result.stderr)
         self.assertIn("non-fast-forward", result.stderr)
-        self.assertEqual(self.remote_sha("main"), other)
-        self.assertEqual(self.remote_sha(RELEASE), self.base)
+        self.assertEqual(self.remote_sha("main"), self.base)
+        self.assertEqual(self.remote_sha(RELEASE), other)
+
+    def test_commit_hook_cannot_switch_checkout_to_main(self):
+        self.change_recent()
+        self.hook("post-commit", 'git branch -f main HEAD\ngit symbolic-ref HEAD refs/heads/main')
+        result = self.cli("publish", "--base", self.base, success=False)
+        self.assertIn("Expected checkout branch", result.stderr)
+        for branch in ("main", RELEASE):
+            self.assertEqual(self.remote_sha(branch), self.base)
 
 
 if __name__ == "__main__":
