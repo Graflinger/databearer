@@ -17,9 +17,9 @@ permalink: /posts/2026/batteriespeicher-wandel/
 
 Wer auf die Batteriespeicher schaut, die 2025 in Betrieb gegangen sind, sieht zwei gegenläufige Entwicklungen: Es sind **2,02 Prozent weniger Anlagen** als im Jahr davor, sie bringen aber **9,11 Prozent mehr Speicherkapazität** mit. Den Unterschied machen vor allem große Speicher. Wer nur Anlagen zählt, übersieht also einen wichtigen Teil des Bildes.
 
-Dabei handelt es sich um einen **Kohortenvergleich**: Wir zählen die Anlagen, die im aktuellen Register noch in Betrieb sind, und ordnen sie dem Jahr ihrer ersten Inbetriebnahme zu. Das ist nicht dasselbe wie der tatsächliche Zubau eines Jahres, denn stillgelegte Anlagen fehlen und spätere Erweiterungen zählen mit ihrer heutigen Kapazität. Mehr dazu steht in der [Methodik](#methodik).
+Dabei handelt es sich um einen **Kohortenvergleich**: Gezählt werden die Anlagen, die im aktuellen Register noch in Betrieb sind, jeweils im Jahr ihrer ersten Inbetriebnahme. Das ist nicht dasselbe wie der tatsächliche Zubau eines Jahres, denn stillgelegte Anlagen fehlen und spätere Erweiterungen zählen mit ihrer heutigen Kapazität. Mehr dazu steht unter [Daten und Quellen](#daten).
 
-Insgesamt sind in Deutschland nach unserer Auswertung **2.769.020 Batteriespeicher** mit zusammen **20,22 Gigawatt Leistung** und **33,30 Gigawattstunden Speicherkapazität** in Betrieb. Fast alle davon sind kleine Anlagen mit weniger als 30 kW Leistung und 30 kWh Speicherkapazität. Die nur 652 großen Speicher stellen aber schon fast ein Viertel der gesamten Kapazität.
+Insgesamt sind in Deutschland laut Register **2.769.020 Batteriespeicher** mit zusammen **20,22 Gigawatt Leistung** und **33,30 Gigawattstunden Speicherkapazität** in Betrieb. Fast alle davon sind kleine Anlagen mit weniger als 30 kW Leistung und 30 kWh Speicherkapazität. Die nur 652 großen Speicher stellen aber schon fast ein Viertel der gesamten Kapazität.
 
 <div class="table-scroll" tabindex="0" role="region" aria-label="Tabelle: Batteriespeicher in Betrieb nach Größenklasse">
   <table id="battery-stock-table">
@@ -36,7 +36,7 @@ Insgesamt sind in Deutschland nach unserer Auswertung **2.769.020 Batteriespeich
 
 **Quelle:** [Bundesnetzagentur, Marktstammdatenregister (MaStR)](https://www.marktstammdatenregister.de/MaStR/Datendownload), dl-de/by-2-0; eigene gefilterte Auswertung, Stand 26. September 2026. Geplante Anlagen sind nicht enthalten. Durch Rundung können die Summen leicht abweichen.
 
-Grundlage ist der Registerstand des Marktstammdatenregisters vom **26. September 2026**. Das laufende Jahr 2026 betrachten wir [in einem eigenen Abschnitt](#jahr-2026).
+Das laufende Jahr 2026 ist noch unvollständig und folgt [in einem eigenen Abschnitt](#jahr-2026).
 
 ## Anlagenzahl und Speicherkapazität erzählen verschiedene Geschichten
 
@@ -74,7 +74,7 @@ Die Größenklassen sind rein technisch abgegrenzt. Sie verraten nicht, wem ein 
   <p class="chart-description" id="battery-segments-description">Die gestapelten Balken zeigen die Speicherkapazität je Inbetriebnahme-Kohorte in GWh. Zwischen 2024 und 2025 legt die große Klasse deutlich zu, während die kleine Klasse zurückgeht.</p>
   <div id="battery-storage-segments" role="img" aria-labelledby="battery-storage-segments-heading" aria-describedby="battery-segments-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/battery_storage/segments.js"></script>
-  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, MaStR</a>; eigene Auswertung, Stand 26. September 2026. Größenschwellen angelehnt an die <a href="https://battery-charts.de/battery-charts/#methodology">Methodik von Battery Charts (RWTH Aachen)</a>.</div>
+  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, MaStR</a>; eigene Auswertung, Stand 26. September 2026.</div>
 </div>
 
 <div class="table-scroll" tabindex="0" role="region" aria-label="Tabelle: Speicherkapazität nach Größenklasse">
@@ -129,7 +129,7 @@ Diese großen Speicher bringen es schon jetzt auf **3,77 GWh**. Das ist mehr als
 
 **Quelle:** [Bundesnetzagentur, Marktstammdatenregister (MaStR)](https://www.marktstammdatenregister.de/MaStR/Datendownload), dl-de/by-2-0; eigene gefilterte Auswertung, Stand 26. September 2026.
 
-Auch insgesamt liegt die Speicherkapazität 2026 schon nach knapp neun Monaten über dem Wert des gesamten Vorjahres. Weil Nachmeldungen die Zahlen in der Regel noch erhöhen, sind die Werte für 2026 eher als Untergrenze zu verstehen. Hochrechnungen auf das ganze Jahr nehmen wir bewusst nicht vor, und in den Diagrammen oben bleibt 2026 außen vor, bis das Jahr abgeschlossen ist.
+Auch insgesamt liegt die Speicherkapazität 2026 schon nach knapp neun Monaten über dem Wert des gesamten Vorjahres. Weil Nachmeldungen die Zahlen in der Regel noch erhöhen, sind die Werte für 2026 eher als Untergrenze zu verstehen. Auf das ganze Jahr hochgerechnet wird bewusst nicht, und in den Diagrammen oben bleibt 2026 außen vor, bis das Jahr abgeschlossen ist.
 
 ## Warum Speicher im Tagesverlauf interessant sind
 
@@ -157,38 +157,11 @@ Weniger Anlagen, mehr Kapazität und eine längere Speicherdauer: Die Kohorte 20
 
 Der Beitrag knüpft an [„Technologieoffenheit oder Industriepolitik?“](/posts/2025/Industriepolitik/) an, in dem es um fallende Batteriepreise und die Elektrifizierung geht. Aktuelle Erzeugungs- und Preisdaten zeigt das [Stromdashboard](/dashboards/strom/). Dessen Datenstand ändert sich laufend, dieser Beitrag beschreibt den Stand vom 26. September 2026.
 
-<h2 id="methodik">Methodik und Datenquellen</h2>
+<h2 id="daten">Daten und Quellen</h2>
 
-### Registerstand und Zähleinheit
+Grundlage ist der öffentliche Gesamtdatenexport des Marktstammdatenregisters vom **26. September 2026**. Berücksichtigt sind Batteriespeicher in Deutschland, die in Betrieb sind. Geplante und stillgelegte Anlagen fehlen. Einträge mit offensichtlich unplausiblen oder fehlenden Angaben zu Leistung, Kapazität oder Inbetriebnahmedatum sind ausgeschlossen. Das betrifft weniger als ein Prozent der Anlagen, aber knapp vier Prozent der gemeldeten Kapazität. Die Gesamtwerte dürften daher etwas zu niedrig liegen.
 
-Grundlage ist der öffentliche [Gesamtdatenexport des Marktstammdatenregisters](https://www.marktstammdatenregister.de/MaStR/Datendownload) vom **26. September 2026**. Aus dem [datierten Archiv](https://download.marktstammdatenregister.de/Gesamtdatenexport_20260926_26.1.zip) haben wir alle **88 Dateien** zu Speichereinheiten, Speicheranlagen, EEG-Speicheranlagen und den zugehörigen Katalogen vollständig geladen, ohne Stichprobe.
+Jede Anlage zählt zum Jahr ihrer ersten Inbetriebnahme, spätere Erweiterungen eingeschlossen. Das Tagesprofil mittelt die SMARD-Stundenwerte vom 27. August bis 25. September 2026 je Stunde.
 
-Die Quelle enthält **2.824.640 Speichereinheiten** aller Technologien und Betriebszustände. Berücksichtigt werden davon nur Batteriespeicher in Deutschland, die in Betrieb sind und deren Einheiten eindeutig einer Speicheranlage zugeordnet sind. Nach den Plausibilitätsfiltern bleiben **2.769.021 Einheiten in 2.769.020 Anlagen**. Die jüngste enthaltene Inbetriebnahme ist vom **26. September 2026**. Geplante Anlagen sind nicht enthalten.
-
-Gezählt werden **Anlagen**, nicht einzelne Einheiten. Die Leistung (Nettonennleistung) der Einheiten einer Anlage wird addiert, ihre nutzbare Speicherkapazität nur einmal gezählt. Doppelte oder widersprüchliche Einträge schließen wir aus, damit keine Kapazität mehrfach gezählt wird.
-
-### Plausibilitätsfilter
-
-Eingeschlossen werden Anlagen mit gültigem Inbetriebnahmedatum zwischen **1. Januar 1990 und 26. September 2026**, einer Leistung **über 0,3 kW**, einer Speicherkapazität **über 0,3 kWh** und einer nominalen Speicherdauer (E/P) **von 0,1 bis 12 Stunden**. Fehlende oder widersprüchliche Angaben werden nicht als null gewertet, sondern ausgeschlossen.
-
-Die Filter betreffen **12.735 von 2.781.756 Einheiten (0,46 Prozent)**, aber **0,04 GW der bekannten Leistung (0,19 Prozent)** und **1,27 GWh der bekannten Speicherkapazität (3,68 Prozent)**. Nach Anzahl sind die Ausschlüsse also gering, nach Kapazität etwas relevanter. Bei 55 Einträgen ist die Speicherkapazität unbekannt. Ein Eintrag kann aus mehreren Gründen ausgeschlossen werden.
-
-Wir nehmen **keine Betreibertyp-Korrektur und keine Imputation** fehlender Werte vor. Die [Methodik von Battery Charts (RWTH Aachen)](https://battery-charts.de/battery-charts/#methodology) diente als Vergleich für Plausibilitätsschwellen und Größenklassen. Battery Charts prüft und korrigiert zusätzlich Betreiber- und Netzanschlussangaben. Unsere Zahlen sind deshalb **nicht die korrigierten RWTH-Gesamtsummen** und weichen davon ab.
-
-### Kohorten statt Zubau
-
-Jede Anlage wird dem Jahr ihrer **frühesten Inbetriebnahme** zugeordnet. Wurde sie später erweitert, zählt ihre heutige Kapazität trotzdem zum ursprünglichen Jahr. Außerdem enthält der Registerstand nur Anlagen, die heute noch in Betrieb sind. Stillgelegte Anlagen fehlen (**Survivor-Effekt**). Eine echte Zeitreihe des jährlichen Zubaus lässt sich aus einem einzelnen Registerstand deshalb nicht rekonstruieren.
-
-Nachmeldungen und Korrekturen können auch bereits abgeschlossene Jahre noch verändern. Für das laufende Jahr 2026 gilt das besonders, deshalb zeigen die Diagramme nur die Jahre 2019 bis 2025. Die Werte für 2026 weisen wir separat als unvollständigen Zwischenstand aus: Sie können sich durch Nachmeldungen und Korrekturen noch ändern und werden nicht hochgerechnet. Der Index ist der Jahreswert geteilt durch den Wert von 2024, mal 100. Prozentveränderungen berechnen wir aus den ungerundeten Werten. Die nominale Speicherdauer wird je Anlage berechnet und als ungewichteter Median je Kohorte ausgewiesen.
-
-### Strommarktdaten
-
-Das Tagesprofil nutzt die SMARD-Stundenwerte vom **27. August bis 25. September 2026** aus der Datengrundlage des Stromdashboards, eingefroren mit dem Stand vom 26. September 2026. Für jede Stunde (Ortszeit Berlin) mitteln wir die Werte der 30 Tage. Einzelne Speicher und ihr tatsächlicher Betrieb werden dabei nicht betrachtet.
-
-### Quellen und Lizenzen
-
-- **Batteriespeicher:** [Bundesnetzagentur, Marktstammdatenregister – Datendownload](https://www.marktstammdatenregister.de/MaStR/Datendownload), [Datenlizenz Deutschland – Namensnennung – Version 2.0](https://www.govdata.de/dl-de/by-2-0); eigene Filter und Aggregationen wie oben beschrieben.
+- **Batteriespeicher:** [Bundesnetzagentur, Marktstammdatenregister](https://www.marktstammdatenregister.de/MaStR/Datendownload), [Datenlizenz Deutschland – Namensnennung – Version 2.0](https://www.govdata.de/dl-de/by-2-0); eigene Auswertung.
 - **Strommarkt:** [Bundesnetzagentur | SMARD.de](https://www.smard.de/home/marktdaten), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); eigene Mittelwerte je Stunde.
-- **Methodischer Vergleich:** [Battery Charts – Methodology](https://battery-charts.de/battery-charts/#methodology), RWTH Aachen. Übernommen wurden nur die Größenschwellen als Orientierung, keine Daten.
-
-Der Beitrag zeigt ausschließlich aggregierte Kennzahlen. Einzelne Anlagen-, Einheiten- oder Betreiberdaten veröffentlichen wir nicht.

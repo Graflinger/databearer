@@ -51,9 +51,13 @@ records are exported to the frontend.
 Source licensing: MaStR, Datenlizenz Deutschland – Namensnennung 2.0 (attribution
 "Bundesnetzagentur, Marktstammdatenregister", licence link, note of own
 modifications); SMARD, CC BY 4.0 with the mandated attribution
-"Bundesnetzagentur | SMARD.de". Battery Charts (RWTH Aachen) is cited only as a
-methodological reference for thresholds; none of its data is reused. The article
-lists all three with licence links.
+"Bundesnetzagentur | SMARD.de". The article lists both with licence links.
+
+Editorial decision (26 September 2026): the article does not name or link any
+third-party methodology. The plausibility screens and size classes below are
+described in the article only in simplified form ("unplausible or missing values
+removed; <1 % of plants, ~4 % of capacity; totals therefore slightly low"). The
+detailed rules, counts and shares stay in this document.
 
 ## Interpretation and quality
 

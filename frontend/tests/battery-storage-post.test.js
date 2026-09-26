@@ -143,21 +143,30 @@ describe('battery storage static contract', () => {
     }
   });
 
-  test('copy preserves snapshot, survivor, expansion, filtering and interpretation caveats', () => {
+  test('copy keeps the key caveats short, in a one-author voice, without third-party methodology', () => {
     const text = document.body.textContent;
-    for (const phrase of ['nicht dasselbe wie der tatsächliche Zubau', 'Survivor-Effekt',
-      'frühesten Inbetriebnahme', 'später erweitert', 'nicht die Streuung',
+    for (const phrase of ['nicht dasselbe wie der tatsächliche Zubau', 'stillgelegte Anlagen fehlen',
+      'spätere Erweiterungen', 'nicht die Streuung', 'unplausiblen oder fehlenden Angaben',
+      'knapp vier Prozent der gemeldeten Kapazität', 'etwas zu niedrig',
       '2,02 Prozent weniger Anlagen', '9,11 Prozent mehr Speicherkapazität', '110,04 Prozent',
-      '0,46 Prozent', '0,19 Prozent', '3,68 Prozent', 'keine Betreibertyp-Korrektur und keine Imputation',
-      '466.762 Anlagen mit 7,90 GWh', 'Hochrechnungen auf das ganze Jahr nehmen wir bewusst nicht vor', 'erstmals seit 2016', '215 große Speicher',
-      '2.769.021 Einheiten in 2.769.020 Anlagen', '2.769.020 Batteriespeicher',
-      'nicht die korrigierten RWTH-Gesamtsummen', '26. September 2026', '27. August bis 25. September 2026',
+      '466.762 Anlagen mit 7,90 GWh', 'hochgerechnet wird bewusst nicht', 'erstmals seit 2016', '215 große Speicher',
+      '2.769.020 Batteriespeicher', '26. September 2026', '27. August bis 25. September 2026',
       '13 Uhr liegt der mittlere Day-Ahead-Preis bei 37,94 EUR/MWh', 'um 19 Uhr 248,93 EUR/MWh', 'kein Kausalnachweis',
       'noch kein Gewinn für einen Speicher', 'Bundesnetzagentur | SMARD.de', 'Datenlizenz Deutschland']) {
       expect(text).toContain(phrase);
     }
-    expect(document.querySelector('a[href="#methodik"]')).not.toBeNull();
-    expect(document.getElementById('methodik')).not.toBeNull();
+    // One author: no team "wir"/"unser"; no named third-party methodology.
+    expect(text).not.toMatch(/\b(?:[Ww]ir|[Uu]ns|[Uu]nser\w*)\b/);
+    expect(text).not.toMatch(/Battery Charts|RWTH/i);
+    expect(document.querySelector('a[href*="battery-charts"]')).toBeNull();
+    const data = document.getElementById('daten');
+    expect(data.tagName).toBe('H2');
+    expect(document.querySelector('a[href="#daten"]')).not.toBeNull();
+    // The data section stays short: no H3 subsections, at most a few paragraphs.
+    const section = [];
+    for (let node = data.nextElementSibling; node && node.tagName !== 'H2'; node = node.nextElementSibling) section.push(node);
+    expect(section.filter((node) => node.tagName === 'H3')).toHaveLength(0);
+    expect(section.filter((node) => node.tagName === 'P').length).toBeLessThanOrEqual(3);
     expect(document.querySelector('a[href^="/docs/"]')).toBeNull();
     expect(document.querySelector('a[href="/dashboards/strom/"]')).not.toBeNull();
     expect(document.querySelector('a[href="/posts/2025/Industriepolitik/"]')).not.toBeNull();

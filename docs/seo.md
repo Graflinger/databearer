@@ -107,7 +107,8 @@ Implementation: [`.eleventy.js`](../frontend/.eleventy.js), [`src/seo.js`](../fr
   changed.
 - **Structure:** the post layout renders the single H1, the excerpt and the linked
   byline (`site.author` → `/about/`). The body uses H2/H3, starts with the key
-  takeaway, and ends with a Methodik/Datenquellen section.
+  takeaway, and ends with a short "Daten und Quellen" section (source, date, what
+  was left out; technical detail belongs in `docs/`).
 - **Internal links:** use root-relative `/posts/<year>/<slug>/` with a trailing
   slash. `<slug>` is the Markdown filename without `.md`, with case preserved.
   Topic links use the form `/themen/<topic>/`. Link text must describe the target;
