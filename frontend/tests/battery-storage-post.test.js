@@ -45,23 +45,24 @@ function optionFor(config, rows) {
 describe('battery storage static contract', () => {
   beforeEach(() => { document.body.innerHTML = markdown.render(post.content); });
 
-  test('explicit draft is skipped by the production draft preprocessor before rendering', () => {
+  test('published post passes the production draft preprocessor and joins discovery', () => {
     expect(post.data.title).toBe('Weniger neue Batteriespeicher, mehr Speicherkapazität');
-    expect(post.data.eleventyExcludeFromCollections).toBe(true);
-    expect(post.data.excludeFromSitemap).toBe(true);
+    expect(post.data.eleventyExcludeFromCollections).toBeUndefined();
+    expect(post.data.excludeFromSitemap).toBeUndefined();
     expect(post.data.permalink).toBe(route);
-    expect(post.data.draft).toBe(true);
+    expect(post.data.draft).toBeUndefined();
+    expect(post.data.date).toEqual(new Date('2026-09-26'));
+    expect(post.data.lastUpdated).toEqual(new Date('2026-09-26'));
     const inherited = require('../src/posts/posts.11tydata');
     const [[name, extensions, skip]] = productionPreprocessors();
     expect([name, extensions]).toEqual(['drafts', '*']);
-    // Boolean `draft: true` suppresses the file and all discovery in every run mode.
-    expect(skip({ ...inherited, ...post.data })).toBe(false);
-    expect(skip({ ...inherited, ...post.data, draft: false })).toBeUndefined();
-    expect(post.data.image).toBeUndefined();
-    expect(post.data.excerpt).toContain('Rechercheentwurf');
-    expect(post.content).toContain('DRAFT – explorativer Rechercheentwurf');
+    expect(skip({ ...inherited, ...post.data })).toBeUndefined();
+    expect(post.data.excerpt).not.toMatch(/Rechercheentwurf|DRAFT/);
+    expect(post.content).not.toMatch(/Rechercheentwurf|DRAFT/);
     expect(document.querySelector('h1')).toBeNull();
-    expect(document.querySelectorAll('h2')).toHaveLength(7);
+    expect(document.querySelectorAll('h2')).toHaveLength(8);
+    expect(document.getElementById('jahr-2026').tagName).toBe('H2');
+    expect(document.querySelector('a[href="#jahr-2026"]')).not.toBeNull();
     expect(inherited.layout).toBe('post.njk');
   });
 
@@ -80,7 +81,9 @@ describe('battery storage static contract', () => {
       }
       const node = document.getElementById(config.containerId);
       expect(node.getAttribute('role')).toBe('img');
-      expect(node.getAttribute('aria-label')).toBeTruthy();
+      const heading = document.getElementById(node.getAttribute('aria-labelledby'));
+      expect(heading.tagName).toMatch(/^H[34]$/);
+      expect(heading.textContent.trim()).toBeTruthy();
       expect(document.getElementById(node.getAttribute('aria-describedby')).textContent).toBeTruthy();
       expect(node.closest('.chart-section').querySelector('.chart-sources a[href^="https://"]')).not.toBeNull();
     }
@@ -110,20 +113,28 @@ describe('battery storage static contract', () => {
     const cells = (selector) => [...document.querySelectorAll(`${selector} tbody tr`)]
       .map((row) => [...row.children].map((cell) => cell.textContent));
     expect(cells('#battery-stock-table')).toEqual([
-      ['Klein', '2.708.524', '14,823182', '23,419361', '1,84'],
-      ['Mittel', '27.650', '0,812270', '1,735507', '2,56'],
-      ['Groß', '632', '4,261752', '7,552861', '2,00'],
-      ['Gesamt', '2.736.806', '19,897204', '32,707728', '1,84'],
+      ['Klein', '2.740.190', '15,008', '23,710', '1,84'],
+      ['Mittel', '28.178', '0,829', '1,774', '2,56'],
+      ['Groß', '652', '4,384', '7,814', '2,00'],
+      ['Gesamt', '2.769.020', '20,222', '33,299', '1,84'],
     ]);
     expect(cells('#battery-cohorts-table')).toEqual([
-      ['2024', '573.941', '4,027362', '6,199239', '1,6552'],
-      ['2025', '562.181', '3,960796', '6,759564', '1,9200'],
+      ['2024', '574.051', '4,029', '6,203', '1,66'],
+      ['2025', '562.472', '3,965', '6,768', '1,92'],
     ]);
     expect(cells('#battery-segments-table')).toEqual([
-      ['Klein', '5,057129', '4,585800'], ['Mittel', '0,314970', '0,437809'], ['Groß', '0,827140', '1,735955'],
+      ['Klein', '5,060', '4,591', '3,695'], ['Mittel', '0,316', '0,439', '0,440'], ['Groß', '0,827', '1,737', '3,768'],
     ]);
+    expect(cells('#battery-2026-table')).toEqual([
+      ['Anlagen insgesamt', '562.472', '466.762'],
+      ['Speicherkapazität insgesamt (GWh)', '6,768', '7,902'],
+      ['Große Speicher (Anzahl)', '131', '215'],
+      ['Große Speicher (GWh)', '1,737', '3,768'],
+      ['Median E/P (Stunden)', '1,92', '1,98'],
+    ]);
+    expect(document.querySelector('#battery-2026-table caption').textContent).toContain('unvollständig');
     for (const table of document.querySelectorAll('table')) {
-      expect(table.querySelector('caption').textContent).toContain('11. September 2026');
+      expect(table.querySelector('caption').textContent).toContain('26. September 2026');
       expect(table.querySelectorAll('thead th:not([scope="col"])')).toHaveLength(0);
       expect(table.querySelectorAll('tbody th:not([scope="row"])')).toHaveLength(0);
     }
@@ -131,15 +142,15 @@ describe('battery storage static contract', () => {
 
   test('copy preserves snapshot, survivor, expansion, filtering and interpretation caveats', () => {
     const text = document.body.textContent;
-    for (const phrase of ['keine historisch beobachteten jährlichen Neuinstallationen', 'Survivor-Effekt',
-      'frühesten Inbetriebnahmedatums', 'späteren Erweiterungen', 'keine Verteilung',
-      '2,05 Prozent weniger', '9,04 Prozent mehr', '109,87 Prozent',
-      '0,4481 Prozent', '0,1182 Prozent', '2,7416 Prozent', 'keine Betreibertyp-Korrektur und keine Imputation',
-      '435.080 Anlagen mit 7,327640 GWh', 'weder auf ein Gesamtjahr hochgerechnet',
-      '2.736.807 Einheiten in 2.736.806 Anlagen', '10. September 2026',
-      'nicht die korrigierten RWTH-Gesamtsummen', '11. September 2026', '11. August bis 9. September 2026',
-      '13 Uhr bei 39,05 EUR/MWh', '20 Uhr bei 209,61 EUR/MWh', 'kein Kausalnachweis',
-      'kein erreichbarer Speichergewinn']) {
+    for (const phrase of ['nicht dasselbe wie der tatsächliche Zubau', 'Survivor-Effekt',
+      'frühesten Inbetriebnahme', 'später erweitert', 'nicht die Streuung',
+      '2,02 Prozent weniger Anlagen', '9,11 Prozent mehr Speicherkapazität', '110,04 Prozent',
+      '0,46 Prozent', '0,19 Prozent', '3,68 Prozent', 'keine Betreibertyp-Korrektur und keine Imputation',
+      '466.762 Anlagen mit 7,90 GWh', 'Hochrechnungen auf das ganze Jahr nehmen wir bewusst nicht vor', 'erstmals seit 2016', '215 große Speicher',
+      '2.769.021 Einheiten in 2.769.020 Anlagen', '2.769.020 Batteriespeicher',
+      'nicht die korrigierten RWTH-Gesamtsummen', '26. September 2026', '27. August bis 25. September 2026',
+      '13 Uhr liegt der mittlere Day-Ahead-Preis bei 37,94 EUR/MWh', 'um 19 Uhr 248,93 EUR/MWh', 'kein Kausalnachweis',
+      'noch kein Gewinn für einen Speicher', 'Bundesnetzagentur | SMARD.de', 'Datenlizenz Deutschland']) {
       expect(text).toContain(phrase);
     }
     expect(document.querySelector('a[href="#methodik"]')).not.toBeNull();
@@ -150,7 +161,7 @@ describe('battery storage static contract', () => {
   });
 });
 
-// Actual frozen September 11 evidence; missing inputs must fail the full suite.
+// Actual frozen September 26 evidence; missing inputs must fail the full suite.
 describe('battery storage CSV contract', () => {
   function rowsFor(filename) {
     const directory = dataDirectory;
@@ -183,31 +194,34 @@ describe('battery storage CSV contract', () => {
   test('exported values reconcile with the frozen article evidence', () => {
     const cohorts = rowsFor('battery_storage_cohorts.csv');
     expect(cohorts.find((row) => row.Jahr === 2024)).toMatchObject({ Jahr: 2024, Anzahl_Index: 100, Energie_Index: 100 });
-    for (const [year, count, power, energy] of [[2024, 573941, 4.027361784, 6.199238861], [2025, 562181, 3.960795735, 6.759563553]]) {
+    for (const [year, count, power, energy] of [[2024, 574051, 4.028811855, 6.202971356], [2025, 562472, 3.964645995, 6.768137764]]) {
       const row = cohorts.find((item) => item.Jahr === year);
       expect(row.Anzahl).toBe(count);
       expect(row.Leistung_GW).toBe(power);
       expect(row.Energie_GWh).toBe(energy);
     }
     const next = cohorts.find((row) => row.Jahr === 2025);
-    expect(next.Anzahl_Index).toBeCloseTo(562181 / 573941 * 100, 8);
-    expect(next.Energie_Index).toBeCloseTo(6.759563553 / 6.199238861 * 100, 8);
-    expect(100 - next.Anzahl_Index).toBeCloseTo(2.0490, 4);
-    expect(next.Energie_Index - 100).toBeCloseTo(9.0386, 4);
+    expect(next.Anzahl_Index).toBeCloseTo(562472 / 574051 * 100, 8);
+    expect(next.Energie_Index).toBeCloseTo(6.768137764 / 6.202971356 * 100, 8);
+    expect(100 - next.Anzahl_Index).toBeCloseTo(2.0171, 4);
+    expect(next.Energie_Index - 100).toBeCloseTo(9.1112, 4);
     const segments = rowsFor('battery_storage_segments.csv');
-    for (const [year, expected] of [[2024, [5.057128882, 0.314970178, 0.827139801]], [2025, [4.585800078, 0.437808885, 1.73595459]]]) {
+    for (const [year, expected] of [[2024, [5.060271857, 0.315559698, 0.827139801]], [2025, [4.591402349, 0.439436825, 1.73729859]]]) {
       const row = segments.find((item) => item.Jahr === year);
       ['Klein_GWh', 'Mittel_GWh', 'Gross_GWh'].forEach((key, index) => expect(row[key]).toBe(expected[index]));
     }
     expect((segments.find((row) => row.Jahr === 2025).Gross_GWh
-      / segments.find((row) => row.Jahr === 2024).Gross_GWh - 1) * 100).toBeCloseTo(109.8744, 4);
+      / segments.find((row) => row.Jahr === 2024).Gross_GWh - 1) * 100).toBeCloseTo(110.0369, 4);
     const durations = rowsFor('battery_storage_duration.csv');
     expect(durations.find((row) => row.Jahr === 2024).Median_Stunden).toBe(1.655172414);
     expect(durations.find((row) => row.Jahr === 2025).Median_Stunden).toBeCloseTo(1.92, 4);
     expect(durations.every((row) => row.Median_Stunden >= 0.1 && row.Median_Stunden <= 12)).toBe(true);
     const profile = rowsFor('battery_storage_daily_profile.csv');
-    expect(profile.find((row) => row.Stunde === '13:00').Preis_EUR_MWh).toBeCloseTo(39.05, 2);
-    expect(profile.find((row) => row.Stunde === '20:00').Preis_EUR_MWh).toBeCloseTo(209.61, 2);
+    expect(profile.find((row) => row.Stunde === '13:00').Preis_EUR_MWh).toBeCloseTo(37.94, 2);
+    expect(profile.find((row) => row.Stunde === '19:00').Preis_EUR_MWh).toBeCloseTo(248.93, 2);
+    const prices = profile.map((row) => row.Preis_EUR_MWh);
+    expect(Math.min(...prices)).toBe(profile.find((row) => row.Stunde === '13:00').Preis_EUR_MWh);
+    expect(Math.max(...prices)).toBe(profile.find((row) => row.Stunde === '19:00').Preis_EUR_MWh);
     expect(profile.every((row) => row.Solar_GW >= 0)).toBe(true);
   });
 });
@@ -242,32 +256,31 @@ describe('battery storage build-time manifest gate', () => {
   test('accepts all ten frozen exports against their manifest without writing', () => {
     const validated = validateBatteryStorage();
     expect(Object.keys(validated.files)).toHaveLength(10);
-    expect(validated.mastr.snapshot_date).toBe('2026-09-11');
+    expect(validated.mastr.snapshot_date).toBe('2026-09-26');
     expect(validated.operating_stock).toMatchObject({
-      snapshot_date: '2026-09-11', plant_count: 2736806, unit_count: 2736807,
-      power_gw: 19.897203659, energy_gwh: 32.707727757,
+      snapshot_date: '2026-09-26', plant_count: 2769020, unit_count: 2769021,
+      power_gw: 20.221522359, energy_gwh: 33.299118225,
     });
     const quality = JSON.parse(files[qualityName]);
     const before = quality.before_quality_filters;
     const excluded = quality.excluded_by_quality_filters;
-    expect(before.relation_count).toBe(2749124);
-    expect(excluded.relation_count).toBe(12318);
-    expect(excluded.relation_count / before.relation_count * 100).toBeCloseTo(0.4481, 4);
-    expect(before.selected_operating_unit_count).toBe(2749125);
-    expect(excluded.selected_operating_unit_count).toBe(12318);
-    expect(excluded.selected_operating_unit_count / before.selected_operating_unit_count * 100).toBeCloseTo(0.4481, 4);
-    expect(excluded.known_power_gw / before.known_power_gw * 100).toBeCloseTo(0.1182, 4);
-    expect(excluded.known_energy_gwh / before.known_energy_gwh * 100).toBeCloseTo(2.7416, 4);
+    expect(before.relation_count).toBe(2781755);
+    expect(excluded.relation_count).toBe(12735);
+    expect(before.selected_operating_unit_count).toBe(2781756);
+    expect(excluded.selected_operating_unit_count).toBe(12735);
+    expect(excluded.selected_operating_unit_count / before.selected_operating_unit_count * 100).toBeCloseTo(0.4578, 4);
+    expect(excluded.known_power_gw / before.known_power_gw * 100).toBeCloseTo(0.1917, 4);
+    expect(excluded.known_energy_gwh / before.known_energy_gwh * 100).toBeCloseTo(3.6821, 4);
   });
 
   test('full stock and partial 2026 exports reconcile with static evidence', () => {
     const summary = parse(files['battery_storage_summary.csv'], { columns: true, cast: true });
-    expect(summary.every((row) => row.operating_status === 'operating' && row.snapshot_date === '2026-09-11')).toBe(true);
+    expect(summary.every((row) => row.operating_status === 'operating' && row.snapshot_date === '2026-09-26')).toBe(true);
     for (const [segment, count, power, energy, median] of [
-      ['small', 2708524, 14.823182201, 23.41936069, 1.84],
-      ['medium', 27650, 0.812269588, 1.735506554, 2.56],
-      ['large', 632, 4.26175187, 7.552860513, 2],
-      ['overall', 2736806, 19.897203659, 32.707727757, 1.84],
+      ['small', 2740190, 15.008280735, 23.71040408, 1.84],
+      ['medium', 28178, 0.829080754, 1.774300432, 2.56],
+      ['large', 652, 4.38416087, 7.814413713, 2],
+      ['overall', 2769020, 20.221522359, 33.299118225, 1.84],
     ]) {
       expect(summary.find((row) => row.size_segment === segment)).toMatchObject({
         plant_count: count, power_gw: power, energy_gwh: energy, median_duration_hours: median,
@@ -275,7 +288,7 @@ describe('battery storage build-time manifest gate', () => {
     }
     const yearly = parse(files['battery_storage_yearly.csv'], { columns: true, cast: true });
     expect(yearly.find((row) => row.commissioning_year === 2026 && row.size_segment === 'overall')).toMatchObject({
-      plant_count: 435080, energy_gwh: 7.327640391, period_complete: 'false',
+      plant_count: 466762, energy_gwh: 7.902219936, period_complete: 'false',
     });
     expect(yearly.filter((row) => row.commissioning_year < 2026).every((row) => row.period_complete === 'true')).toBe(true);
   });
@@ -309,7 +322,7 @@ describe('battery storage build-time manifest gate', () => {
   });
 
   const failures = [
-    ['mutated chart CSV', () => { files['battery_storage_cohorts.csv'] = Buffer.from(files['battery_storage_cohorts.csv'].toString().replace('573941', '573942')); }],
+    ['mutated chart CSV', () => { files['battery_storage_cohorts.csv'] = Buffer.from(files['battery_storage_cohorts.csv'].toString().replace('574051', '574052')); }],
     ['mutated nonchart export', () => { files['battery_storage_by_state.csv'] = Buffer.concat([files['battery_storage_by_state.csv'], Buffer.from('\n')]); }],
     ['missing chart CSV', () => { delete files['battery_storage_segments.csv']; }],
     ['missing nonchart CSV', () => { delete files['battery_storage_monthly.csv']; }],
@@ -348,11 +361,11 @@ describe('battery storage build-time manifest gate', () => {
     ['wrong stock date', () => { metadata.operating_stock.snapshot_date = '2026-06-30'; }],
     ['wrong index base', () => { metadata.methodology.index_base_year = 2025; }],
     ['wrong chart years', () => { metadata.methodology.chart_years.push(2026); }],
-    ['wrong electricity dates', () => { metadata.electricity_profile.first_local_date = '2026-08-12'; }],
+    ['wrong electricity dates', () => { metadata.electricity_profile.first_local_date = '2026-08-28'; }],
     ['wrong electricity timezone', () => { metadata.electricity_profile.timezone = 'UTC'; }],
     ['wrong nonchart snapshot with matching hash', () => {
       const name = 'battery_storage_summary.csv';
-      files[name] = Buffer.from(files[name].toString().replaceAll('2026-09-11', '2026-06-30')); reseal(name);
+      files[name] = Buffer.from(files[name].toString().replaceAll('2026-09-26', '2026-06-30')); reseal(name);
     }],
   ];
   test.each(failures)('%s stops the real generator before data loading or chart writes', (_, mutate) => {
@@ -388,9 +401,14 @@ describe('battery storage build-time manifest gate', () => {
 
 // Opt in only AFTER the main agent's build; this suite never generates files.
 const builtTest = process.env.BATTERY_STORAGE_BUILD_CHECK === '1' ? test : test.skip;
-builtTest('battery storage draft has no production HTML and stays out of discovery', () => {
+builtTest('battery storage post is built with chart assets and joins discovery', () => {
   const site = path.join(root, '_site');
-  expect(fs.existsSync(path.join(site, route, 'index.html'))).toBe(false);
+  document.body.innerHTML = fs.readFileSync(path.join(site, route, 'index.html'), 'utf8');
+  expect(document.querySelectorAll('article.post-content h1')).toHaveLength(1);
+  expect(document.querySelectorAll('article.post-content table')).toHaveLength(4);
+  const scripts = [...document.querySelectorAll('article.post-content script[src]')]
+    .map((node) => node.getAttribute('src'));
+  expect(scripts).toEqual(['/js/lib/echarts.min.js', ...configs.map((config) => `/js/charts/battery_storage/${config.outputFile}`)]);
   const echartsAsset = fs.readFileSync(path.join(site, 'js/lib/echarts.min.js'), 'utf8');
   expect(echartsAsset.length).toBeGreaterThan(0);
   expect(() => new vm.Script(echartsAsset)).not.toThrow();
@@ -401,6 +419,6 @@ builtTest('battery storage draft has no production HTML and stays out of discove
   }
   for (const filename of ['index.html', 'feed.json', 'feed.xml', 'search.json', 'sitemap.xml',
     'themen/energie/index.html', 'themen/wirtschaft/index.html']) {
-    expect(fs.readFileSync(path.join(site, filename), 'utf8')).not.toContain(route);
+    expect(fs.readFileSync(path.join(site, filename), 'utf8')).toContain(route);
   }
 });

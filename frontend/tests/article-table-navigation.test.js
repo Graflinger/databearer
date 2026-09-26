@@ -22,7 +22,7 @@ describe('scrollable article tables', () => {
     ['2026/Windenergiezukunft.md', 1],
     ['2026/Windkraftausschreibungen-2026.md', 1],
     ['2025/Industriepolitik.md', 4],
-    ['2026/batteriespeicher-wandel.md', 3],
+    ['2026/batteriespeicher-wandel.md', 4],
   ])('%s: wrappers are named, keyboard-focusable .table-scroll regions', (post, count) => {
     renderPost(post);
     const wrappers = [...document.querySelectorAll('.table-scroll')];

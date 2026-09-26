@@ -4,7 +4,7 @@ const { createHash } = require('crypto');
 const { parse } = require('csv-parse/sync');
 
 const MANIFEST = 'battery_storage_metadata.json';
-const SNAPSHOT = '2026-09-11';
+const SNAPSHOT = '2026-09-26';
 const YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025];
 const QUALITY_SCOPE = 'Relations with selected_operating_unit_count > 0 (active German operating battery units)';
 const MEASURES = ['plant_count', 'unit_count', 'power_gw', 'energy_gwh', 'median_duration_hours', 'network_verified_plant_count'];
@@ -52,8 +52,8 @@ function validateBatteryStorage(dataDir = path.join(__dirname, '../data/2026/bat
   requireValid(metadata.mastr?.snapshot_date === SNAPSHOT && metadata.operating_stock?.snapshot_date === SNAPSHOT, 'MaStR snapshot date mismatch');
   requireValid(metadata.methodology?.index_base_year === 2024 && same(metadata.methodology?.chart_years, YEARS), 'cohort years/base mismatch');
   const profile = metadata.electricity_profile;
-  requireValid(profile?.first_local_date === '2026-08-11' && profile?.last_local_date === '2026-09-09'
-    && profile?.window_start_utc === '2026-08-10T22:00:00Z' && profile?.window_end_utc_exclusive === '2026-09-09T22:00:00Z'
+  requireValid(profile?.first_local_date === '2026-08-27' && profile?.last_local_date === '2026-09-25'
+    && profile?.window_start_utc === '2026-08-26T22:00:00Z' && profile?.window_end_utc_exclusive === '2026-09-25T22:00:00Z'
     && profile?.timezone === 'Europe/Berlin' && profile?.local_days === 30 && profile?.observations_per_hour === 30
     && profile?.input_rows === 720 && profile?.input_grain_minutes === 60
     && profile?.units?.power === 'GW' && profile?.units?.price === 'EUR/MWh', 'electricity profile period/units mismatch');

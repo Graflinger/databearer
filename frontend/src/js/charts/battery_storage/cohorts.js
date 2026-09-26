@@ -33,7 +33,7 @@
 
     const colors = getThemeColors();
     const xData = [2019,2020,2021,2022,2023,2024,2025];
-    const seriesData = [{"key":"Anzahl_Index","name":"Anlagenzahl","data":[7.335771447,15.106256566,24.704804152,38.333731167,105.882660413,100,97.951008902],"color":null},{"key":"Energie_Index","name":"Speicherkapazität","data":[7.411729057,14.349751283,22.345556641,42.407292459,98.537408801,100,109.038604651],"color":null}];
+    const seriesData = [{"key":"Anzahl_Index","name":"Anlagenzahl","data":[7.333320559,15.100748888,24.699547601,38.327605039,105.891636806,100,97.98293183],"color":null},{"key":"Energie_Index","name":"Speicherkapazität","data":[7.407701433,14.343788435,22.33835429,42.395116229,98.533515089,100,109.111220664],"color":null}];
 
     const option = {
       aria: {

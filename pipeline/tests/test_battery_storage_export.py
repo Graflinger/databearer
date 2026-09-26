@@ -6,6 +6,7 @@ import json
 import shutil
 import tempfile
 import unittest
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
@@ -60,11 +61,11 @@ class BatteryExportTest(unittest.TestCase):
         shutil.copyfile(self.template, self.database)
         self.output = self.root / "output"
         self.electricity = self.root / "electricity.json"
-        start_ms = 1786399200000
+        start_ms = int(datetime.fromisoformat(exporter.START.replace("Z", "+00:00")).timestamp() * 1000)
         data = {
             "schema_version": 1, "timezone": "Europe/Berlin", "units": {"power": "GW", "price": "EUR/MWh"},
             "window_start": exporter.START, "window_end": exporter.END, "data_through": exporter.END,
-            "snapshot_created_at": "2026-09-10T00:00:00Z",
+            "snapshot_created_at": "2026-09-26T00:00:00Z",
             "source": {"name": "Bundesnetzagentur | SMARD.de", "url": "https://www.smard.de/home/marktdaten", "license": "CC BY 4.0"},
             "columns": ["timestamp", "solar", "price"],
             "rows": [[start_ms + n * 3600000, n % 24, n // 24 - 20 + n % 24] for n in range(720)],
@@ -249,8 +250,10 @@ class BatteryExportTest(unittest.TestCase):
         original = self.electricity.read_bytes()
         mutations = [
             lambda d: d.update(timezone="UTC"),
-            lambda d: d.update(window_start="2026-08-11T00:00:00Z"),
-            lambda d: d.update(data_through="2026-09-09T21:00:00Z"),
+            lambda d: d.update(window_start="2026-08-27T00:00:00Z"),
+            lambda d: d.update(data_through="2026-09-25T21:00:00Z"),
+            lambda d: d.update(schema_version=3),
+            lambda d: d.update(schema_version=2, components={"solar": {"status": "complete", "known_hours": 720}, "price": {"status": "partial", "known_hours": 700}}),
             lambda d: d.update(units={"power": "MW", "price": "EUR/MWh"}),
             lambda d: d["rows"].pop(),
             lambda d: d["rows"][1].__setitem__(0, d["rows"][0][0]),
