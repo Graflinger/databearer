@@ -8,6 +8,7 @@ data/**
 !data/2026/battery_storage/battery_storage_segments.csv
 !data/2026/battery_storage/battery_storage_duration.csv
 !data/2026/battery_storage/battery_storage_daily_profile.csv
+!data/2026/battery_storage/battery_storage_trend.csv
 !data/2026/battery_storage/battery_storage_yearly.csv
 !data/2026/battery_storage/battery_storage_monthly.csv
 !data/2026/battery_storage/battery_storage_by_state.csv
