@@ -127,7 +127,7 @@ Der Beitrag knüpft an [„Technologieoffenheit oder Industriepolitik?“](/post
 
 <h2 id="daten">Daten und Quellen</h2>
 
-Grundlage ist der öffentliche Gesamtdatenexport des Marktstammdatenregisters vom **26. September 2026\**. Berücksichtigt sind Batteriespeicher in Deutschland, die in Betrieb sind. Geplante und stillgelegte Anlagen fehlen. Einträge mit offensichtlich unplausiblen oder fehlenden Angaben zu Leistung, Kapazität oder Inbetriebnahmedatum sind ausgeschlossen. Das betrifft weniger als ein Prozent der Anlagen, aber knapp vier Prozent der gemeldeten Kapazität. Die Gesamtwerte dürften daher etwas zu niedrig liegen.
+Grundlage ist der öffentliche Gesamtdatenexport des Marktstammdatenregisters vom **26. September 2026**. Berücksichtigt sind Batteriespeicher in Deutschland, die in Betrieb sind. Geplante und stillgelegte Anlagen fehlen. Einträge mit offensichtlich unplausiblen oder fehlenden Angaben zu Leistung, Kapazität oder Inbetriebnahmedatum sind ausgeschlossen. Das betrifft weniger als ein Prozent der Anlagen, aber knapp vier Prozent der gemeldeten Kapazität. Die Gesamtwerte dürften daher etwas zu niedrig liegen.
 
 Jede Anlage zählt zum Jahr ihrer ersten Inbetriebnahme, spätere Erweiterungen eingeschlossen. 2026\* reicht bis zum 26. September und wird nicht hochgerechnet. Das Tagesprofil mittelt die SMARD-Stundenwerte vom 27. August bis 25. September 2026 je Stunde.
 
