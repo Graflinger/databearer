@@ -85,7 +85,7 @@ Die Größenklassen sind rein technisch abgegrenzt. Sie verraten nicht, wem ein 
 
 Teilt man die Speicherkapazität einer Anlage durch ihre Leistung, erhält man ihre nominale Speicherdauer (E/P). Ein Speicher mit 10 kWh und 5 kW kann rechnerisch zwei Stunden lang mit voller Leistung entladen. Wie er tatsächlich betrieben wird, zeigt diese Kennzahl nicht.
 
-Bis 2022 lag der Median dieser Speicherdauer bei rund zwei Stunden, 2023 fiel er auf 1,63 Stunden. Seitdem steigt er wieder: von **1,66 Stunden** (2024) auf **1,92 Stunden** (2025) und **1,98 Stunden** 2026\*. Die Hälfte der Anlagen liegt darüber, die andere Hälfte darunter, große und kleine Anlagen zählen dabei gleich viel. Neue Speicher sind also wieder etwas ausdauernder ausgelegt. Ob dahinter neue Geschäftsmodelle stehen, lässt sich aus dem Register allein nicht ablesen.
+Bis 2022 lag der Median dieser Speicherdauer bei rund zwei Stunden, 2023 fiel er auf 1,63 Stunden. Seitdem steigt er wieder: von **1,66 Stunden** (2024) auf **1,92 Stunden** (2025) und **1,98 Stunden** 2026**. Die Hälfte der Anlagen liegt darüber, die andere Hälfte darunter, große und kleine Anlagen zählen dabei gleich viel. Neue Speicher sind also wieder etwas ausdauernder ausgelegt. Ob dahinter neue Geschäftsmodelle stehen, lässt sich aus dem Register allein nicht ablesen.
 
 <div class="chart-section">
   <h3 id="battery-storage-duration-heading">Median der nominalen Speicherdauer je Inbetriebnahmejahr</h3>
@@ -97,7 +97,7 @@ Bis 2022 lag der Median dieser Speicherdauer bei rund zwei Stunden, 2023 fiel er
 
 ## Warum Speicher im Tagesverlauf gebraucht werden
 
-Warum lohnt es sich überhaupt, Strom zeitlich zu verschieben? Ein Blick auf die Stundenwerte des Strommarkts der letzten 30 Tage, vom **27. August bis 25. September 2026\**, gibt einen Eindruck.
+Warum lohnt es sich überhaupt, Strom zeitlich zu verschieben? Ein Blick auf die Stundenwerte des Strommarkts der letzten 30 Tage, vom **27. August bis 25. September 2026**, gibt einen Eindruck.
 
 Mittags, wenn die Solaranlagen am meisten Strom liefern, ist der Strom an der Börse am günstigsten: Um **13 Uhr liegt der mittlere Day-Ahead-Preis bei 37,94 EUR/MWh**. Am Abend, wenn die Sonne untergeht, steigt er deutlich an und erreicht **um 19 Uhr 248,93 EUR/MWh**. Das sind Durchschnittswerte über 30 Tage, keine Preise, die an jedem einzelnen Tag erreicht werden.
 
