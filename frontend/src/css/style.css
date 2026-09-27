@@ -49,8 +49,9 @@ a:focus-visible {
 /* Skip to Main Content Link */
 .skip-link {
   position: absolute;
-  top: -40px;
+  top: 0;
   left: 0;
+  transform: translateY(calc(-100% - 4px));
   background: #c4ad61;
   color: #1a1a1a;
   padding: 8px 16px;
@@ -61,7 +62,7 @@ a:focus-visible {
 }
 
 .skip-link:focus {
-  top: 0;
+  transform: none;
   outline: 2px solid #1a1a1a;
   outline-offset: -4px;
 }
@@ -241,17 +242,19 @@ a:focus-visible {
 }
 
 .blog-grid h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
+  font-size: 26px;
+  line-height: 1.25;
+  margin-bottom: 6px;
   font-weight: 700;
   text-align: center;
 }
 
 .topic-intro {
-  max-width: 900px;
-  margin: 0 auto 24px;
-  font-size: 18px;
-  line-height: 1.7;
+  max-width: 680px;
+  margin: 0 auto 20px;
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: center;
   color: #4b5563;
 }
 
@@ -955,8 +958,15 @@ a:focus-visible {
   .grid {
     grid-template-columns: 1fr;
   }
+  .blog-grid {
+    padding-top: 16px;
+  }
   .blog-grid h1 {
-    font-size: 28px;
+    font-size: 20px;
+  }
+  .topic-intro {
+    font-size: 14px;
+    margin-bottom: 16px;
   }
   /* Make featured post look like regular posts on mobile */
   .featured-post .blog-card-image {
