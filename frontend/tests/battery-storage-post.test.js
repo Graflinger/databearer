@@ -25,6 +25,7 @@ const contracts = {
   'battery_storage_segments.csv': ['Jahr', 'Klein_GWh', 'Mittel_GWh', 'Gross_GWh'],
   'battery_storage_duration.csv': ['Jahr', 'Median_Stunden'],
   'battery_storage_daily_profile.csv': ['Stunde', 'Preis_EUR_MWh', 'Solar_GW'],
+  'battery_storage_trend.csv': ['Kohorte', 'Energie_GWh', 'Gross_Anzahl', 'Gross_GWh'],
 };
 
 function optionFor(config, rows) {
@@ -70,12 +71,12 @@ describe('battery storage static contract', () => {
     expect(inherited.layout).toBe('post.njk');
   });
 
-  test('four evidence groups wire all five plots to supported CSV columns and accessible descriptions', () => {
-    expect(configs).toHaveLength(5);
-    expect(document.querySelectorAll('.chart-section')).toHaveLength(4);
+  test('five evidence groups wire all six plots to supported CSV columns and accessible descriptions', () => {
+    expect(configs).toHaveLength(6);
+    expect(document.querySelectorAll('.chart-section')).toHaveLength(5);
     expect(new Set(configs.map((config) => config.dataFile))).toEqual(new Set(Object.keys(contracts).map((name) => `${dataPath}/${name}`)));
-    expect(new Set(configs.map((config) => config.containerId)).size).toBe(5);
-    expect(new Set(configs.map((config) => config.outputFile)).size).toBe(5);
+    expect(new Set(configs.map((config) => config.containerId)).size).toBe(6);
+    expect(new Set(configs.map((config) => config.outputFile)).size).toBe(6);
     const scripts = [...document.querySelectorAll('script[src]')].map((node) => node.getAttribute('src'));
     expect(scripts).toEqual(['/js/lib/echarts.min.js', ...configs.map((config) => `/js/charts/battery_storage/${config.outputFile}`)]);
     for (const config of configs) {
@@ -96,8 +97,15 @@ describe('battery storage static contract', () => {
   test('builders preserve indexed units, stacking, median and separate hourly scales in memory', () => {
     const rows = [{ Jahr: 2024, Anzahl_Index: 100, Energie_Index: 100, Klein_GWh: 5.057128882,
       Mittel_GWh: 0.314970178, Gross_GWh: 0.827139801, Median_Stunden: 1.655172414,
-      Stunde: 13, Preis_EUR_MWh: 39.05, Solar_GW: 40 }];
-    const [cohorts, segments, duration, price, solar] = configs.map((config) => optionFor(config, rows));
+      Stunde: 13, Preis_EUR_MWh: 39.05, Solar_GW: 40, Kohorte: '2026*', Energie_GWh: 7.9, Gross_Anzahl: 215 }];
+    const [cohorts, segments, duration, trend, price, solar] = configs.map((config) => optionFor(config, rows));
+    // Trend: energy on the left axis, number of large plants on a right axis.
+    expect(trend.xAxis.data).toEqual(['2026*']);
+    expect(trend.yAxis.map((axis) => axis.name)).toEqual(['Speicherkapazität (GWh)', 'Große Speicher (Anzahl)']);
+    expect(trend.series.map((series) => [series.name, series.yAxisIndex, series.data])).toEqual([
+      ['Kapazität gesamt (GWh)', 0, [7.9]], ['Große Speicher (GWh)', 0, [0.827139801]], ['Große Speicher (Anzahl)', 1, [215]],
+    ]);
+    expect(cohorts.series.every((series) => series.yAxisIndex === undefined)).toBe(true);
     expect(cohorts.yAxis.name).toBe('Index (2024 = 100)');
     expect(cohorts.series.map((series) => series.data)).toEqual([[100], [100]]);
     expect(segments.series.every((series) => series.stack === 'total')).toBe(true);
@@ -196,7 +204,7 @@ describe('battery storage CSV contract', () => {
     expect(rows.length).toBeGreaterThan(0);
     expect(Object.keys(rows[0])).toEqual(contracts[filename]);
     for (const row of rows) {
-      expect(Object.entries(row).filter(([key]) => key !== 'Stunde')
+      expect(Object.entries(row).filter(([key]) => key !== 'Stunde' && key !== 'Kohorte')
         .every(([, value]) => typeof value === 'number' && Number.isFinite(value))).toBe(true);
     }
     return rows;
@@ -205,8 +213,12 @@ describe('battery storage CSV contract', () => {
   test.each(Object.keys(contracts))('%s matches headers, finite values and the complete axis', (filename) => {
     const rows = rowsFor(filename);
     const hourly = filename === 'battery_storage_daily_profile.csv';
-    expect(rows.map((row) => row[hourly ? 'Stunde' : 'Jahr']))
-      .toEqual(Array.from({ length: hourly ? 24 : 7 }, (_, index) => hourly ? `${String(index).padStart(2, '0')}:00` : index + 2019));
+    if (filename === 'battery_storage_trend.csv') {
+      expect(rows.map((row) => row.Kohorte)).toEqual([2019, 2020, 2021, 2022, 2023, 2024, 2025, '2026*']);
+    } else {
+      expect(rows.map((row) => row[hourly ? 'Stunde' : 'Jahr']))
+        .toEqual(Array.from({ length: hourly ? 24 : 7 }, (_, index) => hourly ? `${String(index).padStart(2, '0')}:00` : index + 2019));
+    }
     for (const config of configs.filter((item) => item.dataFile === `${dataPath}/${filename}`)) {
       const option = optionFor(config, rows);
       expect(option.series.every((series) => series.data.every(Number.isFinite))).toBe(true);
@@ -238,6 +250,16 @@ describe('battery storage CSV contract', () => {
     expect(durations.find((row) => row.Jahr === 2024).Median_Stunden).toBe(1.655172414);
     expect(durations.find((row) => row.Jahr === 2025).Median_Stunden).toBeCloseTo(1.92, 4);
     expect(durations.every((row) => row.Median_Stunden >= 0.1 && row.Median_Stunden <= 12)).toBe(true);
+    const trend = rowsFor('battery_storage_trend.csv');
+    const yearlyRows = parse(fs.readFileSync(path.join(dataDirectory, 'battery_storage_yearly.csv')), { columns: true, cast: true });
+    for (const row of trend) {
+      const year = Number(String(row.Kohorte).replace('*', ''));
+      const pick = (segment) => yearlyRows.find((item) => item.commissioning_year === year && item.size_segment === segment);
+      expect(row.Energie_GWh).toBe(pick('overall').energy_gwh);
+      expect(row.Gross_Anzahl).toBe(pick('large') ? pick('large').plant_count : 0);
+      expect(row.Gross_GWh).toBe(pick('large') ? pick('large').energy_gwh : 0);
+    }
+    expect(trend.at(-1)).toEqual({ Kohorte: '2026*', Energie_GWh: 7.902219936, Gross_Anzahl: 215, Gross_GWh: 3.76815745 });
     const profile = rowsFor('battery_storage_daily_profile.csv');
     expect(profile.find((row) => row.Stunde === '13:00').Preis_EUR_MWh).toBeCloseTo(37.94, 2);
     expect(profile.find((row) => row.Stunde === '19:00').Preis_EUR_MWh).toBeCloseTo(248.93, 2);
@@ -275,9 +297,9 @@ describe('battery storage build-time manifest gate', () => {
   });
   afterEach(() => { jest.restoreAllMocks(); jest.dontMock('../src/data_ingestion/builders/utils'); });
 
-  test('accepts all ten frozen exports against their manifest without writing', () => {
+  test('accepts all eleven frozen exports against their manifest without writing', () => {
     const validated = validateBatteryStorage();
-    expect(Object.keys(validated.files)).toHaveLength(10);
+    expect(Object.keys(validated.files)).toHaveLength(11);
     expect(validated.mastr.snapshot_date).toBe('2026-09-26');
     expect(validated.operating_stock).toMatchObject({
       snapshot_date: '2026-09-26', plant_count: 2769020, unit_count: 2769021,
@@ -328,7 +350,7 @@ describe('battery storage build-time manifest gate', () => {
     } finally {
       process.argv = argv;
     }
-    const outputs = ['cohorts', 'segments', 'duration', 'daily-price', 'daily-solar'];
+    const outputs = ['cohorts', 'segments', 'duration', 'trend', 'daily-price', 'daily-solar'];
     expect(loadData.mock.calls.map(([filename]) => filename)).toEqual(configs.map((config) =>
       path.join(root, 'src/data_ingestion/data', config.dataFile)));
     expect(saveChart.mock.calls.map(([, filename]) => filename)).toEqual(outputs.map((name) =>

@@ -24,7 +24,7 @@ DBT = PIPELINE / "src/data_pipelines/databearer_dbt"
 DEFAULT_DATABASE = Path(".data/mastr_battery.duckdb")
 DEFAULT_OUTPUT = Path(".data/output/batteries_germany")
 DEFAULT_ELECTRICITY = PIPELINE.parent / "frontend/src/_data/germanElectricity.json"
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 EPHEMERAL_MODELS = {"mastr_battery_freshness": "models/cleaned/mastr/mastr_battery_freshness.sql"}
 REQUIRED_SINGULAR_TESTS = {
     "battery_aggregate_reconciliation.sql", "battery_catalogue_contract.sql",
@@ -48,6 +48,9 @@ CHART_CONTRACTS = {
     "battery_storage_duration.csv": ["Jahr", "Median_Stunden"],
     "battery_storage_daily_profile.csv": ["Stunde", "Preis_EUR_MWh", "Solar_GW"],
 }
+# 2019–2025 plus the incomplete snapshot year, labelled "<year>*" (lower bound).
+TREND_FILE = "battery_storage_trend.csv"
+TREND_COLUMNS = ["Kohorte", "Energie_GWh", "Gross_Anzahl", "Gross_GWh"]
 MEASURES = ["plant_count", "unit_count", "power_gw", "energy_gwh", "median_duration_hours", "network_verified_plant_count"]
 
 
@@ -380,6 +383,16 @@ def build_payloads(db, electricity):
     for name, rows in zip(CHART_CONTRACTS, [cohorts, segments, durations, profile]):
         add_csv(name, CHART_CONTRACTS[name], rows)
 
+    # Trend including the incomplete snapshot year. A year without large plants
+    # has no large segment row; that is zero, not missing data.
+    require(snapshot.year > YEARS[-1] and (snapshot.year, "overall") in yearly, "Missing incomplete snapshot-year cohort")
+    trend = []
+    for year in [*YEARS, snapshot.year]:
+        large = yearly.get((year, "large"))
+        trend.append([f"{year}*" if year == snapshot.year else str(year), yearly[(year, "overall")]["energy_gwh"],
+                      large["plant_count"] if large else 0, large["energy_gwh"] if large else 0.0])
+    add_csv(TREND_FILE, TREND_COLUMNS, trend)
+
     distribution = query(db, f"""SELECT commissioning_year AS Jahr,
         CASE WHEN GROUPING(size_segment) = 1 THEN 'overall' ELSE size_segment END AS Segment,
         COUNT(*) AS Anzahl, QUANTILE_CONT(duration_hours, 0.1) AS P10_Stunden,
@@ -410,7 +423,8 @@ def build_payloads(db, electricity):
             "segments": {"small": "power <30 kW AND energy <30 kWh", "large": "power >=1000 kW OR energy >=1000 kWh", "medium": "remaining included plants"},
             "duration": "Unweighted plant-level usable kWh / net nominal kW. Median and continuous P10/P25/P75/P90; not ratio of aggregate energy to power.",
             "index_base_year": 2024, "chart_years": YEARS,
-            "partial_periods": "Charts use completed calendar years 2019–2025 only. Full cohort tables mark snapshot-year/month as period_complete=false; not annualized. Complete means calendar period, not registration completeness.",
+            "trend": f"{TREND_FILE}: 2019–2025 plus the incomplete snapshot year labelled '<year>*'; a lower bound through the snapshot date, never annualized.",
+            "partial_periods": "Cohort/segment/duration charts use completed calendar years 2019–2025 only. Full cohort tables mark snapshot-year/month as period_complete=false; not annualized. Complete means calendar period, not registration completeness.",
             "rounding": "Nine decimal places, trailing CSV zeros removed; reconcile with 1e-8 GW/GWh tolerance.",
         },
         "operating_stock": stock,
@@ -425,7 +439,7 @@ def build_payloads(db, electricity):
 def verify_set(directory):
     """Reject incomplete/mixed sets. Unrelated frozen datasets are ignored."""
     metadata = json.loads((directory / MANIFEST).read_bytes())
-    expected = set(CHART_CONTRACTS) | {f"battery_storage_{suffix}.csv" for suffix in ("yearly", "monthly", "by_state", "summary", "duration_distribution")} | {"battery_storage_quality.json"}
+    expected = set(CHART_CONTRACTS) | {TREND_FILE} | {f"battery_storage_{suffix}.csv" for suffix in ("yearly", "monthly", "by_state", "summary", "duration_distribution")} | {"battery_storage_quality.json"}
     require(set(metadata["files"]) == expected, "Manifest file allowlist mismatch")
     for name, contract in metadata["files"].items():
         raw = (directory / name).read_bytes()

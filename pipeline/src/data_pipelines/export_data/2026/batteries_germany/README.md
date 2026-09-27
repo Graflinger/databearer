@@ -49,6 +49,7 @@ separators. Rows sort ascending; finite numbers have up to nine decimal places.
 | `battery_storage_segments.csv` | `Jahr,Klein_GWh,Mittel_GWh,Gross_GWh` | 2019–2025, seven rows |
 | `battery_storage_duration.csv` | `Jahr,Median_Stunden` | 2019–2025, seven rows; unweighted plant median |
 | `battery_storage_daily_profile.csv` | `Stunde,Preis_EUR_MWh,Solar_GW` | `00:00`–`23:00`, 24 rows; arithmetic mean of 30 observations per Berlin hour |
+| `battery_storage_trend.csv` | `Kohorte,Energie_GWh,Gross_Anzahl,Gross_GWh` | 2019–2025 plus the incomplete snapshot year labelled `2026*`, eight rows; overall energy and large-segment count/energy from the yearly model (0 if a year has no large plant); the `*` year is a lower bound, never annualized |
 
 The yearly data describe **commissioning cohorts of plants still operating at the
 MaStR snapshot**, with current whole-plant capacity attributed to the earliest
@@ -97,7 +98,7 @@ continuous plant-level quantiles and counts reconciled to the yearly model.
 - `battery_storage_metadata.json`: publication manifest with source date/URL/
   filename/archive hash, separate electricity input provenance/window/time grain,
   methodology/version, model/test/exporter hashes, DuckDB version, stock totals,
-  and exact SHA-256/byte size/CSV contracts for all ten data files. No wall-clock
+  and exact SHA-256/byte size/CSV contracts for all eleven data files. No wall-clock
   export timestamp makes repeat runs over identical inputs byte-reproducible.
 
 All seven current `battery_*.sql` singular dbt tests (plus any future matching

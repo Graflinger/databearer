@@ -112,6 +112,14 @@ Das laufende Jahr ist noch nicht vorbei, und viele Anlagen werden erst mit Verz�
 
 Diese großen Speicher bringen es schon jetzt auf **3,77 GWh**. Das ist mehr als doppelt so viel wie im gesamten Jahr 2025 (1,74 GWh). Damit liegt die Kapazität der großen Klasse erstmals seit 2016 wieder **über der der kleinen Speicher** (3,69 GWh). Damals war der Markt mit insgesamt rund 0,2 GWh allerdings noch winzig.
 
+<div class="chart-section">
+  <h3 id="battery-storage-trend-heading">Speicherkapazität und große Speicher je Inbetriebnahmejahr, einschließlich 2026</h3>
+  <p class="chart-description" id="battery-trend-description">Die Speicherkapazität aller Anlagen steigt von 0,46 GWh (2019) auf 6,77 GWh (2025) und liegt 2026 bis zum 26. September bereits bei 7,90 GWh. Große Speicher wachsen von 1,74 GWh mit 131 Anlagen (2025) auf 3,77 GWh mit 215 Anlagen (2026). Der Wert für 2026 ist unvollständig und eine Untergrenze. Die Anzahl großer Speicher steht auf der rechten Achse.</p>
+  <div id="battery-storage-trend" role="img" aria-labelledby="battery-storage-trend-heading" aria-describedby="battery-trend-description" style="width: 100%; height: 400px;"></div>
+  <script defer src="/js/charts/battery_storage/trend.js"></script>
+  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, Marktstammdatenregister (MaStR)</a>; eigene Auswertung, Stand 26. September 2026. 2026* = 1. Januar bis 26. September, nicht hochgerechnet.</div>
+</div>
+
 <div class="table-scroll" tabindex="0" role="region" aria-label="Tabelle: Zwischenstand 2026 im Vergleich zu 2025">
   <table id="battery-2026-table">
     <caption>Inbetriebnahme-Kohorte 2026 bis 26. September (unvollständig) im Vergleich zum vollständigen Jahr 2025, Registerstand 26. September 2026</caption>
@@ -128,7 +136,7 @@ Diese großen Speicher bringen es schon jetzt auf **3,77 GWh**. Das ist mehr als
 
 <p class="table-note"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, Marktstammdatenregister (MaStR)</a>, dl-de/by-2-0; eigene gefilterte Auswertung, Stand 26. September 2026.</p>
 
-Auch insgesamt liegt die Speicherkapazität 2026 schon nach knapp neun Monaten über dem Wert des gesamten Vorjahres. Weil Nachmeldungen die Zahlen in der Regel noch erhöhen, sind die Werte für 2026 eher als Untergrenze zu verstehen. Auf das ganze Jahr hochgerechnet wird bewusst nicht, und in den Diagrammen oben bleibt 2026 außen vor, bis das Jahr abgeschlossen ist.
+Auch insgesamt liegt die Speicherkapazität 2026 schon nach knapp neun Monaten über dem Wert des gesamten Vorjahres. Weil Nachmeldungen die Zahlen in der Regel noch erhöhen, sind die Werte für 2026 eher als Untergrenze zu verstehen. Auf das ganze Jahr hochgerechnet wird bewusst nicht, und in den Diagrammen weiter oben bleibt 2026 außen vor, bis das Jahr abgeschlossen ist.
 
 ## Warum Speicher im Tagesverlauf interessant sind
 

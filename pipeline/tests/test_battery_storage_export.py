@@ -113,6 +113,16 @@ class BatteryExportTest(unittest.TestCase):
                     self.assertEqual(rows[-1], ["23:00", "17.5", "23"])
                 else:
                     self.assertEqual([int(row[0]) for row in rows[1:]], exporter.YEARS)
+        trend = list(csv.reader(first[exporter.TREND_FILE].decode().splitlines()))
+        self.assertEqual(trend[0], exporter.TREND_COLUMNS)
+        self.assertEqual([row[0] for row in trend[1:]], [*map(str, exporter.YEARS), "2026*"])
+        yearly_rows = list(csv.DictReader(first["battery_storage_yearly.csv"].decode().splitlines()))
+        for row in trend[1:]:
+            year = row[0].rstrip("*")
+            overall = next(r for r in yearly_rows if r["commissioning_year"] == year and r["size_segment"] == "overall")
+            self.assertEqual(float(row[1]), float(overall["energy_gwh"]))
+            large = [r for r in yearly_rows if r["commissioning_year"] == year and r["size_segment"] == "large"]
+            self.assertEqual(int(row[2]), int(large[0]["plant_count"]) if large else 0)
         cohorts = list(csv.DictReader(first["battery_storage_cohorts.csv"].decode().splitlines()))
         self.assertEqual(cohorts[5]["Anzahl_Index"], "100")
         self.assertEqual(cohorts[5]["Energie_Index"], "100")

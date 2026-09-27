@@ -3,7 +3,7 @@ const { validateBatteryStorage } = require('../utils/batteryStorageValidation');
 // The loader propagates validation failures before any charts are generated.
 validateBatteryStorage();
 
-// Four evidence groups; the hourly group uses separate scales because the
+// Five evidence groups; the hourly group uses separate scales because the
 // existing line builder has a single y-axis. Both plots read the same hours.
 module.exports = [
   {
@@ -39,6 +39,25 @@ module.exports = [
     xAxisLabel: 'Inbetriebnahme-Kohorte',
     yAxisLabel: 'Median E/P (Stunden)',
     yKey: 'Median_Stunden',
+    smooth: false,
+  },
+  {
+    // Includes the incomplete snapshot year ('2026*'), a lower bound. Energy on
+    // the left axis, the number of large plants on the right axis.
+    type: 'line',
+    dataFile: '2026/battery_storage/battery_storage_trend.csv',
+    outputFile: 'trend.js',
+    containerId: 'battery-storage-trend',
+    xKey: 'Kohorte',
+    xAxisLabel: 'Inbetriebnahme-Kohorte (2026* bis 26. September)',
+    yAxisLabel: 'Speicherkapazität (GWh)',
+    secondaryYAxisLabel: 'Große Speicher (Anzahl)',
+    seriesKeys: ['Energie_GWh', 'Gross_GWh', 'Gross_Anzahl'],
+    seriesNames: ['Kapazität gesamt (GWh)', 'Große Speicher (GWh)', 'Große Speicher (Anzahl)'],
+    seriesYAxisIndex: [0, 0, 1],
+    // The three-entry legend wraps to two or three lines on phones.
+    narrowGridTop: '30%',
+    narrowShortYearLabels: true,
     smooth: false,
   },
   {

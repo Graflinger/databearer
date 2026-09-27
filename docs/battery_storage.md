@@ -42,7 +42,7 @@ ZIP. The hash above identifies the reconstructed subset, not that full remote ZI
 
 Frozen aggregate exports and provenance are under
 `frontend/src/data_ingestion/data/2026/battery_storage/`. The independently verified
-fresh export is `pipeline/.data/output/batteries_germany_20260926/` (ten data files
+fresh export is `pipeline/.data/output/batteries_germany_20260926/` (eleven data files
 plus `battery_storage_metadata.json`), byte-identical to the tracked set. The
 metadata records every data-file hash, model/test SQL hashes, exporter identity,
 source identity and the separate electricity input identity. No unit/plant/operator
@@ -91,8 +91,10 @@ Recent cohorts also suffer registration lag. Charts therefore focus on
 4.291020297 GW and 7.902219936 GWh**, with `period_complete=false` in the yearly
 CSV. Calendar-period completeness does not imply registration completeness.
 
-The article shows 2026 in its own section and table (not in the charts), always
-labelled "bis 26. September"/unvollständig. It may be compared with full 2025
+The article shows 2026 in its own section with a trend line chart
+(`battery_storage_trend.csv`, `2026*`, dual axis: GWh left, number of large plants
+right) and a table, always labelled "bis 26. September"/unvollständig. The
+cohort, segment and duration charts stay 2019–2025. It may be compared with full 2025
 only as an already-reached level that late registrations would typically raise
 (e.g. large-segment energy 3.768157450 GWh vs 1.737298590 GWh in 2025; 215 vs
 131 large plants; total 7.902 vs 6.768 GWh). Never annualize it or present it as
@@ -267,7 +269,7 @@ then `BATTERY_STORAGE_BUILD_CHECK=1 npm test -- --runInBand tests/battery-storag
   console errors, no horizontal overflow.
 - No commit, push or publication was performed by the refresh itself.
 
-Build-time battery validation verifies all ten data files against their manifest
+Build-time battery validation verifies all eleven data files against their manifest
 before chart generation, rejecting incomplete or mixed sets.
 
 ### Historical 11 September baseline
