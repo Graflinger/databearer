@@ -27,12 +27,16 @@ not promise rankings.
 ## Body
 
 - [ ] There is no H1 in the Markdown; use H2/H3. The key takeaway comes first, and a
-  Methodik/Datenquellen section comes last.
+  short "Daten und Quellen" section comes last. One-author voice: no "wir"/"unser"
+  for the author's own work. No third-party methodology is named unless its data
+  is used.
 - [ ] Each chart follows the [chart pattern](../../docs/seo.md#charts-and-evidence):
   - one deferred ECharts script;
   - a container with `role="img"`, `aria-labelledby` and `aria-describedby`;
   - a `chart-description` longer than 40 characters;
   - static values or a captioned table, units, period and a verified source link.
+- [ ] Sources and footnotes of standalone tables sit directly below them in
+  `<p class="table-note">`, not as body text.
 - [ ] Wide tables are wrapped in `.table-scroll`
   ([Styling](../../docs/seo.md#styling-and-navigation)). Datawrapper embeds use
   `loading="lazy"`, have a `title` and a visible source credit.

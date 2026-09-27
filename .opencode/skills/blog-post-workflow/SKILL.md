@@ -43,10 +43,44 @@ Default style:
 - Start with a concise key takeaway.
 - Make the central claim specific and data-backed.
 - Use charts as evidence, not decoration.
-- Include source and methodology notes.
+- Include sources and a short data note (see below).
 - Name caveats clearly instead of hiding uncertainty.
 - Avoid overclaiming from one data point.
 - Prefer concrete phrasing over generic commentary.
+
+### Voice: one author
+
+Databearer is written by one person. Never suggest a team:
+
+- No author "wir"/"uns"/"unser" for the author's own work: not "unsere
+  Auswertung", "wir haben gefiltert", "wir rechnen nicht hoch", "wie wir bereits
+  beschrieben haben".
+- Prefer impersonal phrasing ("Die Auswertung zeigt…", "Nicht berücksichtigt
+  sind…", "Hochgerechnet wird nicht"). Use "ich"/"mein" sparingly where a personal
+  choice or opinion is meant ("Ich rechne das Jahr bewusst nicht hoch").
+- Inclusive reader "wir" ("Schauen wir auf…") and collective "unsere Industrie"
+  (Germany/society) are acceptable but use them sparingly.
+
+### Keep the methodology short
+
+Readers come for the finding, not the pipeline. Unless the user explicitly asks
+for a detailed methodology:
+
+- End with a short **"Daten und Quellen"** section: one or two short paragraphs
+  on source, date/period, what was included or left out (e.g. implausible outliers
+  removed) and what that means for interpretation, then the source/licence list.
+- Put caveats needed to read a chart correctly next to that chart, once, in plain
+  words. Do not repeat them in several sections.
+- No filter thresholds, row counts, exclusion percentages, file names, hashes,
+  model names, request budgets or tooling in the article. That detail belongs in
+  the topic's `docs/` file.
+
+### Third-party methods
+
+Do not name, link or cite another project's methodology (thresholds, size classes,
+corrections, dashboards) unless its **data** is used or the user asks for it.
+Describe your own, simplified approach in your own words. Credit only the sources
+whose data appears in the post.
 
 ## Frontmatter checklist
 
@@ -112,23 +146,34 @@ Comparison, history, or policy relevance.
 
 What the chart does and does not prove.
 
-## Methodik und Datenquellen
+## Daten und Quellen
 
-Source, grain, transformations, limitations.
+1–2 short paragraphs: source, date, what was left out and why it matters.
+Then a source list with licences. Details stay in docs/.
 ```
 
 ## Chart requirements
 
-Every chart needs a one-sentence takeaway, the accessible container pattern
-(`role="img"`, `aria-labelledby` → heading, `aria-describedby` → a
+Every chart needs a unique `containerId`, a one-sentence takeaway, the accessible
+container pattern (`role="img"`, `aria-labelledby` → heading, `aria-describedby` → a
 `chart-description` longer than 40 characters), static values or a captioned table,
 and a verified source link. Load ECharts once and give every script `defer`. Each
-chart needs a CSV in `frontend/src/data_ingestion/data/`, a config in
-`frontend/src/data_ingestion/charts/`, and generated JS under
+chart needs a CSV under `frontend/src/data_ingestion/data/<article-year>/<topic>/`
+(with supporting aggregates and the validated provenance manifest in the same
+folder), a config in `frontend/src/data_ingestion/charts/`, and generated JS under
 `frontend/src/js/charts/<config-name>/`. See
 [Charts and evidence](../../../docs/seo.md#charts-and-evidence).
 
-Use `frontend-visualization` for exact commands and config fields.
+Tables outside a `.chart-section` put their source and footnotes (rounding,
+definitions, exclusions) directly below the table as
+`<p class="table-note"><strong>Quelle:</strong> <a href="…">…</a>; …</p>`. It renders
+smaller and muted so it visibly belongs to the table. Use HTML inside it, not
+Markdown. Never format a table source as a normal body paragraph.
+
+Use `frontend-visualization` for exact commands, config fields and the **Organize a
+frozen data entity** workflow. Use the article year even when data spans many years;
+keep frozen article evidence separate from live dashboard snapshots. A refresh must
+update chart inputs, provenance, article numbers/dates and tests together.
 
 ## Workflow
 
@@ -138,8 +183,9 @@ Use `frontend-visualization` for exact commands and config fields.
 4. Create or update chart CSV/config/scripts using `frontend-visualization`.
 5. Draft the Markdown post using `frontend-page` conventions.
 6. Add descriptively labelled links to relevant topic pages or previous posts.
-7. Add a Methodik/Datenquellen section. Verify claims against original sources;
-   record unresolved legacy citations rather than inventing URLs, dates or provenance.
+7. Add a short "Daten und Quellen" section (see *Keep the methodology short*).
+   Verify claims against original sources; record unresolved legacy citations
+   rather than inventing URLs, dates or provenance.
 8. Run the [checks](../../../docs/seo.md#checks) from `frontend/`:
    `npm test -- --runInBand`, `npm run lint`, `npm run build`,
    `npm run test:seo-output`.
@@ -155,7 +201,10 @@ Before considering a post complete:
 - Excerpt is plain text, key finding first, not clickbait, no draft labels.
 - The strongest claim is backed by data shown in the post.
 - Every chart has static evidence, units, period and a verified source.
-- Caveats are explicit.
+- Caveats are explicit, stated once and in plain words.
+- No author "wir"/"unser" for the author's own work; one-author voice.
+- The data/methodology section is short; technical detail lives in `docs/`.
+- No other project's methodology is named or linked unless its data is used.
 - Internal links are relevant and descriptive.
 - Hero/social alt describes the image; the caption is `imageText`.
 - Drafting-only flags are removed when publishing.

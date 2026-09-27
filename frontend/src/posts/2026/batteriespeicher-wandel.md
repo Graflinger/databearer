@@ -1,151 +1,135 @@
 ---
-title: "Weniger neue Batteriespeicher, mehr Speicherkapazität"
-date: 2026-09-11
-lastUpdated: 2026-09-11
-excerpt: "Rechercheentwurf: Die Registerkohorte 2025 umfasst weniger Anlagen als 2024, aber mehr Speicherkapazität. Ein Blick auf Größenklassen und nominale Speicherdauer."
+title: "Große Speicher treiben den Batterieausbau"
+date: 2026-09-27
+excerpt: "Große Batteriespeicher liefern einen immer größeren Teil der neuen Speicherkapazität in Deutschland. 2026 stellen sie schon fast die Hälfte, und das Jahr übertrifft bereits nach knapp neun Monaten das gesamte Vorjahr."
+image: "/images/blog_card_images/2026/batteriespeicher-wandel.png"
+imageAlt: "Illustration: Batteriespeicher-Schränke zwischen Solarmodulen, dahinter Windräder und ein Bauernhaus in hügeliger Landschaft bei Sonnenuntergang"
+imageText: "Große Batteriespeicher liefern einen immer größeren Teil der neuen Speicherkapazität"
 topic: ["energie", "wirtschaft"]
 fullWidthCard: false
-draft: true
-eleventyExcludeFromCollections: true
-excludeFromSitemap: true
 permalink: /posts/2026/batteriespeicher-wandel/
 ---
 
-**DRAFT – explorativer Rechercheentwurf, noch nicht redaktionell freigegeben.** Die folgenden Zahlen beschreiben einen gefilterten Registerstand vom **30. Juni 2026**. Sie sind kein aktueller Bestandsbericht für September 2026.
-
-In der Inbetriebnahme-Kohorte 2025 stehen **2,48 Prozent weniger Batteriespeicheranlagen**, aber **8,68 Prozent mehr Speicherkapazität** als in der Kohorte 2024. Besonders die große Größenklasse trägt zu diesem Unterschied bei. Wer nur Anlagen zählt, übersieht damit einen wichtigen Teil des Bildes.
-
-Die Überschrift ist eine Kurzfassung dieses **Kohortenvergleichs**: Gezählt werden im Registerstand noch betriebene Anlagen, gruppiert nach dem frühesten Inbetriebnahmedatum ihrer zugeordneten Einheiten. Das sind **keine historisch beobachteten jährlichen Neuinstallationen**. Stillgelegte Anlagen fehlen; spätere Erweiterungen können mit ihrer heutigen Kapazität einem früheren Jahr zugerechnet werden. Die [Methodik unten](#methodik) erläutert diese Grenzen.
-
 <script defer src="/js/lib/echarts.min.js"></script>
 
-## 1. Anlagenzahl und Speicherkapazität erzählen verschiedene Geschichten
+## Mehr Kapazität, getragen von großen Speichern
 
-Die Kohorte 2024 umfasst 573.235 Anlagen mit zusammen rund 6,179 GWh Speicherkapazität. Für 2025 sind es 559.016 Anlagen mit rund 6,715 GWh. Die zugeordnete Nettonennleistung sinkt zugleich von rund 4,028 auf 3,935 GW. Mehr Energieinhalt bedeutet also nicht automatisch mehr Leistung.
+In Deutschland geht Jahr für Jahr mehr Batteriespeicherkapazität in Betrieb. Den Unterschied machen inzwischen die großen Speicher: 2024 stellten sie **13 Prozent** der neu installierten Kapazität, 2025 schon **26 Prozent** und 2026 bislang **48 Prozent**, also fast die Hälfte.
 
-**GW beschreibt Leistung:** Wie schnell kann ein Speicher Energie abgeben? **GWh beschreibt Energieinhalt:** Wie viel Energie kann er speichern? Für die Frage, wie lange ein Speicher bei einer bestimmten Leistung durchhalten könnte, braucht man beide Größen.
+2025 kamen Speicher mit **6,77 GWh** hinzu, **9,11 Prozent mehr** als 2024, obwohl die Zahl der Anlagen um 2,02 Prozent sank. Die Kapazität großer Speicher hat sich im selben Zeitraum mehr als verdoppelt (**+110,04 Prozent**). 2026 ist mit **7,90 GWh** nach knapp neun Monaten schon jetzt das stärkste Jahr.
 
-<div class="chart-section">
-  <h3>Anlagenzahl und Energieinhalt, jeweils 2024 = 100</h3>
-  <p class="chart-description" id="battery-cohorts-description">Die Kurven vergleichen die Inbetriebnahme-Kohorten 2019–2025 im Registerstand vom 30. Juni 2026. Beide Reihen sind separat auf 2024 = 100 normiert; 2025 liegt die Anlagenzahl bei rund 97,52 und die Speicherkapazität bei 108,68. Der Index vergleicht Veränderungen, keine absoluten Einheiten.</p>
-  <div id="battery-storage-cohorts" role="img" aria-label="Index von Anlagenzahl und Speicherkapazität, Basis 2024 gleich 100" aria-describedby="battery-cohorts-description" style="width: 100%; height: 400px;"></div>
-  <script defer src="/js/charts/battery_storage/cohorts.js"></script>
-  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, Marktstammdatenregister (MaStR)</a>; eigene gefilterte Auswertung, Stand 30. Juni 2026.</div>
-</div>
+**2026\*** steht in diesem Beitrag für den 1. Januar bis 26. September 2026. Diese Werte sind unvollständig, weil Anlagen oft verspätet gemeldet werden, und daher eher eine Untergrenze. Hochgerechnet wird nicht. Außerdem zählt jede Anlage zum Jahr ihrer ersten Inbetriebnahme: Stillgelegte Anlagen fehlen, spätere Erweiterungen zählen mit ihrer heutigen Kapazität. Das ist also nicht dasselbe wie der tatsächliche Zubau eines Jahres. Mehr dazu unter [Daten und Quellen](#daten).
 
-<div class="table-scroll" tabindex="0" role="region" aria-label="Tabelle: Kernwerte der Registerkohorten 2024 und 2025">
-  <table id="battery-cohorts-table">
-    <caption>Kernwerte der gefilterten Registerkohorten, Stand 30. Juni 2026; keine historischen Jahreszubauten</caption>
-    <thead><tr><th scope="col">Kohorte</th><th scope="col">Anlagenzahl</th><th scope="col">Nettonennleistung (GW)</th><th scope="col">Speicherkapazität (GWh)</th><th scope="col">Median E/P (Stunden)</th></tr></thead>
+Insgesamt sind in Deutschland laut Register **2.769.020 Batteriespeicher** mit zusammen **20,22 Gigawatt Leistung** und **33,30 Gigawattstunden Speicherkapazität** in Betrieb. Fast alle davon sind kleine Anlagen mit weniger als 30 kW Leistung und 30 kWh Speicherkapazität. Die nur 652 großen Speicher stellen aber schon fast ein Viertel der gesamten Kapazität.
+
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabelle: Batteriespeicher in Betrieb nach Größenklasse">
+  <table id="battery-stock-table">
+    <caption>Batteriespeicher in Betrieb nach technischer Größenklasse, Registerstand 26. September 2026, alle Inbetriebnahmejahre</caption>
+    <thead><tr><th scope="col">Größenklasse</th><th scope="col">Anlagenzahl</th><th scope="col">Leistung (GW)</th><th scope="col">Speicherkapazität (GWh)</th><th scope="col">Median E/P (Stunden)</th></tr></thead>
     <tbody>
-      <tr><th scope="row">2024</th><td>573.235</td><td>4,027772</td><td>6,178516</td><td>1,6461</td></tr>
-      <tr><th scope="row">2025</th><td>559.016</td><td>3,935269</td><td>6,714984</td><td>1,9200</td></tr>
+      <tr><th scope="row">Klein</th><td>2.740.190</td><td>15,008</td><td>23,710</td><td>1,84</td></tr>
+      <tr><th scope="row">Mittel</th><td>28.178</td><td>0,829</td><td>1,774</td><td>2,56</td></tr>
+      <tr><th scope="row">Groß</th><td>652</td><td>4,384</td><td>7,814</td><td>2,00</td></tr>
+      <tr><th scope="row">Gesamt</th><td>2.769.020</td><td>20,222</td><td>33,299</td><td>1,84</td></tr>
     </tbody>
   </table>
 </div>
 
-Die Tabellen und Kernaussagen bleiben auch ohne JavaScript lesbar. Die Nachkommastellen dokumentieren die Registerauswertung, nicht eine entsprechend hohe Messgenauigkeit.
+<p class="table-note"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, Marktstammdatenregister (MaStR)</a>, dl-de/by-2-0; eigene gefilterte Auswertung, Stand 26. September 2026. Geplante Anlagen sind nicht enthalten. Durch Rundung können die Summen leicht abweichen.</p>
 
-## 2. Der Unterschied liegt vor allem in der großen Größenklasse
+<p class="table-note"><strong>Abgrenzung:</strong> Klein heißt Leistung unter 30 kW und Speicherkapazität unter 30 kWh. Groß heißt Leistung ab 1.000 kW oder Speicherkapazität ab 1.000 kWh. Alle übrigen Anlagen gehören zur mittleren Klasse.</p>
 
-Die kleine Größenklasse fällt von rund 5,041 auf 4,544 GWh. Die mittlere wächst von rund 0,313 auf 0,424 GWh, die große von rund 0,824 auf 1,746 GWh. Der höhere Energieinhalt der großen Klasse überwiegt damit den Rückgang bei den kleinen Anlagen.
+## Große Speicher wachsen am schnellsten
 
-Diese Gruppen sind **technische Größenklassen**, keine nachgewiesenen Eigentümer- oder Nutzungsgruppen. Aus ihnen lässt sich nicht direkt ablesen, ob Haushalte, Gewerbebetriebe oder Energieunternehmen investieren.
+Der Blick auf die einzelnen Inbetriebnahmejahre zeigt, wie steil die großen Speicher zulegen. 2024 gingen 102 große Speicher in Betrieb, 2025 waren es 131 und 2026 bis Ende September bereits **215**. Ihre Kapazität stieg von 0,83 über 1,74 auf **3,77 GWh**. Die gesamte neue Kapazität wuchs im selben Zeitraum deutlich langsamer.
 
 <div class="chart-section">
-  <h3>Speicherkapazität nach Größenklasse</h3>
-  <p class="chart-description" id="battery-segments-description">Die gestapelten Balken zeigen den Energieinhalt je Registerkohorte in GWh. Zwischen 2024 und 2025 nimmt die große Klasse deutlich zu, während die kleine Klasse zurückgeht. Die Gesamthöhe zeigt Kapazität, nicht Anlagenzahl.</p>
-  <div id="battery-storage-segments" role="img" aria-label="Gestapelte Speicherkapazität in GWh nach kleiner, mittlerer und großer Größenklasse" aria-describedby="battery-segments-description" style="width: 100%; height: 400px;"></div>
+  <h3 id="battery-storage-trend-heading">Speicherkapazität und große Speicher je Inbetriebnahmejahr</h3>
+  <p class="chart-description" id="battery-trend-description">Die neue Speicherkapazität aller Anlagen steigt von 0,46 GWh (2019) auf 6,77 GWh (2025) und liegt 2026* bereits bei 7,90 GWh. Große Speicher wachsen von 1,74 GWh mit 131 Anlagen (2025) auf 3,77 GWh mit 215 Anlagen (2026*). Die Anzahl großer Speicher steht auf der rechten Achse.</p>
+  <div id="battery-storage-trend" role="img" aria-labelledby="battery-storage-trend-heading" aria-describedby="battery-trend-description" style="width: 100%; height: 400px;"></div>
+  <script defer src="/js/charts/battery_storage/trend.js"></script>
+  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, Marktstammdatenregister (MaStR)</a>; eigene Auswertung, Stand 26. September 2026. 2026* = 1. Januar bis 26. September, nicht hochgerechnet.</div>
+</div>
+
+## Große Speicher überholen die kleinen
+
+Bei kleinen Speichern ging die neu installierte Kapazität 2025 zurück, von 5,06 auf 4,59 GWh. Die mittlere Größenklasse wuchs leicht, die große hat sich mehr als verdoppelt. 2026\* liegen große Speicher mit 3,77 GWh erstmals seit 2016 wieder **vor den kleinen** (3,69 GWh). Damals war der Markt mit insgesamt rund 0,2 GWh allerdings noch winzig. Nachmeldungen können den Abstand für 2026 noch verändern.
+
+Die Größenklassen sind rein technisch abgegrenzt. Sie verraten nicht, wem ein Speicher gehört. Ob Haushalte, Gewerbebetriebe oder Energieunternehmen investieren, lässt sich daraus nicht direkt ablesen.
+
+<div class="chart-section">
+  <h3 id="battery-storage-segments-heading">Neue Speicherkapazität nach Größenklasse</h3>
+  <p class="chart-description" id="battery-segments-description">Die gestapelten Balken zeigen die Speicherkapazität je Inbetriebnahmejahr in GWh. Der Anteil großer Speicher wächst seit 2023 deutlich und liegt 2026* mit 3,77 GWh über dem der kleinen mit 3,69 GWh.</p>
+  <div id="battery-storage-segments" role="img" aria-labelledby="battery-storage-segments-heading" aria-describedby="battery-segments-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/battery_storage/segments.js"></script>
-  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, MaStR</a>; eigene Auswertung, Stand 30. Juni 2026. Größenschwellen nach dem <a href="https://battery-charts.de/battery-charts/#methodology">Methodenvergleich mit Battery Charts der RWTH Aachen</a>.</div>
+  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, MaStR</a>; eigene Auswertung, Stand 26. September 2026. 2026* = 1. Januar bis 26. September, nicht hochgerechnet.</div>
 </div>
 
 <div class="table-scroll" tabindex="0" role="region" aria-label="Tabelle: Speicherkapazität nach Größenklasse">
   <table id="battery-segments-table">
-    <caption>Speicherkapazität der Größenklassen in GWh, Registerstand 30. Juni 2026</caption>
-    <thead><tr><th scope="col">Größenklasse</th><th scope="col">Kohorte 2024</th><th scope="col">Kohorte 2025</th></tr></thead>
+    <caption>Neue Speicherkapazität der Größenklassen in GWh je Inbetriebnahmejahr, Registerstand 26. September 2026</caption>
+    <thead><tr><th scope="col">Größenklasse</th><th scope="col">2024</th><th scope="col">2025</th><th scope="col">2026*</th></tr></thead>
     <tbody>
-      <tr><th scope="row">Klein</th><td>5,041173</td><td>4,544400</td></tr>
-      <tr><th scope="row">Mittel</th><td>0,313054</td><td>0,424486</td></tr>
-      <tr><th scope="row">Groß</th><td>0,824290</td><td>1,746098</td></tr>
+      <tr><th scope="row">Klein</th><td>5,060</td><td>4,591</td><td>3,695</td></tr>
+      <tr><th scope="row">Mittel</th><td>0,316</td><td>0,439</td><td>0,440</td></tr>
+      <tr><th scope="row">Groß</th><td>0,827</td><td>1,737</td><td>3,768</td></tr>
+      <tr><th scope="row">Gesamt</th><td>6,203</td><td>6,768</td><td>7,902</td></tr>
+      <tr><th scope="row">Anteil groß</th><td>13 %</td><td>26 %</td><td>48 %</td></tr>
     </tbody>
   </table>
 </div>
 
-**Abgrenzung:** Klein heißt Leistung **unter 30 kW UND** Energieinhalt **unter 30 kWh**. Groß heißt Leistung **mindestens 1.000 kW ODER** Energieinhalt **mindestens 1.000 kWh**. Alle übrigen eingeschlossenen Anlagen gehören zur mittleren Klasse. Rundungen können minimale Abweichungen zwischen den Segmenten und der Gesamtsumme verursachen.
+<p class="table-note"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, Marktstammdatenregister (MaStR)</a>, dl-de/by-2-0; eigene gefilterte Auswertung, Stand 26. September 2026. 2026* = 1. Januar bis 26. September, unvollständig.</p>
 
-## 3. Wie sich die nominale Speicherdauer verändert
+## Die Speicherdauer steigt wieder
 
-Das Verhältnis **E/P**, also Speicherkapazität in kWh geteilt durch Nettonennleistung in kW, ergibt eine nominale Speicherdauer in Stunden. Eine Anlage mit 10 kWh und 5 kW kommt rechnerisch auf zwei Stunden. Das ist keine Messung ihres tatsächlichen Lade- oder Entladebetriebs.
+Teilt man die Speicherkapazität einer Anlage durch ihre Leistung, erhält man ihre nominale Speicherdauer (E/P). Ein Speicher mit 10 kWh und 5 kW kann rechnerisch zwei Stunden lang mit voller Leistung entladen. Wie er tatsächlich betrieben wird, zeigt diese Kennzahl nicht.
 
-Der Median dieses Verhältnisses steigt zwischen den Kohorten 2024 und 2025 von **1,6461 auf 1,9200 Stunden**. Er wird über die einzelnen Anlagen berechnet, ohne Gewichtung nach Größe. Er ist weder das Verhältnis der Jahressummen noch die durchschnittliche Autarkiedauer eines Haushalts.
+Bis 2022 lag der Median dieser Speicherdauer bei rund zwei Stunden, 2023 fiel er auf 1,63 Stunden. Seitdem steigt er wieder: von **1,66 Stunden** (2024) auf **1,92 Stunden** (2025) und **1,98 Stunden** 2026\*. Die Hälfte der Anlagen liegt darüber, die andere Hälfte darunter, große und kleine Anlagen zählen dabei gleich viel. Neue Speicher sind also wieder etwas ausdauernder ausgelegt. Ob dahinter neue Geschäftsmodelle stehen, lässt sich aus dem Register allein nicht ablesen.
 
 <div class="chart-section">
-  <h3>Median der nominalen Speicherdauer je Kohorte</h3>
-  <p class="chart-description" id="battery-duration-description">2025 liegt der Median von E/P höher als 2024. Die Linie zeigt nur die Mitte der Anlagenwerte, keine Verteilung: Streuung, Quantile und Unterschiede innerhalb der Größenklassen sind hier nicht dargestellt.</p>
-  <div id="battery-storage-duration" role="img" aria-label="Median des nominalen Energie-Leistungs-Verhältnisses in Stunden je Registerkohorte" aria-describedby="battery-duration-description" style="width: 100%; height: 400px;"></div>
+  <h3 id="battery-storage-duration-heading">Median der nominalen Speicherdauer je Inbetriebnahmejahr</h3>
+  <p class="chart-description" id="battery-duration-description">Der Median der nominalen Speicherdauer fällt von 2,17 Stunden (2019) auf 1,63 Stunden (2023) und steigt seitdem wieder auf 1,92 Stunden (2025) und 1,98 Stunden (2026*). Die Linie zeigt nur den mittleren Wert, nicht die Streuung der Anlagen.</p>
+  <div id="battery-storage-duration" role="img" aria-labelledby="battery-storage-duration-heading" aria-describedby="battery-duration-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/battery_storage/duration.js"></script>
-  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, MaStR</a>; eigene Auswertung von Kapazität und Nettonennleistung, Stand 30. Juni 2026.</div>
+  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, MaStR</a>; eigene Auswertung von Speicherkapazität und Leistung, Stand 26. September 2026. 2026* = 1. Januar bis 26. September.</div>
 </div>
 
-Ein höherer Median ist mit einer Verschiebung zu längeren nominalen Speicherdauern vereinbar. Er beweist weder einen Wechsel der Geschäftsmodelle noch, dass alle Speicher länger laufen. Ladezustand, Verluste, Betriebsstrategie und Netzanschluss sind hier nicht beobachtet.
+## Warum Speicher im Tagesverlauf gebraucht werden
 
-## 4. Solarstrom und Börsenpreise im Tagesverlauf: ein illustratives Fenster
+Warum lohnt es sich überhaupt, Strom zeitlich zu verschieben? Ein Blick auf die Stundenwerte des Strommarkts der letzten 30 Tage, vom **27. August bis 25. September 2026\**, gibt einen Eindruck.
 
-Warum ist die zeitliche Verschiebung von Energie interessant? Einen anschaulichen Kontext liefern die Stundenprofile aus dem Strommarkt. Dafür verwenden wir einen **separaten, eingefrorenen Zeitraum vom 11. August bis 9. September 2026 (30 Tage)**. Dieser spätere Zeitraum ist nicht der Stichtag der Batteriespeicherdaten.
-
-Die Werte werden nach lokaler Stunde (**Europe/Berlin**) zusammengefasst. Für jede Stunde zeigen die Kurven das Mittel über die 30 Tage. Der mittlere DE–LU-Day-Ahead-Preis liegt um **13 Uhr bei 39,05 EUR/MWh**, um **20 Uhr bei 209,61 EUR/MWh**. Das sind Stundenprofil-Mittelwerte, keine für jeden Tag garantierten Kauf- und Verkaufspreise.
+Mittags, wenn die Solaranlagen am meisten Strom liefern, ist der Strom an der Börse am günstigsten: Um **13 Uhr liegt der mittlere Day-Ahead-Preis bei 37,94 EUR/MWh**. Am Abend, wenn die Sonne untergeht, steigt er deutlich an und erreicht **um 19 Uhr 248,93 EUR/MWh**. Das sind Durchschnittswerte über 30 Tage, keine Preise, die an jedem einzelnen Tag erreicht werden.
 
 <div class="chart-section">
-  <h3>Ein Stundenprofil, zwei getrennte Maßstäbe</h3>
-  <p class="chart-description" id="battery-profile-description">Illustration für den 11. August bis 9. September 2026: Die Preisreihe zeigt einen deutlich höheren Mittelwert um 20 Uhr als um 13 Uhr; die Solarreihe zeigt den Tagesgang der Erzeugung. Beide Diagramme verwenden dieselben Stunden, aber getrennte y-Achsen und Einheiten. Kurvenhöhen zwischen den Diagrammen sind nicht vergleichbar.</p>
-  <h4>DE–LU-Day-Ahead-Preis in EUR/MWh</h4>
-  <div id="battery-storage-daily-price" role="img" aria-label="Mittlerer Day-Ahead-Preis je Stunde in EUR pro MWh, 30 Tage" aria-describedby="battery-profile-description" style="width: 100%; height: 400px;"></div>
+  <h3 id="battery-storage-profile-heading">Strompreis und Solarerzeugung im Tagesverlauf</h3>
+  <p class="chart-description" id="battery-profile-description">Mittelwerte je Stunde für den 27. August bis 25. September 2026: Der Day-Ahead-Preis ist um 13 Uhr am niedrigsten und um 19 Uhr am höchsten, die Solarerzeugung erreicht ihr Maximum um die Mittagszeit. Beide Diagramme haben eigene Achsen und Einheiten.</p>
+  <h4 id="battery-storage-daily-price-heading">Day-Ahead-Preis (DE–LU) in EUR/MWh</h4>
+  <div id="battery-storage-daily-price" role="img" aria-labelledby="battery-storage-daily-price-heading" aria-describedby="battery-profile-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/battery_storage/daily-price.js"></script>
-  <h4>Solarerzeugung in Deutschland in GW</h4>
-  <div id="battery-storage-daily-solar" role="img" aria-label="Mittlere Solarerzeugung je Stunde in GW, derselbe 30-Tage-Zeitraum" aria-describedby="battery-profile-description" style="width: 100%; height: 400px;"></div>
+  <h4 id="battery-storage-daily-solar-heading">Solarerzeugung in Deutschland in GW</h4>
+  <div id="battery-storage-daily-solar" role="img" aria-labelledby="battery-storage-daily-solar-heading" aria-describedby="battery-profile-description" style="width: 100%; height: 400px;"></div>
   <script defer src="/js/charts/battery_storage/daily-solar.js"></script>
-  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.smard.de/">Bundesnetzagentur, SMARD</a>; eingefrorene Stundendaten aus der Datengrundlage des <a href="/dashboards/strom/">Databearer-Stromdashboards</a>, eigene Mittelwerte für 11. August bis 9. September 2026.</div>
+  <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.smard.de/home/marktdaten">Bundesnetzagentur | SMARD.de</a>, CC BY 4.0; eingefrorene Stundendaten aus dem <a href="/dashboards/strom/">Databearer-Stromdashboard</a>, eigene Mittelwerte für den 27. August bis 25. September 2026.</div>
 </div>
 
-Das Nebeneinander ist **deskriptiv, kein Kausalnachweis**: Nachfrage, Wind, Kraftwerksverfügbarkeit und grenzüberschreitender Handel beeinflussen die Preise ebenfalls. Aus diesem 30-Tage-Fenster folgt weder ein ganzjähriges Muster noch eine Erklärung für die Registerkohorten 2024 und 2025.
+Dieses Muster ist als **„Duck Curve“** bekannt, als Entenkurve. Der Begriff stammt vom kalifornischen Netzbetreiber und beschreibt eigentlich die Residuallast, also den Strombedarf, der nach Abzug von Wind- und Solarstrom noch von anderen Kraftwerken gedeckt werden muss. Mittags drückt der Solarstrom diese Last tief nach unten, das ist der Bauch der Ente. Am Abend fällt er innerhalb weniger Stunden weg, während der Verbrauch hoch bleibt. Die Residuallast steigt dann steil an, das ist der Hals. Die Börsenpreise folgen diesem Verlauf: Zwischen 13 und 19 Uhr sinkt die mittlere Solarerzeugung von rund 37 GW auf unter 1 GW, gleichzeitig steigt der Preis um mehr als 200 EUR/MWh.
 
-Auch **Rentabilität** lässt sich daraus nicht ableiten. Dafür fehlen unter anderem Investitions- und Betriebskosten, Wirkungsgrad, Alterung, Entgelte sowie die tatsächlich nutzbaren Handels- und Netzbedingungen. Die Differenz zwischen zwei Stundenmittelwerten ist kein erreichbarer Speichergewinn.
+Mit jeder weiteren Solaranlage wird der Bauch tiefer und der Abendanstieg steiler. Das ist ein bekanntes Problem des Solarausbaus: Mittags ist zeitweise mehr Strom da als gebraucht wird, abends müssen andere Kraftwerke in kurzer Zeit hochfahren. Genau diese Lücke können Batteriespeicher schließen, indem sie mittags laden und am Abend einspeisen.
 
-## Was sich aus dem Vergleich mitnehmen lässt
+Der Zusammenhang ist **deskriptiv, kein Kausalnachweis**. Auch Nachfrage, Wind, Kraftwerksverfügbarkeit und Stromhandel mit den Nachbarländern beeinflussen die Preise. Und aus der Differenz zweier Durchschnittspreise folgt noch kein Gewinn für einen Speicher: Dafür fehlen unter anderem Investitions- und Betriebskosten, Wirkungsgrad, Alterung und Netzentgelte.
 
-Die gefilterten Registerkohorten zeigen einen interessanten Strukturunterschied: Weniger Anlagen gehen mit mehr Energieinhalt und einem höheren Median der nominalen Speicherdauer einher. Der Kapazitätsunterschied konzentriert sich auf die große Größenklasse. Ob dahinter ein dauerhafter Wandel steht, bleibt eine Frage für weitere Registerstände und eine Prüfung der Verteilungen.
+## Der Ausbau wird größer, nicht nur breiter
 
-Das knüpft an den Beitrag [„Technologieoffenheit oder Industriepolitik?“](/posts/2025/Industriepolitik/) an, der Batteriepreise und Elektrifizierung behandelt. Die vorliegende Auswertung ergänzt diese Perspektive um deutsche stationäre Speicher; sie prüft weder die dort diskutierten Kostentrends noch konkrete Geschäftsmodelle. Aktuelle Erzeugung und Preise sind im [Stromdashboard](/dashboards/strom/) zu finden, dessen Datenstand sich unabhängig von diesem eingefrorenen Artikel verändert.
+Die Zahl neuer Batteriespeicher ist seit ihrem Höchststand 2023 leicht gesunken, ihre Kapazität wächst dagegen weiter. Eine 2024 in Betrieb genommene Anlage brachte im Schnitt 10,8 kWh mit, 2025 waren es 12,0 kWh und 2026\* bereits 16,9 kWh. Getragen wird das von großen Speichern, die fast die Hälfte der neuen Kapazität stellen. Für die Duck Curve ist das die entscheidende Größe: Je mehr Speicherkapazität zur Verfügung steht, desto mehr Mittagsstrom lässt sich in den Abend verschieben.
 
-<h2 id="methodik">Methodik und Datenquellen</h2>
+Der Beitrag knüpft an [„Technologieoffenheit oder Industriepolitik?“](/posts/2025/Industriepolitik/) an, in dem es um fallende Batteriepreise und die Elektrifizierung geht. Aktuelle Erzeugungs- und Preisdaten zeigt das [Stromdashboard](/dashboards/strom/). Dessen Datenstand ändert sich laufend, dieser Beitrag beschreibt den Stand vom 26. September 2026.
 
-### Registerstand und Zähleinheit
+<h2 id="daten">Daten und Quellen</h2>
 
-Grundlage ist der öffentliche [MaStR-Gesamtdatenauszug der Bundesnetzagentur](https://www.marktstammdatenregister.de/MaStR/Datendownload) mit dem hier ausgewerteten Stichtag **30. Juni 2026**. Die Analyse verbindet Speicheranlagen mit ihren zugeordneten Speichereinheiten. Berücksichtigt werden aktive Batterieeinträge in Deutschland mit übereinstimmendem Betriebsstatus „in Betrieb“ und konsistenter Anlagen-Einheiten-Verknüpfung. Geplante Anlagen sind nicht Teil der gezeigten Werte.
+Grundlage ist der öffentliche Gesamtdatenexport des Marktstammdatenregisters vom **26. September 2026**. Berücksichtigt sind Batteriespeicher in Deutschland, die in Betrieb sind. Geplante und stillgelegte Anlagen fehlen. Einträge mit offensichtlich unplausiblen oder fehlenden Angaben zu Leistung, Kapazität oder Inbetriebnahmedatum sind ausgeschlossen. Das betrifft weniger als ein Prozent der Anlagen, aber knapp vier Prozent der gemeldeten Kapazität. Die Gesamtwerte dürften daher etwas zu niedrig liegen.
 
-Gezählt werden **Anlagen**, nicht einzelne Registereinheiten. Die Nettonennleistungen der zugeordneten Einheiten werden addiert; der Energieinhalt wird nur einmal je Anlage berücksichtigt. Doppelte oder widersprüchliche Identifikatoren und Anlagenverknüpfungen werden ausgeschlossen, statt Kapazität mehrfach zu zählen.
+Jede Anlage zählt zum Jahr ihrer ersten Inbetriebnahme, spätere Erweiterungen eingeschlossen. 2026\* reicht bis zum 26. September und wird nicht hochgerechnet. Das Tagesprofil mittelt die SMARD-Stundenwerte vom 27. August bis 25. September 2026 je Stunde.
 
-### Plausibilitätsfilter und ihre Folgen
-
-Eingeschlossen werden nur Anlagen mit gültigen Inbetriebnahmedaten ihrer Einheiten zwischen **1. Januar 1990 und 30. Juni 2026**, einer Leistung **über 0,3 kW**, einem Energieinhalt **über 0,3 kWh** und einem Verhältnis **E/P von 0,1 bis 12 Stunden**. Fehlende, nicht endliche oder widersprüchliche Angaben werden nicht als null interpretiert.
-
-Die Qualitätsausschlüsse betreffen **0,4523 Prozent der ausgewählten betriebenen Einheiten**, aber **4,5745 Prozent des bekannten Energieinhalts** in der betrachteten Ausgangsauswahl. Der zweite Anteil bezieht sich auf bekannte Kapazitätsangaben, nicht auf einen vollständig bekannten Gesamtmarkt. Die Filter sind also nach Anlagenzahl relativ klein, nach Energieinhalt jedoch deutlich relevanter. Die Einheitenbasis dieser Ausschlussquote ist von der Anlagenzählung in den Tabellen zu unterscheiden.
-
-Es gibt **keine Betreibertyp-Korrektur und keine Imputation** fehlender oder ausgeschlossener Werte. Die [Methodik von Battery Charts (RWTH Aachen)](https://battery-charts.de/battery-charts/#methodology) dient als Vergleich für Plausibilitätsschwellen und Größenklassen. Battery Charts verwendet zusätzliche Betreiber- und Netzanschlussprüfungen sowie Korrekturen. Wir bilden deshalb **nicht die korrigierten RWTH-Gesamtsummen** nach. Insbesondere sind „klein“, „mittel“ und „groß“ hier keine Belege für Haushalt, Gewerbe oder einen bestimmten Betreiber.
-
-### Kohorten statt historischer Zubauzeitreihe
-
-Jede eingeschlossene Anlage wird dem Jahr des **frühesten Inbetriebnahmedatums** ihrer Einheiten zugeordnet. Bei späteren Erweiterungen wird damit auch deren im Snapshot erfasster Energieinhalt dem früheren Jahr zugeschlagen. Die Auswertung enthält nur die am Stichtag noch betriebenen Anlagen: Dieser **Survivor-Effekt** lässt frühere Stilllegungen aus dem Vergleich verschwinden. Eine historische Bestands- oder Zubauzeitreihe lässt sich aus diesem einzelnen Registerstand nicht rekonstruieren.
-
-Nachmeldungen und Registerkorrekturen können auch abgeschlossene Kohorten verändern. Für das erste Halbjahr 2026 sind Meldeverzögerungen besonders relevant; deshalb gibt es hier keinen Schlagzeilenvergleich mit 2026 H1. Die Diagramme der Registerkohorten zeigen 2019–2025. Der Index berechnet sich jeweils als Jahreswert geteilt durch den Wert der Kohorte 2024, mal 100. Größenklassen werden aus den im Snapshot erfassten Anlagenwerten bestimmt; E/P wird je Anlage berechnet und anschließend als ungewichteter Median je Kohorte ausgewiesen.
-
-### Getrennter Strommarkt-Snapshot und Quellen
-
-Das Stundenprofil nutzt ausschließlich den eingefrorenen Zeitraum **11. August bis 9. September 2026** aus den SMARD-Stundendaten der bestehenden Dashboard-Datengrundlage. Es mittelt die Stundenwerte je lokaler Stunde und verbindet keine einzelnen Speicher mit beobachteten Lade- oder Entladevorgängen. Das Registerdatum und dieses Strommarktfenster sind bewusst getrennt ausgewiesen.
-
-- **Primärquelle Speicher:** [Bundesnetzagentur – öffentlicher MaStR-Datendownload](https://www.marktstammdatenregister.de/MaStR/Datendownload), [Datenlizenz Deutschland – Namensnennung 2.0](https://www.govdata.de/dl-de/by-2-0); eigene Filter und Aggregationen wie oben beschrieben.
-- **Methodischer Vergleich:** [Battery Charts – Methodology](https://battery-charts.de/battery-charts/#methodology), RWTH Aachen. Kein Übernehmen korrigierter Marktsummen.
-- **Primärquelle Strommarkt:** [Bundesnetzagentur – SMARD](https://www.smard.de/), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); eigene Stundenprofil-Aggregation. Weitere Erläuterungen im [Stromdashboard](/dashboards/strom/).
-
-Der Artikel zeigt ausschließlich aggregierte Kennzahlen. Einzelne Anlagen-, Einheiten- oder Betreiberdatensätze werden hier nicht veröffentlicht.
+- **Batteriespeicher:** [Bundesnetzagentur, Marktstammdatenregister](https://www.marktstammdatenregister.de/MaStR/Datendownload), [Datenlizenz Deutschland – Namensnennung – Version 2.0](https://www.govdata.de/dl-de/by-2-0); eigene Auswertung.
+- **Strommarkt:** [Bundesnetzagentur | SMARD.de](https://www.smard.de/home/marktdaten), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); eigene Mittelwerte je Stunde.
