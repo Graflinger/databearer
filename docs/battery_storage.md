@@ -161,7 +161,9 @@ hour. Input SHA-256:
 `a5925adc1cb9f0f860dbafeaf747b4d6b14c65f44f41174558e7819c57deb0c5`; tracked at
 commit `c49ce4dafb61f6c33418cabdd90c70c8c13316a6`. Mean day-ahead price is lowest
 at 13:00 (37.94 EUR/MWh) and highest at 19:00 (248.93 EUR/MWh); mean solar peaks
-at 12:00 (37.20 GW). It is not a yearly pattern, battery dispatch measurement,
+at 12:00 (37.20 GW). The article names this the "Duck Curve" (originally a residual-load
+concept; in this window mean load minus wind and solar falls to ~2 GW at 13:00 and
+rises to ~37.5 GW at 19:00, computed from the same frozen input but not exported). It is not a yearly pattern, battery dispatch measurement,
 causal estimate or profit model.
 
 ## Running manually

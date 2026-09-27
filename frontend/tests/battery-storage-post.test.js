@@ -152,7 +152,7 @@ describe('battery storage static contract', () => {
       '466.762 Anlagen mit 7,90 GWh', 'hochgerechnet wird bewusst nicht', 'erstmals seit 2016', '215 große Speicher',
       '2.769.020 Batteriespeicher', '26. September 2026', '27. August bis 25. September 2026',
       '13 Uhr liegt der mittlere Day-Ahead-Preis bei 37,94 EUR/MWh', 'um 19 Uhr 248,93 EUR/MWh', 'kein Kausalnachweis',
-      'noch kein Gewinn für einen Speicher', 'Bundesnetzagentur | SMARD.de', 'Datenlizenz Deutschland']) {
+      'noch kein Gewinn für einen Speicher', '„Duck Curve“', 'Residuallast', 'mehr als 200 EUR/MWh', 'Bundesnetzagentur | SMARD.de', 'Datenlizenz Deutschland']) {
       expect(text).toContain(phrase);
     }
     // One author: no team "wir"/"unser"; no named third-party methodology.

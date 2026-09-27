@@ -149,6 +149,10 @@ Mittags, wenn die Solaranlagen am meisten Strom liefern, ist der Strom an der B�
   <div class="chart-sources"><strong>Quelle:</strong> <a href="https://www.smard.de/home/marktdaten">Bundesnetzagentur | SMARD.de</a>, CC BY 4.0; eingefrorene Stundendaten aus dem <a href="/dashboards/strom/">Databearer-Stromdashboard</a>, eigene Mittelwerte für den 27. August bis 25. September 2026.</div>
 </div>
 
+Dieses Muster ist als **„Duck Curve“** bekannt, als Entenkurve. Der Begriff stammt vom kalifornischen Netzbetreiber und beschreibt eigentlich die Residuallast, also den Strombedarf, der nach Abzug von Wind- und Solarstrom noch von anderen Kraftwerken gedeckt werden muss. Mittags drückt der Solarstrom diese Last tief nach unten, das ist der Bauch der Ente. Am Abend fällt er innerhalb weniger Stunden weg, während der Verbrauch hoch bleibt. Die Residuallast steigt dann steil an, das ist der Hals. Die Börsenpreise folgen diesem Verlauf: Zwischen 13 und 19 Uhr sinkt die mittlere Solarerzeugung von rund 37 GW auf unter 1 GW, gleichzeitig steigt der Preis um mehr als 200 EUR/MWh.
+
+Mit jeder weiteren Solaranlage wird der Bauch tiefer und der Abendanstieg steiler. Das ist ein bekanntes Problem des Solarausbaus: Mittags ist zeitweise mehr Strom da als gebraucht wird, abends müssen andere Kraftwerke in kurzer Zeit hochfahren. Genau diese Lücke können Batteriespeicher schließen, indem sie mittags laden und am Abend einspeisen.
+
 Der Zusammenhang ist **deskriptiv, kein Kausalnachweis**. Auch Nachfrage, Wind, Kraftwerksverfügbarkeit und Stromhandel mit den Nachbarländern beeinflussen die Preise. Und aus der Differenz zweier Durchschnittspreise folgt noch kein Gewinn für einen Speicher: Dafür fehlen unter anderem Investitions- und Betriebskosten, Wirkungsgrad, Alterung und Netzentgelte.
 
 ## Mehr Kapazität pro Anlage
