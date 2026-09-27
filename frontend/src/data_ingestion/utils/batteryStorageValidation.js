@@ -4,8 +4,10 @@ const { createHash } = require('crypto');
 const { parse } = require('csv-parse/sync');
 
 const MANIFEST = 'battery_storage_metadata.json';
-const SNAPSHOT = '2026-06-30';
+const SNAPSHOT = '2026-09-26';
 const YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025];
+// Trend axis: completed years plus the incomplete snapshot year, marked with '*'.
+const TREND_LABELS = [...YEARS.map(String), `${SNAPSHOT.slice(0, 4)}*`];
 const QUALITY_SCOPE = 'Relations with selected_operating_unit_count > 0 (active German operating battery units)';
 const MEASURES = ['plant_count', 'unit_count', 'power_gw', 'energy_gwh', 'median_duration_hours', 'network_verified_plant_count'];
 const aggregate = (dimension, partial = false) => ['snapshot_date', dimension, 'size_segment', ...MEASURES, ...(partial ? ['period_complete'] : [])];
@@ -15,6 +17,7 @@ const CONTRACTS = {
   'battery_storage_segments.csv': ['Jahr', 'Klein_GWh', 'Mittel_GWh', 'Gross_GWh'],
   'battery_storage_duration.csv': ['Jahr', 'Median_Stunden'],
   'battery_storage_daily_profile.csv': ['Stunde', 'Preis_EUR_MWh', 'Solar_GW'],
+  'battery_storage_trend.csv': ['Kohorte', 'Anzahl', 'Energie_GWh', 'Klein_GWh', 'Mittel_GWh', 'Gross_GWh', 'Gross_Anzahl', 'Median_Stunden'],
   'battery_storage_yearly.csv': aggregate('commissioning_year', true),
   'battery_storage_monthly.csv': aggregate('commissioning_month', true),
   'battery_storage_by_state.csv': aggregate('state'),
@@ -41,7 +44,7 @@ function json(bytes, label) {
   }
 }
 
-function validateBatteryStorage(dataDir = path.join(__dirname, '../data')) {
+function validateBatteryStorage(dataDir = path.join(__dirname, '../data/2026/battery_storage')) {
   const read = (name) => {
     const filename = path.join(dataDir, name);
     requireValid(fs.lstatSync(filename).isFile(), `${name} must be a regular file, not a symlink`);
@@ -52,8 +55,8 @@ function validateBatteryStorage(dataDir = path.join(__dirname, '../data')) {
   requireValid(metadata.mastr?.snapshot_date === SNAPSHOT && metadata.operating_stock?.snapshot_date === SNAPSHOT, 'MaStR snapshot date mismatch');
   requireValid(metadata.methodology?.index_base_year === 2024 && same(metadata.methodology?.chart_years, YEARS), 'cohort years/base mismatch');
   const profile = metadata.electricity_profile;
-  requireValid(profile?.first_local_date === '2026-08-11' && profile?.last_local_date === '2026-09-09'
-    && profile?.window_start_utc === '2026-08-10T22:00:00Z' && profile?.window_end_utc_exclusive === '2026-09-09T22:00:00Z'
+  requireValid(profile?.first_local_date === '2026-08-27' && profile?.last_local_date === '2026-09-25'
+    && profile?.window_start_utc === '2026-08-26T22:00:00Z' && profile?.window_end_utc_exclusive === '2026-09-25T22:00:00Z'
     && profile?.timezone === 'Europe/Berlin' && profile?.local_days === 30 && profile?.observations_per_hour === 30
     && profile?.input_rows === 720 && profile?.input_grain_minutes === 60
     && profile?.units?.power === 'GW' && profile?.units?.price === 'EUR/MWh', 'electricity profile period/units mismatch');
@@ -80,6 +83,9 @@ function validateBatteryStorage(dataDir = path.join(__dirname, '../data')) {
       const row = Object.fromEntries(columns.map((column, index) => [column, values[index]]));
       if ('snapshot_date' in row) requireValid(row.snapshot_date === SNAPSHOT, `${name} snapshot date mismatch`);
       if ('Jahr' in row) requireValid(YEARS.includes(Number(row.Jahr)), `${name} chart year mismatch`);
+    }
+    if (name === 'battery_storage_trend.csv') {
+      requireValid(same(records.slice(1).map((values) => values[0]), TREND_LABELS), `${name} cohort axis mismatch`);
     }
   }
   return metadata;

@@ -5,6 +5,31 @@ images. The implementation is provider-adaptable, so switching models or API
 shapes should usually only require changing config or adding a small adapter in
 `image_generator.py`.
 
+## Setup
+
+Create a local environment with [uv](https://docs.astral.sh/uv/). `.venv/` is
+Git-ignored.
+
+```bash
+cd image-generation
+uv venv --python 3.12
+uv pip install -r requirements.txt
+az account show   # if this fails: az login
+```
+
+The requirements include `ipykernel`, so the notebook can use this environment.
+In VS Code, open `image_generation_flux.ipynb` and pick
+`image-generation/.venv/bin/python` via **Select Kernel**. For Jupyter itself,
+register the kernel once:
+
+```bash
+.venv/bin/python -m ipykernel install --user --name databearer-images \
+  --display-name "Databearer images"
+```
+
+Then pick **Databearer images** as the notebook kernel. Show a result inline with
+`from IPython.display import Image; Image(filename=str(output_path))`.
+
 ## CLI usage
 
 ```bash

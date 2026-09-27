@@ -6,6 +6,7 @@ members are copied in chunks and the resulting archive is CRC-checked before use
 """
 from __future__ import annotations
 
+import codecs
 import hashlib
 import io
 import json
@@ -659,6 +660,21 @@ class _XMLTokenGuard:
 
 def _parse_member(member, table, emit, deadline):
     """Streaming XML with bounded lexical tokens, names, attributes and fields."""
+    # Official exports use BOM-marked UTF-16. Decode only bounded chunks for
+    # lexical checks; Expat receives the original bytes after those checks.
+    # Strict incremental decoding handles split code units/surrogates without
+    # letting zero bytes hide oversized tokens from the ASCII-compatible guard.
+    prefix = b''
+    while len(prefix) < 4:
+        deadline.check()
+        part = member.read(4 - len(prefix))
+        if not part:
+            break
+        prefix += part
+    if prefix.startswith((codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE)):
+        raise ValueError('UTF-32 XML is not supported')
+    utf16 = prefix.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE))
+    decoder = codecs.getincrementaldecoder('utf-16')(errors='strict') if utf16 else None
     parser = expat.ParserCreate(namespace_separator='}')
     guard = _XMLTokenGuard()
     stack = []
@@ -683,8 +699,9 @@ def _parse_member(member, table, emit, deadline):
             raise ValueError('XML namespace attribute limit exceeded')
 
     def declaration(version, encoding, standalone):
-        if encoding and encoding.lower() not in ('utf-8', 'us-ascii'):
-            raise ValueError('Only UTF-8/US-ASCII XML declarations are supported')
+        allowed = ('utf-16',) if utf16 else ('utf-8', 'us-ascii')
+        if encoding and encoding.lower() not in allowed:
+            raise ValueError('XML encoding declaration does not match supported input encoding')
 
     def start(name, attrs):
         nonlocal record, field_text, field_size, record_size, null_field, namespace_count
@@ -760,10 +777,14 @@ def _parse_member(member, table, emit, deadline):
     parser.ExternalEntityRefHandler = reject
     parser.StartNamespaceDeclHandler = namespace
     parser.XmlDeclHandler = declaration
-    while chunk := member.read(CHUNK_SIZE):
+    chunk = prefix + member.read(CHUNK_SIZE - len(prefix))
+    while chunk:
         deadline.check()
-        guard.feed(chunk)
+        guard.feed(decoder.decode(chunk).encode('utf-8') if decoder else chunk)
         parser.Parse(chunk, False)
+        chunk = member.read(CHUNK_SIZE)
+    if decoder:
+        guard.feed(decoder.decode(b'', final=True).encode('utf-8'))
     parser.Parse(b'', True)
     if not count:
         raise ValueError(f'Empty XML member for {table.table_name}')

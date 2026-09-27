@@ -24,7 +24,7 @@ DBT = PIPELINE / "src/data_pipelines/databearer_dbt"
 DEFAULT_DATABASE = Path(".data/mastr_battery.duckdb")
 DEFAULT_OUTPUT = Path(".data/output/batteries_germany")
 DEFAULT_ELECTRICITY = PIPELINE.parent / "frontend/src/_data/germanElectricity.json"
-VERSION = "1.0.1"
+VERSION = "1.3.0"
 EPHEMERAL_MODELS = {"mastr_battery_freshness": "models/cleaned/mastr/mastr_battery_freshness.sql"}
 REQUIRED_SINGULAR_TESTS = {
     "battery_aggregate_reconciliation.sql", "battery_catalogue_contract.sql",
@@ -36,14 +36,21 @@ MANIFEST = "battery_storage_metadata.json"
 YEARS = list(range(2019, 2026))
 SEGMENTS = ("small", "medium", "large")
 BERLIN = ZoneInfo("Europe/Berlin")
-START = "2026-08-10T22:00:00Z"
-END = "2026-09-09T22:00:00Z"
+# Frozen 30-day Berlin window of the pinned electricity input (Aug 27–Sep 25, 2026).
+START = "2026-08-26T22:00:00Z"
+END = "2026-09-25T22:00:00Z"
+FIRST_LOCAL_DATE = date(2026, 8, 27)
+LAST_LOCAL_DATE = date(2026, 9, 25)
+ELECTRICITY_SCHEMA_VERSIONS = (1, 2)
 CHART_CONTRACTS = {
     "battery_storage_cohorts.csv": ["Jahr", "Anzahl_Index", "Energie_Index", "Anzahl", "Leistung_GW", "Energie_GWh"],
     "battery_storage_segments.csv": ["Jahr", "Klein_GWh", "Mittel_GWh", "Gross_GWh"],
     "battery_storage_duration.csv": ["Jahr", "Median_Stunden"],
     "battery_storage_daily_profile.csv": ["Stunde", "Preis_EUR_MWh", "Solar_GW"],
 }
+# 2019–2025 plus the incomplete snapshot year, labelled "<year>*" (lower bound).
+TREND_FILE = "battery_storage_trend.csv"
+TREND_COLUMNS = ["Kohorte", "Anzahl", "Energie_GWh", "Klein_GWh", "Mittel_GWh", "Gross_GWh", "Gross_Anzahl", "Median_Stunden"]
 MEASURES = ["plant_count", "unit_count", "power_gw", "energy_gwh", "median_duration_hours", "network_verified_plant_count"]
 
 
@@ -253,7 +260,13 @@ def read_aggregates(db, snapshot):
 def daily_profile(path):
     raw = path.read_bytes()
     data = json.loads(raw)
-    require(data.get("schema_version") == 1, "Electricity schema version mismatch")
+    require(data.get("schema_version") in ELECTRICITY_SCHEMA_VERSIONS, "Electricity schema version mismatch")
+    if data["schema_version"] == 2:
+        # v2 snapshots carry per-component status; the profile needs complete inputs.
+        components = data.get("components", {})
+        for column in ("solar", "price"):
+            status = components.get(column, {})
+            require(status.get("status") == "complete" and status.get("known_hours") == 720, f"Electricity component incomplete: {column}")
     require(data.get("timezone") == "Europe/Berlin", "Electricity timezone mismatch")
     require(data.get("units") == {"power": "GW", "price": "EUR/MWh"}, "Electricity units mismatch")
     require(data.get("window_start") == START and data.get("window_end") == END, "Electricity frozen window mismatch")
@@ -282,14 +295,14 @@ def daily_profile(path):
         price, solar = row[columns.index("price")], row[columns.index("solar")]
         require(-10000 <= price <= 10000, "Electricity price out of bounds")
         local = datetime.fromtimestamp(timestamp / 1000, timezone.utc).astimezone(BERLIN)
-        require(date(2026, 8, 11) <= local.date() <= date(2026, 9, 9) and local.minute == 0, "Electricity Berlin day/hour mismatch")
+        require(FIRST_LOCAL_DATE <= local.date() <= LAST_LOCAL_DATE and local.minute == 0, "Electricity Berlin day/hour mismatch")
         buckets[local.hour].append((price, solar))
     require(set(buckets) == set(range(24)) and all(len(v) == 30 for v in buckets.values()), "Electricity requires 30 observations per Berlin hour")
     profile = [[f"{hour:02d}:00", math.fsum(v[0] for v in buckets[hour]) / 30, math.fsum(v[1] for v in buckets[hour]) / 30] for hour in range(24)]
     metadata = {
         "input_filename": path.name, "input_sha256": sha256(raw), "input_content_hash": data["content_hash"],
         "snapshot_created_at": created, "source": source, "window_start_utc": START, "window_end_utc_exclusive": END,
-        "first_local_date": "2026-08-11", "last_local_date": "2026-09-09", "timezone": "Europe/Berlin",
+        "first_local_date": FIRST_LOCAL_DATE.isoformat(), "last_local_date": LAST_LOCAL_DATE.isoformat(), "timezone": "Europe/Berlin",
         "timestamp_encoding": "UTC Unix milliseconds, interval start", "input_grain_minutes": 60,
         "input_rows": 720, "local_days": 30, "observations_per_hour": 30,
         "aggregation": "Arithmetic mean by Europe/Berlin hour across 30 complete days; not battery dispatch or storage revenue.",
@@ -370,6 +383,19 @@ def build_payloads(db, electricity):
     for name, rows in zip(CHART_CONTRACTS, [cohorts, segments, durations, profile]):
         add_csv(name, CHART_CONTRACTS[name], rows)
 
+    # Article charts: completed years plus the incomplete snapshot year. A year
+    # without plants in a segment has no row for it; that is zero, not missing.
+    require(snapshot.year > YEARS[-1] and (snapshot.year, "overall") in yearly, "Missing incomplete snapshot-year cohort")
+    trend = []
+    for year in [*YEARS, snapshot.year]:
+        overall = yearly[(year, "overall")]
+        energy = {segment: yearly[(year, segment)]["energy_gwh"] if (year, segment) in yearly else 0.0 for segment in SEGMENTS}
+        large = yearly.get((year, "large"))
+        trend.append([f"{year}*" if year == snapshot.year else str(year), overall["plant_count"], overall["energy_gwh"],
+                      energy["small"], energy["medium"], energy["large"], large["plant_count"] if large else 0,
+                      overall["median_duration_hours"]])
+    add_csv(TREND_FILE, TREND_COLUMNS, trend)
+
     distribution = query(db, f"""SELECT commissioning_year AS Jahr,
         CASE WHEN GROUPING(size_segment) = 1 THEN 'overall' ELSE size_segment END AS Segment,
         COUNT(*) AS Anzahl, QUANTILE_CONT(duration_hours, 0.1) AS P10_Stunden,
@@ -400,7 +426,8 @@ def build_payloads(db, electricity):
             "segments": {"small": "power <30 kW AND energy <30 kWh", "large": "power >=1000 kW OR energy >=1000 kWh", "medium": "remaining included plants"},
             "duration": "Unweighted plant-level usable kWh / net nominal kW. Median and continuous P10/P25/P75/P90; not ratio of aggregate energy to power.",
             "index_base_year": 2024, "chart_years": YEARS,
-            "partial_periods": "Charts use completed calendar years 2019–2025 only. Full cohort tables mark snapshot-year/month as period_complete=false; not annualized. Complete means calendar period, not registration completeness.",
+            "trend": f"{TREND_FILE}: article chart input, 2019–2025 plus the incomplete snapshot year labelled '<year>*'; a lower bound through the snapshot date, never annualized. The plant count of '<year>*' is not comparable with full years.",
+            "partial_periods": "Supporting cohort/segment/duration CSVs keep completed calendar years 2019–2025 only. Full cohort tables mark snapshot-year/month as period_complete=false; not annualized. Complete means calendar period, not registration completeness.",
             "rounding": "Nine decimal places, trailing CSV zeros removed; reconcile with 1e-8 GW/GWh tolerance.",
         },
         "operating_stock": stock,
@@ -415,7 +442,7 @@ def build_payloads(db, electricity):
 def verify_set(directory):
     """Reject incomplete/mixed sets. Unrelated frozen datasets are ignored."""
     metadata = json.loads((directory / MANIFEST).read_bytes())
-    expected = set(CHART_CONTRACTS) | {f"battery_storage_{suffix}.csv" for suffix in ("yearly", "monthly", "by_state", "summary", "duration_distribution")} | {"battery_storage_quality.json"}
+    expected = set(CHART_CONTRACTS) | {TREND_FILE} | {f"battery_storage_{suffix}.csv" for suffix in ("yearly", "monthly", "by_state", "summary", "duration_distribution")} | {"battery_storage_quality.json"}
     require(set(metadata["files"]) == expected, "Manifest file allowlist mismatch")
     for name, contract in metadata["files"].items():
         raw = (directory / name).read_bytes()
@@ -466,7 +493,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--database", type=Path, default=DEFAULT_DATABASE)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT, help="Explicitly set frontend/src/data_ingestion/data to publish the frozen article files")
-    parser.add_argument("--electricity-snapshot", "--electricity-input", dest="electricity_snapshot", type=Path, default=DEFAULT_ELECTRICITY, help="Original frozen hourly JSON; must cover Berlin Aug 11–Sep 9, 2026 (legacy alias: --electricity-input)")
+    parser.add_argument("--electricity-snapshot", "--electricity-input", dest="electricity_snapshot", type=Path, default=DEFAULT_ELECTRICITY, help="Original frozen hourly JSON; must cover Berlin Aug 27–Sep 25, 2026 (legacy alias: --electricity-input)")
     args = parser.parse_args()
     metadata = export(args.database, args.output_dir, args.electricity_snapshot)
     print(f"Validated {len(metadata['files'])} data files + {MANIFEST}; MaStR {metadata['mastr']['snapshot_date']}; output {args.output_dir}")

@@ -4,17 +4,20 @@
 }
 
 .blog-grid h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
+  // Compact listing header: orientation, not a hero. Stories come first.
+  font-size: 26px;
+  line-height: 1.25;
+  margin-bottom: 6px;
   font-weight: 700;
   text-align: center;
 }
 
 .topic-intro {
-  max-width: 900px;
-  margin: 0 auto 24px;
-  font-size: 18px;
-  line-height: 1.7;
+  max-width: 680px;
+  margin: 0 auto 20px;
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: center;
   color: #4b5563;
 }
 
