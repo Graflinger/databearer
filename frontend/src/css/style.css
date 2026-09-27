@@ -2358,6 +2358,24 @@ a:focus-visible {
   outline: 2px solid var(--electricity-accent);
   outline-offset: 3px;
 }
+@media (max-width: 768px) {
+  .electricity-discovery {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .electricity-discovery > span {
+    font-size: 0.65rem;
+  }
+  .electricity-discovery h2 {
+    margin: 0.2rem 0;
+    font-size: 1.15rem;
+  }
+  .electricity-discovery p {
+    font-size: 0.875rem;
+    line-height: 1.45;
+    margin: 0;
+  }
+}
 
 .dashboard-overview {
   padding: 3rem 0;
