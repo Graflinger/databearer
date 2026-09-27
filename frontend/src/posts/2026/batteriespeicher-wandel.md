@@ -1,7 +1,6 @@
 ---
 title: "Weniger neue Batteriespeicher, mehr Speicherkapazität"
-date: 2026-09-26
-lastUpdated: 2026-09-26
+date: 2026-09-27
 excerpt: "2025 gingen weniger Batteriespeicher in Betrieb als 2024, aber mit rund 9 Prozent mehr Speicherkapazität. Den Unterschied machen große Speicher, und 2026 setzt sich der Trend verstärkt fort."
 image: "/images/blog_card_images/2026/batteriespeicher-wandel.png"
 imageAlt: "Illustration: Batteriespeicher-Schränke zwischen Solarmodulen, dahinter Windräder und ein Bauernhaus in hügeliger Landschaft bei Sonnenuntergang"

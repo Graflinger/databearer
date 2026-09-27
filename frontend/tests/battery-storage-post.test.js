@@ -51,8 +51,9 @@ describe('battery storage static contract', () => {
     expect(post.data.excludeFromSitemap).toBeUndefined();
     expect(post.data.permalink).toBe(route);
     expect(post.data.draft).toBeUndefined();
-    expect(post.data.date).toEqual(new Date('2026-09-26'));
-    expect(post.data.lastUpdated).toEqual(new Date('2026-09-26'));
+    expect(post.data.date).toEqual(new Date('2026-09-27'));
+    // First publication: no separate "Aktualisiert" date.
+    expect(post.data.lastUpdated).toBeUndefined();
     const inherited = require('../src/posts/posts.11tydata');
     const [[name, extensions, skip]] = productionPreprocessors();
     expect([name, extensions]).toEqual(['drafts', '*']);
