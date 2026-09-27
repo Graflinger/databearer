@@ -17,7 +17,7 @@ const CONTRACTS = {
   'battery_storage_segments.csv': ['Jahr', 'Klein_GWh', 'Mittel_GWh', 'Gross_GWh'],
   'battery_storage_duration.csv': ['Jahr', 'Median_Stunden'],
   'battery_storage_daily_profile.csv': ['Stunde', 'Preis_EUR_MWh', 'Solar_GW'],
-  'battery_storage_trend.csv': ['Kohorte', 'Energie_GWh', 'Gross_Anzahl', 'Gross_GWh'],
+  'battery_storage_trend.csv': ['Kohorte', 'Anzahl', 'Energie_GWh', 'Klein_GWh', 'Mittel_GWh', 'Gross_GWh', 'Gross_Anzahl', 'Median_Stunden'],
   'battery_storage_yearly.csv': aggregate('commissioning_year', true),
   'battery_storage_monthly.csv': aggregate('commissioning_month', true),
   'battery_storage_by_state.csv': aggregate('state'),

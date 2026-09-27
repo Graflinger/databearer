@@ -14,6 +14,7 @@
  * @param {Array<string>} options.colors - Custom colors for series (optional)
  * @param {string} options.color - Bar color for single series (optional)
  * @param {boolean} options.stacked - Stack bars (default: false)
+ * @param {boolean} options.narrowShortYearLabels - Below 600px, show every year label as '’19' (optional)
  * @returns {string} JavaScript code for the chart
  */
 function buildBarChart(data, options = {}) {
@@ -29,6 +30,7 @@ function buildBarChart(data, options = {}) {
     colors = null,
     color = null,
     stacked = false,
+    narrowShortYearLabels = false,
   } = options;
 
   if (!containerId) {
@@ -149,7 +151,12 @@ function buildBarChart(data, options = {}) {
           }
         },
         axisLabel: {
-          color: colors.textColor
+          color: colors.textColor${narrowShortYearLabels ? `,
+          ...(chartDom.clientWidth < 600 ? {
+            // Keep every year, incl. the marked last one, visible on phones.
+            interval: 0,
+            formatter: (value) => '\u2019' + String(value).slice(2)
+          } : {})` : ''}
         },
         splitLine: {
           lineStyle: {
@@ -217,7 +224,7 @@ function buildBarChart(data, options = {}) {
 
     // Make chart responsive
     window.addEventListener('resize', function() {
-      if (chart) chart.resize();
+      if (chart) chart.resize();${narrowShortYearLabels ? '\n      updateChart();' : ''}
     });
   };
 

@@ -91,16 +91,20 @@ Recent cohorts also suffer registration lag. Charts therefore focus on
 4.291020297 GW and 7.902219936 GWh**, with `period_complete=false` in the yearly
 CSV. Calendar-period completeness does not imply registration completeness.
 
-The article shows 2026 in its own section with a trend line chart
-(`battery_storage_trend.csv`, `2026*`, dual axis: GWh left, number of large plants
-right) and a table, always labelled "bis 26. September"/unvollständig. The
-cohort, segment and duration charts stay 2019–2025. It may be compared with full 2025
-only as an already-reached level that late registrations would typically raise
-(e.g. large-segment energy 3.768157450 GWh vs 1.737298590 GWh in 2025; 215 vs
-131 large plants; total 7.902 vs 6.768 GWh). Never annualize it or present it as
-a full-year addition figure. Large-segment energy exceeds small-segment energy
-(3.694521683 GWh) in 2026 and otherwise only in 2016 (0.121711 vs 0.0753586 GWh,
-a tiny market); the article says "erstmals seit 2016".
+Editorial structure (27 September 2026): the article "Große Speicher treiben den
+Batterieausbau" integrates 2026 throughout instead of a separate section. All cohort
+charts (trend with dual axis, stacked segments, median duration) read
+`battery_storage_trend.csv` with 2019–2025 plus `2026*` (1 January–26 September,
+defined once in the intro and on every chart/table). 2026* capacity figures are
+reported as an already-reached lower bound; the 2026* plant count is not compared
+with full years (the "fewer plants" finding is 2024→2025 only). The index chart
+(2024 = 100) was dropped; `battery_storage_cohorts.csv`, `_segments.csv` and
+`_duration.csv` remain as frozen supporting exports. Large-segment share of new
+capacity: 13 % (2024), 26 % (2025), 48 % (2026*); mean capacity per plant 10.8,
+12.0 and 16.9 kWh. Large-segment energy exceeds small-segment energy (3.694521683
+GWh) in 2026* and otherwise only in 2016 (0.121711 vs 0.0753586 GWh, a tiny
+market); the article says "erstmals seit 2016". The median E/P fell from 2.17 h
+(2019) to 1.63 h (2023) and rose since; the article says "steigt wieder".
 
 ### Current operating fleet
 

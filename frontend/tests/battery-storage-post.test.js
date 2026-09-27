@@ -25,7 +25,7 @@ const contracts = {
   'battery_storage_segments.csv': ['Jahr', 'Klein_GWh', 'Mittel_GWh', 'Gross_GWh'],
   'battery_storage_duration.csv': ['Jahr', 'Median_Stunden'],
   'battery_storage_daily_profile.csv': ['Stunde', 'Preis_EUR_MWh', 'Solar_GW'],
-  'battery_storage_trend.csv': ['Kohorte', 'Energie_GWh', 'Gross_Anzahl', 'Gross_GWh'],
+  'battery_storage_trend.csv': ['Kohorte', 'Anzahl', 'Energie_GWh', 'Klein_GWh', 'Mittel_GWh', 'Gross_GWh', 'Gross_Anzahl', 'Median_Stunden'],
 };
 
 function optionFor(config, rows) {
@@ -47,7 +47,7 @@ describe('battery storage static contract', () => {
   beforeEach(() => { document.body.innerHTML = markdown.render(post.content); });
 
   test('published post passes the production draft preprocessor and joins discovery', () => {
-    expect(post.data.title).toBe('Weniger neue Batteriespeicher, mehr Speicherkapazität');
+    expect(post.data.title).toBe('Große Speicher treiben den Batterieausbau');
     expect(post.data.eleventyExcludeFromCollections).toBeUndefined();
     expect(post.data.excludeFromSitemap).toBeUndefined();
     expect(post.data.permalink).toBe(route);
@@ -65,18 +65,19 @@ describe('battery storage static contract', () => {
     expect(post.data.imageAlt).toBeTruthy();
     expect(post.content).not.toMatch(/Rechercheentwurf|DRAFT/);
     expect(document.querySelector('h1')).toBeNull();
-    expect(document.querySelectorAll('h2')).toHaveLength(8);
-    expect(document.getElementById('jahr-2026').tagName).toBe('H2');
-    expect(document.querySelector('a[href="#jahr-2026"]')).not.toBeNull();
+    expect(document.querySelectorAll('h2')).toHaveLength(7);
+    // 2026 is integrated throughout, not a separate section.
+    expect(document.getElementById('jahr-2026')).toBeNull();
     expect(inherited.layout).toBe('post.njk');
   });
 
-  test('five evidence groups wire all six plots to supported CSV columns and accessible descriptions', () => {
-    expect(configs).toHaveLength(6);
-    expect(document.querySelectorAll('.chart-section')).toHaveLength(5);
-    expect(new Set(configs.map((config) => config.dataFile))).toEqual(new Set(Object.keys(contracts).map((name) => `${dataPath}/${name}`)));
-    expect(new Set(configs.map((config) => config.containerId)).size).toBe(6);
-    expect(new Set(configs.map((config) => config.outputFile)).size).toBe(6);
+  test('four evidence groups wire all five plots to supported CSV columns and accessible descriptions', () => {
+    expect(configs).toHaveLength(5);
+    expect(document.querySelectorAll('.chart-section')).toHaveLength(4);
+    // Cohort charts read the trend file, which includes the incomplete year 2026*.
+    expect(new Set(configs.map((config) => config.dataFile))).toEqual(new Set(['battery_storage_trend.csv', 'battery_storage_daily_profile.csv'].map((name) => `${dataPath}/${name}`)));
+    expect(new Set(configs.map((config) => config.containerId)).size).toBe(5);
+    expect(new Set(configs.map((config) => config.outputFile)).size).toBe(5);
     const scripts = [...document.querySelectorAll('script[src]')].map((node) => node.getAttribute('src'));
     expect(scripts).toEqual(['/js/lib/echarts.min.js', ...configs.map((config) => `/js/charts/battery_storage/${config.outputFile}`)]);
     for (const config of configs) {
@@ -95,19 +96,17 @@ describe('battery storage static contract', () => {
   });
 
   test('builders preserve indexed units, stacking, median and separate hourly scales in memory', () => {
-    const rows = [{ Jahr: 2024, Anzahl_Index: 100, Energie_Index: 100, Klein_GWh: 5.057128882,
-      Mittel_GWh: 0.314970178, Gross_GWh: 0.827139801, Median_Stunden: 1.655172414,
+    const rows = [{ Klein_GWh: 5.057128882, Mittel_GWh: 0.314970178, Gross_GWh: 0.827139801, Median_Stunden: 1.655172414,
       Stunde: 13, Preis_EUR_MWh: 39.05, Solar_GW: 40, Kohorte: '2026*', Energie_GWh: 7.9, Gross_Anzahl: 215 }];
-    const [cohorts, segments, duration, trend, price, solar] = configs.map((config) => optionFor(config, rows));
+    const [trend, segments, duration, price, solar] = configs.map((config) => optionFor(config, rows));
     // Trend: energy on the left axis, number of large plants on a right axis.
     expect(trend.xAxis.data).toEqual(['2026*']);
     expect(trend.yAxis.map((axis) => axis.name)).toEqual(['Speicherkapazität (GWh)', 'Große Speicher (Anzahl)']);
     expect(trend.series.map((series) => [series.name, series.yAxisIndex, series.data])).toEqual([
       ['Kapazität gesamt (GWh)', 0, [7.9]], ['Große Speicher (GWh)', 0, [0.827139801]], ['Große Speicher (Anzahl)', 1, [215]],
     ]);
-    expect(cohorts.series.every((series) => series.yAxisIndex === undefined)).toBe(true);
-    expect(cohorts.yAxis.name).toBe('Index (2024 = 100)');
-    expect(cohorts.series.map((series) => series.data)).toEqual([[100], [100]]);
+    expect(duration.series.every((series) => series.yAxisIndex === undefined)).toBe(true);
+    expect(segments.xAxis.data).toEqual(['2026*']);
     expect(segments.series.every((series) => series.stack === 'total')).toBe(true);
     expect(segments.series.map((series) => series.data)).toEqual([[5.057128882], [0.314970178], [0.827139801]]);
     expect(duration.series[0].data).toEqual([1.655172414]);
@@ -130,23 +129,13 @@ describe('battery storage static contract', () => {
       ['Groß', '652', '4,384', '7,814', '2,00'],
       ['Gesamt', '2.769.020', '20,222', '33,299', '1,84'],
     ]);
-    expect(cells('#battery-cohorts-table')).toEqual([
-      ['2024', '574.051', '4,029', '6,203', '1,66'],
-      ['2025', '562.472', '3,965', '6,768', '1,92'],
-    ]);
     expect(cells('#battery-segments-table')).toEqual([
       ['Klein', '5,060', '4,591', '3,695'], ['Mittel', '0,316', '0,439', '0,440'], ['Groß', '0,827', '1,737', '3,768'],
+      ['Gesamt', '6,203', '6,768', '7,902'], ['Anteil groß', '13 %', '26 %', '48 %'],
     ]);
-    expect(cells('#battery-2026-table')).toEqual([
-      ['Anlagen insgesamt', '562.472', '466.762'],
-      ['Speicherkapazität insgesamt (GWh)', '6,768', '7,902'],
-      ['Große Speicher (Anzahl)', '131', '215'],
-      ['Große Speicher (GWh)', '1,737', '3,768'],
-      ['Median E/P (Stunden)', '1,92', '1,98'],
-    ]);
-    expect(document.querySelector('#battery-2026-table caption').textContent).toContain('unvollständig');
+    expect(document.querySelector('#battery-segments-table thead').textContent).toContain('2026*');
     // Standalone tables carry their source as a small table note right below them.
-    for (const id of ['battery-stock-table', 'battery-2026-table']) {
+    for (const id of ['battery-stock-table', 'battery-segments-table']) {
       const note = document.getElementById(id).closest('.table-scroll').nextElementSibling;
       expect(note.matches('p.table-note')).toBe(true);
       expect(note.textContent).toMatch(/^Quelle: Bundesnetzagentur, Marktstammdatenregister/);
@@ -166,8 +155,9 @@ describe('battery storage static contract', () => {
     for (const phrase of ['nicht dasselbe wie der tatsächliche Zubau', 'stillgelegte Anlagen fehlen',
       'spätere Erweiterungen', 'nicht die Streuung', 'unplausiblen oder fehlenden Angaben',
       'knapp vier Prozent der gemeldeten Kapazität', 'etwas zu niedrig',
-      '2,02 Prozent weniger Anlagen', '9,11 Prozent mehr Speicherkapazität', '110,04 Prozent',
-      '466.762 Anlagen mit 7,90 GWh', 'hochgerechnet wird bewusst nicht', 'erstmals seit 2016', '215 große Speicher',
+      '2,02 Prozent sank', '9,11 Prozent mehr', '+110,04 Prozent', '13 Prozent', '26 Prozent', '48 Prozent',
+      'Hochgerechnet wird nicht', 'erstmals seit 2016', 'bereits 215', '1,98 Stunden', '16,9 kWh',
+      '2026* steht in diesem Beitrag für den 1. Januar bis 26. September 2026',
       '2.769.020 Batteriespeicher', '26. September 2026', '27. August bis 25. September 2026',
       '13 Uhr liegt der mittlere Day-Ahead-Preis bei 37,94 EUR/MWh', 'um 19 Uhr 248,93 EUR/MWh', 'kein Kausalnachweis',
       'noch kein Gewinn für einen Speicher', '„Duck Curve“', 'Residuallast', 'mehr als 200 EUR/MWh', 'Bundesnetzagentur | SMARD.de', 'Datenlizenz Deutschland']) {
@@ -258,8 +248,17 @@ describe('battery storage CSV contract', () => {
       expect(row.Energie_GWh).toBe(pick('overall').energy_gwh);
       expect(row.Gross_Anzahl).toBe(pick('large') ? pick('large').plant_count : 0);
       expect(row.Gross_GWh).toBe(pick('large') ? pick('large').energy_gwh : 0);
+      expect(row.Klein_GWh).toBe(pick('small').energy_gwh);
+      expect(row.Mittel_GWh).toBe(pick('medium').energy_gwh);
+      expect(row.Anzahl).toBe(pick('overall').plant_count);
+      expect(row.Median_Stunden).toBe(pick('overall').median_duration_hours);
     }
-    expect(trend.at(-1)).toEqual({ Kohorte: '2026*', Energie_GWh: 7.902219936, Gross_Anzahl: 215, Gross_GWh: 3.76815745 });
+    expect(trend.at(-1)).toEqual({ Kohorte: '2026*', Anzahl: 466762, Energie_GWh: 7.902219936, Klein_GWh: 3.694521683,
+      Mittel_GWh: 0.439540803, Gross_GWh: 3.76815745, Gross_Anzahl: 215, Median_Stunden: 1.98 });
+    // Large-plant shares quoted in the text: 13 % (2024), 26 % (2025), 48 % (2026*).
+    expect(trend.slice(-3).map((row) => Math.round(row.Gross_GWh / row.Energie_GWh * 100))).toEqual([13, 26, 48]);
+    // Mean capacity per plant: 10,8 / 12,0 / 16,9 kWh.
+    expect(trend.slice(-3).map((row) => (row.Energie_GWh * 1e6 / row.Anzahl).toFixed(1))).toEqual(['10.8', '12.0', '16.9']);
     const profile = rowsFor('battery_storage_daily_profile.csv');
     expect(profile.find((row) => row.Stunde === '13:00').Preis_EUR_MWh).toBeCloseTo(37.94, 2);
     expect(profile.find((row) => row.Stunde === '19:00').Preis_EUR_MWh).toBeCloseTo(248.93, 2);
@@ -350,7 +349,7 @@ describe('battery storage build-time manifest gate', () => {
     } finally {
       process.argv = argv;
     }
-    const outputs = ['cohorts', 'segments', 'duration', 'trend', 'daily-price', 'daily-solar'];
+    const outputs = ['trend', 'segments', 'duration', 'daily-price', 'daily-solar'];
     expect(loadData.mock.calls.map(([filename]) => filename)).toEqual(configs.map((config) =>
       path.join(root, 'src/data_ingestion/data', config.dataFile)));
     expect(saveChart.mock.calls.map(([, filename]) => filename)).toEqual(outputs.map((name) =>
@@ -449,7 +448,7 @@ builtTest('battery storage post is built with chart assets and joins discovery',
   const site = path.join(root, '_site');
   document.body.innerHTML = fs.readFileSync(path.join(site, route, 'index.html'), 'utf8');
   expect(document.querySelectorAll('article.post-content h1')).toHaveLength(1);
-  expect(document.querySelectorAll('article.post-content table')).toHaveLength(4);
+  expect(document.querySelectorAll('article.post-content table')).toHaveLength(2);
   const scripts = [...document.querySelectorAll('article.post-content script[src]')]
     .map((node) => node.getAttribute('src'));
   expect(scripts).toEqual(['/js/lib/echarts.min.js', ...configs.map((config) => `/js/charts/battery_storage/${config.outputFile}`)]);

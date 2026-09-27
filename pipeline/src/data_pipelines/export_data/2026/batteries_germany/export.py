@@ -24,7 +24,7 @@ DBT = PIPELINE / "src/data_pipelines/databearer_dbt"
 DEFAULT_DATABASE = Path(".data/mastr_battery.duckdb")
 DEFAULT_OUTPUT = Path(".data/output/batteries_germany")
 DEFAULT_ELECTRICITY = PIPELINE.parent / "frontend/src/_data/germanElectricity.json"
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 EPHEMERAL_MODELS = {"mastr_battery_freshness": "models/cleaned/mastr/mastr_battery_freshness.sql"}
 REQUIRED_SINGULAR_TESTS = {
     "battery_aggregate_reconciliation.sql", "battery_catalogue_contract.sql",
@@ -50,7 +50,7 @@ CHART_CONTRACTS = {
 }
 # 2019–2025 plus the incomplete snapshot year, labelled "<year>*" (lower bound).
 TREND_FILE = "battery_storage_trend.csv"
-TREND_COLUMNS = ["Kohorte", "Energie_GWh", "Gross_Anzahl", "Gross_GWh"]
+TREND_COLUMNS = ["Kohorte", "Anzahl", "Energie_GWh", "Klein_GWh", "Mittel_GWh", "Gross_GWh", "Gross_Anzahl", "Median_Stunden"]
 MEASURES = ["plant_count", "unit_count", "power_gw", "energy_gwh", "median_duration_hours", "network_verified_plant_count"]
 
 
@@ -383,14 +383,17 @@ def build_payloads(db, electricity):
     for name, rows in zip(CHART_CONTRACTS, [cohorts, segments, durations, profile]):
         add_csv(name, CHART_CONTRACTS[name], rows)
 
-    # Trend including the incomplete snapshot year. A year without large plants
-    # has no large segment row; that is zero, not missing data.
+    # Article charts: completed years plus the incomplete snapshot year. A year
+    # without plants in a segment has no row for it; that is zero, not missing.
     require(snapshot.year > YEARS[-1] and (snapshot.year, "overall") in yearly, "Missing incomplete snapshot-year cohort")
     trend = []
     for year in [*YEARS, snapshot.year]:
+        overall = yearly[(year, "overall")]
+        energy = {segment: yearly[(year, segment)]["energy_gwh"] if (year, segment) in yearly else 0.0 for segment in SEGMENTS}
         large = yearly.get((year, "large"))
-        trend.append([f"{year}*" if year == snapshot.year else str(year), yearly[(year, "overall")]["energy_gwh"],
-                      large["plant_count"] if large else 0, large["energy_gwh"] if large else 0.0])
+        trend.append([f"{year}*" if year == snapshot.year else str(year), overall["plant_count"], overall["energy_gwh"],
+                      energy["small"], energy["medium"], energy["large"], large["plant_count"] if large else 0,
+                      overall["median_duration_hours"]])
     add_csv(TREND_FILE, TREND_COLUMNS, trend)
 
     distribution = query(db, f"""SELECT commissioning_year AS Jahr,
@@ -423,8 +426,8 @@ def build_payloads(db, electricity):
             "segments": {"small": "power <30 kW AND energy <30 kWh", "large": "power >=1000 kW OR energy >=1000 kWh", "medium": "remaining included plants"},
             "duration": "Unweighted plant-level usable kWh / net nominal kW. Median and continuous P10/P25/P75/P90; not ratio of aggregate energy to power.",
             "index_base_year": 2024, "chart_years": YEARS,
-            "trend": f"{TREND_FILE}: 2019–2025 plus the incomplete snapshot year labelled '<year>*'; a lower bound through the snapshot date, never annualized.",
-            "partial_periods": "Cohort/segment/duration charts use completed calendar years 2019–2025 only. Full cohort tables mark snapshot-year/month as period_complete=false; not annualized. Complete means calendar period, not registration completeness.",
+            "trend": f"{TREND_FILE}: article chart input, 2019–2025 plus the incomplete snapshot year labelled '<year>*'; a lower bound through the snapshot date, never annualized. The plant count of '<year>*' is not comparable with full years.",
+            "partial_periods": "Supporting cohort/segment/duration CSVs keep completed calendar years 2019–2025 only. Full cohort tables mark snapshot-year/month as period_complete=false; not annualized. Complete means calendar period, not registration completeness.",
             "rounding": "Nine decimal places, trailing CSV zeros removed; reconcile with 1e-8 GW/GWh tolerance.",
         },
         "operating_stock": stock,

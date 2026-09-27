@@ -120,9 +120,14 @@ class BatteryExportTest(unittest.TestCase):
         for row in trend[1:]:
             year = row[0].rstrip("*")
             overall = next(r for r in yearly_rows if r["commissioning_year"] == year and r["size_segment"] == "overall")
-            self.assertEqual(float(row[1]), float(overall["energy_gwh"]))
-            large = [r for r in yearly_rows if r["commissioning_year"] == year and r["size_segment"] == "large"]
-            self.assertEqual(int(row[2]), int(large[0]["plant_count"]) if large else 0)
+            values = dict(zip(exporter.TREND_COLUMNS, row))
+            self.assertEqual(int(values["Anzahl"]), int(overall["plant_count"]))
+            self.assertEqual(float(values["Energie_GWh"]), float(overall["energy_gwh"]))
+            self.assertEqual(float(values["Median_Stunden"]), float(overall["median_duration_hours"]))
+            segments = {r["size_segment"]: r for r in yearly_rows if r["commissioning_year"] == year}
+            for column, segment in (("Klein_GWh", "small"), ("Mittel_GWh", "medium"), ("Gross_GWh", "large")):
+                self.assertEqual(float(values[column]), float(segments[segment]["energy_gwh"]) if segment in segments else 0.0)
+            self.assertEqual(int(values["Gross_Anzahl"]), int(segments["large"]["plant_count"]) if "large" in segments else 0)
         cohorts = list(csv.DictReader(first["battery_storage_cohorts.csv"].decode().splitlines()))
         self.assertEqual(cohorts[5]["Anzahl_Index"], "100")
         self.assertEqual(cohorts[5]["Energie_Index"], "100")

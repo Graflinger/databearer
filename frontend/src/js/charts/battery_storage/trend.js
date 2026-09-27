@@ -63,7 +63,7 @@
       xAxis: {
         type: 'category',
         data: xData,
-        name: "Inbetriebnahme-Kohorte (2026* bis 26. September)",
+        name: "Inbetriebnahmejahr (2026* bis 26. September)",
         nameLocation: 'middle',
         nameGap: 30,
         nameTextStyle: {
