@@ -34,7 +34,7 @@ Insgesamt sind in Deutschland laut Register **2.769.020 Batteriespeicher** mit z
   </table>
 </div>
 
-**Quelle:** [Bundesnetzagentur, Marktstammdatenregister (MaStR)](https://www.marktstammdatenregister.de/MaStR/Datendownload), dl-de/by-2-0; eigene gefilterte Auswertung, Stand 26. September 2026. Geplante Anlagen sind nicht enthalten. Durch Rundung können die Summen leicht abweichen.
+<p class="table-note"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, Marktstammdatenregister (MaStR)</a>, dl-de/by-2-0; eigene gefilterte Auswertung, Stand 26. September 2026. Geplante Anlagen sind nicht enthalten. Durch Rundung können die Summen leicht abweichen.</p>
 
 Das laufende Jahr 2026 ist noch unvollständig und folgt [in einem eigenen Abschnitt](#jahr-2026).
 
@@ -89,7 +89,7 @@ Die Größenklassen sind rein technisch abgegrenzt. Sie verraten nicht, wem ein 
   </table>
 </div>
 
-**Abgrenzung:** Klein heißt Leistung **unter 30 kW und** Speicherkapazität **unter 30 kWh**. Groß heißt Leistung **ab 1.000 kW oder** Speicherkapazität **ab 1.000 kWh**. Alle übrigen Anlagen gehören zur mittleren Klasse.
+<p class="table-note"><strong>Abgrenzung:</strong> Klein heißt Leistung unter 30 kW und Speicherkapazität unter 30 kWh. Groß heißt Leistung ab 1.000 kW oder Speicherkapazität ab 1.000 kWh. Alle übrigen Anlagen gehören zur mittleren Klasse.</p>
 
 ## Die Speicher halten etwas länger durch
 
@@ -127,7 +127,7 @@ Diese großen Speicher bringen es schon jetzt auf **3,77 GWh**. Das ist mehr als
   </table>
 </div>
 
-**Quelle:** [Bundesnetzagentur, Marktstammdatenregister (MaStR)](https://www.marktstammdatenregister.de/MaStR/Datendownload), dl-de/by-2-0; eigene gefilterte Auswertung, Stand 26. September 2026.
+<p class="table-note"><strong>Quelle:</strong> <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Bundesnetzagentur, Marktstammdatenregister (MaStR)</a>, dl-de/by-2-0; eigene gefilterte Auswertung, Stand 26. September 2026.</p>
 
 Auch insgesamt liegt die Speicherkapazität 2026 schon nach knapp neun Monaten über dem Wert des gesamten Vorjahres. Weil Nachmeldungen die Zahlen in der Regel noch erhöhen, sind die Werte für 2026 eher als Untergrenze zu verstehen. Auf das ganze Jahr hochgerechnet wird bewusst nicht, und in den Diagrammen oben bleibt 2026 außen vor, bis das Jahr abgeschlossen ist.
 

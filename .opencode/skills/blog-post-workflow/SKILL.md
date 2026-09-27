@@ -164,6 +164,12 @@ folder), a config in `frontend/src/data_ingestion/charts/`, and generated JS und
 `frontend/src/js/charts/<config-name>/`. See
 [Charts and evidence](../../../docs/seo.md#charts-and-evidence).
 
+Tables outside a `.chart-section` put their source and footnotes (rounding,
+definitions, exclusions) directly below the table as
+`<p class="table-note"><strong>Quelle:</strong> <a href="…">…</a>; …</p>`. It renders
+smaller and muted so it visibly belongs to the table. Use HTML inside it, not
+Markdown. Never format a table source as a normal body paragraph.
+
 Use `frontend-visualization` for exact commands, config fields and the **Organize a
 frozen data entity** workflow. Use the article year even when data spans many years;
 keep frozen article evidence separate from live dashboard snapshots. A refresh must

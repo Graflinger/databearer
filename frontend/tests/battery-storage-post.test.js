@@ -136,6 +136,15 @@ describe('battery storage static contract', () => {
       ['Median E/P (Stunden)', '1,92', '1,98'],
     ]);
     expect(document.querySelector('#battery-2026-table caption').textContent).toContain('unvollständig');
+    // Standalone tables carry their source as a small table note right below them.
+    for (const id of ['battery-stock-table', 'battery-2026-table']) {
+      const note = document.getElementById(id).closest('.table-scroll').nextElementSibling;
+      expect(note.matches('p.table-note')).toBe(true);
+      expect(note.textContent).toMatch(/^Quelle: Bundesnetzagentur, Marktstammdatenregister/);
+      expect(note.querySelector('a[href^="https://www.marktstammdatenregister.de/"]')).not.toBeNull();
+    }
+    expect([...document.querySelectorAll('.post-content > p, p')].some((node) => !node.classList.contains('table-note')
+      && !node.closest('.chart-section') && /^Quelle:/.test(node.textContent.trim()))).toBe(false);
     for (const table of document.querySelectorAll('table')) {
       expect(table.querySelector('caption').textContent).toContain('26. September 2026');
       expect(table.querySelectorAll('thead th:not([scope="col"])')).toHaveLength(0);

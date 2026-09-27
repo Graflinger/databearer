@@ -754,6 +754,22 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+.post-content .table-note {
+  margin: 0 0 24px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--table-muted);
+}
+
+.post-content .table-scroll + .table-note,
+.post-content table + .table-note {
+  margin-top: -16px;
+}
+
+.post-content .table-note strong {
+  font-weight: 600;
+}
+
 .post-content iframe {
   margin: 40px 0;
 }

@@ -35,6 +35,8 @@ not promise rankings.
   - a container with `role="img"`, `aria-labelledby` and `aria-describedby`;
   - a `chart-description` longer than 40 characters;
   - static values or a captioned table, units, period and a verified source link.
+- [ ] Sources and footnotes of standalone tables sit directly below them in
+  `<p class="table-note">`, not as body text.
 - [ ] Wide tables are wrapped in `.table-scroll`
   ([Styling](../../docs/seo.md#styling-and-navigation)). Datawrapper embeds use
   `loading="lazy"`, have a `title` and a visible source credit.
