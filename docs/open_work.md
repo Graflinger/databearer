@@ -38,7 +38,7 @@ Rows are sorted by ID so that parallel branches edit different lines.
 | `strom-ytd` | story | in review | `feature/dashboard-strom-ytd` | [#31](https://github.com/Graflinger/databearer/pull/31) | `docs/strom_ytd.md` (on branch) | Review the article `/posts/2026/strom-2026-ytd-zahlen/`. The January–September 9 window is time-sensitive, so decide soon whether to publish as-is or refresh. Merge `main` in (28 behind). |
 | `stromhandel` | story | in review | `feature/dashboard-stromhandel-jahre` | [#32](https://github.com/Graflinger/databearer/pull/32) | `docs/stromhandel_post.md` (on branch) | Review the article `/posts/2026/stromimporte-exporte-deutschland/`. Merge `main` in (28 behind), then merge. |
 | `strompreis-korrelation` | story | in review | `feature/strompreis-gas-erneuerbare-korrelation` | [#44](https://github.com/Graflinger/databearer/pull/44) | — | Review the article comparing electricity prices with renewables and gas prices, then merge. |
-| `weekly-release-promotion` | infra | in review | `feature/weekly-release-promotion` | PR_PLACEHOLDER | [release_promotion.md](release_promotion.md) | Review and merge. The PR adds a workflow file, so promote it manually to `releases/cloudflare` (fast-forward, no force), then watch the first Sunday run. |
+| `weekly-release-promotion` | infra | in review | `feature/weekly-release-promotion` | [#49](https://github.com/Graflinger/databearer/pull/49) | [release_promotion.md](release_promotion.md) | Review and merge. The PR adds a workflow file, so promote it manually to `releases/cloudflare` (fast-forward, no force), then watch the first Sunday run. |
 
 ## Ideas without a branch
 
