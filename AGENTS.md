@@ -25,6 +25,8 @@ publication, read:
   an explicit need and agreement on the trade-offs.
 - [Dashboard publication](docs/dashboard_publication.md): authorized daily data-only
   publication, released-base guards, public verification, and recovery.
+- [Weekly release promotion](docs/release_promotion.md): authorized Sunday promotion
+  of everything on `main` to `releases/cloudflare`; drafts stay hidden via `draft: true`.
 - [German electricity history](docs/german_electricity_history.md): approved exception
   storing validated daily history in yearly Git-tracked partitions. Refresh only the
   current year's correction window; closed years require explicit reconciliation.
@@ -74,10 +76,16 @@ sync. There is no two-ref atomic update promise. Preserve the ten-minute product
 job budget including the 240-second verifier; sync has its own ten-minute cap and
 additional validation/build cost.
 
-Normal blog/code and monthly/manual progress changes retain manual promotion:
-incorporate latest release ancestry into reviewed main via sync or explicit real-merge
-reconciliation, preserving newer snapshots, then fast-forward release without force.
-Main and release need not routinely equal. Preserve explicit history/trade
+Normal blog/code and monthly/manual progress changes are promoted **weekly and
+automatically** by `promote-release.yml` (Sunday 04:17 UTC, see
+[Weekly release promotion](docs/release_promotion.md)): everything on `main` goes
+live, so `main` must always be publishable. Hide unfinished work with `draft: true`
+and set a post's `date` to its publication Sunday. The run validates the candidate
+offline, syncs release ancestry into main, then fast-forwards release without force
+and verifies new posts publicly. Changes under `.github/workflows/` still need manual
+promotion (incorporate latest release ancestry into reviewed main, preserve newer
+snapshots, fast-forward release without force), because `GITHUB_TOKEN` cannot push
+them. Main and release need not routinely equal. Preserve explicit history/trade
 reconciliation at rollover; never auto-correct closed years. Follow the publication
 runbook's separate recovery paths for public verification failures and sync failures.
 
@@ -97,3 +105,5 @@ is merged and, if public-facing, live on `releases/cloudflare`.
 - Keep `.data/`, raw downloads, and credentials out of Git. Preserve unrelated work.
 - Do not commit, push, or deploy unless requested; documenting a future automated
   publication workflow does not authorize publishing during the current task.
+- Merging into `main` schedules publication for the next Sunday. Do not merge
+  unfinished posts without `draft: true`.

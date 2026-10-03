@@ -269,10 +269,10 @@ For the commit-based MVP:
   frontend tests/lint/build, without live source fetching. Recheck candidate and
   refs before a **main-only non-force push**. Conflicts/races fail; never silently
   overwrite main or change schemas to make integration pass.
-- Normal blog/code and monthly/manual progress changes retain manual promotion:
-  incorporate latest release ancestry into reviewed main through sync or explicit
-  real-merge reconciliation, preserve newer snapshots, and fast-forward release
-  without force. If either branch advances, review and validate again. Main and
+- Normal blog/code and monthly/manual progress changes go live through the Sunday
+  [weekly release promotion](release_promotion.md): it incorporates latest release
+  ancestry into main through the released sync script, validates the candidate, and
+  fast-forwards release without force. Workflow-file changes need manual promotion. If either branch advances, review and validate again. Main and
   release need not routinely equal; there is no two-ref atomic update promise.
 - Do not bypass branch protection. If automated pushes are disallowed, explicitly
   choose an approved PR or deployment strategy before implementation.

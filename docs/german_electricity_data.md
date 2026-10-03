@@ -297,9 +297,10 @@ validation failures, or races make the workflow red but leave verified productio
 intact and future refreshes possible. No-change publishing runs retry outstanding
 sync; there is no two-ref atomic promise.
 
-Normal code/blog releases retain manual promotion: incorporate latest release
-ancestry through sync or reviewed real-merge reconciliation, preserve newer snapshots,
-pass checks, then fast-forward release to reviewed main without force. Main and
+Normal code/blog releases go live through the Sunday
+[weekly release promotion](release_promotion.md): it incorporates latest release
+ancestry through the released sync script, validates the candidate, then fast-forwards
+release to main without force. Workflow-file changes still need manual promotion. Main and
 release need not routinely equal. See [the publication runbook](dashboard_publication.md)
 for new rollout and distinct recovery paths for public failure versus sync conflict/race.
 

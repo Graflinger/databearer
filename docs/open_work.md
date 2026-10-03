@@ -8,7 +8,7 @@ Maintain it with the `work-tracking` skill (`.opencode/skills/work-tracking/`).
 GitHub is the source of truth for PR state. When this file and GitHub disagree,
 reconcile this file.
 
-**Last reconciled:** 2026-09-26 (against `gh pr list` and `origin/*`)
+**Last reconciled:** 2026-10-03 (against `gh pr list` and `origin/*`)
 
 ## Status values
 
@@ -18,7 +18,7 @@ reconcile this file.
 | `in progress` | Branch exists, no PR yet or PR still a draft. |
 | `in review` | PR open and ready for review. |
 | `blocked` | Waiting on something external. Say what in *Next step*. |
-| `awaiting release` | Merged to `main`, not yet promoted to `releases/cloudflare`, so not live. Used only by the `release-promotion` row, which collects all such PRs. |
+| `awaiting release` | Merged to `main`, not yet promoted to `releases/cloudflare`, so not live (normally until the next Sunday promotion). Used only by the `release-promotion` row, which collects all such PRs. |
 | `parked` | Deliberately paused. Keep the branch, and say why. |
 
 Remove a topic row when its PR is merged. If the change is public-facing, add the
@@ -32,13 +32,13 @@ Rows are sorted by ID so that parallel branches edit different lines.
 
 | ID | Type | Status | Branch | PR | Docs | Next step |
 | --- | --- | --- | --- | --- | --- | --- |
-| `battery-storage` | story | in review | `feature/battery-storage-analysis` | [#25](https://github.com/Graflinger/databearer/pull/25) | [battery_storage.md](battery_storage.md) | Published as „Große Speicher treiben den Batterieausbau“ (26 Sep MaStR data, 2026* integrated, card image, date 2026-09-27). Next: merge, then release promotion via merge commit. |
 | `erneuerbare-wachstum` | story | in review | `feature/dashboard-erneuerbare-wachstum` | [#34](https://github.com/Graflinger/databearer/pull/34) | `docs/erneuerbare_wachstum.md` (on branch) | Review the article `/posts/2026/solar-boomt-wind-waechst/`. Merge `main` in (28 behind), then merge. |
 | `netzeingriffe` | story | in review | `feature/dashboard-netzeingriffe-stabilitaet` | [#33](https://github.com/Graflinger/databearer/pull/33) | `docs/netzeingriffe.md` (on branch) | Review the article `/posts/2026/netzeingriffe-netzstabilitaet/`. Merge `main` in (28 behind). Follow-up idea: the documented BNetzA SAIDI route. |
-| `release-promotion` | infra | awaiting release | `main` → `releases/cloudflare` | [#22](https://github.com/Graflinger/databearer/pull/22), [#23](https://github.com/Graflinger/databearer/pull/23), [#26](https://github.com/Graflinger/databearer/pull/26), [#28](https://github.com/Graflinger/databearer/pull/28), [#30](https://github.com/Graflinger/databearer/pull/30), [#35](https://github.com/Graflinger/databearer/pull/35), [#37](https://github.com/Graflinger/databearer/pull/37), [#39](https://github.com/Graflinger/databearer/pull/39), [#41](https://github.com/Graflinger/databearer/pull/41), [#42](https://github.com/Graflinger/databearer/pull/42) | [dashboard publication](dashboard_publication.md), [partial refresh](dashboard_partial_refresh.md) | Content promoted on 2026-09-26 via **squash** PR [#45](https://github.com/Graflinger/databearer/pull/45), so these commits are not ancestors of `releases/cloudflare`. Verify the live data/HTML and the next 06:00 UTC run (release-first #26, partial refresh #39), reconcile ancestry by merging `releases/cloudflare` into `main` (real merge, no force), then empty this row. |
+| `release-promotion` | infra | awaiting release | `main` → `releases/cloudflare` | [#47](https://github.com/Graflinger/databearer/pull/47) | [weekly promotion](release_promotion.md), [dashboard publication](dashboard_publication.md) | #47 is live via squash [#48](https://github.com/Graflinger/databearer/pull/48), but its commit is not an ancestor of `releases/cloudflare`. The next promotion (manual for `weekly-release-promotion`, then every Sunday) fast-forwards it; then empty this row. |
 | `strom-ytd` | story | in review | `feature/dashboard-strom-ytd` | [#31](https://github.com/Graflinger/databearer/pull/31) | `docs/strom_ytd.md` (on branch) | Review the article `/posts/2026/strom-2026-ytd-zahlen/`. The January–September 9 window is time-sensitive, so decide soon whether to publish as-is or refresh. Merge `main` in (28 behind). |
 | `stromhandel` | story | in review | `feature/dashboard-stromhandel-jahre` | [#32](https://github.com/Graflinger/databearer/pull/32) | `docs/stromhandel_post.md` (on branch) | Review the article `/posts/2026/stromimporte-exporte-deutschland/`. Merge `main` in (28 behind), then merge. |
 | `strompreis-korrelation` | story | in review | `feature/strompreis-gas-erneuerbare-korrelation` | [#44](https://github.com/Graflinger/databearer/pull/44) | — | Review the article comparing electricity prices with renewables and gas prices, then merge. |
+| `weekly-release-promotion` | infra | in review | `feature/weekly-release-promotion` | PR_PLACEHOLDER | [release_promotion.md](release_promotion.md) | Review and merge. The PR adds a workflow file, so promote it manually to `releases/cloudflare` (fast-forward, no force), then watch the first Sunday run. |
 
 ## Ideas without a branch
 

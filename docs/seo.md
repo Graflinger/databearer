@@ -27,6 +27,11 @@ Implementation: [`.eleventy.js`](../frontend/.eleventy.js), [`src/seo.js`](../fr
 - Before publishing, remove any extra exclusions that were added while drafting.
   For example, `eleventyExcludeFromCollections: true` or `excludeFromSitemap: true`
   would keep the post out of collections, feeds or the sitemap after `draft` is removed.
+- Everything on `main` without `draft: true` goes live on the next Sunday
+  ([Weekly release promotion](release_promotion.md)). Set `date` to that Sunday,
+  because it becomes `datePublished` and the feed date. The promotion fails for a
+  newly published post dated in the future and warns if the date is more than seven
+  days old.
 - **Stale HTML cleanup:** production builds (`npm run build`, run mode `build`,
   filesystem output) record the existing `.html` files before rendering. Only after
   Eleventy finishes writing do they delete recorded files that the build did not

@@ -9,7 +9,8 @@ current-year data-only updates from the release checkout, followed by public
 verification and a separate validated ancestry sync to main. The release-first
 implementation requires deliberate promotion to both branches and new live rollout
 verification; the September 10 success covered the old both-ref design. Closed-year
-reconciliation remains explicit and manually promoted.
+reconciliation remains explicit and reviewed on `main`; the
+[weekly release promotion](release_promotion.md) publishes it.
 
 The uncommitted [partial-refresh contract](dashboard_partial_refresh.md) adds nullable
 v2 partitions, independent daily cutoffs and source-error retention in a coordinated

@@ -28,7 +28,9 @@ Historical evidence, distinct from this rollout:
   separate validated `sync-main` job still require live verification and recording.
 
 Production remains Cloudflare Pages' Git integration on `releases/cloudflare`, with
-root directory `frontend`. Normal blog/code changes require manual promotion.
+root directory `frontend`. Normal blog/code changes are promoted every Sunday by the
+[weekly release promotion](release_promotion.md); workflow-file changes still need
+manual promotion.
 The approved exception publishes only validated daily electricity exports from an
 already released commit, then separately synchronizes verified release ancestry
 into current `main`. The branches need not routinely be equal; unpublished `main`
@@ -235,13 +237,18 @@ Rollout procedure:
 5. Record run/deployment URLs, checked commit, public hashes/coverage, measured total
    runtime **for each job**, and both outcomes here. **These new live results are pending.**
 
-Normal subsequent blog/code and monthly/manual progress promotion remains a reviewed
-fast-forward of `releases/cloudflare` to the reviewed main commit. First ensure
+Normal subsequent blog/code and monthly/manual progress promotion is the
+[weekly release promotion](release_promotion.md): every Sunday it merges the latest
+release ancestry into main with the released sync script, validates the candidate
+offline, pushes main, then fast-forwards `releases/cloudflare` without force and
+verifies new posts publicly. Everything on main goes live, so unfinished work must
+be a draft (`draft: true`). Changes under `.github/workflows/` cannot be pushed by
+`GITHUB_TOKEN`; promote them manually as a reviewed fast-forward: first ensure
 successful sync or manually reconcile
 the **latest** release ancestry into main, preserve newer snapshots, and pass checks.
 Fetch both refs immediately before promotion; if release has advanced, integrate and
-validate again before a non-force release push. Main may hold unpublished code while
-daily production refresh continues on released code. Do not use ref equality as a
+validate again before a non-force release push. Daily production refresh continues
+on released code between promotions. Do not use ref equality as a
 routine precondition or silently change data contracts to make a merge pass.
 
 ## Failure and recovery
