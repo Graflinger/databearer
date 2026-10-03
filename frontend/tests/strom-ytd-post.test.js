@@ -150,8 +150,9 @@ test('standard charts retain nested inputs, stable routes, short grouped labels 
     const build = config.type === 'line' ? buildLineChart : buildBarChart;
     let option;
     const chart = { setOption: (value) => { option = value; }, resize: () => {} };
+    const container = { hasAttribute: () => true, getAttribute: () => null, setAttribute: () => {} };
     vm.runInNewContext(build(data, config), {
-      document: { getElementById: () => ({}) },
+      document: { getElementById: () => container },
       window: { matchMedia: () => ({ matches: false, addEventListener: () => {} }), addEventListener: () => {} },
       echarts: { init: () => chart },
     });

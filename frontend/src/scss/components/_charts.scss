@@ -63,7 +63,7 @@
     align-items: center;
     gap: 0.5rem 1rem;
     padding: 0.8rem 0;
-    border-top: 1px solid var(--post-border);
+    border-top: 1px solid var(--table-line);
   }
 
   dt {
@@ -85,13 +85,13 @@
   &__period {
     display: block;
     font-size: 12px;
-    color: var(--post-muted);
+    color: var(--table-muted);
     font-weight: 400;
   }
 
   &__arrow {
     align-self: end;
-    color: var(--post-muted);
+    color: var(--table-muted);
   }
 
   &__delta {

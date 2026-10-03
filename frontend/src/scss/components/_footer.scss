@@ -22,11 +22,12 @@
 }
 
 .footer-nav a:hover {
-  color: #d9c176;
+  color: var(--prose-link);
 }
 
 .copyright {
   text-align: center;
-  color: #999;
+  // AA on the #fafafa footer (4.7:1).
+  color: #707070;
   font-size: 14px;
 }

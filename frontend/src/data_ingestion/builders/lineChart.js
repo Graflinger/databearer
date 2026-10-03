@@ -13,6 +13,10 @@
  * @param {Array<string>} options.seriesNames - Array of display names for series (e.g., ['Sales', 'Expenses'])
  * @param {Array<string>} options.colors - Custom colors for series (optional)
  * @param {boolean} options.smooth - Smooth line curve (default: false)
+ * @param {string} options.secondaryYAxisLabel - Adds a right-hand y-axis (optional)
+ * @param {Array<number>} options.seriesYAxisIndex - Axis (0 left, 1 right) per series key
+ * @param {string} options.narrowGridTop - Grid top below 600px width, for wrapping legends (optional)
+ * @param {boolean} options.narrowShortYearLabels - Below 600px, show every year label as '’19' (optional)
  * @returns {string} JavaScript code for the chart
  */
 function buildLineChart(data, options = {}) {
@@ -27,6 +31,10 @@ function buildLineChart(data, options = {}) {
     seriesNames = null,
     colors = null,
     smooth = false,
+    secondaryYAxisLabel = '',
+    seriesYAxisIndex = null,
+    narrowGridTop = '',
+    narrowShortYearLabels = false,
   } = options;
 
   if (!containerId) {
@@ -34,6 +42,11 @@ function buildLineChart(data, options = {}) {
   }
 
   const xData = data.map((d) => d[xKey]);
+  const hasSecondaryAxis = Boolean(secondaryYAxisLabel);
+  if (hasSecondaryAxis && !(Array.isArray(seriesKeys) && Array.isArray(seriesYAxisIndex)
+    && seriesYAxisIndex.length === seriesKeys.length && seriesYAxisIndex.every((axis) => axis === 0 || axis === 1))) {
+    throw new Error('secondaryYAxisLabel requires seriesKeys and one seriesYAxisIndex (0 or 1) per key');
+  }
 
   // Multi-series mode
   const isMultiSeries = seriesKeys && Array.isArray(seriesKeys) && seriesKeys.length > 0;
@@ -45,6 +58,7 @@ function buildLineChart(data, options = {}) {
       name: seriesNames && seriesNames[index] ? seriesNames[index] : key,
       data: data.map((d) => d[key]),
       color: colors && colors[index] ? colors[index] : null,
+      ...(hasSecondaryAxis ? { yAxisIndex: seriesYAxisIndex[index] } : {}),
     }));
   } else {
     const yData = data.map((d) => d[yKey]);
@@ -61,6 +75,7 @@ function buildLineChart(data, options = {}) {
 
   let chart = null;
   let isInitialized = false;
+  const hasAuthoredLabel = chartDom.hasAttribute('aria-labelledby') || chartDom.hasAttribute('aria-label');
 
   // Detect dark mode
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -89,6 +104,13 @@ function buildLineChart(data, options = {}) {
     const seriesData = ${JSON.stringify(seriesData)};
 
     const option = {
+      aria: {
+        enabled: true,
+        // Keep the article's authored accessible name and summary when present.
+        label: {
+          enabled: !hasAuthoredLabel
+        }
+      },
       backgroundColor: colors.backgroundColor,
       title: ${
         title
@@ -135,7 +157,12 @@ function buildLineChart(data, options = {}) {
           }
         },
         axisLabel: {
-          color: colors.textColor
+          color: colors.textColor${narrowShortYearLabels ? `,
+          ...(chartDom.clientWidth < 600 ? {
+            // Keep every year, incl. the marked last one, visible on phones.
+            interval: 0,
+            formatter: (value) => '\u2019' + String(value).slice(2)
+          } : {})` : ''}
         },
         splitLine: {
           lineStyle: {
@@ -143,7 +170,9 @@ function buildLineChart(data, options = {}) {
           }
         }
       },
-      yAxis: {
+      ${
+        hasSecondaryAxis
+          ? `yAxis: [{
         type: 'value',
         name: ${JSON.stringify(yAxisLabel)},
         nameLocation: 'middle',
@@ -164,12 +193,54 @@ function buildLineChart(data, options = {}) {
             color: colors.splitLineColor
           }
         }
-      },
+      }, {
+        type: 'value',
+        name: ${JSON.stringify(secondaryYAxisLabel)},
+        nameLocation: 'middle',
+        nameGap: 50,
+        nameTextStyle: {
+          color: colors.textColor
+        },
+        axisLine: {
+          lineStyle: {
+            color: colors.axisLineColor
+          }
+        },
+        axisLabel: {
+          color: colors.textColor
+        },
+        splitLine: {
+          show: false
+        }
+      }],`
+          : `yAxis: {
+        type: 'value',
+        name: ${JSON.stringify(yAxisLabel)},
+        nameLocation: 'middle',
+        nameGap: 50,
+        nameTextStyle: {
+          color: colors.textColor
+        },
+        axisLine: {
+          lineStyle: {
+            color: colors.axisLineColor
+          }
+        },
+        axisLabel: {
+          color: colors.textColor
+        },
+        splitLine: {
+          lineStyle: {
+            color: colors.splitLineColor
+          }
+        }
+      },`
+      }
       series: seriesData.map((series, index) => ({
         name: series.name,
         data: series.data,
         type: 'line',
-        smooth: ${smooth},
+        smooth: ${smooth},${hasSecondaryAxis ? '\n        yAxisIndex: series.yAxisIndex,' : ''}
         lineStyle: {
           width: 2,
           color: series.color || colors.defaultColors[index % colors.defaultColors.length]
@@ -183,7 +254,7 @@ function buildLineChart(data, options = {}) {
         left: '10%',
         right: '10%',
         bottom: '15%',
-        top: ${isMultiSeries ? (title ? "'25%'" : "'18%'") : title ? "'15%'" : "'10%'"}
+        top: ${narrowGridTop ? `chartDom.clientWidth < 600 ? ${JSON.stringify(narrowGridTop)} : ` : ''}${isMultiSeries ? (title ? "'25%'" : "'18%'") : title ? "'15%'" : "'10%'"}
       },
       animation: true,
       animationDuration: 1000,
@@ -197,6 +268,7 @@ function buildLineChart(data, options = {}) {
     if (isInitialized) return;
     isInitialized = true;
 
+    if (!chartDom.hasAttribute('role')) chartDom.setAttribute('role', 'img');
     chart = echarts.init(chartDom);
     updateChart();
 
@@ -207,7 +279,7 @@ function buildLineChart(data, options = {}) {
 
     // Make chart responsive
     window.addEventListener('resize', function() {
-      if (chart) chart.resize();
+      if (chart) chart.resize();${narrowGridTop || narrowShortYearLabels ? '\n      updateChart();' : ''}
     });
   };
 

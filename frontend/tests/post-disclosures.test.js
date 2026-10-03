@@ -40,7 +40,7 @@ test('compiled disclosure CSS preserves native focus styling, theme borders and 
   const css = sass.compile(path.join(root, 'src/scss/style.scss')).css;
   const dark = css.slice(css.indexOf('/* Dark Mode */'));
   expect(dark).toMatch(/@media \(prefers-color-scheme: dark\)/);
-  expect(dark).toMatch(/\.post-content \{[^}]*--post-border: #404040;/);
+  expect(dark).toMatch(/\.post-content \{[^}]*--table-line: #404040;/);
   expect(css).toMatch(/\.post-content \.post-methodology > summary:focus-visible[^}]*outline: 2px solid currentColor/);
   expect(css).toMatch(/\.post-content \.post-methodology\[open\] > summary[^}]*margin-bottom/);
   expect(css).toContain('.post-content li ul,\n.post-content li ol');

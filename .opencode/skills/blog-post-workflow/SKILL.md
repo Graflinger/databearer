@@ -28,7 +28,9 @@ Combine this skill with:
 - `data-pipeline` for ingestion/dbt/export work
 - `frontend-visualization` for ECharts and CSVs
 - `frontend-page` for Eleventy posts and frontmatter
-- `image-generation` for the required article-specific blog card/header image
+- `image-generation` if a blog card image is needed
+- `work-tracking` when creating the post's branch or PR, so that the topic appears
+  in `docs/open_work.md`
 
 ## Editorial style
 
@@ -41,10 +43,44 @@ Default style:
 - Start with a concise key takeaway.
 - Make the central claim specific and data-backed.
 - Use charts as evidence, not decoration.
-- Include source and methodology notes.
+- Include sources and a short data note (see below).
 - Name caveats clearly instead of hiding uncertainty.
 - Avoid overclaiming from one data point.
 - Prefer concrete phrasing over generic commentary.
+
+### Voice: one author
+
+Databearer is written by one person. Never suggest a team:
+
+- No author "wir"/"uns"/"unser" for the author's own work: not "unsere
+  Auswertung", "wir haben gefiltert", "wir rechnen nicht hoch", "wie wir bereits
+  beschrieben haben".
+- Prefer impersonal phrasing ("Die Auswertung zeigt…", "Nicht berücksichtigt
+  sind…", "Hochgerechnet wird nicht"). Use "ich"/"mein" sparingly where a personal
+  choice or opinion is meant ("Ich rechne das Jahr bewusst nicht hoch").
+- Inclusive reader "wir" ("Schauen wir auf…") and collective "unsere Industrie"
+  (Germany/society) are acceptable but use them sparingly.
+
+### Keep the methodology short
+
+Readers come for the finding, not the pipeline. Unless the user explicitly asks
+for a detailed methodology:
+
+- End with a short **"Daten und Quellen"** section: one or two short paragraphs
+  on source, date/period, what was included or left out (e.g. implausible outliers
+  removed) and what that means for interpretation, then the source/licence list.
+- Put caveats needed to read a chart correctly next to that chart, once, in plain
+  words. Do not repeat them in several sections.
+- No filter thresholds, row counts, exclusion percentages, file names, hashes,
+  model names, request budgets or tooling in the article. That detail belongs in
+  the topic's `docs/` file.
+
+### Third-party methods
+
+Do not name, link or cite another project's methodology (thresholds, size classes,
+corrections, dashboards) unless its **data** is used or the user asks for it.
+Describe your own, simplified approach in your own words. Credit only the sources
+whose data appears in the post.
 
 ## Frontmatter checklist
 
@@ -56,10 +92,14 @@ Use or preserve this frontmatter shape:
 ---
 title: "Post title"
 date: YYYY-MM-DD
-lastUpdated: YYYY-MM-DD
-excerpt: "140-160 character summary of the key insight."
+draft: true # remove when publishing
+# lastUpdated: YYYY-MM-DD # real substantive revision only
+excerpt: "Key finding first, 1–2 plain-text sentences, no draft labels."
 image: "/images/blog_card_images/<year>/<file>.png"
-imageText: "Short descriptive image caption"
+imageAlt: "" # describe informative heroes; empty if decorative
+imageText: "Visible image caption"
+# socialImage: "/images/blog_card_images/<year>/<social-file>.png"
+# socialImageAlt: "Description of the social preview image"
 fullWidthCard: false
 topic: ["energie"]
 ---
@@ -71,39 +111,21 @@ Allowed topics:
 - `wirtschaft`
 - `politik-und-gesellschaft`
 
-## Article image — required before handoff
-
-Every new article needs its own topic-appropriate title image. Load
-`image-generation` and use the existing `image-generation/` code, rather than
-silently reusing another post's image or a dashboard illustration. Reuse is an
-exception requiring the user's explicit approval (for example, the dashboard
-introduction may use the approved dashboard illustration).
-
-- Follow the image skill's provider/auth workflow, natural editorial prompts,
-  full-bleed composition and current 1408×800 output specification.
-- Inspect the generated image, put the curated asset in the article-year image
-  folder and wire `image` and a truthful symbolic-image caption in frontmatter.
-- If generation/authentication is unavailable, report the blocker. Do not mark
-  image preparation complete or substitute an unrelated image without approval.
-- Never request credentials in chat or commit authentication/configuration secrets.
-
-## Reading flow and methodology
-
-Keep the main narrative short and evidence-led. Prefer charts or the supported
-comparison chart for headline comparisons; do not place a cramped wide table in
-the reading flow. Keep accessible exact-value evidence, using a labelled,
-scrollable region inside a closed disclosure for long backup tables.
-
-Put detailed technical methodology in native `<details class="post-methodology">`
-with `<summary>Methodik und Datenquellen</summary>` and no `open` attribute. Keep
-sources and interpretation-critical caveats visible near each chart. Verify the
-built HTML: Markdown inside HTML blocks must actually render, not appear as raw
-syntax. Check keyboard operation, spacing and nested-list text contrast in both
-light and dark mode; this disclosure does not need custom JavaScript.
-
 ## Post structure
 
-The layout provides the H1. Body content should use H2/H3 only.
+[`docs/seo.md`](../../../docs/seo.md) is the single detailed contract. Key points:
+
+- `draft: true` keeps the post out of all output in every run mode. When publishing,
+  remove it together with any drafting-only exclusions
+  ([Drafts](../../../docs/seo.md#drafts)).
+- The `excerpt` becomes the meta description, card text, search excerpt and feed
+  summary. Titles carry no brand suffix. Corrections set `lastUpdated` and add a
+  visible `*Korrektur vom …*` note
+  ([Content guidance](../../../docs/seo.md#content-guidance)).
+- Images must be local `/images/...` files. `imageAlt`/`socialImageAlt` describe the
+  image, and `imageText` is the caption ([Images](../../../docs/seo.md#images)).
+- The layout renders the H1 and byline, so the body uses H2/H3 only. Internal links
+  use `/posts/<year>/<slug>/`.
 
 Recommended structure:
 
@@ -124,23 +146,34 @@ Comparison, history, or policy relevance.
 
 What the chart does and does not prove.
 
-## Methodik und Datenquellen
+## Daten und Quellen
 
-Source, grain, transformations, limitations.
+1–2 short paragraphs: source, date, what was left out and why it matters.
+Then a source list with licences. Details stay in docs/.
 ```
 
 ## Chart requirements
 
-Every chart needs:
+Every chart needs a unique `containerId`, a one-sentence takeaway, the accessible
+container pattern (`role="img"`, `aria-labelledby` → heading, `aria-describedby` → a
+`chart-description` longer than 40 characters), static values or a captioned table,
+and a verified source link. Load ECharts once and give every script `defer`. Each
+chart needs a CSV under `frontend/src/data_ingestion/data/<article-year>/<topic>/`
+(with supporting aggregates and the validated provenance manifest in the same
+folder), a config in `frontend/src/data_ingestion/charts/`, and generated JS under
+`frontend/src/js/charts/<config-name>/`. See
+[Charts and evidence](../../../docs/seo.md#charts-and-evidence).
 
-- unique `containerId`
-- one-sentence takeaway above the chart
-- source link below the chart
-- generated JS under `frontend/src/js/charts/<config-name>/`
-- matching config under `frontend/src/data_ingestion/charts/`
-- CSV input under `frontend/src/data_ingestion/data/`
+Tables outside a `.chart-section` put their source and footnotes (rounding,
+definitions, exclusions) directly below the table as
+`<p class="table-note"><strong>Quelle:</strong> <a href="…">…</a>; …</p>`. It renders
+smaller and muted so it visibly belongs to the table. Use HTML inside it, not
+Markdown. Never format a table source as a normal body paragraph.
 
-Use `frontend-visualization` for exact commands and config fields.
+Use `frontend-visualization` for exact commands, config fields and the **Organize a
+frozen data entity** workflow. Use the article year even when data spans many years;
+keep frozen article evidence separate from live dashboard snapshots. A refresh must
+update chart inputs, provenance, article numbers/dates and tests together.
 
 ## Workflow
 
@@ -149,33 +182,35 @@ Use `frontend-visualization` for exact commands and config fields.
 3. Ingest/export data if needed using `data-pipeline`.
 4. Create or update chart CSV/config/scripts using `frontend-visualization`.
 5. Draft the Markdown post using `frontend-page` conventions.
-6. Generate and review the article-specific image using `image-generation`, unless
-   the user explicitly approved reuse. Treat unavailable generation as a blocker.
-7. Add internal links and concise source notes; put lengthy methodology in a
-   default-closed disclosure. Dashboard-derived stories end with a dashboard link.
-8. Run frontend build from `frontend/`:
-
-```bash
-npm run build
-```
-
-9. Inspect errors, chart output, feed impact, and changed files.
+6. Add descriptively labelled links to relevant topic pages or previous posts.
+7. Add a short "Daten und Quellen" section (see *Keep the methodology short*).
+   Verify claims against original sources; record unresolved legacy citations
+   rather than inventing URLs, dates or provenance.
+8. Run the [checks](../../../docs/seo.md#checks) from `frontend/`:
+   `npm test -- --runInBand`, `npm run lint`, `npm run build`,
+   `npm run test:seo-output`.
+9. Inspect errors, chart output, feed impact and changed files. Keep the
+   [JSON Feed fields](../../../docs/seo.md#feeds) used by the private
+   `video-generator` unchanged.
 
 ## QA checklist
 
 Before considering a post complete:
 
 - Exactly one H1; post body has no H1.
-- Excerpt is clear and not clickbait.
+- Excerpt is plain text, key finding first, not clickbait, no draft labels.
 - The strongest claim is backed by data shown in the post.
-- Every chart has a source.
-- An individually generated title image is inspected and wired, or explicit reuse
-  approval / an unresolved image-generation blocker is recorded.
-- Caveats are explicit.
-- Long methodology is collapsed by default; key caveats remain visible.
-- Mobile comparisons are readable, and nested lists have sufficient dark-mode contrast.
-- Internal links are relevant.
-- `npm run build` passes.
+- Every chart has static evidence, units, period and a verified source.
+- Caveats are explicit, stated once and in plain words.
+- No author "wir"/"unser" for the author's own work; one-author voice.
+- The data/methodology section is short; technical detail lives in `docs/`.
+- No other project's methodology is named or linked unless its data is used.
+- Internal links are relevant and descriptive.
+- Hero/social alt describes the image; the caption is `imageText`.
+- Drafting-only flags are removed when publishing.
+- Frontend tests, lint, build and `npm run test:seo-output` pass.
+
+Completing this workflow does not authorize publication, commits, pushes or deployment.
 
 If data or generated chart files change incidentally, call that out in the
 final response.

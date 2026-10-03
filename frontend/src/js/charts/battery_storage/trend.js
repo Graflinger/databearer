@@ -1,12 +1,13 @@
 (function() {
-  const chartDom = document.getElementById('battery-storage-cohorts');
+  const chartDom = document.getElementById('battery-storage-trend');
   if (!chartDom) {
-    console.error('Chart container "battery-storage-cohorts" not found');
+    console.error('Chart container "battery-storage-trend" not found');
     return;
   }
 
   let chart = null;
   let isInitialized = false;
+  const hasAuthoredLabel = chartDom.hasAttribute('aria-labelledby') || chartDom.hasAttribute('aria-label');
 
   // Detect dark mode
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -31,10 +32,17 @@
     if (!chart) return;
 
     const colors = getThemeColors();
-    const xData = [2019,2020,2021,2022,2023,2024,2025];
-    const seriesData = [{"key":"Anzahl_Index","name":"Anlagenzahl","data":[7.354226452,15.131141678,24.739940862,38.361405008,105.882229801,100,97.519516429],"color":null},{"key":"Energie_Index","name":"Speicherkapazität","data":[7.438527198,14.385957557,22.40141118,42.495236238,98.632807474,100,108.682791865],"color":null}];
+    const xData = [2019,2020,2021,2022,2023,2024,2025,"2026*"];
+    const seriesData = [{"key":"Energie_GWh","name":"Kapazität gesamt (GWh)","data":[0.459497598,0.889741088,1.385641718,2.629756916,6.112005717,6.202971356,6.768137764,7.902219936],"color":null,"yAxisIndex":0},{"key":"Gross_GWh","name":"Große Speicher (GWh)","data":[0.081737,0.0904114,0.050847,0.54412872,0.311616752,0.827139801,1.73729859,3.76815745],"color":null,"yAxisIndex":0},{"key":"Gross_Anzahl","name":"Große Speicher (Anzahl)","data":[10,13,15,55,60,102,131,215],"color":null,"yAxisIndex":1}];
 
     const option = {
+      aria: {
+        enabled: true,
+        // Keep the article's authored accessible name and summary when present.
+        label: {
+          enabled: !hasAuthoredLabel
+        }
+      },
       backgroundColor: colors.backgroundColor,
       title: undefined,
       tooltip: {
@@ -55,7 +63,7 @@
       xAxis: {
         type: 'category',
         data: xData,
-        name: "Inbetriebnahme-Kohorte",
+        name: "Inbetriebnahmejahr (2026* bis 26. September)",
         nameLocation: 'middle',
         nameGap: 30,
         nameTextStyle: {
@@ -67,7 +75,12 @@
           }
         },
         axisLabel: {
-          color: colors.textColor
+          color: colors.textColor,
+          ...(chartDom.clientWidth < 600 ? {
+            // Keep every year, incl. the marked last one, visible on phones.
+            interval: 0,
+            formatter: (value) => '’' + String(value).slice(2)
+          } : {})
         },
         splitLine: {
           lineStyle: {
@@ -75,9 +88,9 @@
           }
         }
       },
-      yAxis: {
+      yAxis: [{
         type: 'value',
-        name: "Index (2024 = 100)",
+        name: "Speicherkapazität (GWh)",
         nameLocation: 'middle',
         nameGap: 50,
         nameTextStyle: {
@@ -96,12 +109,32 @@
             color: colors.splitLineColor
           }
         }
-      },
+      }, {
+        type: 'value',
+        name: "Große Speicher (Anzahl)",
+        nameLocation: 'middle',
+        nameGap: 50,
+        nameTextStyle: {
+          color: colors.textColor
+        },
+        axisLine: {
+          lineStyle: {
+            color: colors.axisLineColor
+          }
+        },
+        axisLabel: {
+          color: colors.textColor
+        },
+        splitLine: {
+          show: false
+        }
+      }],
       series: seriesData.map((series, index) => ({
         name: series.name,
         data: series.data,
         type: 'line',
         smooth: false,
+        yAxisIndex: series.yAxisIndex,
         lineStyle: {
           width: 2,
           color: series.color || colors.defaultColors[index % colors.defaultColors.length]
@@ -115,7 +148,7 @@
         left: '10%',
         right: '10%',
         bottom: '15%',
-        top: '18%'
+        top: chartDom.clientWidth < 600 ? "30%" : '18%'
       },
       animation: true,
       animationDuration: 1000,
@@ -129,6 +162,7 @@
     if (isInitialized) return;
     isInitialized = true;
 
+    if (!chartDom.hasAttribute('role')) chartDom.setAttribute('role', 'img');
     chart = echarts.init(chartDom);
     updateChart();
 
@@ -140,6 +174,7 @@
     // Make chart responsive
     window.addEventListener('resize', function() {
       if (chart) chart.resize();
+      updateChart();
     });
   };
 

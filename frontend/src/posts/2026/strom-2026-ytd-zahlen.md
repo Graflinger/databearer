@@ -8,7 +8,7 @@ imageText: "KI-generiertes Symbolbild: Solarpark und Windräder in einer weiten 
 fullWidthCard: false
 topic: ["energie"]
 ---
-<script src="/js/lib/echarts.min.js"></script>
+<script defer src="/js/lib/echarts.min.js"></script>
 
 ## Mehr Strom, mehr Erneuerbare
 
@@ -34,10 +34,10 @@ Alle folgenden Vergleiche betrachten jeweils **1. Januar bis einschließlich 9. 
 Wind an Land steigt von **62,8 auf 72,3 TWh**, Solar von **62,2 auf 70,5 TWh**. Beide wachsen also kräftig. Der Abstand ist trotzdem klein: Gerade einmal **1,8 TWh** trennen die beiden größten Einzelquellen im laufenden Jahr.
 
 <div class="chart-section">
-  <h3>Wind an Land und Solar: gleicher Zeitraum, mehr Erzeugung</h3>
-  <p class="chart-description">Beide Energieträger legen gegenüber 2025 zu. Gezeigt wird jeweils die öffentliche Erzeugung vom 1. Januar bis 9. September in TWh.</p>
-  <div id="strom-ytd-2026-mix" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/strom_ytd_2026/mix.js"></script>
+  <h3 id="strom-ytd-2026-mix-heading">Wind an Land und Solar: gleicher Zeitraum, mehr Erzeugung</h3>
+  <p class="chart-description" id="strom-ytd-2026-mix-description">Beide Energieträger legen gegenüber 2025 zu. Gezeigt wird jeweils die öffentliche Erzeugung vom 1. Januar bis 9. September in TWh.</p>
+  <div id="strom-ytd-2026-mix" role="img" aria-labelledby="strom-ytd-2026-mix-heading" aria-describedby="strom-ytd-2026-mix-description" style="width: 100%; height: 400px;"></div>
+  <script defer src="/js/charts/strom_ytd_2026/mix.js"></script>
   <div class="chart-sources"><strong>Quelle: </strong><a href="https://www.smard.de/home/marktdaten">Bundesnetzagentur / SMARD.de</a>, eingefrorene Tageshistorie, eigene Auswertung.</div>
 </div>
 
@@ -72,10 +72,10 @@ Die [starken Windkraftausschreibungen 2026](/posts/2026/Windkraftausschreibungen
 2019 kamen die Erneuerbaren im gleichen Kalenderfenster auf **43,5 Prozent**, 2026 sind es **61,7 Prozent**. Das ist ein deutlicher Fortschritt. Gleichmäßig verlief er nicht: 2021 fiel der Anteil gegenüber 2020, 2025 lag er unter 2024. Jetzt steigt er wieder.
 
 <div class="chart-section">
-  <h3>Erneuerbarenanteil seit 2019</h3>
-  <p class="chart-description">2026 liegt der Anteil höher als in allen sieben Vergleichsjahren. Jeder Punkt umfasst nur den Zeitraum 1. Januar bis 9. September, keine Jahresbilanz.</p>
-  <div id="strom-ytd-2026-renewable-share" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/strom_ytd_2026/renewable-share.js"></script>
+  <h3 id="strom-ytd-2026-renewable-share-heading">Erneuerbarenanteil seit 2019</h3>
+  <p class="chart-description" id="strom-ytd-2026-renewable-share-description">2026 liegt der Anteil höher als in allen sieben Vergleichsjahren. Jeder Punkt umfasst nur den Zeitraum 1. Januar bis 9. September, keine Jahresbilanz.</p>
+  <div id="strom-ytd-2026-renewable-share" role="img" aria-labelledby="strom-ytd-2026-renewable-share-heading" aria-describedby="strom-ytd-2026-renewable-share-description" style="width: 100%; height: 400px;"></div>
+  <script defer src="/js/charts/strom_ytd_2026/renewable-share.js"></script>
   <div class="chart-sources"><strong>Quelle: </strong><a href="https://www.smard.de/home/marktdaten">Bundesnetzagentur / SMARD.de</a>, erneuerbare Erzeugung geteilt durch gesamte öffentliche Erzeugung.</div>
 </div>
 
@@ -88,10 +88,10 @@ Der zeitgewichtete Day-Ahead-Preis liegt 2026 bisher bei **103,92 €/MWh**. Im 
 Der längere Vergleich zeigt aber keinen ungebremsten Preisanstieg. Nach **38,22 €/MWh** im Jahr 2019 fiel der Preis im Vergleichszeitraum 2020 zunächst auf **26,25 €/MWh**. 2022 folgte der Sprung auf **243,53 €/MWh**. Danach ging es zwei Jahre deutlich abwärts, bis auf **70,32 €/MWh** im Jahr 2024. Erst 2025 und 2026 steigen die Werte wieder.
 
 <div class="chart-section">
-  <h3>Day-Ahead-Preis im gleichen Kalenderfenster</h3>
-  <p class="chart-description">2026 ist teurer als 2025, bleibt aber weit unter dem Krisenniveau 2022. Zeitgewichteter Preis vom 1. Januar bis 9. September, nominal in €/MWh.</p>
-  <div id="strom-ytd-2026-price" style="width: 100%; height: 400px;"></div>
-  <script src="/js/charts/strom_ytd_2026/price.js"></script>
+  <h3 id="strom-ytd-2026-price-heading">Day-Ahead-Preis im gleichen Kalenderfenster</h3>
+  <p class="chart-description" id="strom-ytd-2026-price-description">2026 ist teurer als 2025, bleibt aber weit unter dem Krisenniveau 2022. Zeitgewichteter Preis vom 1. Januar bis 9. September, nominal in €/MWh.</p>
+  <div id="strom-ytd-2026-price" role="img" aria-labelledby="strom-ytd-2026-price-heading" aria-describedby="strom-ytd-2026-price-description" style="width: 100%; height: 400px;"></div>
+  <script defer src="/js/charts/strom_ytd_2026/price.js"></script>
   <div class="chart-sources"><strong>Quelle: </strong><a href="https://www.smard.de/home/marktdaten">Bundesnetzagentur / SMARD.de</a>, Tagesmittel mit der jeweiligen Tageslänge gewichtet; Marktgebiet Deutschland/Luxemburg.</div>
 </div>
 

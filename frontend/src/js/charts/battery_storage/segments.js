@@ -7,6 +7,7 @@
 
   let chart = null;
   let isInitialized = false;
+  const hasAuthoredLabel = chartDom.hasAttribute('aria-labelledby') || chartDom.hasAttribute('aria-label');
 
   // Detect dark mode
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -31,11 +32,18 @@
     if (!chart) return;
 
     const colors = getThemeColors();
-    const xData = [2019,2020,2021,2022,2023,2024,2025];
-    const seriesData = [{"key":"Klein_GWh","name":"Klein","data":[0.345740256,0.741205626,1.252523053,1.964712371,5.539988937,5.041172647,4.54440019],"color":null},{"key":"Mittel_GWh","name":"Mittel","data":[0.03211337,0.057221727,0.08070482,0.116734067,0.242438538,0.313053994,0.424486125],"color":null},{"key":"Gross_GWh","name":"Groß","data":[0.081737,0.0904114,0.050847,0.54412872,0.311616752,0.824289801,1.74609785],"color":null}];
+    const xData = [2019,2020,2021,2022,2023,2024,2025,"2026*"];
+    const seriesData = [{"key":"Klein_GWh","name":"Klein","data":[0.345651328,0.741590321,1.253808458,1.967650699,5.554733047,5.060271857,4.591402349,3.694521683],"color":null},{"key":"Mittel_GWh","name":"Mittel","data":[0.03210927,0.057739367,0.08098626,0.117977497,0.245655918,0.315559698,0.439436825,0.439540803],"color":null},{"key":"Gross_GWh","name":"Groß","data":[0.081737,0.0904114,0.050847,0.54412872,0.311616752,0.827139801,1.73729859,3.76815745],"color":null}];
     const stacked = true;
 
     const option = {
+      aria: {
+        enabled: true,
+        // Keep the article's authored accessible name and summary when present.
+        label: {
+          enabled: !hasAuthoredLabel
+        }
+      },
       backgroundColor: colors.backgroundColor,
       title: undefined,
       tooltip: {
@@ -59,7 +67,7 @@
       xAxis: {
         type: 'category',
         data: xData,
-        name: "Inbetriebnahme-Kohorte",
+        name: "Inbetriebnahmejahr (2026* bis 26. September)",
         nameLocation: 'middle',
         nameGap: 30,
         nameTextStyle: {
@@ -71,7 +79,12 @@
           }
         },
         axisLabel: {
-          color: colors.textColor
+          color: colors.textColor,
+          ...(chartDom.clientWidth < 600 ? {
+            // Keep every year, incl. the marked last one, visible on phones.
+            interval: 0,
+            formatter: (value) => '’' + String(value).slice(2)
+          } : {})
         },
         splitLine: {
           lineStyle: {
@@ -128,6 +141,7 @@
     if (isInitialized) return;
     isInitialized = true;
 
+    if (!chartDom.hasAttribute('role')) chartDom.setAttribute('role', 'img');
     chart = echarts.init(chartDom);
     updateChart();
 
@@ -139,6 +153,7 @@
     // Make chart responsive
     window.addEventListener('resize', function() {
       if (chart) chart.resize();
+      updateChart();
     });
   };
 

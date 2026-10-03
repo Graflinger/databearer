@@ -1,10 +1,15 @@
 /* Skip to Main Content Link */
 .skip-link {
   position: absolute;
-  top: -40px;
+  top: 0;
   left: 0;
+  // Fully off-screen regardless of font size/line height. A fixed -40px left a
+  // gold strip visible on mobile, and exactly -100% still antialiases one pixel
+  // row at fractional heights, hence the extra margin.
+  transform: translateY(calc(-100% - 4px));
   background: #c4ad61;
-  color: #fff;
+  // Dark text on gold, as for the other gold controls (7.9:1).
+  color: #1a1a1a;
   padding: 8px 16px;
   text-decoration: none;
   font-weight: 600;
@@ -13,7 +18,7 @@
 }
 
 .skip-link:focus {
-  top: 0;
-  outline: 2px solid #fff;
+  transform: none;
+  outline: 2px solid #1a1a1a;
   outline-offset: -4px;
 }

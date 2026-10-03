@@ -7,6 +7,7 @@
 
   let chart = null;
   let isInitialized = false;
+  const hasAuthoredLabel = chartDom.hasAttribute('aria-labelledby') || chartDom.hasAttribute('aria-label');
 
   // Detect dark mode
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -31,10 +32,17 @@
     if (!chart) return;
 
     const colors = getThemeColors();
-    const xData = [2019,2020,2021,2022,2023,2024,2025];
-    const seriesData = [{"key":"Median_Stunden","name":"Median E/P (Stunden)","data":[2.166666667,2,1.961538462,1.964285714,1.617647059,1.646090535,1.92],"color":null}];
+    const xData = [2019,2020,2021,2022,2023,2024,2025,"2026*"];
+    const seriesData = [{"key":"Median_Stunden","name":"Median E/P (Stunden)","data":[2.166666667,2,1.964285714,1.964285714,1.625,1.655172414,1.92,1.98],"color":null}];
 
     const option = {
+      aria: {
+        enabled: true,
+        // Keep the article's authored accessible name and summary when present.
+        label: {
+          enabled: !hasAuthoredLabel
+        }
+      },
       backgroundColor: colors.backgroundColor,
       title: undefined,
       tooltip: {
@@ -49,7 +57,7 @@
       xAxis: {
         type: 'category',
         data: xData,
-        name: "Inbetriebnahme-Kohorte",
+        name: "Inbetriebnahmejahr (2026* bis 26. September)",
         nameLocation: 'middle',
         nameGap: 30,
         nameTextStyle: {
@@ -61,7 +69,12 @@
           }
         },
         axisLabel: {
-          color: colors.textColor
+          color: colors.textColor,
+          ...(chartDom.clientWidth < 600 ? {
+            // Keep every year, incl. the marked last one, visible on phones.
+            interval: 0,
+            formatter: (value) => '’' + String(value).slice(2)
+          } : {})
         },
         splitLine: {
           lineStyle: {
@@ -123,6 +136,7 @@
     if (isInitialized) return;
     isInitialized = true;
 
+    if (!chartDom.hasAttribute('role')) chartDom.setAttribute('role', 'img');
     chart = echarts.init(chartDom);
     updateChart();
 
@@ -134,6 +148,7 @@
     // Make chart responsive
     window.addEventListener('resize', function() {
       if (chart) chart.resize();
+      updateChart();
     });
   };
 

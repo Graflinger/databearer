@@ -10,7 +10,7 @@ eleventyExcludeFromCollections: true
   "description": {{ site.description | dump | safe }},
   "language": {{ site.locale | dump | safe }},
   "authors": [
-    { "name": {{ (site.author or "Databearer") | dump | safe }} }
+    { "name": {{ (site.author or "Databearer") | dump | safe }}, "url": {{ site.authorUrl | absoluteUrl(site.url) | dump | safe }} }
   ],
   "items": [
 {%- for post in collections.post | reverse %}
@@ -22,13 +22,13 @@ eleventyExcludeFromCollections: true
       "date_published": {{ post.data.date | htmlDateString | dump | safe }},
       "date_modified": {{ (post.data.lastUpdated or post.data.date) | htmlDateString | dump | safe }},
       {%- if post.data.image %}
-      "image": {{ (site.url + post.data.image) | dump | safe }},
+      "image": {{ post.data.image | absoluteUrl(site.url) | dump | safe }},
       {%- endif %}
       {%- if post.data.imageText %}
       "_image_alt": {{ post.data.imageText | dump | safe }},
       {%- endif %}
       "tags": {{ (post.data.topic or []) | dump | safe }},
-      "content_html": {{ post.templateContent | dump | safe }}
+      "content_html": {{ post.templateContent | feedHTML(post.url, site.url) | dump | safe }}
     }{%- if not loop.last -%},{%- endif %}
 {%- endfor %}
   ]

@@ -33,8 +33,8 @@
     return recent.dayKey(utc - 2 * recent.HOUR) === value ? utc - 2 * recent.HOUR : utc - recent.HOUR;
   }
   function hours(value) { return (midnight(nextDate(value)) - midnight(value)) / recent.HOUR; }
-  function metadata(value) {
-    assert(value.schema_version === 1 && value.timezone === recent.TIMEZONE, 'Unbekanntes Datenformat');
+  function metadata(value, nullable = false) {
+    assert((value.schema_version === 1 || (nullable && value.schema_version === 2)) && value.timezone === recent.TIMEZONE, 'Unbekanntes Datenformat');
     fields(value.source, Object.keys(recent.SOURCE));
     assert(Object.entries(recent.SOURCE).every(([key, expected]) => value.source[key] === expected), 'Ungültige Quelle');
   }
@@ -63,7 +63,7 @@
   function validatePartition(partition, entry) {
     validateEntry(entry);
     fields(partition, ['schema_version', 'year', 'timezone', 'source', 'rows']);
-    metadata(partition);
+    metadata(partition, true);
     assert(partition.year === entry.year && Array.isArray(partition.rows) && partition.rows.length === entry.days, 'Jahr/Tagesanzahl stimmt nicht');
     let expected = entry.first_date;
     partition.rows.forEach((row) => {
@@ -72,11 +72,11 @@
       fields(row.energy_gwh, ENERGY);
       ENERGY.forEach((key) => {
         const value = row.energy_gwh[key];
-        assert((value === null && GAPS[row.date] === key) ||
+        assert((value === null && (partition.schema_version === 2 || GAPS[row.date] === key)) ||
           (typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 200 * row.hours), 'Ungültige Energie oder unerlaubte Lücke');
       });
       const price = row.price_eur_mwh;
-      assert(row.date < '2015-01-05' ? price === null : typeof price === 'number' && Number.isFinite(price) && Math.abs(price) <= 10000, 'Ungültiger Tagespreis');
+      assert(row.date < '2015-01-05' ? price === null : (partition.schema_version === 2 && price === null) || typeof price === 'number' && Number.isFinite(price) && Math.abs(price) <= 10000, 'Ungültiger Tagespreis');
       assert(row.price_zone === (row.date < '2018-10-01' ? 'DE-AT-LU' : 'DE-LU'), 'Ungültige Preiszone');
       assert(typeof row.nuclear_derived_zero === 'boolean' && (!row.nuclear_derived_zero || (row.date > '2023-04-15' && row.energy_gwh.nuclear === 0)), 'Ungültige abgeleitete Kernkraft-Null');
       assert(row.date <= '2023-04-15' || row.energy_gwh.nuclear === 0, 'Kernkraft nach Abschaltung');
@@ -174,16 +174,19 @@
       return cache.get(year);
     };
   }
-  function complete(row) { return ENERGY.every((key) => row.energy_gwh[key] !== null); }
+  function complete(row) { return SOURCES.every((source) => row.energy_gwh[source.key] !== null); }
   function summarize(partition) {
     const rows = partition.rows;
     const known = rows.filter(complete);
     const knownHours = known.reduce((sum, row) => sum + row.hours, 0);
     const totalHours = rows.reduce((sum, row) => sum + row.hours, 0);
-    const energy = Object.fromEntries(ENERGY.map((key) => [key, known.reduce((sum, row) => sum + row.energy_gwh[key], 0)]));
+    const energy = Object.fromEntries(SOURCES.map(({ key }) => [key, known.reduce((sum, row) => sum + row.energy_gwh[key], 0)]));
     const generationEnergy = SOURCES.reduce((sum, source) => sum + energy[source.key], 0);
     const renewableEnergy = SOURCES.filter((source) => source.renewable).reduce((sum, source) => sum + energy[source.key], 0);
     const prices = rows.filter((row) => row.price_eur_mwh !== null);
+    const loads = rows.filter((row) => row.energy_gwh.load !== null);
+    const loadHours = loads.reduce((sum, row) => sum + row.hours, 0);
+    const loadEnergy = loadHours ? loads.reduce((sum, row) => sum + row.energy_gwh.load, 0) : null;
     const priceHours = prices.reduce((sum, row) => sum + row.hours, 0);
     const mix = SOURCES.map((source) => ({ ...source, energy: knownHours ? energy[source.key] : null,
       average: knownHours ? energy[source.key] / knownHours : null,
@@ -192,10 +195,10 @@
       completeDays: known.length, days: rows.length, priceDays: prices.length, priceHours,
       generationEnergy: knownHours ? generationEnergy : null,
       generationAverage: knownHours ? generationEnergy / knownHours : null,
-      loadEnergy: knownHours ? energy.load : null, loadAverage: knownHours ? energy.load / knownHours : null,
+      loadDays: loads.length, loadHours, loadEnergy, loadAverage: loadHours ? loadEnergy / loadHours : null,
       renewableShare: generationEnergy ? renewableEnergy / generationEnergy * 100 : null,
       priceAverage: priceHours ? prices.reduce((sum, row) => sum + row.price_eur_mwh * row.hours, 0) / priceHours : null,
-      negativeDays: prices.filter((row) => row.price_eur_mwh < 0).length,
+      negativeDays: prices.length ? prices.filter((row) => row.price_eur_mwh < 0).length : null,
       derivedZeroDays: rows.filter((row) => row.nuclear_derived_zero).length,
       zone: partition.year === 2018 ? 'DE–AT–LU / DE–LU (gemischte Marktgebiete 2018)' : partition.year < 2018 ? 'DE–AT–LU' : 'DE–LU',
       label: `${recent.dateLabel(date(rows[0].date))} – ${recent.dateLabel(date(rows[rows.length - 1].date))}` };
@@ -206,10 +209,14 @@
     return { label: summary.label, generation: n(summary.generationAverage), energy: n(summary.generationEnergy),
       renewable: n(summary.renewableShare), load: n(summary.loadAverage), price: n(summary.priceAverage, 2),
       hours: n(summary.hours, 0), negative: n(summary.negativeDays, 0),
-      coverage: `${coverage} für alle Energie-Kennzahlen und den Mix. ${summary.completeDays < summary.days ? 'Teilsummen, keine Jahressummen: unvollständige Tage auch bei Netzlast und Erneuerbaren ausgeschlossen.' : 'Vollständig bedeutet: alle täglichen Quellwerte vorhanden; keine Bestätigung lückenloser zugrunde liegender Stunden.'}`,
-      generationText: `${coverage}: ${n(summary.generationEnergy)} GWh öffentliche Erzeugung, ${n(summary.generationAverage)} GW im Mittel; ${n(summary.renewableShare)} % erneuerbar. Tagesenergie / tatsächliche Tagesstunden (23/24/25) ergibt die dargestellte Leistung. Unvollständige Erzeugungstage bleiben als Lücken sichtbar.`,
-      loadText: `Netzlast auf derselben Datenbasis (${coverage}): ${n(summary.loadEnergy)} GWh, im Mittel ${n(summary.loadAverage)} GW. Das Diagramm zeigt alle verfügbaren Tagesmittel, auch an Tagen mit unvollständiger Erzeugung.`,
-      priceText: `${summary.zone}: ${n(summary.priceAverage, 2)} €/MWh, Tagesmittel nach tatsächlichen Tagesstunden gewichtet. Preisabdeckung: ${summary.priceDays}/${summary.days} Tage (${n(summary.priceHours, 0)}/${n(summary.totalHours, 0)} Stunden). ${summary.negativeDays} ${summary.negativeDays === 1 ? 'Tag' : 'Tage'} mit negativem Tagesmittel. Negative Preisstunden und stündliche Minima/Maxima sind daraus nicht ableitbar.`,
+      coverage: `${coverage} für Erzeugung und Mix. Netzlast: ${summary.loadDays}/${summary.days} Tage.${summary.completeDays < summary.days ? ' Teilsummen, keine Jahressummen: Erzeugung und Anteile nur über dieselben vollständigen Erzeugungstage.' : ''}`,
+      // Headlines keep every incompleteness marker visible; notes only explain definitions.
+      generationText: `${coverage}: ${n(summary.generationEnergy)} GWh öffentliche Erzeugung, ${n(summary.generationAverage)} GW im Mittel; ${n(summary.renewableShare)} % erneuerbar.${summary.completeDays < summary.days ? ' Unvollständige Erzeugungstage bleiben als Lücken sichtbar.' : ''}`,
+      generationNote: 'Tagesenergie / tatsächliche Tagesstunden (23/24/25) ergibt die dargestellte Leistung. Vollständig bedeutet: alle täglichen Quellwerte vorhanden; keine Bestätigung lückenloser zugrunde liegender Stunden. Unvollständige Erzeugungstage bleiben als Lücken sichtbar.',
+      loadText: `Netzlast: ${summary.loadDays}/${summary.days} Tage, ${n(summary.loadEnergy)} GWh, im Mittel ${n(summary.loadAverage)} GW.${summary.loadDays < summary.days ? ' Teilsumme aus bekannten Werten.' : ''}`,
+      loadNote: `${n(summary.loadHours, 0)}/${n(summary.totalHours, 0)} Stunden mit bekannter Netzlast; bei Lücken Teilsumme. Die Abdeckung der Netzlast ist unabhängig von der Erzeugung.`,
+      priceText: `${summary.zone}: im Mittel ${n(summary.priceAverage, 2)} €/MWh. Preisabdeckung: ${summary.priceDays}/${summary.days} Tage; ${n(summary.negativeDays, 0)} ${summary.negativeDays === 1 ? 'Tag' : 'Tage'} mit negativem Tagesmittel.`,
+      priceNote: `Tagesmittel nach tatsächlichen Tagesstunden gewichtet (${n(summary.priceHours, 0)}/${n(summary.totalHours, 0)} Stunden mit bekanntem Preis). Negative Tage zählen nur unter bekannten Tagen. Negative Preisstunden und stündliche Minima/Maxima sind aus Tagesmitteln nicht ableitbar.`,
     };
   }
   function freshness(manifest, now = Date.now()) {

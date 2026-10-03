@@ -7,6 +7,7 @@
 
   let chart = null;
   let isInitialized = false;
+  const hasAuthoredLabel = chartDom.hasAttribute('aria-labelledby') || chartDom.hasAttribute('aria-label');
 
   // Detect dark mode
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -32,9 +33,16 @@
 
     const colors = getThemeColors();
     const xData = ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"];
-    const seriesData = [{"key":"Solar_GW","name":"Solarerzeugung (GW)","data":[0,0,0,0,0,0.001075,0.531219,4.916353667,13.804925333,23.646180667,31.460477333,36.444304,38.960787667,39.158678333,37.432242333,33.688873333,27.396225667,18.936504333,9.476419667,2.463419667,0.132239,0.000107333,0,0],"color":null}];
+    const seriesData = [{"key":"Solar_GW","name":"Solarerzeugung (GW)","data":[0,0,0,0,0,0.000003333,0.087494,2.675108667,10.539538667,20.602722667,29.311250667,34.779516333,37.197798333,37.140627,34.904538667,30.592152333,23.855803667,14.897493333,5.733481667,0.751951333,0.005462333,0.000001333,0,0],"color":null}];
 
     const option = {
+      aria: {
+        enabled: true,
+        // Keep the article's authored accessible name and summary when present.
+        label: {
+          enabled: !hasAuthoredLabel
+        }
+      },
       backgroundColor: colors.backgroundColor,
       title: undefined,
       tooltip: {
@@ -123,6 +131,7 @@
     if (isInitialized) return;
     isInitialized = true;
 
+    if (!chartDom.hasAttribute('role')) chartDom.setAttribute('role', 'img');
     chart = echarts.init(chartDom);
     updateChart();
 

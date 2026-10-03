@@ -53,7 +53,7 @@ python generate.py \
   --model MAI-Image-2.5 \
   --width 1366 \
   --height 768 \
-  --prompt "Full-bleed editorial blog card illustration, no border, no margin, no white bar, no text, no logos, wide 16:9 composition" \
+  --prompt "Blog card illustration of <scene>, comfy realistic anime style, hand-painted anime background art, soft warm light, full-bleed, no border, no margin, no white bar, no text, no logos, wide 16:9 composition" \
   --out my-post-image
 ```
 
@@ -116,7 +116,10 @@ recommend rotating it.
 
    ```yaml
    image: "/images/blog_card_images/<year>/my-post-image.png"
-   imageText: "Short descriptive image caption"
+   imageAlt: "Description of what the image shows" # empty only if decorative
+   imageText: "Visible editorial image caption"
+   # socialImage: "/images/blog_card_images/<year>/my-post-social.png"
+   # socialImageAlt: "Description of the social preview image"
    ```
 
 3. Verify the copied image:
@@ -132,45 +135,92 @@ recommend rotating it.
    PY
    ```
 
-4. Run the frontend build from `frontend/`:
+4. Run the [checks](../../../docs/seo.md#checks) from `frontend/`:
+   `npm test -- --runInBand`, `npm run lint`, `npm run build`,
+   `npm run test:seo-output`. Inspect the hero and card rendering on mobile and
+   desktop. Checks do not authorize publication or deployment.
 
-   ```bash
-   npm run build
-   ```
+### Responsive delivery and metadata (summary)
+
+The details are in [Images](../../../docs/seo.md#images). In short:
+
+- Keep the curated source under `frontend/src/images/`, and reference it as a local
+  `/images/...` path with the exact letter case. A wrong path or case fails the build
+  with a clear `Image not found` error. Unused files are never processed.
+- The build creates WebP plus JPEG/PNG variants in the ignored
+  `_site/assets/images/`. Never commit them or hand-write their hashed URLs.
+- Cards are decorative. `imageAlt` (and optional `socialImageAlt` for a separate
+  `socialImage`) should describe the image, not repeat the caption. When no alt is
+  set, `og:image:alt` is omitted. Pages without an image use the brand preview with
+  alt `Databearer-Logo`.
+- Image generation with Azure is a separate authoring step. The frontend build never
+  fetches images. JSON Feed keeps the original `image` URL, and `_image_alt` there is
+  `imageText` ([Feeds](../../../docs/seo.md#feeds)).
 
 ## Prompt guidance
 
-- Default to a natural image that matches the post's topic and overall
-  sentiment. Do **not** add numbers, charts, graphs, dashboards, documents,
-  data overlays, or abstract data-visual metaphors unless the user explicitly
-  asks for them.
-- Use visual mood to reflect the story: positive results should get an
-  optimistic/bright image; negative or critical posts should get a more sober
-  tone.
-- Ask for editorial/blog-card style, realistic or lightly polished unless the
-  user requests abstraction.
+### House style: comfy realistic anime
+
+Every Databearer card image uses the same default look: **comfy realistic anime
+style**. Only deviate if the user explicitly asks for another style for a post.
+
+- Hand-painted anime look with realistic proportions, believable architecture,
+  landscapes and technology (in the spirit of modern anime films' background art),
+  not chibi, not exaggerated characters, not photorealistic, not 3D render.
+- Comfy, calm atmosphere: soft warm light, gentle colours, cosy everyday details,
+  lots of sky and nature where it fits.
+- People are optional and small in the scene; the subject is the place or the
+  technology, not a character portrait.
+- Always put this style phrase into the prompt:
+  `comfy realistic anime style, hand-painted anime background art, realistic
+  proportions and details, soft warm light, calm cosy atmosphere`.
+
+### Content and mood
+
+- Default to a scene that matches the post's topic and overall sentiment. Do
+  **not** add numbers, charts, graphs, dashboards, documents, data overlays, or
+  abstract data-visual metaphors unless the user explicitly asks for them.
+- For data-journalism posts, show the underlying real-world subject instead, for
+  example wind turbines for wind power, factories for industry, rivers/cooling
+  towers for nuclear heat stress, or city/landscape scenes for economic topics.
+  Prefer recognisably German/Central European settings.
+- Use visual mood to reflect the story within the comfy style: positive results
+  get bright, warm, hopeful light; negative or critical posts get a quieter,
+  more overcast or dusky tone, but stay calm rather than dramatic.
 - Include the post's subject and the intended mood.
-- Always include `no text, no logos, no numbers, no charts, no diagrams, no
-  documents, no data visualizations` unless those elements are explicitly
-  requested.
-- Always include `full-bleed`, `image content must fill the entire frame edge
-  to edge`, `no border`, `no margin`, `no padding`, `no white bar`, and `no
-  empty band at the bottom` for blog card images.
-- Use `wide 16:9 composition` for blog card images.
-- For data-journalism posts, avoid literal data visuals by default. Use the
-  underlying real-world subject instead, for example wind turbines for wind
-  power, factories for industry, rivers/cooling towers for nuclear heat stress,
-  or city/landscape scenes for economic topics.
+
+### Always include
+
+- `no text, no logos, no numbers, no charts, no diagrams, no documents, no data
+  visualizations` unless those elements are explicitly requested.
+- `full-bleed`, `image content must fill the entire frame edge to edge`,
+  `no border`, `no margin`, `no padding`, `no white bar`, and `no empty band at
+  the bottom`.
+- `wide 16:9 composition`.
+
+### Prompt template
+
+```text
+Blog card illustration for a German data journalism article about <topic> with
+<positive/neutral/critical> findings: <scene with the real-world subject>,
+<setting, time of day, light>, <mood>, comfy realistic anime style, hand-painted
+anime background art, realistic proportions and details, soft warm light, calm
+cosy atmosphere, wide 16:9 composition, full-bleed image content filling the
+entire frame edge to edge, no border, no margin, no padding, no white bar, no
+empty band at the bottom, no text, no logos, no numbers, no charts, no diagrams,
+no documents, no data visualizations
+```
 
 Example prompt for wind-power auction posts:
 
 ```text
-Editorial blog card illustration for a German data journalism article about
-wind power auctions with positive results: beautiful modern onshore wind
-turbines in a sunny German countryside landscape, blue sky, soft warm light,
-green fields, clean renewable energy atmosphere, calm and hopeful mood,
-realistic but slightly polished journalistic style, wide 16:9 composition,
+Blog card illustration for a German data journalism article about wind power
+auctions with positive results: modern onshore wind turbines on gentle hills in
+the German countryside, green fields and a small village with red roofs, blue sky
+with soft summer clouds, late afternoon light, calm and hopeful mood, comfy
+realistic anime style, hand-painted anime background art, realistic proportions
+and details, soft warm light, calm cosy atmosphere, wide 16:9 composition,
 full-bleed image content filling the entire frame edge to edge, no border, no
-margin, no padding, no white bar, no empty band at the bottom, no text, no
-logos, no numbers, no charts, no diagrams, no documents, no data visualizations
+margin, no padding, no white bar, no empty band at the bottom, no text, no logos,
+no numbers, no charts, no diagrams, no documents, no data visualizations
 ```
