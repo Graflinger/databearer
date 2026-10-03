@@ -81,8 +81,9 @@ Then fix drift:
 - Merge: remove the topic row as part of the PR's final commit. If the change is
   public-facing, add the PR number to the single `release-promotion` row
   (status `awaiting release`) instead of keeping a separate row.
-- Promotion to `releases/cloudflare` (manual promotion, see
-  `docs/dashboard_publication.md`): after checking the live site, remove every
+- Promotion to `releases/cloudflare` (automatic every Sunday, see
+  `docs/release_promotion.md`; manual only for workflow-file changes): after the
+  run is green, remove every
   PR from `release-promotion` that is now an ancestor of `origin/releases/cloudflare`.
   Keep the row with PR `—` and next step "Nothing pending" when it's empty.
 - Closed/abandoned: remove, or `parked` with the reason.

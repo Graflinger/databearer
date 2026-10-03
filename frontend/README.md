@@ -80,7 +80,8 @@ plants; it is neither all German storage nor GWh/duration. Congestion interventi
 are not outages, renewable generation losses, or a stability indicator. The compact
 method disclosure links licensing/provenance and explains deferred, unlicensed
 auctions, grid projects, interconnectors and SAIDI. This source remains separately
-refreshed manually/at most monthly and manually promoted, outside daily publication.
+refreshed manually/at most monthly, outside daily publication, and goes live through
+the [weekly release promotion](../docs/release_promotion.md) once merged into `main`.
 
 Checks: `npm test`, `npm run lint`, `npm run build`; inspect desktop/mobile and dark
 mode, independent controls, viewport-only loading, and ECharts-disabled text fallback.

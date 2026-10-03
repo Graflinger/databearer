@@ -1,4 +1,4 @@
-"""Offline contracts for the release-first dashboard workflows.
+"""Offline contracts for the release-first dashboard and weekly promotion workflows.
 
 Run: python3 -B -m unittest discover -s scripts/tests -p 'test_dashboard_workflow.py' -v
 
@@ -288,7 +288,8 @@ class DashboardWorkflowTests(unittest.TestCase):
             with self.subTest(event=event):
                 paths = field(field(triggers, event), "paths")
                 for path in ("scripts/dashboard_sync.py", "scripts/dashboard_publish.py",
-                             "scripts/verify_dashboard_deployment.py", "scripts/tests/**", ".github/workflows/**"):
+                             "scripts/verify_dashboard_deployment.py", "scripts/release_promotion.py",
+                             "scripts/tests/**", ".github/workflows/**"):
                     self.assertIn("'" + path + "'", paths)
         job = field(field(self.ci, "jobs"), "pipeline")
         self.assertIsNone(field(job, "if"))
@@ -296,6 +297,91 @@ class DashboardWorkflowTests(unittest.TestCase):
         test = self.one_step(steps(job), run="unittest discover -s scripts/tests -p 'test_*.py' -v")
         self.assert_success_only(test)
         self.assertIsNone(field(test, "working-directory"))
+
+
+PROMOTE = "env.PROMOTE == 'true' && steps.pending.outputs.pending == 'true'"
+PENDING = "steps.pending.outputs.pending == 'true'"
+
+
+class ReleasePromotionWorkflowTests(unittest.TestCase):
+    """Contracts for the weekly main → releases/cloudflare promotion."""
+
+    # Reuse the step helpers without inheriting (and rerunning) the dashboard tests.
+    one_step = DashboardWorkflowTests.one_step
+    assert_order = DashboardWorkflowTests.assert_order
+    assert_success_only = DashboardWorkflowTests.assert_success_only
+
+    @classmethod
+    def setUpClass(cls):
+        cls.text = workflow("promote-release.yml")
+        cls.job = field(field(cls.text, "jobs"), "promote")
+        cls.steps = steps(cls.job)
+
+    def test_sunday_schedule_shared_concurrency_and_check_only_default(self):
+        triggers = field(self.text, "on")
+        self.assertEqual(field(triggers, "schedule"), "- cron: '17 4 * * 0'")
+        promote = field(field(field(triggers, "workflow_dispatch"), "inputs"), "promote")
+        self.assertEqual(field(promote, "type"), "boolean")
+        self.assertEqual(field(promote, "default"), "false")
+        concurrency = field(self.text, "concurrency")
+        # The same group as the dashboard refresh: never two production writers.
+        self.assertEqual(field(concurrency, "group"), "electricity-dashboard-publication")
+        self.assertEqual(field(concurrency, "cancel-in-progress"), "false")
+        self.assertEqual(field(field(self.job, "env"), "PROMOTE"),
+                         "${{ github.event_name == 'schedule' || inputs.promote }}")
+        self.assertIsNone(field(self.job, "if"))
+        self.assertIsNone(field(self.text, "defaults"))
+
+    def test_released_checkout_and_main_guard_precede_work(self):
+        guard = self.one_step(self.steps, run='test "$GITHUB_REF"')
+        self.assertRegex(field(guard, "run"),
+                         r'test "\$GITHUB_REF" = "refs/heads/main" \|\| \{[^\n]*exit 1; \}')
+        self.assert_success_only(guard, "env.PROMOTE == 'true'")
+        checkout = self.one_step(self.steps, action="actions/checkout")
+        self.assertEqual(field(field(checkout, "with"), "ref"), "releases/cloudflare")
+        self.assertEqual(field(field(checkout, "with"), "fetch-depth"), "0")
+        self.assert_success_only(checkout)
+        self.assert_order(self.steps, guard, checkout, self.one_step(self.steps, step_id="prepare"))
+
+    def test_candidate_comes_from_released_sync_script(self):
+        prepare = self.one_step(self.steps, step_id="prepare")
+        command = " ".join(field(prepare, "run").replace("\\\n", " ").split())
+        self.assertIn('release=$(git rev-parse HEAD)', command)
+        self.assertIn('python3 scripts/dashboard_sync.py prepare --release "$release" '
+                      '--worktree "$RUNNER_TEMP/promotion" --state "$RUNNER_TEMP/promotion.json" '
+                      '>> "$GITHUB_OUTPUT"', command)
+        self.assert_success_only(prepare)
+        pending = self.one_step(self.steps, step_id="pending")
+        self.assertIn('if [ "$CANDIDATE" = "$RELEASE_SHA" ]; then', field(pending, "run"))
+
+    def test_workflow_check_and_full_offline_validation_precede_any_push(self):
+        check = self.one_step(self.steps, run="scripts/release_promotion.py check")
+        pipeline = self.one_step(self.steps, run="test_german_electricity*.py")
+        frontend = self.one_step(self.steps, run="npm run build")
+        plan = self.one_step(self.steps, run="scripts/release_promotion.py plan")
+        sync = self.one_step(self.steps, run="scripts/dashboard_sync.py publish")
+        push = self.one_step(self.steps, run="scripts/release_promotion.py push")
+        verify = self.one_step(self.steps, run="scripts/release_promotion.py verify")
+        self.assertEqual(field(frontend, "run").splitlines(),
+                         FRONTEND_CHECKS + ["npm run test:seo-output"])
+        self.assertEqual(field(frontend, "working-directory"), "${{ runner.temp }}/promotion/frontend")
+        self.assertIn(SCRIPT_TESTS, field(pipeline, "run"))
+        for step in (check, pipeline, frontend, plan):
+            self.assert_success_only(step, PENDING)
+        for step in (sync, push, verify):
+            self.assert_success_only(step, PROMOTE)
+        self.assert_order(self.steps, check, pipeline, frontend, plan, sync, push, verify)
+
+    def test_no_force_no_live_source_refresh_and_no_direct_git_writes(self):
+        commands = "\n".join(field(s, "run", "") for s in self.steps)
+        self.assertNotIn("--force", commands)
+        self.assertNotIn("src.data_pipelines", commands)
+        self.assertNotIn("dashboard_publish.py", commands)
+        self.assertNotRegex(commands, r"\b(?:curl|wget|backfill|reconcile)\b")
+        self.assertNotRegex(commands, r"\bgit\s+(?:push|merge|checkout|switch|reset)\b")
+        for step in self.steps:
+            self.assertIn(field(step, "continue-on-error"), (None, "false"))
+            self.assertIsNone(field(step, "shell"))
 
 
 if __name__ == "__main__":

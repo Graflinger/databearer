@@ -34,7 +34,9 @@ Data flow: **pipeline** produces datasets → **frontend** renders them as posts
 ## Branching & deployment
 
 Production is deployed by **Cloudflare Pages from the `releases/cloudflare` branch** — not from
-`main`. Blog/code changes retain an explicit manual promotion gate. The authorized
+`main`. Everything on `main` is promoted every Sunday by the
+[weekly release promotion](docs/release_promotion.md); unfinished posts stay hidden
+with `draft: true`, and workflow-file changes need manual promotion. The authorized
 daily dashboard publisher advances production with validated data-only changes using
 released code, then separately synchronizes verified release ancestry into current
 `main`. Unpublished main changes do not block production refreshes.

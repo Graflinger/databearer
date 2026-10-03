@@ -7,8 +7,8 @@ no DuckDB, dbt, new dependency or daily workflow integration. Publication retain
 the manual release gate. The authorized [daily publisher](dashboard_publication.md)
 refreshes recent/history/trade only; progress is outside its write allowlist. Daily
 build/public verification reads this existing snapshot without fetching its source
-or advancing its observation dates. Review and manually promote progress changes
-separately, reconciling release ancestry into `main` first when needed.
+or advancing its observation dates. Review progress changes in their own PR; once
+merged into `main`, the [weekly release promotion](release_promotion.md) publishes them.
 
 ## Commands and bounded refresh
 

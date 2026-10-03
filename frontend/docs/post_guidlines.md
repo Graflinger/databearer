@@ -12,11 +12,13 @@ not promise rankings.
 - [ ] `excerpt` is plain text in 1–2 sentences, with the key finding first and no
   draft labels. It becomes the meta description, card text, search excerpt and feed
   summary ([Content guidance](../../docs/seo.md#content-guidance)).
-- [ ] `date` is explicit (`YYYY-MM-DD`). `lastUpdated` is set only for a real
-  substantive revision.
+- [ ] `date` is explicit (`YYYY-MM-DD`) and is the Sunday the post goes live through
+  the [weekly release promotion](../../docs/release_promotion.md). `lastUpdated` is
+  set only for a real substantive revision.
 - [ ] `draft: true` is present while drafting and removed for publication, together
   with any extra `eleventyExcludeFromCollections`, `excludeFromSitemap` or
   `permalink` overrides added while drafting ([Drafts](../../docs/seo.md#drafts)).
+  Anything merged into `main` without it goes live on the next Sunday.
 - [ ] `image` and optional `socialImage` are local `/images/...` files with the exact
   letter case. `imageAlt`/`socialImageAlt` describe the image and are left empty only
   for decorative images. `imageText` is the visible caption

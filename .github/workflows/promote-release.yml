@@ -1,0 +1,114 @@
+name: Weekly release promotion
+
+# Every Sunday, publish everything reviewed on main to production
+# (releases/cloudflare). Unfinished work stays hidden with `draft: true`.
+# Released scripts drive the run; the candidate is validated offline before any
+# push. See docs/release_promotion.md.
+on:
+  schedule:
+    # Sunday 04:17 UTC (06:17 CEST / 05:17 CET). GitHub may start much later.
+    - cron: '17 4 * * 0'
+  workflow_dispatch:
+    inputs:
+      promote:
+        description: Push the validated main candidate to production (false = check only)
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# Shared with the dashboard refresh so that only one run moves production.
+concurrency:
+  group: electricity-dashboard-publication
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    name: Validate main and promote it to production (or check only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PROMOTE: ${{ github.event_name == 'schedule' || inputs.promote }}
+    steps:
+      - name: Authorize promotion trigger
+        if: env.PROMOTE == 'true'
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || { echo "Promotion requires the main ref" >&2; exit 1; }
+      - uses: actions/checkout@v4
+        with:
+          ref: releases/cloudflare
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Prepare candidate from current main and exact release
+        id: prepare
+        run: |
+          release=$(git rev-parse HEAD)
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          python3 scripts/dashboard_sync.py prepare --release "$release" \
+            --worktree "$RUNNER_TEMP/promotion" \
+            --state "$RUNNER_TEMP/promotion.json" >> "$GITHUB_OUTPUT"
+      - name: Decide whether main has unreleased changes
+        id: pending
+        env:
+          RELEASE_SHA: ${{ steps.prepare.outputs.release }}
+          CANDIDATE: ${{ steps.prepare.outputs.candidate }}
+        run: |
+          if [ "$CANDIDATE" = "$RELEASE_SHA" ]; then
+            echo "pending=false" >> "$GITHUB_OUTPUT"
+            echo "Nothing to promote: production already contains main ($RELEASE_SHA)." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "pending=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Reject candidates that this token cannot publish
+        if: steps.pending.outputs.pending == 'true'
+        env:
+          RELEASE_SHA: ${{ steps.prepare.outputs.release }}
+          CANDIDATE: ${{ steps.prepare.outputs.candidate }}
+        run: python3 scripts/release_promotion.py check --release "$RELEASE_SHA" --candidate "$CANDIDATE"
+      - name: Install candidate dashboard runtime
+        if: steps.pending.outputs.pending == 'true'
+        working-directory: ${{ runner.temp }}/promotion/pipeline
+        run: python -m pip install -r requirements-dashboard.txt
+      - name: Validate candidate pipeline and publication safeguards offline
+        if: steps.pending.outputs.pending == 'true'
+        working-directory: ${{ runner.temp }}/promotion
+        run: |
+          (cd pipeline && PYTHONPATH=. python -B -m unittest discover -s tests -p 'test_german_electricity*.py' -v)
+          python -B -m unittest discover -s scripts/tests -p 'test_*.py' -v
+      - uses: actions/setup-node@v4
+        if: steps.pending.outputs.pending == 'true'
+        with:
+          node-version: '20'
+      - name: Validate candidate frontend without fetching source data
+        if: steps.pending.outputs.pending == 'true'
+        working-directory: ${{ runner.temp }}/promotion/frontend
+        run: |
+          npm ci
+          npm test -- --runInBand
+          npm run lint
+          npm run build
+          npm run test:seo-output
+      - name: Plan newly published posts and check their dates
+        if: steps.pending.outputs.pending == 'true'
+        env:
+          CANDIDATE: ${{ steps.prepare.outputs.candidate }}
+        run: |
+          python3 scripts/release_promotion.py plan --candidate "$CANDIDATE" \
+            --feed "$RUNNER_TEMP/promotion/frontend/_site/feed.json" \
+            --out "$RUNNER_TEMP/promotion-plan.json" --summary "$GITHUB_STEP_SUMMARY"
+      - name: Push validated candidate to main only (sync)
+        if: env.PROMOTE == 'true' && steps.pending.outputs.pending == 'true'
+        run: python3 scripts/dashboard_sync.py publish --state "$RUNNER_TEMP/promotion.json"
+      - name: Fast-forward production to the validated candidate
+        if: env.PROMOTE == 'true' && steps.pending.outputs.pending == 'true'
+        env:
+          RELEASE_SHA: ${{ steps.prepare.outputs.release }}
+          CANDIDATE: ${{ steps.prepare.outputs.candidate }}
+        run: python3 scripts/release_promotion.py push --release "$RELEASE_SHA" --candidate "$CANDIDATE"
+      - name: Confirm new posts are publicly live
+        if: env.PROMOTE == 'true' && steps.pending.outputs.pending == 'true'
+        run: python3 scripts/release_promotion.py verify --plan "$RUNNER_TEMP/promotion-plan.json" --timeout 600 --interval 15

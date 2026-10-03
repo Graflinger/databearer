@@ -72,9 +72,12 @@ outstanding sync. There is no two-ref atomic promise. Production retains a ten-m
 budget including its 240-second verifier; sync has its own ten-minute cap and extra
 validation/build cost. Follow the runbook's separate public-failure and sync recovery.
 
-Normal code/blog changes require manual promotion: incorporate latest release
-ancestry into reviewed main via sync or explicit real-merge reconciliation, preserve
-newer snapshots, pass checks, then fast-forward release without force. Main and
+Normal code/blog changes are promoted every Sunday by `promote-release.yml`
+([Weekly release promotion](../docs/release_promotion.md)): everything on `main`
+goes live, so hide unfinished posts with `draft: true` and date posts to their
+publication Sunday. Workflow-file changes still need manual promotion: incorporate
+latest release ancestry into reviewed main, preserve newer snapshots, pass checks,
+then fast-forward release without force. Main and
 release need not routinely equal. Monthly/manual progress and frozen annual
 supplements are excluded from daily source refreshes and the write allowlist.
 Public copy describes automatic daily updates with actual observation dates, while
@@ -120,7 +123,7 @@ Chart config structure:
 ### Post Frontmatter
 ```yaml
 title: "Post Title"                # accurate claim; no brand suffix
-date: 2025-01-01
+date: 2025-01-01                   # the Sunday it goes live (weekly promotion)
 draft: true                        # boolean; remove when publishing
 excerpt: "Key finding first, 1–2 plain-text sentences"
 image: "/images/blog_card_images/2025/filename.png"

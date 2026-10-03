@@ -64,8 +64,9 @@ file intact and removes the temporary file. No-change runs preserve bytes and mt
 Cross-checkout publication uses serialized Git operations in the authorized
 [daily data publisher](dashboard_publication.md). Trade's current-year correction
 window is included after recent/history refresh; normal code and explicit closed-year
-reconciliation retain manual release promotion after integrating latest release
-ancestry into reviewed main and preserving newer snapshots. The release-first
+reconciliation are reviewed on `main` and go live through the
+[weekly release promotion](release_promotion.md), which integrates latest release
+ancestry and preserves newer snapshots. The release-first
 implementation requires deliberate promotion to both branches and new live rollout
 verification; the September 10 successful run covered the old both-ref design.
 
