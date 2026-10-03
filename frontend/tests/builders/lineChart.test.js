@@ -44,4 +44,21 @@ describe('buildLineChart', () => {
     expect(result).toContain('Expenses');
     expect(result).toContain('#111111');
   });
+
+  it('adds an optional right-hand axis without changing default output', () => {
+    const data = [{ x: '2025', a: 1, b: 100 }, { x: '2026*', a: 2, b: 200 }];
+    const base = { containerId: 'dual', xKey: 'x', seriesKeys: ['a', 'b'], yAxisLabel: 'GWh' };
+    expect(buildLineChart(data, base)).not.toContain('yAxisIndex');
+    expect(buildLineChart(data, base)).not.toContain('clientWidth');
+    const dual = buildLineChart(data, { ...base, secondaryYAxisLabel: 'Anzahl', seriesYAxisIndex: [0, 1] });
+    expect(dual).toContain('yAxis: [{');
+    expect(dual).toContain('name: "Anzahl"');
+    expect(dual).toContain('yAxisIndex: series.yAxisIndex');
+    expect(dual).toContain('"yAxisIndex":1');
+    expect(() => buildLineChart(data, { ...base, secondaryYAxisLabel: 'Anzahl' })).toThrow('seriesYAxisIndex');
+    expect(() => buildLineChart(data, { ...base, secondaryYAxisLabel: 'Anzahl', seriesYAxisIndex: [0, 2] })).toThrow('seriesYAxisIndex');
+    const narrow = buildLineChart(data, { ...base, narrowGridTop: '30%', narrowShortYearLabels: true });
+    expect(narrow).toContain('chartDom.clientWidth < 600 ? "30%"');
+    expect(narrow).toContain('interval: 0');
+  });
 });

@@ -83,8 +83,9 @@ Important folders:
    ```
 
 4. Write the body with H2/H3 only. The layout renders the H1, excerpt and byline.
-   Start with the key takeaway, add static chart evidence, and end with a
-   Methodik/Datenquellen section. Follow the
+   Start with the key takeaway, add static chart evidence, and end with a short
+   "Daten und Quellen" section. Voice and methodology length follow the
+   `blog-post-workflow` skill (one author, no "unsere Auswertung"). Follow the
    [post QA guide](../../../frontend/docs/post_guidlines.md).
 5. For posts with charts, also use the `frontend-visualization` skill.
 6. Run the [checks](../../../docs/seo.md#checks): `npm test -- --runInBand`,

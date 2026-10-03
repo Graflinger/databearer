@@ -389,9 +389,43 @@ class XMLBoundsTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'Invalid NV'):
                 self.parse(data)
 
+    def test_utf16_both_byte_orders_and_split_unicode_preserve_values(self):
+        text = ('<?xml version="1.0" encoding="UTF-16"?>' +
+                xml(m.MASTR_BATTERY_TABLES[-1]).decode().replace('value', 'Größe 🐻'))
+
+        class ShortReads(io.BytesIO):
+            def read(self, size=-1):
+                return super().read(min(size, 1))
+
+        for bom, encoding in ((b'\xff\xfe', 'utf-16-le'), (b'\xfe\xff', 'utf-16-be')):
+            data = bom + text.encode(encoding)
+            for member in (io.BytesIO(data), ShortReads(data)):
+                with self.subTest(encoding=encoding, reader=type(member).__name__):
+                    count, seen, rows = self.parse(data, member)
+                    self.assertEqual((count, seen, rows),
+                                     (1, {'Id', 'Name'}, [{'Id': '1', 'Name': 'Größe 🐻'}]))
+
     def test_utf16_cannot_bypass_token_guard(self):
-        with self.assertRaisesRegex(ValueError, 'ASCII-compatible'):
-            self.parse(xml(m.MASTR_BATTERY_TABLES[-1]).decode().encode('utf-16'))
+        text = xml(m.MASTR_BATTERY_TABLES[-1]).decode().replace(
+            '<Name>', '<Name NV="' + 'x' * 5_000_000 + '">')
+        member = io.BytesIO(text.encode('utf-16'))
+        with self.assertRaisesRegex(ValueError, 'before Expat'):
+            self.parse(b'', member)
+        self.assertLessEqual(member.tell(), m.CHUNK_SIZE + 4)
+
+    def test_utf16_dtd_malformed_truncation_and_encoding_mismatch_rejected(self):
+        text = xml(m.MASTR_BATTERY_TABLES[-1]).decode()
+        cases = [
+            ('<!DOCTYPE Katalogkategorien [<!ENTITY x "boom">]>' + text).encode('utf-16'),
+            text.encode('utf-16')[:-1],
+            text.encode('utf-16') + b'\x00\xd8',
+            ('<?xml version="1.0" encoding="UTF-8"?>' + text).encode('utf-16'),
+            ('<?xml version="1.0" encoding="UTF-16"?>' + text).encode('utf-8'),
+            text.encode('utf-32'),
+        ]
+        for data in cases:
+            with self.subTest(prefix=data[:80]), self.assertRaises((ValueError, m.expat.ExpatError)):
+                self.parse(data)
 
 
 class DownloadTests(unittest.TestCase):
