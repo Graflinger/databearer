@@ -125,6 +125,7 @@
 
 .post-content li p {
   color: inherit;
+  margin-bottom: 0.5rem;
 }
 
 // Topic tags are separate links: pills instead of one continuous underlined phrase.
@@ -239,6 +240,75 @@
 
 .post-content .table-note strong {
   font-weight: 600;
+}
+
+.post-content li ul,
+.post-content li ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.post-content .post-data-details {
+  margin: 1.5rem 0;
+  padding: 0.9rem 0;
+  border-block: 1px solid var(--table-line);
+
+  > summary {
+    cursor: pointer;
+    font-weight: 600;
+    line-height: 1.5;
+    padding: 0.25rem;
+  }
+
+  > summary:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  > summary:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  &[open] > summary {
+    margin-bottom: 1.25rem;
+  }
+
+  h3 {
+    font-size: 19px;
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p, ul, ol {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 1rem;
+  }
+
+  th, td {
+    padding: 0.65rem 0.5rem;
+    border-bottom: 1px solid var(--table-line);
+    text-align: right;
+    vertical-align: top;
+  }
+
+  th:first-child, td:first-child {
+    text-align: left;
+    padding-left: 0;
+  }
+
+  th {
+    overflow-wrap: anywhere;
+  }
 }
 
 .post-content iframe {

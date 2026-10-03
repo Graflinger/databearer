@@ -6,6 +6,7 @@ const { verifyPublished } = require('./src/data_ingestion/builders/electricityHi
 const { verifyPublishedTrends } = require('./src/data_ingestion/builders/electricityTrends');
 const { verifyPublishedProgress } = require('./src/data_ingestion/builders/electricityProgress');
 const electricityFilters = require('./src/data_ingestion/builders/electricityFilters');
+const { comparisonEmbed } = require('./src/data_ingestion/builders/comparisonEmbed');
 const seo = require('./src/seo');
 
 module.exports = function (eleventyConfig) {
@@ -16,6 +17,7 @@ module.exports = function (eleventyConfig) {
   // template before rendering, so it writes no file and never reaches collections,
   // feeds, search or the sitemap. Future dates are not drafts.
   eleventyConfig.addPreprocessor('drafts', '*', (data) => (data.draft === true ? false : undefined));
+  eleventyConfig.addShortcode('comparisonChart', comparisonEmbed);
   // Generate charts before Eleventy build
   eleventyConfig.on('eleventy.before', async () => {
     console.log('🎨 Generating charts...');
