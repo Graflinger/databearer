@@ -41,7 +41,7 @@ test('backup tables render closed with native summaries and table notes; data no
   expect(notes.filter((node) => node.tagName === 'P')).toHaveLength(1);
   expect(notes.some((node) => node.querySelector('a[href="https://creativecommons.org/licenses/by/4.0/"]'))).toBe(true);
 
-  for (const caveat of ['kein Maß für den Stromhandel', 'nicht auf den Bruttostromverbrauch', 'lässt sich aus den Tagesdaten nicht bestimmen', 'Börsenpreis ist kein Haushaltstarif', 'lässt sich aus diesen Daten nicht ablesen']) {
+  for (const caveat of ['kein Maß für den Stromhandel', 'nicht auf den Bruttostromverbrauch', 'lässt sich aus den Tagesdaten aber nicht bestimmen', 'Börsenpreis ist kein Haushaltstarif', 'lässt sich aus diesen Daten nicht ablesen']) {
     expect([...document.querySelectorAll('p')].some((p) => !p.closest('details') && p.textContent.includes(caveat))).toBe(true);
   }
 });
@@ -60,4 +60,12 @@ test('compiled disclosure CSS preserves native focus styling, theme borders and 
   expect(css).toMatch(/\.post-content \.post-data-details > summary:focus-visible[^}]*outline: 2px solid currentColor/);
   expect(css).toMatch(/\.post-content \.post-data-details\[open\] > summary[^}]*margin-bottom/);
   expect(css).toContain('.post-content li ul,\n.post-content li ol');
+  // The change label sits under the current (2026) value, not the baseline.
+  expect(css).toMatch(/\.post-content \.comparison-chart__delta \{[^}]*grid-column: 3;/);
+});
+
+test('price context links to the gas/renewables correlation article', () => {
+  const link = render().querySelector('a[href="/posts/2026/strompreis-gaspreis-erneuerbare/"]');
+  expect(link).not.toBeNull();
+  expect(link.closest('p').previousElementSibling.textContent).toBe('Mehr Erneuerbare und trotzdem teurer?');
 });

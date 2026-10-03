@@ -1615,7 +1615,7 @@ a:focus-visible {
   color: var(--table-muted);
 }
 .post-content .comparison-chart__delta {
-  grid-column: 1/-1;
+  grid-column: 3;
   font-size: 14px;
 }
 .post-content .comparison-chart__delta .comparison-chart__period {

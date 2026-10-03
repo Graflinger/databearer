@@ -94,8 +94,9 @@
     color: var(--table-muted);
   }
 
+  // The change belongs to the current value: place it in the same column.
   &__delta {
-    grid-column: 1 / -1;
+    grid-column: 3;
     font-size: 14px;
 
     .comparison-chart__period {
