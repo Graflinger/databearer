@@ -1,7 +1,7 @@
 (function() {
-  const chartDom = document.getElementById('strom-ytd-2026-renewable-share');
+  const chartDom = document.getElementById('strom-ytd-2026-quarterly-price');
   if (!chartDom) {
-    console.error('Chart container "strom-ytd-2026-renewable-share" not found');
+    console.error('Chart container "strom-ytd-2026-quarterly-price" not found');
     return;
   }
 
@@ -32,8 +32,9 @@
     if (!chart) return;
 
     const colors = getThemeColors();
-    const xData = [2019,2020,2021,2022,2023,2024,2025,2026];
-    const seriesData = [{"key":"renewable_share_pct","name":"Erneuerbarenanteil","data":[43.560997,48.680956,42.970837,47.384118,55.06981,60.871737,60.080716,61.556019],"color":"#3ba272"}];
+    const xData = ["Q1","Q2","Q3"];
+    const seriesData = [{"key":"price_2025","name":"2025","data":[111.935748,69.727473,82.757174],"color":"#9e9e9e"},{"key":"price_2026","name":"2026","data":[102.166522,95.214835,125.512717],"color":"#d5a62c"}];
+    const stacked = false;
 
     const option = {
       aria: {
@@ -47,6 +48,9 @@
       title: undefined,
       tooltip: {
         trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        },
         backgroundColor: isDarkMode() ? 'rgba(50, 50, 50, 0.9)' : 'rgba(255, 255, 255, 0.9)',
         borderColor: colors.axisLineColor,
         textStyle: {
@@ -63,7 +67,7 @@
       xAxis: {
         type: 'category',
         data: xData,
-        name: "Jeweils 1.1.–30.9.",
+        name: "",
         nameLocation: 'middle',
         nameGap: 30,
         nameTextStyle: {
@@ -85,7 +89,7 @@
       },
       yAxis: {
         type: 'value',
-        name: "%",
+        name: "€/MWh",
         nameLocation: 'middle',
         nameGap: 50,
         nameTextStyle: {
@@ -108,16 +112,11 @@
       series: seriesData.map((series, index) => ({
         name: series.name,
         data: series.data,
-        type: 'line',
-        smooth: false,
-        lineStyle: {
-          width: 2,
-          color: series.color || colors.defaultColors[index % colors.defaultColors.length]
-        },
+        type: 'bar',
+        stack: stacked ? 'total' : undefined,
         itemStyle: {
           color: series.color || colors.defaultColors[index % colors.defaultColors.length]
-        },
-        symbolSize: 6
+        }
       })),
       grid: {
         left: '10%',

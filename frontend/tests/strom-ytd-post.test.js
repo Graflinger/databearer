@@ -5,13 +5,12 @@ const vm = require('vm');
 const { execFileSync, spawnSync } = require('child_process');
 const { createHash } = require('crypto');
 const { parse } = require('csv-parse/sync');
-const { validateStromYtd, STROM_YTD_DIRECTORY } = require('../src/data_ingestion/utils/stromYtdValidation');
+const { validateStromYtd, STROM_YTD_DIRECTORY, STROM_YTD_COMMIT: commit } = require('../src/data_ingestion/utils/stromYtdValidation');
 const { buildLineChart } = require('../src/data_ingestion/builders/lineChart');
 const { buildBarChart } = require('../src/data_ingestion/builders/barChart');
 const { renderComparisonChart } = require('../src/data_ingestion/builders/comparisonChart');
 const { JSDOM } = require('jsdom');
 const root = path.resolve(__dirname, '../..');
-const commit = 'dd0c7f8deef858a844be777a5fd1e78949386413';
 const hash = (raw) => createHash('sha256').update(raw).digest('hex');
 const git = (filename) => execFileSync('git', ['show', `${commit}:${filename}`], { cwd: root });
 // Shallow CI checkouts may not contain the frozen source commit. Only the
@@ -42,11 +41,11 @@ function mutateCsv(name, change, rehash = true) {
   }
 }
 
-test('frozen package validates and preserves the original CSV bytes without Git history', () => {
-  expect(validateStromYtd().manifest.source_commit).toBe(commit);
-  const originalCsv = fs.readFileSync(path.join(STROM_YTD_DIRECTORY, 'strom_ytd_2026_mix.csv'));
-  // Pin the original bytes independently of both Git availability and the manifest.
-  expect(hash(originalCsv)).toBe('0071b2ed6d13193139bd267329777cc523df7a25ca5ff594c2d762df22c14fa3');
+test('frozen package validates without Git history', () => {
+  const { manifest: frozen } = validateStromYtd();
+  expect(frozen.source_commit).toBe(commit);
+  expect(frozen.observation_cutoff).toBe('2026-09-30');
+  expect(Object.keys(frozen.payloads).sort()).toEqual(['comparison.csv', 'mix_by_year.csv', 'periods.csv', 'quarters.csv']);
 });
 
 testWithSourceHistory('all supporting aggregates reproduce independently from the exact original Git history', () => {
@@ -86,6 +85,18 @@ testWithSourceHistory('all supporting aggregates reproduce independently from th
     expect(period.price_eur_mwh).toBeCloseTo(numerator / hours, 5);
     expect(period.negative_mean_days).toBe(rows.filter((r) => r.price_eur_mwh < 0).length);
     for (const row of tables['mix_by_year.csv'].filter((r) => r.year === period.year)) expect(row.generation_twh).toBeCloseTo(energy[row.source], 5);
+    if (period.year < 2025) continue;
+    const bounds = [['01-01', '03-31'], ['04-01', '06-30'], ['07-01', '09-30']];
+    tables['quarters.csv'].forEach((quarter, index) => {
+      const [from, to] = bounds[index].map((md) => `${period.year}-${md}`);
+      const part = rows.filter((r) => r.date >= from && r.date <= to);
+      const partHours = part.reduce((sum, r) => sum + r.hours, 0);
+      expect(quarter[`days_${period.year}`]).toBe(part.length);
+      expect(quarter[`hours_${period.year}`]).toBe(partHours);
+      expect(quarter[`price_${period.year}`]).toBeCloseTo(part.reduce((sum, r) => sum + r.price_eur_mwh * r.hours, 0) / partHours, 5);
+      expect(quarter[`wind_onshore_${period.year}`]).toBeCloseTo(part.reduce((sum, r) => sum + r.energy_gwh.wind_onshore, 0) / 1000, 5);
+      expect(quarter[`solar_${period.year}`]).toBeCloseTo(part.reduce((sum, r) => sum + r.energy_gwh.solar, 0) / 1000, 5);
+    });
   }
 });
 
@@ -106,14 +117,17 @@ test('rejects extra files and symlinks', () => {
 });
 
 test.each([
-  ['periods.csv', (s) => s.replace('2025-09-09', '2025-12-31')],
-  ['periods.csv', (s) => s.replace('6047', '6048')],
-  ['periods.csv', (s) => s.replace('38.218093', '')],
-  ['periods.csv', (s) => s.replace('38.218093', 'NaN')],
-  ['periods.csv', (s) => s.replace('59.442532', '60.442532')],
+  ['periods.csv', (s) => s.replace('2025-09-30', '2025-12-31')],
+  ['periods.csv', (s) => s.replace('6551', '6552')],
+  ['periods.csv', (s) => s.replace('38.030446', '')],
+  ['periods.csv', (s) => s.replace('38.030446', 'NaN')],
+  ['periods.csv', (s) => s.replace('60.080716', '61.080716')],
   ['mix_by_year.csv', (s) => s.replace('2019,biomass', '2019,gas')],
-  ['mix_by_year.csv', (s) => s.replace('24.107794', '0.000000')],
-  ['comparison.csv', (s) => s.replace('72.259377', '73.259377')],
+  ['mix_by_year.csv', (s) => s.replace('26.071045', '0.000000')],
+  ['comparison.csv', (s) => s.replace('77.904679', '78.904679')],
+  ['quarters.csv', (s) => s.replace('102.166522', '92.166522')],
+  ['quarters.csv', (s) => s.replace('24.925614', '25.925614')],
+  ['quarters.csv', (s) => s.replace('Q1', '1. Quartal')],
 ])('rejects rehashed semantic corruption #%#', (name, change) => {
   mutateCsv(name, change);
   expect(() => validateStromYtd(scratch)).toThrow();
@@ -143,7 +157,7 @@ test('config validation failure propagates to the generator process', () => {
 
 test('standard charts retain nested inputs, stable routes, short grouped labels and explicit straight-line colors', () => {
   const configs = require('../src/data_ingestion/charts/strom_ytd_2026');
-  expect(configs.map((c) => c.outputFile)).toEqual(['comparison.js', 'mix.js', 'renewable-share.js', 'price.js']);
+  expect(configs.map((c) => c.outputFile)).toEqual(['comparison.js', 'mix.js', 'renewable-share.js', 'price.js', 'quarterly-price.js']);
   for (const config of configs.filter((c) => c.type !== 'comparison')) {
     expect(config.dataFile.startsWith('2026/strom_ytd/')).toBe(true);
     const data = parse(fs.readFileSync(path.join(STROM_YTD_DIRECTORY, path.basename(config.dataFile))), { columns: true, cast: true });
@@ -158,9 +172,12 @@ test('standard charts retain nested inputs, stable routes, short grouped labels 
     });
     expect(option.series.map((s) => s.itemStyle.color)).toEqual(config.colors);
     if (config.type === 'line') expect(option.series.every((s) => s.smooth === false)).toBe(true);
-    else {
+    else if (config.outputFile === 'mix.js') {
       expect(option.xAxis.data).toEqual([2025, 2026]);
       expect(option.legend.data).toEqual(['Wind an Land', 'Solar']);
+    } else {
+      expect(option.xAxis.data).toEqual(['Q1', 'Q2', 'Q3']);
+      expect(option.legend.data).toEqual(['2025', '2026']);
     }
   }
 });
@@ -169,9 +186,11 @@ test('article dates, static tables, comparisons and closing link agree with the 
   const article = fs.readFileSync(path.resolve(__dirname, '../src/posts/2026/strom-2026-ytd-zahlen.md'), 'utf8');
   const de = (number, digits) => number.toLocaleString('de-DE', { minimumFractionDigits: digits, maximumFractionDigits: digits });
   expect(article).toContain('title: "Strom 2026 bisher: Solar und Wind an Land');
-  expect(article).toContain('date: 2026-09-11');
-  expect(article).toContain('lastUpdated: 2026-09-14');
-  expect(article.trim().endsWith('[Strom-Dashboard](/dashboards/strom/).')).toBe(true);
+  expect(article).toContain('date: 2026-10-03');
+  expect(article).not.toContain('lastUpdated:');
+  expect(article).toContain('[Strom-Dashboard](/dashboards/strom/).');
+  expect(article).toMatch(/\n## Daten und Quellen\n[^#]*$/);
+  expect(article).not.toMatch(/9\. September|1\.1\.–9\.9\./);
   for (const p of tables['periods.csv']) {
     expect(article).toContain(`| ${p.year} | ${de(p.generation_twh, 1)} | ${de(p.renewable_share_pct, 1)} | ${de(p.price_eur_mwh, 2)} |`);
   }
@@ -186,12 +205,18 @@ test('article dates, static tables, comparisons and closing link agree with the 
     const change = delta === 'percentagePoints' ? b[key] - a[key] : 100 * (b[key] / a[key] - 1);
     expect(metrics[i].querySelector('.comparison-chart__delta').textContent).toBe(`+${de(change, 1)} ${delta === 'percentagePoints' ? 'Prozentpunkte' : '%'} gegenüber 2025`);
   }
-  expect(article).toContain(`+${de(b.renewable_share_pct - a.renewable_share_pct, 1)} Prozentpunkte`);
+  expect(article).toContain(`von **${de(a.renewable_share_pct, 1)} auf ${de(b.renewable_share_pct, 1)} Prozent**`);
+  expect(article).toContain(`**${de(100 * (b.price_eur_mwh / a.price_eur_mwh - 1), 1)} Prozent**`);
+  for (const [i, q] of tables['quarters.csv'].entries()) {
+    const change = 100 * (q.price_2026 / q.price_2025 - 1);
+    expect(article).toContain(i === 0 ? `**${de(-change, 1)} Prozent günstiger**` : `**${de(change, 1)} Prozent**`);
+    expect(article).toContain(`${de(q.price_2026, 2)} statt ${de(q.price_2025, 2)} €/MWh`);
+  }
   const labels = { biomass: 'Biomasse', hydro: 'Wasserkraft', wind_offshore: 'Wind auf See', wind_onshore: 'Wind an Land', solar: 'Solar', other_renewables: 'Sonstige Erneuerbare', lignite: 'Braunkohle', hard_coal: 'Steinkohle', gas: 'Erdgas', other_conventional: 'Sonstige Konventionelle', pumped_storage: 'Pumpspeicher', nuclear: 'Kernenergie' };
   for (const [source, label] of Object.entries(labels)) {
     const values = [2025, 2026].map((year) => tables['mix_by_year.csv'].find((r) => r.year === year && r.source === source).generation_twh);
     expect(article).toContain(`| ${label} | ${de(values[0], 1)} | ${de(values[1], 1)} |`);
   }
-  expect(b.negative_mean_days).toBe(2);
-  expect(article).toContain('Zwei Tage hatten 2026');
+  expect([a.negative_mean_days, b.negative_mean_days]).toEqual([0, 2]);
+  expect(article).toContain('An zwei Tagen lag der Tagesdurchschnitt 2026 bisher unter null, 2025 im gleichen Zeitraum an keinem.');
 });

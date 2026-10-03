@@ -33,7 +33,7 @@
 
     const colors = getThemeColors();
     const xData = [2025,2026];
-    const seriesData = [{"key":"wind_onshore_twh","name":"Wind an Land","data":[62.845803,72.259377],"color":"#3ba272"},{"key":"solar_twh","name":"Solar","data":[62.237127,70.455996],"color":"#d5a62c"}];
+    const seriesData = [{"key":"wind_onshore_twh","name":"Wind an Land","data":[70.646132,77.904679],"color":"#3ba272"},{"key":"solar_twh","name":"Solar","data":[66.421244,76.320406],"color":"#d5a62c"}];
     const stacked = false;
 
     const option = {
@@ -67,7 +67,7 @@
       xAxis: {
         type: 'category',
         data: xData,
-        name: "Jeweils 1.1.–9.9.",
+        name: "Jeweils 1.1.–30.9.",
         nameLocation: 'middle',
         nameGap: 30,
         nameTextStyle: {

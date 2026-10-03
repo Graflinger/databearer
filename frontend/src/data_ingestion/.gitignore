@@ -19,7 +19,7 @@ data/**
 
 # Frozen, validated evidence for the 2026 electricity YTD article.
 !data/2026/strom_ytd/
-!data/2026/strom_ytd/strom_ytd_2026_mix.csv
+!data/2026/strom_ytd/quarters.csv
 !data/2026/strom_ytd/periods.csv
 !data/2026/strom_ytd/mix_by_year.csv
 !data/2026/strom_ytd/comparison.csv

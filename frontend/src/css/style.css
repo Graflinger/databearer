@@ -777,47 +777,37 @@ a:focus-visible {
   margin-bottom: 0.75rem;
 }
 
-.post-content .post-methodology,
 .post-content .post-data-details {
   margin: 1.5rem 0;
   padding: 0.9rem 0;
   border-block: 1px solid var(--table-line);
 }
-.post-content .post-methodology > summary,
 .post-content .post-data-details > summary {
   cursor: pointer;
   font-weight: 600;
   line-height: 1.5;
   padding: 0.25rem;
 }
-.post-content .post-methodology > summary:hover,
 .post-content .post-data-details > summary:hover {
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
-.post-content .post-methodology > summary:focus-visible,
 .post-content .post-data-details > summary:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 4px;
   border-radius: 2px;
 }
-.post-content .post-methodology[open] > summary,
 .post-content .post-data-details[open] > summary {
   margin-bottom: 1.25rem;
 }
-.post-content .post-methodology h3,
 .post-content .post-data-details h3 {
   font-size: 19px;
   margin: 1.5rem 0 0.75rem;
 }
-.post-content .post-methodology p, .post-content .post-methodology ul, .post-content .post-methodology ol,
-.post-content .post-data-details p,
-.post-content .post-data-details ul,
-.post-content .post-data-details ol {
+.post-content .post-data-details p, .post-content .post-data-details ul, .post-content .post-data-details ol {
   font-size: 16px;
   line-height: 1.7;
 }
-.post-content .post-methodology table,
 .post-content .post-data-details table {
   width: 100%;
   border-collapse: collapse;
@@ -826,21 +816,16 @@ a:focus-visible {
   font-variant-numeric: tabular-nums;
   margin-bottom: 1rem;
 }
-.post-content .post-methodology th, .post-content .post-methodology td,
-.post-content .post-data-details th,
-.post-content .post-data-details td {
+.post-content .post-data-details th, .post-content .post-data-details td {
   padding: 0.65rem 0.5rem;
   border-bottom: 1px solid var(--table-line);
   text-align: right;
   vertical-align: top;
 }
-.post-content .post-methodology th:first-child, .post-content .post-methodology td:first-child,
-.post-content .post-data-details th:first-child,
-.post-content .post-data-details td:first-child {
+.post-content .post-data-details th:first-child, .post-content .post-data-details td:first-child {
   text-align: left;
   padding-left: 0;
 }
-.post-content .post-methodology th,
 .post-content .post-data-details th {
   overflow-wrap: anywhere;
 }

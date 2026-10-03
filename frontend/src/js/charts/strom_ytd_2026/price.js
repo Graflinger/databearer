@@ -33,7 +33,7 @@
 
     const colors = getThemeColors();
     const xData = [2019,2020,2021,2022,2023,2024,2025,2026];
-    const seriesData = [{"key":"price_eur_mwh","name":"Day-Ahead-Preis","data":[38.218093,26.245011,63.849643,243.526147,99.428851,70.320631,88.837758,103.918889],"color":"#d5a62c"}];
+    const seriesData = [{"key":"price_eur_mwh","name":"Day-Ahead-Preis","data":[38.030446,27.686999,69.178029,249.824108,99.535182,70.404245,88.029602,107.717722],"color":"#d5a62c"}];
 
     const option = {
       aria: {
@@ -63,7 +63,7 @@
       xAxis: {
         type: 'category',
         data: xData,
-        name: "Jeweils 1.1.–9.9.",
+        name: "Jeweils 1.1.–30.9.",
         nameLocation: 'middle',
         nameGap: 30,
         nameTextStyle: {
