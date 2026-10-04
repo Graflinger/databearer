@@ -280,7 +280,8 @@
     margin: 1.5rem 0 0.75rem;
   }
 
-  p, ul, ol {
+  // Table notes keep their own smaller size inside disclosures.
+  p:not(.table-note), ul, ol {
     font-size: 16px;
     line-height: 1.7;
   }
@@ -306,8 +307,9 @@
     padding-left: 0;
   }
 
+  // Break only words that cannot fit; never squeeze headers letter by letter.
   th {
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 }
 
