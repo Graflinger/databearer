@@ -15,7 +15,12 @@ const CONTRACTS = {
     'Partiell_Erneuerbare', 'Partiell_Gas', 'Pearson_Erneuerbare_Gas', 'Veraenderungen', 'Pearson_Veraenderung_Erneuerbare', 'Pearson_Veraenderung_Gas'],
   'strompreis_korrelation_regression.csv': ['Modell', 'Zeitraum', 'Monate', 'Gas_Koeffizient', 'Gas_KI95_unten', 'Gas_KI95_oben',
     'Erneuerbare_Koeffizient', 'Erneuerbare_KI95_unten', 'Erneuerbare_KI95_oben', 'R2'],
+  'strompreis_korrelation_2026.csv': ['Monat', 'Strompreis_EUR_MWh', 'Erneuerbarenanteil_Prozent', 'Gaspreis_EUR_MWh', 'Gaspreis_USD_MMBtu',
+    'USD_je_EUR', 'Stunden', 'Erwartet_EUR_MWh', 'Abweichung_EUR_MWh'],
 };
+// 2026 is compared out of sample with the 2023–2025 regression; it is in no statistic.
+const CURRENT_MONTHS = ['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09'];
+const CURRENT_COMMIT = '66035ab8b186fe975a55d065982a00963e3cee93';
 const TEXT = new Set(['Monat', 'Zeitraum', 'Modell']);
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -45,8 +50,12 @@ function validateStrompreisKorrelation(dataDir = path.join(__dirname, '../data',
     return fs.readFileSync(filename);
   };
   const metadata = JSON.parse(read(MANIFEST).toString('utf8'));
-  requireValid(metadata.schema_version === 1 && metadata.kind === 'frozen_strompreis_korrelation_article', 'manifest schema/kind mismatch');
+  requireValid(metadata.schema_version === 2 && metadata.kind === 'frozen_strompreis_korrelation_article', 'manifest schema/kind mismatch');
   requireValid(metadata.period?.first_month === '2019-01' && metadata.period?.last_month === '2025-12' && metadata.period?.months === 84, 'period mismatch');
+  const current = metadata.current_year;
+  requireValid(current?.first_month === '2026-01' && current?.last_month === '2026-09' && current?.months === 9 && current?.model_period === PERIODS[2], 'current-year scope mismatch');
+  requireValid(metadata.sources?.electricity?.current_partition?.commit === CURRENT_COMMIT
+    && metadata.sources?.electricity?.current_partition?.observation_cutoff === '2026-09-30', 'current-year source mismatch');
   requireValid(same(Object.keys(metadata.files).sort(), Object.keys(CONTRACTS).sort()), 'manifest file allowlist mismatch');
   requireValid(metadata.sources?.electricity?.license === 'CC BY 4.0' && metadata.sources?.gas?.license === 'CC BY 4.0', 'source licenses missing');
 
@@ -83,7 +92,16 @@ function validateStrompreisKorrelation(dataDir = path.join(__dirname, '../data',
       if (/^(Pearson|Spearman|Partiell)/.test(key)) requireValid(value >= -1 && value <= 1, `${row.Zeitraum} ${key} outside [-1, 1]`);
     }
   }
-  return { metadata, monthly, correlations, regression: tables['strompreis_korrelation_regression.csv'] };
+  const currentRows = tables['strompreis_korrelation_2026.csv'];
+  requireValid(same(currentRows.map((row) => row.Monat), CURRENT_MONTHS), '2026 rows must be 2026-01..2026-09');
+  const { intercept, gas, renewable_share: renewable } = current.model_coefficients;
+  for (const row of currentRows) {
+    requireValid(row.Gaspreis_EUR_MWh > 0 && row.Erneuerbarenanteil_Prozent > 0 && row.Erneuerbarenanteil_Prozent < 100, `${row.Monat} 2026 value out of range`);
+    const expected = intercept + gas * row.Gaspreis_EUR_MWh + renewable * row.Erneuerbarenanteil_Prozent;
+    requireValid(Math.abs(expected - row.Erwartet_EUR_MWh) < 0.006, `${row.Monat} expected price does not follow the 2023–2025 model`);
+    requireValid(Math.abs(row.Strompreis_EUR_MWh - row.Erwartet_EUR_MWh - row.Abweichung_EUR_MWh) < 0.006, `${row.Monat} deviation mismatch`);
+  }
+  return { metadata, monthly, correlations, regression: tables['strompreis_korrelation_regression.csv'], current: currentRows };
 }
 
 module.exports = { validateStrompreisKorrelation, DIRECTORY, PERIODS };

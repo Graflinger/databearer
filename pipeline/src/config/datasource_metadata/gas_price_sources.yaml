@@ -17,7 +17,7 @@ sources:
     max_bytes: 5000000
   ecb_usd_eur:
     description: "ECB euro foreign exchange reference rate, US dollar per euro, monthly average"
-    url: "https://data-api.ecb.europa.eu/service/data/EXR/M.USD.EUR.SP00.A?startPeriod=2019-01&endPeriod=2025-12&format=csvdata"
+    url: "https://data-api.ecb.europa.eu/service/data/EXR/M.USD.EUR.SP00.A?startPeriod=2019-01&endPeriod=2026-09&format=csvdata"
     series_key: "EXR.M.USD.EUR.SP00.A"
     landing_page: "https://data.ecb.europa.eu/data/datasets/EXR/EXR.M.USD.EUR.SP00.A"
     terms_url: "https://www.ecb.europa.eu/services/disclaimer/html/index.en.html"

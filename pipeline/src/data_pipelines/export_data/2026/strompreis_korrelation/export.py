@@ -1,4 +1,4 @@
-"""Frozen article export: German wholesale electricity price vs. renewable share and gas, 2019–2025.
+"""Frozen article export: German wholesale electricity price vs. renewable share and gas, 2019–2025 plus 2026.
 
 Run from ``pipeline/`` after ``ingest_gas_price_data.py`` and
 ``dbt build --target prod --select +fact_gas_price_europe_monthly``::
@@ -8,10 +8,13 @@ Run from ``pipeline/`` after ``ingest_gas_price_data.py`` and
         --output-dir ../frontend/src/data_ingestion/data/2026/strompreis-korrelation
 
 Electricity inputs are the validated, Git-tracked SMARD daily history partitions
-(closed years 2019–2025, verified by raw-byte SHA-256 against the manifest). Gas and
+(closed years 2019–2025, verified by raw-byte SHA-256 against the manifest). The open
+year 2026 changes with every dashboard refresh, so January–September 2026 is read from
+the history at one pinned Git commit (``git show``), again SHA-256 checked. Gas and
 exchange-rate inputs come from the curated DuckDB fact. No network requests.
 Statistics are computed from the rounded values published in the monthly CSV, so
-readers can reproduce every number from that file alone.
+readers can reproduce every number from that file alone. 2026 is not part of any
+statistic: it is compared with the values the 2023–2025 regression would expect.
 """
 
 from __future__ import annotations
@@ -24,6 +27,7 @@ import json
 import math
 import os
 import re
+import subprocess
 import tempfile
 from datetime import date, timedelta
 from pathlib import Path
@@ -36,7 +40,7 @@ REPOSITORY = PIPELINE.parent
 DEFAULT_DATABASE = Path(".data/duckdb.db")
 DEFAULT_OUTPUT = Path(".data/output/strompreis_korrelation")
 DEFAULT_HISTORY = REPOSITORY / "frontend/src/data-history/german-electricity"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 MANIFEST = "strompreis_korrelation_metadata.json"
 FIRST_MONTH, LAST_MONTH = "2019-01", "2025-12"
 YEARS = list(range(2019, 2026))
@@ -49,6 +53,13 @@ PERIODS = [
     ("2023-2025", "2023–2025", "2023-01", "2025-12"),
 ]
 SUB_PERIODS = PERIODS[1:]
+# Open year 2026: observations through September, read from one pinned dashboard
+# refresh (same snapshot as the electricity YTD article), compared out of sample.
+CURRENT_YEAR = 2026
+CURRENT_FIRST, CURRENT_LAST = "2026-01", "2026-09"
+CURRENT_COMMIT = "66035ab8b186fe975a55d065982a00963e3cee93"
+CURRENT_HISTORY_PATH = "frontend/src/data-history/german-electricity"
+MODEL_PERIOD = "2023–2025"
 # Same classification as the electricity dashboard (frontend/src/js/dashboards):
 # pumped-storage discharge and nuclear count as generation but not as renewable.
 RENEWABLE = ["biomass", "hydro", "wind_offshore", "wind_onshore", "solar", "other_renewables"]
@@ -67,6 +78,7 @@ EXPECTED_SOURCE = {
 MONTHLY = "strompreis_korrelation_monthly.csv"
 CORRELATIONS = "strompreis_korrelation_correlations.csv"
 REGRESSION = "strompreis_korrelation_regression.csv"
+CURRENT = "strompreis_korrelation_2026.csv"
 MONTHLY_COLUMNS = ["Monat", "Zeitraum", "Strompreis_EUR_MWh", "Erneuerbarenanteil_Prozent", "Gaspreis_EUR_MWh",
                    "Gaspreis_USD_MMBtu", "USD_je_EUR", "Last_GW", "Stunden"]
 CORRELATION_COLUMNS = ["Zeitraum", "Monate", "Pearson_Erneuerbare", "Spearman_Erneuerbare", "Pearson_Gas", "Spearman_Gas",
@@ -74,7 +86,9 @@ CORRELATION_COLUMNS = ["Zeitraum", "Monate", "Pearson_Erneuerbare", "Spearman_Er
                        "Veraenderungen", "Pearson_Veraenderung_Erneuerbare", "Pearson_Veraenderung_Gas"]
 REGRESSION_COLUMNS = ["Modell", "Zeitraum", "Monate", "Gas_Koeffizient", "Gas_KI95_unten", "Gas_KI95_oben",
                       "Erneuerbare_Koeffizient", "Erneuerbare_KI95_unten", "Erneuerbare_KI95_oben", "R2"]
-CONTRACTS = {MONTHLY: MONTHLY_COLUMNS, CORRELATIONS: CORRELATION_COLUMNS, REGRESSION: REGRESSION_COLUMNS}
+CURRENT_COLUMNS = ["Monat", "Strompreis_EUR_MWh", "Erneuerbarenanteil_Prozent", "Gaspreis_EUR_MWh", "Gaspreis_USD_MMBtu",
+                   "USD_je_EUR", "Stunden", "Erwartet_EUR_MWh", "Abweichung_EUR_MWh"]
+CONTRACTS = {MONTHLY: MONTHLY_COLUMNS, CORRELATIONS: CORRELATION_COLUMNS, REGRESSION: REGRESSION_COLUMNS, CURRENT: CURRENT_COLUMNS}
 PARTITION_NAME = re.compile(r"^(\d{4})\.([a-f0-9]{64})\.json$")
 
 
@@ -139,6 +153,40 @@ def read_history(history_dir: Path = DEFAULT_HISTORY, years=YEARS) -> tuple[list
     return rows, provenance
 
 
+def git_reader(commit: str = CURRENT_COMMIT, repository: Path = REPOSITORY):
+    def read(path: str) -> bytes:
+        return subprocess.check_output(["git", "show", f"{commit}:{path}"], cwd=repository)
+    return read
+
+
+def read_current_history(reader=None) -> tuple[list[dict], dict]:
+    """Return January–September 2026 daily rows from the pinned history snapshot."""
+    reader = reader or git_reader()
+    manifest = json.loads(reader(f"{CURRENT_HISTORY_PATH}/manifest.json"))
+    require(manifest.get("schema_version") == 1 and manifest.get("kind") == "german-electricity-history", "Pinned history manifest schema/kind mismatch")
+    require(manifest.get("timezone") == "Europe/Berlin" and manifest.get("source") == EXPECTED_SOURCE, "Pinned history source/timezone mismatch")
+    entry = next((item for item in manifest["years"] if item["year"] == CURRENT_YEAR), None)
+    require(entry is not None, f"Pinned history has no {CURRENT_YEAR} partition")
+    filename = entry["url"].rsplit("/", 1)[-1]
+    match = PARTITION_NAME.match(filename)
+    require(match is not None and int(match.group(1)) == CURRENT_YEAR and match.group(2) == entry["sha256"], "Unexpected pinned partition filename")
+    raw = reader(f"{CURRENT_HISTORY_PATH}/{filename}")
+    require(sha256(raw) == entry["sha256"], f"Pinned partition {filename} SHA-256 mismatch")
+    partition = json.loads(raw)
+    require(partition.get("year") == CURRENT_YEAR and partition.get("source") == EXPECTED_SOURCE, "Pinned partition source/year mismatch")
+    last_day = (date(CURRENT_YEAR, int(CURRENT_LAST[5:]) % 12 + 1, 1) - timedelta(days=1)).isoformat()
+    require(entry["last_date"] >= last_day, f"Pinned history ends before {last_day}")
+    rows = [row for row in partition["rows"] if f"{CURRENT_FIRST}-01" <= row["date"] <= last_day]
+    expected = date(CURRENT_YEAR, 1, 1)
+    for row in rows:
+        require(row["date"] == expected.isoformat(), f"Pinned partition: non-contiguous date near {row['date']}")
+        expected += timedelta(days=1)
+    require(expected.isoformat() > last_day, "Pinned partition does not cover January–September completely")
+    return rows, {"year": CURRENT_YEAR, "commit": CURRENT_COMMIT, "filename": filename, "sha256": entry["sha256"],
+                  "history_last_date": entry["last_date"], "observation_cutoff": last_day, "days": len(rows),
+                  "schema_version": partition.get("schema_version")}
+
+
 def monthly_electricity(rows: list[dict]) -> dict[str, dict]:
     """Aggregate daily rows to calendar months; any unknown value fails instead of being skipped.
 
@@ -184,7 +232,7 @@ def read_gas(db) -> tuple[dict[str, dict], dict]:
         SELECT strftime(month, '%Y-%m') AS month, gas_usd_per_mmbtu, usd_per_eur, gas_eur_per_mwh,
                CAST(gas_release_date AS VARCHAR) AS release_date, gas_source_sha256, fx_source_sha256
         FROM prod_curated.fact_gas_price_europe_monthly
-        WHERE month BETWEEN DATE '2019-01-01' AND DATE '2025-12-01'
+        WHERE month BETWEEN DATE '2019-01-01' AND DATE '2026-09-01'
         ORDER BY month""").fetchall()
     gas = {}
     for month, usd, fx, eur, release, gas_hash, fx_hash in result:
@@ -192,7 +240,7 @@ def read_gas(db) -> tuple[dict[str, dict], dict]:
         require(finite(usd, minimum=0) and usd > 0 and finite(fx) and 0.5 < fx < 2, f"{month}: implausible gas/FX input")
         require(abs(usd / fx / MWH_PER_MMBTU - eur) < 1e-9, f"{month}: gas conversion mismatch")
         gas[month] = {"usd_per_mmbtu": usd, "usd_per_eur": fx, "eur_per_mwh": eur, "release_date": release, "gas_sha256": gas_hash, "fx_sha256": fx_hash}
-    require(list(gas) == months(FIRST_MONTH, LAST_MONTH), "Gas fact does not cover every month 2019-01..2025-12")
+    require(list(gas) == months(FIRST_MONTH, CURRENT_LAST), "Gas fact does not cover every month 2019-01..2026-09")
     for field in ("release_date", "gas_sha256", "fx_sha256"):
         require(len({row[field] for row in gas.values()}) == 1, f"Gas inputs mix several source vintages ({field})")
     staging = {}
@@ -218,7 +266,7 @@ def period_of(month: str) -> str:
 def build_monthly(electricity: dict, gas: dict) -> list[dict]:
     expected = months(FIRST_MONTH, LAST_MONTH)
     require(sorted(electricity) == expected, "Electricity months do not cover 2019-01..2025-12 exactly")
-    require(sorted(gas) == expected, "Gas months do not cover 2019-01..2025-12 exactly")
+    require(set(expected) <= set(gas), "Gas months do not cover 2019-01..2025-12")
     # Values are rounded once here; every statistic below uses exactly these numbers.
     return [{
         "Monat": month,
@@ -357,10 +405,38 @@ def regression_rows(monthly: list[dict]) -> list[dict]:
     return result
 
 
+def model_fit(monthly: list[dict]) -> dict:
+    """The 2023–2025 gas + renewables regression, refitted from the published monthly CSV."""
+    _, _, first, last = next(period for period in PERIODS if period[1] == MODEL_PERIOD)
+    rows = select(monthly, first, last)
+    return ols_hac(column(rows, "Strompreis_EUR_MWh"), [column(rows, "Gaspreis_EUR_MWh"), column(rows, "Erneuerbarenanteil_Prozent")])
+
+
+def current_rows(electricity: dict, gas: dict, monthly: list[dict]) -> list[dict]:
+    """2026 months with the price the 2023–2025 relationship would expect (out of sample)."""
+    expected = months(CURRENT_FIRST, CURRENT_LAST)
+    require(sorted(electricity) == expected, "2026 electricity months do not cover 2026-01..2026-09 exactly")
+    require(set(expected) <= set(gas), "Gas months do not cover 2026-01..2026-09")
+    beta = model_fit(monthly)["coefficients"]
+    result = []
+    for month in expected:
+        price = round(electricity[month]["price"], 2)
+        renewable = round(electricity[month]["renewable_share"], 2)
+        gas_eur = round(gas[month]["eur_per_mwh"], 2)
+        prediction = round(float(beta[0] + beta[1] * gas_eur + beta[2] * renewable), 2)
+        result.append({
+            "Monat": month, "Strompreis_EUR_MWh": price, "Erneuerbarenanteil_Prozent": renewable,
+            "Gaspreis_EUR_MWh": gas_eur, "Gaspreis_USD_MMBtu": round(gas[month]["usd_per_mmbtu"], 2),
+            "USD_je_EUR": round(gas[month]["usd_per_eur"], 6), "Stunden": electricity[month]["hours"],
+            "Erwartet_EUR_MWh": prediction, "Abweichung_EUR_MWh": round(price - prediction, 2),
+        })
+    return result
+
+
 # --- Serialisation and publication ----------------------------------------------------------
 
 DECIMALS = {"Strompreis_EUR_MWh": 2, "Erneuerbarenanteil_Prozent": 2, "Gaspreis_EUR_MWh": 2, "Gaspreis_USD_MMBtu": 2,
-            "USD_je_EUR": 6, "Last_GW": 3}
+            "USD_je_EUR": 6, "Last_GW": 3, "Erwartet_EUR_MWh": 2, "Abweichung_EUR_MWh": 2}
 
 
 def csv_bytes(columns, rows) -> bytes:
@@ -384,24 +460,33 @@ def json_bytes(value) -> bytes:
     return (json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False, allow_nan=False) + "\n").encode("utf-8")
 
 
-def build_payloads(db, history_dir: Path = DEFAULT_HISTORY) -> dict[str, bytes]:
+def build_payloads(db, history_dir: Path = DEFAULT_HISTORY, current_reader=None) -> dict[str, bytes]:
     rows, history = read_history(history_dir)
+    current_daily, current_history = read_current_history(current_reader)
     gas, gas_provenance = read_gas(db)
     monthly = build_monthly(monthly_electricity(rows), gas)
+    current = current_rows(monthly_electricity(current_daily), gas, monthly)
+    beta = model_fit(monthly)["coefficients"]
     files = {
         MONTHLY: csv_bytes(MONTHLY_COLUMNS, monthly),
         CORRELATIONS: csv_bytes(CORRELATION_COLUMNS, correlation_rows(monthly)),
         REGRESSION: csv_bytes(REGRESSION_COLUMNS, regression_rows(monthly)),
+        CURRENT: csv_bytes(CURRENT_COLUMNS, current),
     }
     metadata = {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "frozen_strompreis_korrelation_article",
         "exporter_version": VERSION,
         "exporter_sha256": sha256(Path(__file__).read_bytes()),
         "period": {"first_month": FIRST_MONTH, "last_month": LAST_MONTH, "months": len(monthly),
                    "sub_periods": [{"label": label, "first_month": first, "last_month": last} for _, label, first, last in SUB_PERIODS]},
+        "current_year": {"first_month": CURRENT_FIRST, "last_month": CURRENT_LAST, "months": len(current),
+                         "model_period": MODEL_PERIOD,
+                         "model_coefficients": {"intercept": round(float(beta[0]), 6), "gas": round(float(beta[1]), 6), "renewable_share": round(float(beta[2]), 6)},
+                         "note": "Out-of-sample comparison only; 2026 is not used in any correlation or regression. Recent days were still inside the dashboard correction window."},
         "sources": {
-            "electricity": {**EXPECTED_SOURCE, "dataset": "Day-ahead price DE-LU, net public generation Germany (daily)", "partitions": history},
+            "electricity": {**EXPECTED_SOURCE, "dataset": "Day-ahead price DE-LU, net public generation Germany (daily)", "partitions": history,
+                            "current_partition": current_history},
             "gas": {**gas_provenance["world_bank_pink_sheet"], "name": "World Bank, Commodity Price Data (The Pink Sheet)",
                     "license": "CC BY 4.0", "license_url": "https://creativecommons.org/licenses/by/4.0/",
                     "note": "Natural gas, Europe: Netherlands TTF since April 2015; monthly benchmark average, not a day-ahead quote"},
@@ -418,6 +503,7 @@ def build_payloads(db, history_dir: Path = DEFAULT_HISTORY) -> dict[str, bytes]:
             "correlations": "Pearson and Spearman (average ranks for ties) on monthly levels; partial correlations control for the other variable; changes are month-to-month differences inside each period",
             "regression": f"OLS with intercept; Newey-West HAC standard errors, Bartlett kernel, lag {NEWEY_WEST_LAG}, no small-sample correction; 95 % intervals use z = 1.96",
             "causality": "Descriptive associations only; monthly correlations are not causal effects or cost shares",
+            "expected_2026": "Erwartet = intercept + gas coefficient * gas EUR/MWh + renewable coefficient * renewable share, OLS point estimates of the 2023-2025 model refitted from the rounded monthly CSV; inputs are the rounded 2026 values",
         },
         "files": {name: {"sha256": sha256(content), "bytes": len(content), "columns": CONTRACTS[name],
                          "rows": content.count(b"\n") - 1} for name, content in sorted(files.items())},
@@ -428,7 +514,7 @@ def build_payloads(db, history_dir: Path = DEFAULT_HISTORY) -> dict[str, bytes]:
 
 def verify_set(directory: Path) -> dict:
     metadata = json.loads((directory / MANIFEST).read_bytes())
-    require(metadata.get("schema_version") == 1 and metadata.get("kind") == "frozen_strompreis_korrelation_article", "Manifest schema/kind mismatch")
+    require(metadata.get("schema_version") == 2 and metadata.get("kind") == "frozen_strompreis_korrelation_article", "Manifest schema/kind mismatch")
     require(set(metadata["files"]) == set(CONTRACTS), "Manifest file allowlist mismatch")
     for name, contract in metadata["files"].items():
         raw = (directory / name).read_bytes()
@@ -479,7 +565,7 @@ def main(argv=None):
     parser.add_argument("--history-dir", type=Path, default=DEFAULT_HISTORY)
     args = parser.parse_args(argv)
     metadata = export(args.database, args.output_dir, args.history_dir)
-    print(f"Validated {len(metadata['files'])} files + {MANIFEST}; {metadata['period']['months']} months; output {args.output_dir}")
+    print(f"Validated {len(metadata['files'])} files + {MANIFEST}; {metadata['period']['months']} + {metadata['current_year']['months']} months; output {args.output_dir}")
 
 
 if __name__ == "__main__":

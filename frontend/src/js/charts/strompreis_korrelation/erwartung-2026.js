@@ -1,7 +1,7 @@
 (function() {
-  const chartDom = document.getElementById('strompreis-korrelationen');
+  const chartDom = document.getElementById('strompreis-erwartung-2026');
   if (!chartDom) {
-    console.error('Chart container "strompreis-korrelationen" not found');
+    console.error('Chart container "strompreis-erwartung-2026" not found');
     return;
   }
 
@@ -32,9 +32,8 @@
     if (!chart) return;
 
     const colors = getThemeColors();
-    const xData = ["2019–2025","2019–2020","2021–2022","2023–2025"];
-    const seriesData = [{"key":"Pearson_Erneuerbare","name":"Erneuerbarenanteil","data":[-0.1668,-0.9027,-0.0841,-0.8221],"color":"#3ba272"},{"key":"Pearson_Gas","name":"Gaspreis","data":[0.9722,0.7791,0.964,0.7515],"color":"#e6a23c"}];
-    const stacked = false;
+    const xData = ["2026-01","2026-02","2026-03","2026-04","2026-05","2026-06","2026-07","2026-08","2026-09"];
+    const seriesData = [{"key":"Strompreis_EUR_MWh","name":"Strompreis","data":[110.09,96.58,99.29,78.52,97.54,109.52,105.45,126.89,144.82],"color":"#5470c6"},{"key":"Erwartet_EUR_MWh","name":"Erwartet nach 2023–2025","data":[98.56,92.8,101.84,82.34,84.13,77.95,85.31,95.99,113.91],"color":"#9e9e9e"},{"key":"Gaspreis_EUR_MWh","name":"Gaspreis TTF","data":[34.18,32.44,52.87,44.92,47.27,44.94,53.97,62.13,75.34],"color":"#e6a23c"}];
 
     const option = {
       aria: {
@@ -48,9 +47,6 @@
       title: undefined,
       tooltip: {
         trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        },
         backgroundColor: isDarkMode() ? 'rgba(50, 50, 50, 0.9)' : 'rgba(255, 255, 255, 0.9)',
         borderColor: colors.axisLineColor,
         textStyle: {
@@ -67,7 +63,7 @@
       xAxis: {
         type: 'category',
         data: xData,
-        name: "Zeitraum",
+        name: "Monat 2026",
         nameLocation: 'middle',
         nameGap: 30,
         nameTextStyle: {
@@ -79,14 +75,7 @@
           }
         },
         axisLabel: {
-          color: colors.textColor,
-          // Few, long category labels (e.g. periods): show all, also on phones,
-          // where year ranges shorten to '2019–25'.
-          interval: 0,
-          ...(chartDom.clientWidth < 600 ? {
-            fontSize: 11,
-            formatter: (value) => String(value).replace(/^(\d{4})([–-])\d{2}(\d{2})$/, '$1$2$3')
-          } : {})
+          color: colors.textColor
         },
         splitLine: {
           lineStyle: {
@@ -96,9 +85,7 @@
       },
       yAxis: {
         type: 'value',
-        min: -1,
-        max: 1,
-        name: "Korrelation mit dem Strompreis",
+        name: "EUR/MWh",
         nameLocation: 'middle',
         nameGap: 50,
         nameTextStyle: {
@@ -121,17 +108,22 @@
       series: seriesData.map((series, index) => ({
         name: series.name,
         data: series.data,
-        type: 'bar',
-        stack: stacked ? 'total' : undefined,
+        type: 'line',
+        smooth: false,
+        lineStyle: {
+          width: 2,
+          color: series.color || colors.defaultColors[index % colors.defaultColors.length]
+        },
         itemStyle: {
           color: series.color || colors.defaultColors[index % colors.defaultColors.length]
-        }
+        },
+        symbolSize: 6
       })),
       grid: {
         left: '10%',
         right: '10%',
         bottom: '15%',
-        top: '18%'
+        top: chartDom.clientWidth < 600 ? "24%" : '18%'
       },
       animation: true,
       animationDuration: 1000,
@@ -157,6 +149,7 @@
     // Make chart responsive
     window.addEventListener('resize', function() {
       if (chart) chart.resize();
+      updateChart();
     });
   };
 

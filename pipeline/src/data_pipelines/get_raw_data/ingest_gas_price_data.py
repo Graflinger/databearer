@@ -6,7 +6,7 @@ Run from ``pipeline/``::
     PYTHONPATH=. python src/data_pipelines/get_raw_data/ingest_gas_price_data.py --from-raw
 
 Two bounded requests: the World Bank Pink Sheet workbook (CC BY 4.0) and one ECB
-SDMX CSV for 2019-01..2025-12. Raw bytes plus a small provenance sidecar are kept
+SDMX CSV for 2019-01..2026-09. Raw bytes plus a small provenance sidecar are kept
 in ignored ``.data/raw/gas_prices/``; ``--from-raw`` reloads them without any
 network access. Values are written unchanged to two DuckDB staging tables. Unit
 conversion to EUR/MWh happens in dbt (``fact_gas_price_europe_monthly``).

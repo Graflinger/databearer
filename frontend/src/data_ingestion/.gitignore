@@ -22,4 +22,5 @@ data/**
 !data/2026/strompreis-korrelation/strompreis_korrelation_monthly.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_correlations.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_regression.csv
+!data/2026/strompreis-korrelation/strompreis_korrelation_2026.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_metadata.json

@@ -283,6 +283,8 @@ Common optional fields:
 - `seriesKeys`, `seriesNames` for multi-series charts
 - `smooth` for line charts
 - `color`, `colors`, `stacked` for bar/multi-series styling
+- Bar only: `yAxisMin`/`yAxisMax` fix the value axis (e.g. `-1`/`1` for correlations);
+  omitted bounds leave existing charts unchanged.
 - Scatter only: `xKey`/`yKey` (both numeric, required), `labelKey` (tooltip label),
   `groupKey` + `groupOrder` (one colored series per group), `xUnit`/`yUnit`,
   `xDecimals`/`yDecimals`, `trendLines` (least-squares line per group). Scatter

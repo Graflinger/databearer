@@ -14,6 +14,7 @@ import math
 import os
 import re
 import shutil
+import subprocess
 import tempfile
 import unittest
 from datetime import date, timedelta
@@ -143,7 +144,7 @@ class IngestAndDbtTest(unittest.TestCase):
         self.temporary = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.temporary)
         self.database, self.raw = self.temporary / "test.duckdb", self.temporary / "raw"
-        months = exporter.months("2018-12", "2026-01")
+        months = exporter.months("2018-12", "2026-10")
         self.gas = [(month.replace("-", "M"), 5 + index * 0.1) for index, month in enumerate(months)]
         self.fx = [(month, f"{1.05 + index * 0.001:.6f}") for index, month in enumerate(months[1:-1])]
         self.session = FakeSession({
@@ -167,7 +168,7 @@ class IngestAndDbtTest(unittest.TestCase):
 
     def test_ingest_stores_raw_and_staging_then_models_convert_units(self):
         result = self.run_ingest()
-        self.assertEqual(result, {"gas_rows": len(self.gas), "fx_rows": 84, "release_date": "2026-09-02"})
+        self.assertEqual(result, {"gas_rows": len(self.gas), "fx_rows": 93, "release_date": "2026-09-02"})
         for name in (ingest.PINK_SHEET_FILE, ingest.ECB_FILE):
             sidecar = json.loads((self.raw / f"{name}.json").read_text())
             self.assertEqual(sidecar["sha256"], ingest.sha256((self.raw / name).read_bytes()))
@@ -178,7 +179,7 @@ class IngestAndDbtTest(unittest.TestCase):
             # 1 MMBtu = 1,055,055,852.62 J; 1 MWh = 3.6e9 J.
             self.assertAlmostEqual(eur, usd / fx * 3.6e9 / 1_055_055_852.62, places=9)
             # Only months with both inputs survive the join (Pink Sheet covers more months).
-            self.assertEqual(db.execute("SELECT count(*) FROM fact_gas_price_europe_monthly").fetchone()[0], 84)
+            self.assertEqual(db.execute("SELECT count(*) FROM fact_gas_price_europe_monthly").fetchone()[0], 93)
             db.execute("DELETE FROM fact_gas_price_europe_monthly WHERE month = DATE '2022-06-01'")
             self.assertEqual(db.sql(render(DBT / "tests/gas_price_monthly_contract.sql")).fetchall(), [("missing_month", date(2022, 6, 1))])
 
@@ -190,7 +191,7 @@ class IngestAndDbtTest(unittest.TestCase):
             self.run_ingest()
         self.assertEqual((self.raw / ingest.PINK_SHEET_FILE).read_bytes(), original)
         self.session.responses.clear()  # any network use would now raise KeyError
-        self.assertEqual(self.run_ingest(from_raw=True)["fx_rows"], 84)
+        self.assertEqual(self.run_ingest(from_raw=True)["fx_rows"], 93)
         (self.raw / ingest.ECB_FILE).write_bytes(b"tampered")
         with self.assertRaises(ingest.SourceError):
             self.run_ingest(from_raw=True)
@@ -302,24 +303,36 @@ class ExportTest(unittest.TestCase):
                             "first_date": f"{year}-01-01", "last_date": f"{year}-12-31", "days": len(rows), "frozen": True})
         self.manifest = {"schema_version": 1, "kind": "german-electricity-history", "timezone": "Europe/Berlin", "source": exporter.EXPECTED_SOURCE, "years": entries}
         (self.history / "manifest.json").write_text(json.dumps(self.manifest))
+        # Open year 2026 through 1 October, served as Git objects of the pinned commit.
+        rows = [row for month in range(1, 11) for row in month_rows(2026, month, price=float(60 + month), solar=float(10 + month))][:274]
+        payload = json.dumps({"schema_version": 2, "year": 2026, "timezone": "Europe/Berlin", "source": exporter.EXPECTED_SOURCE, "rows": rows}, sort_keys=True).encode()
+        digest = exporter.sha256(payload)
+        pinned = {"schema_version": 1, "kind": "german-electricity-history", "timezone": "Europe/Berlin", "source": exporter.EXPECTED_SOURCE,
+                  "years": entries + [{"year": 2026, "url": f"/data/history/german-electricity/2026.{digest}.json", "sha256": digest,
+                                       "first_date": "2026-01-01", "last_date": "2026-10-01", "days": 274, "frozen": False}]}
+        self.git_objects = {f"{exporter.CURRENT_HISTORY_PATH}/manifest.json": json.dumps(pinned).encode(),
+                            f"{exporter.CURRENT_HISTORY_PATH}/2026.{digest}.json": payload}
+        self.current = lambda path: self.git_objects[path]  # noqa: E731
         self.db = duckdb.connect(":memory:")
         self.addCleanup(self.db.close)
         self.db.execute("CREATE SCHEMA staging; CREATE SCHEMA prod_curated")
         self.db.execute("CREATE TABLE staging.world_bank_gas_europe_monthly AS SELECT 'Natural gas, Europe' AS series, '($/mmbtu)' AS unit, 'https://wb.test' AS source_url, '2026-09-25T22:11:04Z' AS retrieved_at")
         self.db.execute("CREATE TABLE staging.ecb_usd_eur_monthly AS SELECT 'EXR.M.USD.EUR.SP00.A' AS series_key, 'https://ecb.test' AS source_url, '2026-09-25T22:11:05Z' AS retrieved_at")
         self.db.execute("CREATE TABLE prod_curated.fact_gas_price_europe_monthly (month DATE, gas_usd_per_mmbtu DOUBLE, usd_per_eur DOUBLE, gas_eur_per_mwh DOUBLE, gas_release_date DATE, gas_source_sha256 VARCHAR, fx_source_sha256 VARCHAR)")
-        for index, month in enumerate(exporter.months("2018-12", "2026-01")):
+        for index, month in enumerate(exporter.months("2018-12", "2026-10")):
             year, number = map(int, month.split("-"))
             usd, fx = (20 + 10 * year % 7 + number) * exporter.MWH_PER_MMBTU * 1.1, 1.1
             self.db.execute("INSERT INTO prod_curated.fact_gas_price_europe_monthly VALUES (?, ?, ?, ?, DATE '2026-09-02', ?, ?)",
                             [f"{month}-01", usd, fx, usd / fx / exporter.MWH_PER_MMBTU, "a" * 64, "b" * 64])
 
     def test_complete_set_is_reproducible_from_the_published_monthly_csv(self):
-        files = exporter.build_payloads(self.db, self.history)
+        files = exporter.build_payloads(self.db, self.history, self.current)
         output = self.temporary / "out"
         exporter.promote(files, output)
         metadata = exporter.verify_set(output)
         self.assertEqual(metadata["period"]["months"], 84)
+        self.assertEqual(metadata["current_year"]["months"], 9)
+        self.assertEqual(metadata["sources"]["electricity"]["current_partition"]["observation_cutoff"], "2026-09-30")
         self.assertEqual([partition["year"] for partition in metadata["sources"]["electricity"]["partitions"]], exporter.YEARS)
         self.assertEqual(metadata["sources"]["gas"]["release_date"], "2026-09-02")
         monthly = list(csv.DictReader(io.StringIO(files[exporter.MONTHLY].decode())))
@@ -334,8 +347,33 @@ class ExportTest(unittest.TestCase):
         regression = list(csv.DictReader(io.StringIO(files[exporter.REGRESSION].decode())))
         self.assertEqual(len(regression), 5)
         self.assertAlmostEqual(float(regression[0]["Gas_Koeffizient"]), 1.5, delta=0.05)
+        # 2026 is out of sample: expected prices use the 2023–2025 fit only.
+        current = list(csv.DictReader(io.StringIO(files[exporter.CURRENT].decode())))
+        self.assertEqual([row["Monat"] for row in current], exporter.months("2026-01", "2026-09"))
+        post = [row for row in monthly if row["Monat"] >= "2023-01"]
+        X = np.column_stack([np.ones(len(post)), [float(row["Gaspreis_EUR_MWh"]) for row in post], [float(row["Erneuerbarenanteil_Prozent"]) for row in post]])
+        beta = np.linalg.lstsq(X, [float(row["Strompreis_EUR_MWh"]) for row in post], rcond=None)[0]
+        for row in current:
+            expected = beta @ [1, float(row["Gaspreis_EUR_MWh"]), float(row["Erneuerbarenanteil_Prozent"])]
+            self.assertEqual(row["Erwartet_EUR_MWh"], f"{expected:.2f}")
+            self.assertEqual(row["Abweichung_EUR_MWh"], f"{float(row['Strompreis_EUR_MWh']) - float(row['Erwartet_EUR_MWh']):.2f}")
+        # 2026 never enters the closed-year statistics.
+        self.assertNotIn("2026", files[exporter.MONTHLY].decode())
         # Byte-identical when rerun.
-        self.assertEqual(exporter.build_payloads(self.db, self.history), files)
+        self.assertEqual(exporter.build_payloads(self.db, self.history, self.current), files)
+
+    def test_pinned_current_year_integrity_failures(self):
+        path = next(name for name in self.git_objects if "/2026." in name)
+        original = self.git_objects[path]
+        self.git_objects[path] = original.replace(b'"price_eur_mwh": 61.0', b'"price_eur_mwh": 61.5', 1)
+        with self.assertRaisesRegex(exporter.ValidationError, "SHA-256"):
+            exporter.read_current_history(self.current)
+        self.git_objects[path] = original
+        manifest = json.loads(self.git_objects[f"{exporter.CURRENT_HISTORY_PATH}/manifest.json"])
+        manifest["years"][-1]["last_date"] = "2026-09-29"
+        self.git_objects[f"{exporter.CURRENT_HISTORY_PATH}/manifest.json"] = json.dumps(manifest).encode()
+        with self.assertRaisesRegex(exporter.ValidationError, "ends before"):
+            exporter.read_current_history(self.current)
 
     def test_history_integrity_failures(self):
         partition = next(self.history.glob("2021.*.json"))
@@ -357,8 +395,13 @@ class ExportTest(unittest.TestCase):
         with self.assertRaisesRegex(exporter.ValidationError, "every month"):
             exporter.read_gas(self.db)
 
+    def test_gas_must_cover_2026_through_september(self):
+        self.db.execute("DELETE FROM prod_curated.fact_gas_price_europe_monthly WHERE month = DATE '2026-09-01'")
+        with self.assertRaisesRegex(exporter.ValidationError, "2026-09"):
+            exporter.read_gas(self.db)
+
     def test_tampered_output_is_rejected_and_promotion_keeps_the_previous_set(self):
-        files = exporter.build_payloads(self.db, self.history)
+        files = exporter.build_payloads(self.db, self.history, self.current)
         output = self.temporary / "out"
         exporter.promote(files, output)
         (output / exporter.CORRELATIONS).write_bytes(files[exporter.CORRELATIONS].replace(b"2019", b"2018", 1))
@@ -380,6 +423,7 @@ class FrozenArticleTest(unittest.TestCase):
         cls.metadata = exporter.verify_set(FROZEN)
         read = lambda name: list(csv.DictReader(io.StringIO((FROZEN / name).read_text(encoding="utf-8"))))  # noqa: E731
         cls.monthly, cls.correlations, cls.regression = read(exporter.MONTHLY), read(exporter.CORRELATIONS), read(exporter.REGRESSION)
+        cls.current = read(exporter.CURRENT)
 
     def test_electricity_columns_match_the_tracked_smard_history(self):
         rows, partitions = exporter.read_history()
@@ -404,6 +448,29 @@ class FrozenArticleTest(unittest.TestCase):
         self.assertEqual((FROZEN / exporter.CORRELATIONS).read_bytes(), expected)
         expected = exporter.csv_bytes(exporter.REGRESSION_COLUMNS, exporter.regression_rows(monthly))
         self.assertEqual((FROZEN / exporter.REGRESSION).read_bytes(), expected)
+
+    def test_2026_expected_prices_reproduce_from_the_monthly_csv(self):
+        monthly = [{name: (row[name] if name in ("Monat", "Zeitraum") else float(row[name])) for name in exporter.MONTHLY_COLUMNS} for row in self.monthly]
+        beta = exporter.model_fit(monthly)["coefficients"]
+        self.assertEqual(self.metadata["current_year"]["model_coefficients"],
+                         {"intercept": round(float(beta[0]), 6), "gas": round(float(beta[1]), 6), "renewable_share": round(float(beta[2]), 6)})
+        for row in self.current:
+            expected = round(float(beta[0] + beta[1] * float(row["Gaspreis_EUR_MWh"]) + beta[2] * float(row["Erneuerbarenanteil_Prozent"])), 2)
+            self.assertEqual(row["Erwartet_EUR_MWh"], f"{expected:.2f}")
+            usd, fx, eur = float(row["Gaspreis_USD_MMBtu"]), float(row["USD_je_EUR"]), float(row["Gaspreis_EUR_MWh"])
+            self.assertLess(abs(usd / fx / exporter.MWH_PER_MMBTU - eur), 0.005 / fx / exporter.MWH_PER_MMBTU + 0.005)
+
+    @unittest.skipUnless(subprocess.run(["git", "cat-file", "-e", f"{exporter.CURRENT_COMMIT}^{{commit}}"], cwd=REPOSITORY,
+                                        capture_output=True).returncode == 0, "pinned history commit not in this checkout (shallow clone)")
+    def test_2026_electricity_reproduces_from_the_pinned_history_commit(self):
+        rows, partition = exporter.read_current_history()
+        self.assertEqual(partition, self.metadata["sources"]["electricity"]["current_partition"])
+        electricity = exporter.monthly_electricity(rows)
+        for row in self.current:
+            month = electricity[row["Monat"]]
+            self.assertEqual(row["Strompreis_EUR_MWh"], f"{month['price']:.2f}")
+            self.assertEqual(row["Erneuerbarenanteil_Prozent"], f"{month['renewable_share']:.2f}")
+            self.assertEqual(int(row["Stunden"]), month["hours"])
 
     def test_frozen_exporter_version_matches_this_code(self):
         self.assertEqual(self.metadata["exporter_sha256"], exporter.sha256(Path(exporter.__file__).read_bytes()))

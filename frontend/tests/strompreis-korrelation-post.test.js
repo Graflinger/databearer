@@ -45,8 +45,13 @@ describe('frozen data set', () => {
   });
 
   test('chart configs read only the validated frozen files', () => {
-    expect(configs.map((config) => config.containerId)).toEqual(['strompreis-gaspreis-verlauf', 'strompreis-streuung-gas', 'strompreis-streuung-erneuerbare', 'strompreis-korrelationen']);
-    for (const config of configs) expect(config.dataFile).toMatch(/^2026\/strompreis-korrelation\/strompreis_korrelation_(monthly|correlations)\.csv$/);
+    expect(configs.map((config) => config.containerId)).toEqual(['strompreis-gaspreis-verlauf', 'strompreis-streuung-gas', 'strompreis-streuung-erneuerbare', 'strompreis-korrelationen', 'strompreis-erwartung-2026']);
+    for (const config of configs) expect(config.dataFile).toMatch(/^2026\/strompreis-korrelation\/strompreis_korrelation_(monthly|correlations|2026)\.csv$/);
+    // Correlations are bounded: the axis must not suggest values beyond ±1.
+    const bars = configs.find((config) => config.containerId === 'strompreis-korrelationen');
+    expect([bars.yAxisMin, bars.yAxisMax]).toEqual([-1, 1]);
+    const generated = fs.readFileSync(path.join(root, 'js/charts/strompreis_korrelation/korrelationen.js'), 'utf8');
+    expect(generated).toMatch(/type: 'value',\n\s+min: -1,\n\s+max: 1,/);
   });
 });
 
@@ -75,8 +80,8 @@ describe('article evidence', () => {
   });
 
   test.each([
-    ['strompreis-streuung-gas-table', ['Pearson_Gas', 'Spearman_Gas', 'Partiell_Gas']],
-    ['strompreis-streuung-erneuerbare-table', ['Pearson_Erneuerbare', 'Spearman_Erneuerbare', 'Partiell_Erneuerbare']],
+    ['strompreis-streuung-gas-table', ['Pearson_Gas']],
+    ['strompreis-streuung-erneuerbare-table', ['Pearson_Erneuerbare']],
     ['strompreis-korrelationen-table', ['Pearson_Erneuerbare', 'Pearson_Gas', 'Pearson_Veraenderung_Erneuerbare', 'Pearson_Veraenderung_Gas']],
   ])('%s matches the correlation CSV', (id, keys) => {
     const tableRows = rows(id);
@@ -118,11 +123,84 @@ describe('article evidence', () => {
     }
   });
 
+  test('regression backup table is a closed disclosure with a table note', () => {
+    const details = document.getElementById('strompreis-regression-table').closest('details.post-data-details');
+    expect(details).not.toBeNull();
+    expect(details.hasAttribute('open')).toBe(false);
+    expect(details.querySelector('p.table-note a[href="https://www.smard.de/home/marktdaten"]')).not.toBeNull();
+    const key = data.regression.find((row) => row.Modell === 'Gas_Erneuerbare' && row.Zeitraum === '2023–2025');
+    expect(source).toContain(`**In den Jahren 2023–2025 lag der Strompreis bei gleichem Gaspreis um rund ${(-key.Erneuerbare_Koeffizient).toFixed(2).replace('.', ',')} Euro`);
+  });
+
   test('frontmatter describes the benchmark scope and the local image', () => {
     expect(frontmatter).toMatch(/^image: "\/images\/blog_card_images\/2026\/strompreis-gas-erneuerbare\.png"$/m);
     expect(fs.existsSync(path.join(root, 'images/blog_card_images/2026/strompreis-gas-erneuerbare.png'))).toBe(true);
     expect(frontmatter).toMatch(/^topic: \["energie", "wirtschaft"\]$/m);
     expect(source).toContain('nicht um einen täglichen Day-Ahead-Spotpreis');
     expect(source).toMatch(/Korrelation ist keine Ursache/);
+  });
+});
+
+describe('2026 out-of-sample comparison', () => {
+  const hourWeighted = (items, key) => items.reduce((sum, row) => sum + row[key] * row.Stunden, 0) / items.reduce((sum, row) => sum + row.Stunden, 0);
+  const quarter = (items, year, index) => items.filter((row) => row.Monat.startsWith(year) && Math.ceil(Number(row.Monat.slice(5)) / 3) === index + 1);
+  const whole = (value) => value.toFixed(0);
+  const { intercept, gas, renewable_share: renewable } = data.metadata.current_year.model_coefficients;
+
+  test('quarter table matches hour-weighted means of the frozen monthly files', () => {
+    const tableRows = rows('strompreis-erwartung-2026-table');
+    expect(tableRows.map((row) => row.querySelector('th').textContent)).toEqual(['1. Quartal', '2. Quartal', '3. Quartal']);
+    tableRows.forEach((row, index) => {
+      const before = quarter(data.monthly, '2025', index);
+      const now = quarter(data.current, '2026', index);
+      const cells = [...row.querySelectorAll('td')].map((cell) => cell.textContent);
+      expect(cells).toEqual([
+        `${whole(hourWeighted(before, 'Gaspreis_EUR_MWh'))} → ${whole(hourWeighted(now, 'Gaspreis_EUR_MWh'))}`,
+        `${whole(hourWeighted(before, 'Strompreis_EUR_MWh'))} → ${whole(hourWeighted(now, 'Strompreis_EUR_MWh'))}`,
+        whole(hourWeighted(now, 'Erwartet_EUR_MWh')),
+      ]);
+    });
+  });
+
+  test('text claims about deviations follow from the data', () => {
+    const deviations = data.current.map((row) => row.Abweichung_EUR_MWh);
+    const summer = deviations.slice(5);
+    expect(Math.min(...summer)).toBeGreaterThan(20);
+    expect(Math.round(Math.max(...summer))).toBe(32);
+    expect(source).toContain('**20 bis 32 Euro je Megawattstunde**');
+    expect(Math.max(...deviations.slice(0, 5).map(Math.abs))).toBeLessThanOrEqual(14);
+    // No 2023–2025 month deviated by that much from the same model.
+    const inSample = data.monthly.filter((row) => row.Zeitraum === '2023–2025')
+      .map((row) => Math.abs(row.Strompreis_EUR_MWh - (intercept + gas * row.Gaspreis_EUR_MWh + renewable * row.Erneuerbarenanteil_Prozent)));
+    expect(Math.max(...inSample)).toBeLessThan(20);
+    expect(source).toContain('Eine so große Abweichung gab es in den Jahren 2023–2025 in keinem einzigen Monat.');
+    // September gas lies outside the 2023–2025 range, which the article flags.
+    const maxGas = Math.max(...data.monthly.filter((row) => row.Zeitraum === '2023–2025').map((row) => row.Gaspreis_EUR_MWh));
+    expect(data.current.at(-1).Gaspreis_EUR_MWh).toBeGreaterThan(maxGas);
+    expect(source).toContain('Im September lag der Gaspreis zudem über allen Werten der Jahre 2023–2025');
+  });
+});
+
+describe('editorial rules', () => {
+  const body = () => document.body.textContent;
+  test('one-author voice, no pipeline detail, caveat stated once', () => {
+    expect(body()).not.toMatch(/\b(wir|uns|unser\w*)\b/i);
+    expect(body()).not.toMatch(/[a-f0-9]{40}|\.csv|\.json|Prüfsumme|Repository|Newey|Spearman|Pearson|MMBtu|Methodik/);
+    expect(source.match(/Korrelation ist keine Ursache/g)).toHaveLength(1);
+    expect(source).not.toContain('Schritt für Schritt');
+  });
+
+  test('ends with a short Daten und Quellen section', () => {
+    const headings = [...document.querySelectorAll('h2')];
+    const last = headings.at(-1);
+    expect(last.textContent).toBe('Daten und Quellen');
+    const following = [];
+    for (let node = last.nextElementSibling; node; node = node.nextElementSibling) following.push(node);
+    expect(following.filter((node) => node.tagName === 'P')).toHaveLength(2);
+    expect(following.at(-1).tagName).toBe('UL');
+  });
+
+  test('explains the correlation scale at first mention', () => {
+    expect(document.querySelector('p').textContent).toContain('+1 bedeutet vollständigen Gleichlauf, −1 eine vollständige Gegenbewegung');
   });
 });

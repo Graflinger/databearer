@@ -1,15 +1,15 @@
 ---
-title: "Strompreis, Gaspreis und Erneuerbare: Was die Monatsdaten 2019–2025 zeigen"
-date: 2026-09-26
-excerpt: "Von 2019 bis 2025 folgte der deutsche Großhandelsstrompreis vor allem dem Gaspreis. Innerhalb ruhigerer Phasen hängt er zusätzlich deutlich mit dem Anteil erneuerbarer Stromerzeugung zusammen."
+title: "Strompreis, Gaspreis und Erneuerbare: Was die Monatsdaten seit 2019 zeigen"
+date: 2026-10-04
+excerpt: "Von 2019 bis 2025 folgte der deutsche Großhandelsstrompreis vor allem dem Gaspreis; in ruhigeren Phasen war er in Monaten mit viel Wind- und Solarstrom deutlich niedriger. 2026 steigt er mit dem Gaspreis – seit Juni aber stärker, als Gas und Erneuerbare erwarten lassen."
 image: "/images/blog_card_images/2026/strompreis-gas-erneuerbare.png"
 imageText: "KI-generiertes Symbolbild: Windräder und Solarpark auf der einen, Gasleitung und Gaskraftwerk auf der anderen Seite, verbunden durch Hochspannungsleitungen."
 fullWidthCard: false
 topic: ["energie", "wirtschaft"]
 ---
-Über die 84 Monate von 2019 bis 2025 bewegte sich der deutsche Großhandelsstrompreis fast im Gleichschritt mit dem europäischen Gaspreis: Die Korrelation liegt bei **0,97**. Mit dem Anteil erneuerbarer Stromerzeugung korreliert er über denselben Zeitraum kaum (**−0,17**). Dieser Gesamtwert täuscht jedoch. **Innerhalb** der Phasen vor und nach der Gaspreiskrise war der Strompreis in Monaten mit viel Wind- und Solarstrom deutlich niedriger (**−0,90** für 2019–2020, **−0,82** für 2023–2025).
+Über die 84 Monate von 2019 bis 2025 bewegte sich der deutsche Großhandelsstrompreis fast im Gleichschritt mit dem europäischen Gaspreis: Die Korrelation liegt bei **0,97**. Mit dem Anteil erneuerbarer Stromerzeugung korreliert er über denselben Zeitraum kaum (**−0,17**). Eine Korrelation misst, wie eng zwei Größen gemeinsam steigen und fallen: +1 bedeutet vollständigen Gleichlauf, −1 eine vollständige Gegenbewegung, 0 keinen linearen Zusammenhang.
 
-Kurz gesagt: Der Gaspreis bestimmte, **auf welchem Niveau** der Strompreis lag. Der Erneuerbarenanteil hängt damit zusammen, wie weit er **innerhalb dieses Niveaus** nach unten ging. Beides sind statistische Zusammenhänge, keine gemessenen Ursachen. Warum das wichtig ist, zeigen die Daten Schritt für Schritt.
+Der schwache Gesamtwert täuscht jedoch. **Innerhalb** der Phasen vor und nach der Gaspreiskrise war der Strompreis in Monaten mit viel Wind- und Solarstrom deutlich niedriger (**−0,90** für 2019–2020, **−0,82** für 2023–2025). Kurz gesagt: Der Gaspreis bestimmte, **auf welchem Niveau** der Strompreis lag. Der Erneuerbarenanteil hängt damit zusammen, wie weit er **innerhalb dieses Niveaus** nach unten ging. 2026 steigt der Strompreis mit dem Gaspreis – seit Juni aber deutlich stärker, als dieser Zusammenhang erwarten lässt.
 
 <script defer src="/js/lib/echarts.min.js"></script>
 
@@ -46,18 +46,18 @@ Legt man alle 84 Monate in ein Streudiagramm, bilden die Gasmonate fast eine Ger
 
 <div class="chart-section">
 <h3 id="strompreis-streuung-gas-heading">Strompreis und Gaspreis je Monat, nach Zeitraum, 2019–2025</h3>
-<p class="chart-description" id="strompreis-streuung-gas-description">Jeder Punkt ist ein Monat. Je höher der Gaspreis, desto höher der Strompreis. Die Pearson-Korrelation beträgt 0,97 über alle 84 Monate und liegt auch in jedem Teilzeitraum zwischen 0,75 und 0,96. Die gestrichelten Linien sind lineare Trends je Zeitraum.</p>
+<p class="chart-description" id="strompreis-streuung-gas-description">Jeder Punkt ist ein Monat. Je höher der Gaspreis, desto höher der Strompreis. Die Korrelation beträgt 0,97 über alle 84 Monate und liegt auch in jedem Teilzeitraum zwischen 0,75 und 0,96. Die gestrichelten Linien sind lineare Trends je Zeitraum.</p>
 <div id="strompreis-streuung-gas" role="img" aria-labelledby="strompreis-streuung-gas-heading" aria-describedby="strompreis-streuung-gas-description" style="width: 100%; height: 440px;"></div>
 <script defer src="/js/charts/strompreis_korrelation/streuung-gas.js"></script>
 <div class="table-scroll" tabindex="0" role="region" aria-labelledby="strompreis-streuung-gas-heading">
 <table id="strompreis-streuung-gas-table">
 <caption>Ausgewählte Kennzahlen: Korrelation zwischen Strompreis und Gaspreis, Monatswerte</caption>
-<thead><tr><th scope="col">Zeitraum</th><th scope="col">Monate</th><th scope="col">Pearson</th><th scope="col">Spearman</th><th scope="col">Partiell (Erneuerbarenanteil herausgerechnet)</th></tr></thead>
+<thead><tr><th scope="col">Zeitraum</th><th scope="col">Monate</th><th scope="col">Korrelation</th></tr></thead>
 <tbody>
-<tr><th scope="row">2019–2025</th><td>84</td><td>0,97</td><td>0,96</td><td>0,97</td></tr>
-<tr><th scope="row">2019–2020</th><td>24</td><td>0,78</td><td>0,72</td><td>0,64</td></tr>
-<tr><th scope="row">2021–2022</th><td>24</td><td>0,96</td><td>0,93</td><td>0,97</td></tr>
-<tr><th scope="row">2023–2025</th><td>36</td><td>0,75</td><td>0,67</td><td>0,58</td></tr>
+<tr><th scope="row">2019–2025</th><td>84</td><td>0,97</td></tr>
+<tr><th scope="row">2019–2020</th><td>24</td><td>0,78</td></tr>
+<tr><th scope="row">2021–2022</th><td>24</td><td>0,96</td></tr>
+<tr><th scope="row">2023–2025</th><td>36</td><td>0,75</td></tr>
 </tbody>
 </table>
 </div>
@@ -66,18 +66,18 @@ Legt man alle 84 Monate in ein Streudiagramm, bilden die Gasmonate fast eine Ger
 
 <div class="chart-section">
 <h3 id="strompreis-streuung-erneuerbare-heading">Strompreis und Erneuerbarenanteil je Monat, nach Zeitraum, 2019–2025</h3>
-<p class="chart-description" id="strompreis-streuung-erneuerbare-description">Über alle 84 Monate zeigt sich kaum ein Zusammenhang (Pearson −0,17). Innerhalb der Zeiträume 2019–2020 und 2023–2025 fallen die Trendlinien jedoch deutlich ab (−0,90 und −0,82): Monate mit höherem Erneuerbarenanteil hatten dort niedrigere Strompreise. In der Krise 2021–2022 überlagert der Gaspreis diesen Zusammenhang (−0,08).</p>
+<p class="chart-description" id="strompreis-streuung-erneuerbare-description">Über alle 84 Monate zeigt sich kaum ein Zusammenhang (Korrelation −0,17). Innerhalb der Zeiträume 2019–2020 und 2023–2025 fallen die Trendlinien jedoch deutlich ab (−0,90 und −0,82): Monate mit höherem Erneuerbarenanteil hatten dort niedrigere Strompreise. In der Krise 2021–2022 überlagert der Gaspreis diesen Zusammenhang (−0,08).</p>
 <div id="strompreis-streuung-erneuerbare" role="img" aria-labelledby="strompreis-streuung-erneuerbare-heading" aria-describedby="strompreis-streuung-erneuerbare-description" style="width: 100%; height: 440px;"></div>
 <script defer src="/js/charts/strompreis_korrelation/streuung-erneuerbare.js"></script>
 <div class="table-scroll" tabindex="0" role="region" aria-labelledby="strompreis-streuung-erneuerbare-heading">
 <table id="strompreis-streuung-erneuerbare-table">
 <caption>Ausgewählte Kennzahlen: Korrelation zwischen Strompreis und Erneuerbarenanteil, Monatswerte</caption>
-<thead><tr><th scope="col">Zeitraum</th><th scope="col">Monate</th><th scope="col">Pearson</th><th scope="col">Spearman</th><th scope="col">Partiell (Gaspreis herausgerechnet)</th></tr></thead>
+<thead><tr><th scope="col">Zeitraum</th><th scope="col">Monate</th><th scope="col">Korrelation</th></tr></thead>
 <tbody>
-<tr><th scope="row">2019–2025</th><td>84</td><td>−0,17</td><td>0,02</td><td>−0,06</td></tr>
-<tr><th scope="row">2019–2020</th><td>24</td><td>−0,90</td><td>−0,91</td><td>−0,85</td></tr>
-<tr><th scope="row">2021–2022</th><td>24</td><td>−0,08</td><td>−0,04</td><td>−0,44</td></tr>
-<tr><th scope="row">2023–2025</th><td>36</td><td>−0,82</td><td>−0,81</td><td>−0,71</td></tr>
+<tr><th scope="row">2019–2025</th><td>84</td><td>−0,17</td></tr>
+<tr><th scope="row">2019–2020</th><td>24</td><td>−0,90</td></tr>
+<tr><th scope="row">2021–2022</th><td>24</td><td>−0,08</td></tr>
+<tr><th scope="row">2023–2025</th><td>36</td><td>−0,82</td></tr>
 </tbody>
 </table>
 </div>
@@ -92,13 +92,13 @@ Eine zweite Prüfung klammert den langfristigen Trend aus. Sie vergleicht nur, w
 
 <div class="chart-section">
 <h3 id="strompreis-korrelationen-heading">Korrelation mit dem Strompreis nach Zeitraum, Monatswerte 2019–2025</h3>
-<p class="chart-description" id="strompreis-korrelationen-description">Die Balken zeigen die Pearson-Korrelation der Monatswerte mit dem Strompreis. Für den Gaspreis liegt sie in allen Zeiträumen zwischen 0,75 und 0,97. Für den Erneuerbarenanteil ist sie über den Gesamtzeitraum schwach (−0,17), 2019–2020 und 2023–2025 aber stark negativ (−0,90 und −0,82).</p>
+<p class="chart-description" id="strompreis-korrelationen-description">Die Balken zeigen die Korrelation der Monatswerte mit dem Strompreis auf einer Skala von −1 bis +1. Für den Gaspreis liegt sie in allen Zeiträumen zwischen 0,75 und 0,97. Für den Erneuerbarenanteil ist sie über den Gesamtzeitraum schwach (−0,17), 2019–2020 und 2023–2025 aber stark negativ (−0,90 und −0,82).</p>
 <div id="strompreis-korrelationen" role="img" aria-labelledby="strompreis-korrelationen-heading" aria-describedby="strompreis-korrelationen-description" style="width: 100%; height: 400px;"></div>
 <script defer src="/js/charts/strompreis_korrelation/korrelationen.js"></script>
 <div class="table-scroll" tabindex="0" role="region" aria-labelledby="strompreis-korrelationen-heading">
 <table id="strompreis-korrelationen-table">
-<caption>Ausgewählte Kennzahlen: Pearson-Korrelation mit dem Strompreis für Monatswerte und Veränderungen zum Vormonat</caption>
-<thead><tr><th scope="col">Zeitraum</th><th scope="col">Erneuerbarenanteil</th><th scope="col">Gaspreis</th><th scope="col">Veränderung Erneuerbarenanteil</th><th scope="col">Veränderung Gaspreis</th></tr></thead>
+<caption>Ausgewählte Kennzahlen: Korrelation mit dem Strompreis, für Monatswerte und für Veränderungen zum Vormonat</caption>
+<thead><tr><th scope="col">Zeitraum</th><th scope="col">Erneuerbare</th><th scope="col">Gas</th><th scope="col">Erneuerbare (Veränderung)</th><th scope="col">Gas (Veränderung)</th></tr></thead>
 <tbody>
 <tr><th scope="row">2019–2025</th><td>−0,17</td><td>0,97</td><td>−0,54</td><td>0,89</td></tr>
 <tr><th scope="row">2019–2020</th><td>−0,90</td><td>0,78</td><td>−0,88</td><td>0,44</td></tr>
@@ -114,25 +114,60 @@ Das passt zu einer einfachen Lesart: Während der Krise schwankte der Gaspreis s
 
 ## Beide Größen zusammen betrachtet
 
-Gaspreis und Erneuerbarenanteil hängen auch miteinander zusammen. In den Jahren 2019–2020 und 2023–2025 korrelieren sie jeweils mit rund **−0,6**. Im Winter ist Gas meist teurer, und es wird weniger Solarstrom erzeugt. Eine Regression nimmt deshalb beide Größen gleichzeitig auf. Die Koeffizienten geben an, um wie viele Euro je Megawattstunde der Strompreis im Mittel höher lag, wenn der Gaspreis um einen Euro je Megawattstunde oder der Erneuerbarenanteil um einen Prozentpunkt höher war und die jeweils andere Größe gleich blieb.
+Gaspreis und Erneuerbarenanteil hängen auch miteinander zusammen: Im Winter ist Gas meist teurer, und es wird weniger Solarstrom erzeugt. Eine Regression nimmt deshalb beide Größen gleichzeitig auf. Sie zeigt, wie sich der Strompreis im Mittel verändert, wenn sich nur eine der beiden Größen ändert.
+
+**In den Jahren 2023–2025 lag der Strompreis bei gleichem Gaspreis um rund 1,59 Euro je Megawattstunde niedriger, wenn der Erneuerbarenanteil einen Prozentpunkt höher war.** Ein Euro höherer Gaspreis ging bei gleichem Erneuerbarenanteil mit 0,91 Euro höherem Strompreis einher. Über alle Jahre war der Gas-Zusammenhang stärker (**1,68 Euro**), der Erneuerbaren-Zusammenhang dagegen nicht eindeutig von null zu unterscheiden.
+
+Ein Teil des Erneuerbaren-Zusammenhangs ist Jahreszeit. Rechnet man zusätzlich Stromverbrauch und Kalendermonat heraus, bleibt über alle Jahre kein eindeutiger Zusammenhang mit den Erneuerbaren (**−0,24**, Intervall von −0,94 bis 0,45). Der Gas-Zusammenhang bleibt dagegen nahezu unverändert (**1,67**).
+
+<details class="post-data-details">
+<summary>Alle Regressionsergebnisse nach Zeitraum</summary>
 
 <div class="table-scroll" tabindex="0" role="region" aria-labelledby="strompreis-regression-caption">
 <table id="strompreis-regression-table">
-<caption id="strompreis-regression-caption">Ausgewählte Regressionsergebnisse: Strompreis in EUR/MWh, erklärt durch Gaspreis und Erneuerbarenanteil, Monatswerte, in Klammern 95-Prozent-Intervalle</caption>
-<thead><tr><th scope="col">Modell und Zeitraum</th><th scope="col">Gaspreis (EUR/MWh je EUR/MWh)</th><th scope="col">Erneuerbarenanteil (EUR/MWh je Prozentpunkt)</th><th scope="col">R²</th></tr></thead>
+<caption id="strompreis-regression-caption">Ausgewählte Regressionsergebnisse: Veränderung des Strompreises in EUR/MWh je 1 EUR/MWh Gaspreis und je Prozentpunkt Erneuerbarenanteil, Monatswerte, darunter 95-Prozent-Intervalle</caption>
+<thead><tr><th scope="col">Zeitraum</th><th scope="col">Gaspreis</th><th scope="col">Erneuerbare</th><th scope="col">R²</th></tr></thead>
 <tbody>
-<tr><th scope="row">2019–2025</th><td>1,68 (1,54 bis 1,82)</td><td>−0,11 (−0,42 bis 0,20)</td><td>0,95</td></tr>
-<tr><th scope="row">2019–2020</th><td>0,68 (0,39 bis 0,98)</td><td>−0,95 (−1,18 bis −0,71)</td><td>0,89</td></tr>
-<tr><th scope="row">2021–2022</th><td>1,72 (1,56 bis 1,88)</td><td>−2,13 (−3,72 bis −0,54)</td><td>0,94</td></tr>
-<tr><th scope="row">2023–2025</th><td>0,91 (0,31 bis 1,52)</td><td>−1,59 (−2,10 bis −1,07)</td><td>0,79</td></tr>
-<tr><th scope="row">2019–2025, mit Last und Kalendermonat</th><td>1,67 (1,56 bis 1,78)</td><td>−0,24 (−0,94 bis 0,45)</td><td>0,96</td></tr>
+<tr><th scope="row">2019–2025</th><td>1,68 <br><small>1,54 bis 1,82</small></td><td>−0,11 <br><small>−0,42 bis 0,20</small></td><td>0,95</td></tr>
+<tr><th scope="row">2019–2020</th><td>0,68 <br><small>0,39 bis 0,98</small></td><td>−0,95 <br><small>−1,18 bis −0,71</small></td><td>0,89</td></tr>
+<tr><th scope="row">2021–2022</th><td>1,72 <br><small>1,56 bis 1,88</small></td><td>−2,13 <br><small>−3,72 bis −0,54</small></td><td>0,94</td></tr>
+<tr><th scope="row">2023–2025</th><td>0,91 <br><small>0,31 bis 1,52</small></td><td>−1,59 <br><small>−2,10 bis −1,07</small></td><td>0,79</td></tr>
+<tr><th scope="row">2019–2025*</th><td>1,67 <br><small>1,56 bis 1,78</small></td><td>−0,24 <br><small>−0,94 bis 0,45</small></td><td>0,96</td></tr>
 </tbody>
 </table>
 </div>
+<p class="table-note"><strong>Quellen:</strong> <a href="https://www.smard.de/home/marktdaten">Bundesnetzagentur | SMARD.de</a>; <a href="https://www.worldbank.org/en/research/commodity-markets">World Bank – Pink Sheet</a>; <a href="https://data.ecb.europa.eu/data/datasets/EXR/EXR.M.USD.EUR.SP00.A">EZB</a>; eigene Berechnung. * Zusätzlich Stromverbrauch und Kalendermonat berücksichtigt. Die Intervalle berücksichtigen, dass aufeinanderfolgende Monate einander ähneln; bei 24 bis 84 Monatswerten sind sie nur eine Orientierung. R² ist der Anteil der Preisschwankungen, den das Modell abbildet.</p>
 
-In den Jahren 2023–2025 lag der Strompreis bei gleichem Gaspreis um rund **1,59 Euro je Megawattstunde** niedriger, wenn der Erneuerbarenanteil einen Prozentpunkt höher war. Auch während der Krise 2021–2022 ist dieser Koeffizient negativ, sobald der Gaspreis berücksichtigt wird. In der einfachen Korrelation war der Zusammenhang dort vom Gaspreis verdeckt. Über den Gesamtzeitraum gilt das nicht: Der Koeffizient ist klein, und sein Intervall schließt null ein.
+</details>
 
-Die letzte Zeile ist ein Robustheitstest. Sie berücksichtigt zusätzlich den Stromverbrauch und den Kalendermonat. Dadurch fällt der **übliche jahreszeitliche Verlauf** heraus: sonniger Sommer, dunkler und verbrauchsstarker Winter. Übrig bleibt nur, ob ein Monat mehr oder weniger Erneuerbare hatte, als für die Jahreszeit üblich ist. Über den Gesamtzeitraum lässt sich dafür kein eindeutiger Zusammenhang nachweisen (**−0,24**, Intervall von −0,94 bis 0,45). Ein Teil des Zusammenhangs innerhalb der Phasen ist also Jahreszeit. Der Gaspreis-Koeffizient bleibt dagegen nahezu unverändert (**1,67**).
+## 2026: Der Gaspreis steigt, der Strompreis noch stärker
+
+Für 2026 liegen Monatswerte bis September vor. Sie fließen in keine der obigen Berechnungen ein. Stattdessen lässt sich prüfen, ob der Zusammenhang der Jahre 2023–2025 auch 2026 trägt.
+
+Die Richtung stimmt. Im ersten Quartal war Gas günstiger als ein Jahr zuvor, und auch Strom war billiger. Im zweiten und dritten Quartal stieg der Gaspreis deutlich, im dritten Quartal hat er sich fast verdoppelt. Der Strompreis zog mit.
+
+Die Höhe passt aber nicht mehr. Seit Juni lag der Strompreis jeden Monat **20 bis 32 Euro je Megawattstunde** über dem Wert, den Gaspreis und Erneuerbarenanteil nach dem Zusammenhang von 2023–2025 erwarten lassen. Eine so große Abweichung gab es in den Jahren 2023–2025 in keinem einzigen Monat.
+
+<div class="chart-section">
+<h3 id="strompreis-erwartung-2026-heading">Strompreis 2026: tatsächlich und nach dem Zusammenhang 2023–2025 erwartet</h3>
+<p class="chart-description" id="strompreis-erwartung-2026-description">Von Januar bis Mai weicht der tatsächliche Strompreis höchstens 14 EUR/MWh vom erwarteten ab. Ab Juni liegt der tatsächliche Preis jeden Monat 20 bis 32 EUR/MWh darüber, im dritten Quartal im Mittel bei 126 statt erwarteten 98 EUR/MWh. Der Gaspreis steigt von 34 EUR/MWh im Januar auf 75 EUR/MWh im September.</p>
+<div id="strompreis-erwartung-2026" role="img" aria-labelledby="strompreis-erwartung-2026-heading" aria-describedby="strompreis-erwartung-2026-description" style="width: 100%; height: 420px;"></div>
+<script defer src="/js/charts/strompreis_korrelation/erwartung-2026.js"></script>
+<div class="table-scroll" tabindex="0" role="region" aria-labelledby="strompreis-erwartung-2026-heading">
+<table id="strompreis-erwartung-2026-table">
+<caption>Ausgewählte Werte: Quartalsmittel in EUR/MWh; Gas- und Strompreis jeweils 2025 → 2026, erwarteter Strompreis 2026</caption>
+<thead><tr><th scope="col">Quartal</th><th scope="col">Gaspreis</th><th scope="col">Strompreis</th><th scope="col">Erwartet</th></tr></thead>
+<tbody>
+<tr><th scope="row">1. Quartal</th><td>47 → 40</td><td>112 → 102</td><td>98</td></tr>
+<tr><th scope="row">2. Quartal</th><td>36 → 46</td><td>70 → 95</td><td>82</td></tr>
+<tr><th scope="row">3. Quartal</th><td>33 → 64</td><td>83 → 126</td><td>98</td></tr>
+</tbody>
+</table>
+</div>
+<div class="chart-sources"><strong>Quellen: </strong><a href="https://www.smard.de/home/marktdaten">Bundesnetzagentur | SMARD.de</a>, Datenstand 2. Oktober 2026; <a href="https://www.worldbank.org/en/research/commodity-markets">World Bank – Pink Sheet</a>, Stand 2. Oktober 2026; <a href="https://data.ecb.europa.eu/data/datasets/EXR/EXR.M.USD.EUR.SP00.A">EZB</a>; eigene Berechnung. „Erwartet“: Ergebnis der Regression 2023–2025 mit den Gaspreisen und Erneuerbarenanteilen von 2026.</div>
+</div>
+
+Warum, lässt sich aus diesen Monatsdaten nicht ablesen. Für den Juni nennt die Bundesnetzagentur in ihrer [Auswertung des zweiten Quartals](https://www.smard.de/page/home/topic-article/444/221002/erzeugung-und-verbrauch-leicht-gestiegen) eine Hitzewelle mit sehr hohen Abendpreisen. Zudem lohnt sich für viele konventionelle Kraftwerke im Sommer kein Dauerbetrieb; sie werden nur für die Abendstunden angefahren und preisen die Anfahrkosten ein. Für Juli bis September steht eine solche Auswertung noch aus. Im September lag der Gaspreis zudem über allen Werten der Jahre 2023–2025; die Erwartung für diesen Monat ist deshalb unsicherer.
 
 ## Was die Zahlen zeigen und was nicht
 
@@ -144,12 +179,12 @@ Die letzte Zeile ist ein Robustheitstest. Sie berücksichtigt zusätzlich den St
 
 Wie sich der Anteil erneuerbarer Stromerzeugung langfristig entwickelt hat, beschreibt der Beitrag [Erneuerbare Stromerzeugung auf dem Vormarsch](/posts/2025/Erneuerbare-Stromerzeugung-auf-dem-Vormarsch/). Weitere Analysen gibt es im [Themenbereich Energie](/themen/energie/).
 
-## Methodik und Datenquellen
+## Daten und Quellen
 
-- **Strompreis:** Day-Ahead-Großhandelspreis der Gebotszone Deutschland–Luxemburg (DE–LU) von [Bundesnetzagentur | SMARD.de](https://www.smard.de/home/marktdaten), [CC BY 4.0](https://www.smard.de/home/datennutzung). Grundlage sind die Tagesmittel, gewichtet mit der Stundenzahl jedes Tages zu Monatsmitteln. Das ergibt ein zeitgewichtetes Monatsmittel. Die Monatswerte stimmen mit der Monatsauflösung von SMARD auf einen Cent je Megawattstunde überein.
-- **Erneuerbarenanteil:** Anteil von Biomasse, Wasserkraft, Wind an Land, Wind auf See, Photovoltaik und sonstigen Erneuerbaren an der gesamten Nettostromerzeugung für das öffentliche Netz. Beide Größen sind je Monat als Energiesumme gebildet, nicht als Mittel täglicher Anteile. Pumpspeicher und Kernkraft zählen zur Erzeugung, aber nicht zu den Erneuerbaren. Das entspricht der Einteilung im [Strom-Dashboard](/dashboards/strom/). Quelle ist ebenfalls SMARD. Alle 2.557 Tage sind vollständig; kein Wert wurde geschätzt.
-- **Gaspreis:** „Natural gas, Europe“ aus den monatlichen [Commodity Price Data (Pink Sheet) der World Bank](https://www.worldbank.org/en/research/commodity-markets), Stand 2. September 2026, [lizenziert unter CC BY 4.0](https://datacatalog.worldbank.org/search/dataset/0038238/commodity-prices-history-and-projections). Seit April 2015 ist das der niederländische Handelspunkt TTF, der wichtigste Referenzpreis für Gas in Europa. Es handelt sich um ein **Monatsmittel eines Benchmarkpreises**, nicht um einen täglichen Day-Ahead-Spotpreis und nicht um den Preis im deutschen Marktgebiet THE. Die beiden Handelspunkte liegen meist eng beieinander, sind aber nicht identisch.
-- **Umrechnung:** Die World Bank veröffentlicht US-Dollar je MMBtu. Umgerechnet wurde mit dem monatlichen Mittel des [EZB-Referenzkurses US-Dollar/Euro](https://data.ecb.europa.eu/data/datasets/EXR/EXR.M.USD.EUR.SP00.A) (Quelle: EZB, [Nutzungsbedingungen](https://www.ecb.europa.eu/services/disclaimer/html/index.en.html)) und mit 1 MMBtu = 0,29307107 MWh. Die Umrechnung von Monatsmitteln mit einem Monatskurs ist eine Näherung an die Umrechnung einzelner Tageswerte.
-- **Zeiträume:** 2019–2020 (vor der Krise), 2021–2022 (Gaspreiskrise), 2023–2025 (danach). Die Einteilung wurde vor der Berechnung festgelegt. Seit Oktober 2018 gilt durchgehend die Gebotszone DE–LU; 2026 ist noch nicht vollständig und daher nicht enthalten.
-- **Statistik:** Pearson-Korrelationen der Monatswerte, als Robustheitsprüfung Spearman-Rangkorrelationen. Partielle Korrelationen rechnen die jeweils andere Größe linear heraus. Veränderungen sind Differenzen zum Vormonat innerhalb eines Zeitraums. Die Regressionen sind Kleinste-Quadrate-Schätzungen mit Konstante; die 95-Prozent-Intervalle beruhen auf Newey-West-Standardfehlern mit drei Monaten Verzögerung. Sie berücksichtigen, dass aufeinanderfolgende Monate einander ähneln, sind bei 24 bis 84 Monatswerten aber nur als Orientierung zu verstehen. Alle Kennzahlen lassen sich aus der veröffentlichten Monatstabelle nachrechnen.
-- **Reproduzierbarkeit:** Daten, Code und Prüfsummen liegen im [öffentlichen Repository des Blogs](https://github.com/Graflinger/databearer). Gasdaten und Wechselkurse wurden am 26. September 2026 abgerufen.
+Grundlage sind Monatswerte von Januar 2019 bis September 2026. Der Strompreis ist der Day-Ahead-Großhandelspreis für Deutschland und Luxemburg, gemittelt über alle Stunden eines Monats. Der Erneuerbarenanteil bezieht sich auf die öffentliche Nettostromerzeugung; Pumpspeicher und Kernkraft zählen zur Erzeugung, aber nicht zu den Erneuerbaren. Der Gaspreis ist das Monatsmittel des europäischen Referenzpreises TTF, umgerechnet von US-Dollar in Euro. Es handelt sich nicht um einen täglichen Day-Ahead-Spotpreis und nicht um den Preis im deutschen Marktgebiet; beide liegen meist eng beieinander, sind aber nicht identisch.
+
+Alle Korrelationen und Regressionen beruhen nur auf den Jahren 2019 bis 2025, aufgeteilt in drei vorab festgelegte Phasen: vor der Gaspreiskrise, die Krise und danach. 2026 ist noch nicht abgeschlossen und wird nur mit dem Zusammenhang von 2023–2025 verglichen. SMARD kann die Werte der letzten Wochen noch geringfügig korrigieren.
+
+- Strompreis und Erzeugung: [Bundesnetzagentur | SMARD.de](https://www.smard.de/home/marktdaten), Lizenz [CC BY 4.0](https://www.smard.de/home/datennutzung), Datenstand 2. Oktober 2026
+- Gaspreis: [World Bank, Commodity Price Data (Pink Sheet)](https://www.worldbank.org/en/research/commodity-markets), „Natural gas, Europe“, Stand 2. Oktober 2026, Lizenz [CC BY 4.0](https://datacatalog.worldbank.org/search/dataset/0038238/commodity-prices-history-and-projections)
+- Wechselkurs: [EZB-Referenzkurs US-Dollar/Euro](https://data.ecb.europa.eu/data/datasets/EXR/EXR.M.USD.EUR.SP00.A), Monatsmittel ([Nutzungsbedingungen](https://www.ecb.europa.eu/services/disclaimer/html/index.en.html)); eigene Umrechnung des Gaspreises in Euro je Megawattstunde

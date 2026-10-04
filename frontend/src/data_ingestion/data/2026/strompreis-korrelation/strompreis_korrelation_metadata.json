@@ -1,7 +1,35 @@
 {
-  "exporter_sha256": "deb022542359ba556eb82bd7ca8ee702c336484cac96f5f7475df60bed231ac4",
-  "exporter_version": "1.0.0",
+  "current_year": {
+    "first_month": "2026-01",
+    "last_month": "2026-09",
+    "model_coefficients": {
+      "gas": 0.91344,
+      "intercept": 145.573039,
+      "renewable_share": -1.585845
+    },
+    "model_period": "2023–2025",
+    "months": 9,
+    "note": "Out-of-sample comparison only; 2026 is not used in any correlation or regression. Recent days were still inside the dashboard correction window."
+  },
+  "exporter_sha256": "30f236206f70eaff41bee25294c6e9cbfad4a3ddd2123c0ba8d69a6f04b03d96",
+  "exporter_version": "1.1.0",
   "files": {
+    "strompreis_korrelation_2026.csv": {
+      "bytes": 662,
+      "columns": [
+        "Monat",
+        "Strompreis_EUR_MWh",
+        "Erneuerbarenanteil_Prozent",
+        "Gaspreis_EUR_MWh",
+        "Gaspreis_USD_MMBtu",
+        "USD_je_EUR",
+        "Stunden",
+        "Erwartet_EUR_MWh",
+        "Abweichung_EUR_MWh"
+      ],
+      "rows": 9,
+      "sha256": "46af2f1f80d2b08c40503fd8e0ff40b150e97c050da78a0c07f1d458ab9b66a8"
+    },
     "strompreis_korrelation_correlations.csv": {
       "bytes": 555,
       "columns": [
@@ -60,6 +88,7 @@
     "causality": "Descriptive associations only; monthly correlations are not causal effects or cost shares",
     "correlations": "Pearson and Spearman (average ranks for ties) on monthly levels; partial correlations control for the other variable; changes are month-to-month differences inside each period",
     "electricity_price": "Hour-weighted monthly mean of daily DE-LU day-ahead mean prices (EUR/MWh)",
+    "expected_2026": "Erwartet = intercept + gas coefficient * gas EUR/MWh + renewable coefficient * renewable share, OLS point estimates of the 2023-2025 model refitted from the rounded monthly CSV; inputs are the rounded 2026 values",
     "gas_conversion": "EUR/MWh = USD/MMBtu / (USD per EUR) / 0.29307107017 MWh per MMBtu, monthly averages",
     "non_renewable_generation": [
       "lignite",
@@ -103,9 +132,19 @@
       }
     ]
   },
-  "schema_version": 1,
+  "schema_version": 2,
   "sources": {
     "electricity": {
+      "current_partition": {
+        "commit": "66035ab8b186fe975a55d065982a00963e3cee93",
+        "days": 273,
+        "filename": "2026.414303d08c1fb76b9b14bc531882108749f3e17d71c0a06da6a7b9fd9266e3b4.json",
+        "history_last_date": "2026-10-01",
+        "observation_cutoff": "2026-09-30",
+        "schema_version": 2,
+        "sha256": "414303d08c1fb76b9b14bc531882108749f3e17d71c0a06da6a7b9fd9266e3b4",
+        "year": 2026
+      },
       "dataset": "Day-ahead price DE-LU, net public generation Germany (daily)",
       "license": "CC BY 4.0",
       "license_url": "https://creativecommons.org/licenses/by/4.0/",
@@ -166,10 +205,10 @@
     },
     "exchange_rate": {
       "name": "European Central Bank, euro foreign exchange reference rate (USD per EUR), monthly average",
-      "retrieved_at": "2026-09-25T22:11:01Z",
+      "retrieved_at": "2026-10-04T09:40:03Z",
       "series_key": "EXR.M.USD.EUR.SP00.A",
-      "sha256": "ad06f04309b75ac60aed6f13d2c6d645e5dbf4ea5de7cdb235dcb3e81602bcf9",
-      "source_url": "https://data-api.ecb.europa.eu/service/data/EXR/M.USD.EUR.SP00.A?startPeriod=2019-01&endPeriod=2025-12&format=csvdata",
+      "sha256": "41f45be07e7ecaa16d607a0a0c96e6056459c266b5e81f331478ca465b6ca18f",
+      "source_url": "https://data-api.ecb.europa.eu/service/data/EXR/M.USD.EUR.SP00.A?startPeriod=2019-01&endPeriod=2026-09&format=csvdata",
       "terms_url": "https://www.ecb.europa.eu/services/disclaimer/html/index.en.html"
     },
     "gas": {
@@ -177,10 +216,10 @@
       "license_url": "https://creativecommons.org/licenses/by/4.0/",
       "name": "World Bank, Commodity Price Data (The Pink Sheet)",
       "note": "Natural gas, Europe: Netherlands TTF since April 2015; monthly benchmark average, not a day-ahead quote",
-      "release_date": "2026-09-02",
-      "retrieved_at": "2026-09-25T22:11:01Z",
+      "release_date": "2026-10-02",
+      "retrieved_at": "2026-10-04T09:40:03Z",
       "series": "Natural gas, Europe",
-      "sha256": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "sha256": "ea1c350827878ea3bbe30e3cda16a13fd3bd5b409b8458940dc94a36b5a33154",
       "source_url": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
       "unit": "($/mmbtu)"
     }

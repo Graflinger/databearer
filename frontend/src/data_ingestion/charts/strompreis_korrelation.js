@@ -5,6 +5,7 @@ validateStrompreisKorrelation();
 
 const MONTHLY = `${DIRECTORY}/strompreis_korrelation_monthly.csv`;
 const CORRELATIONS = `${DIRECTORY}/strompreis_korrelation_correlations.csv`;
+const CURRENT = `${DIRECTORY}/strompreis_korrelation_2026.csv`;
 // One color per period, reused in both scatterplots.
 const PERIOD_COLORS = ['#3ba272', '#d9534f', '#5470c6'];
 
@@ -67,9 +68,27 @@ module.exports = [
     containerId: 'strompreis-korrelationen',
     xKey: 'Zeitraum',
     xAxisLabel: 'Zeitraum',
-    yAxisLabel: 'Pearson-Korrelation mit dem Strompreis',
+    yAxisLabel: 'Korrelation mit dem Strompreis',
+    // Correlations are bounded by definition; avoid misleading ±1.2 ticks.
+    yAxisMin: -1,
+    yAxisMax: 1,
+    allXAxisLabels: true,
     seriesKeys: ['Pearson_Erneuerbare', 'Pearson_Gas'],
     seriesNames: ['Erneuerbarenanteil', 'Gaspreis'],
     colors: ['#3ba272', '#e6a23c'],
+  },
+  {
+    type: 'line',
+    dataFile: CURRENT,
+    outputFile: 'erwartung-2026.js',
+    containerId: 'strompreis-erwartung-2026',
+    xKey: 'Monat',
+    xAxisLabel: 'Monat 2026',
+    yAxisLabel: 'EUR/MWh',
+    seriesKeys: ['Strompreis_EUR_MWh', 'Erwartet_EUR_MWh', 'Gaspreis_EUR_MWh'],
+    seriesNames: ['Strompreis', 'Erwartet nach 2023–2025', 'Gaspreis TTF'],
+    colors: ['#5470c6', '#9e9e9e', '#e6a23c'],
+    smooth: false,
+    narrowGridTop: '24%',
   },
 ];
