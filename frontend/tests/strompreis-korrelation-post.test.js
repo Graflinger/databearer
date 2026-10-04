@@ -181,6 +181,16 @@ describe('2026 out-of-sample comparison', () => {
   });
 });
 
+test('no calculation links a higher renewable share to a higher wholesale price', () => {
+  expect(source).toContain('**Kein Hinweis, dass Erneuerbare den Börsenstrom verteuert haben.**');
+  const values = [
+    ...data.correlations.flatMap((row) => [row.Pearson_Erneuerbare, row.Spearman_Erneuerbare, row.Partiell_Erneuerbare, row.Pearson_Veraenderung_Erneuerbare]),
+    ...data.regression.map((row) => row.Erneuerbare_Koeffizient),
+  ];
+  // "Negativ oder nahe null": no positive value above 0.05.
+  for (const value of values) expect(value).toBeLessThanOrEqual(0.05);
+});
+
 describe('editorial rules', () => {
   const body = () => document.body.textContent;
   test('one-author voice, no pipeline detail, caveat stated once', () => {
