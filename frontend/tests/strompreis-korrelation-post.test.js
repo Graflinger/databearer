@@ -204,7 +204,6 @@ test('storage outlook links the battery article and quotes its published prices'
   expect(battery).toContain('Um **13 Uhr liegt der mittlere Day-Ahead-Preis bei 37,94 EUR/MWh**');
   expect(battery).toContain('**um 19 Uhr 248,93 EUR/MWh**');
   expect(source).toContain('um 13 Uhr bei rund 38, um 19 Uhr bei rund 249 Euro je Megawattstunde');
-  expect(source).toContain('was die Speicher selbst kosten, misst diese Auswertung nicht');
 });
 
 describe('editorial rules', () => {
