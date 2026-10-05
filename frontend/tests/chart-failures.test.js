@@ -74,7 +74,7 @@ test('Eleventy before hook rejects when chart generation fails', async () => {
     watchIgnores: { add: jest.fn() }, addFilter: registerFilter, addAsyncFilter: registerFilter,
     getFilter: (name) => filters[name], addPassthroughCopy: jest.fn(),
     addPlugin: jest.fn(), addGlobalData: jest.fn(), addCollection: jest.fn(), addPreprocessor: jest.fn(),
-    addWatchTarget: jest.fn(), addNunjucksAsyncShortcode: jest.fn() };
+    addWatchTarget: jest.fn(), addNunjucksAsyncShortcode: jest.fn(), addShortcode: jest.fn() };
   require('../.eleventy.js')(config);
   // Exercise every registered hook without touching real output directories.
   const event = { runMode: 'build', outputMode: 'json', incremental: false };

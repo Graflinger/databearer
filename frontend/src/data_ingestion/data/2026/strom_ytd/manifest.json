@@ -1,0 +1,188 @@
+{
+  "schema_version": 2,
+  "entity": "strom_ytd",
+  "methodology_version": "same-calendar-window-v2",
+  "source_commit": "66035ab8b186fe975a55d065982a00963e3cee93",
+  "source_commit_time": "2026-10-02T12:05:34Z",
+  "source_last_date": "2026-10-01",
+  "observation_cutoff": "2026-09-30",
+  "prepared_on": "2026-10-03",
+  "upstream_retrieved_at": null,
+  "timezone": "Europe/Berlin",
+  "price_zone": "DE-LU",
+  "source": {
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "name": "Bundesnetzagentur | SMARD.de",
+    "terms_url": "https://www.smard.de/home/datennutzung",
+    "url": "https://www.smard.de/home/marktdaten"
+  },
+  "source_files": [
+    {
+      "path": "frontend/src/data-history/german-electricity/manifest.json",
+      "sha256": "3a3182d7a2bc943bd5c2a32766e45032df05c95ce667b99858102e1a09de5cb7",
+      "bytes": 4422
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2019.d7211e250be153c9ff4dbc2bba8e52821204bce116c61a4cf6812316b28dd93f.json",
+      "sha256": "d7211e250be153c9ff4dbc2bba8e52821204bce116c61a4cf6812316b28dd93f",
+      "bytes": 143358
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2020.c2b5b0260c5f71cbd793997cc9ea8f9b5baa464d9f3db00c93341c2b7e5ab596.json",
+      "sha256": "c2b5b0260c5f71cbd793997cc9ea8f9b5baa464d9f3db00c93341c2b7e5ab596",
+      "bytes": 143923
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2021.79059405df894d3bc22ed07540c03e8db6f4fc004f51e5b601726ff1da371403.json",
+      "sha256": "79059405df894d3bc22ed07540c03e8db6f4fc004f51e5b601726ff1da371403",
+      "bytes": 143734
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2022.a2500628fc9af0b9547661db3412ed69eed4464323199aac19cd9b504850a27b.json",
+      "sha256": "a2500628fc9af0b9547661db3412ed69eed4464323199aac19cd9b504850a27b",
+      "bytes": 143506
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2023.9ad85353750c74cb587e7208ca67c1410138e42e6616c7c75e7091c14f7e8ed7.json",
+      "sha256": "9ad85353750c74cb587e7208ca67c1410138e42e6616c7c75e7091c14f7e8ed7",
+      "bytes": 141978
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2024.5aeca1c9781aba47045bcab7a25a7c25d974c93ef00859edcb68248f6ce59540.json",
+      "sha256": "5aeca1c9781aba47045bcab7a25a7c25d974c93ef00859edcb68248f6ce59540",
+      "bytes": 141674
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2025.7e70f946ebf15672021bf207ea2df167d7352b789159dbbb71852e85a4f0fc25.json",
+      "sha256": "7e70f946ebf15672021bf207ea2df167d7352b789159dbbb71852e85a4f0fc25",
+      "bytes": 142414
+    },
+    {
+      "path": "frontend/src/data-history/german-electricity/2026.414303d08c1fb76b9b14bc531882108749f3e17d71c0a06da6a7b9fd9266e3b4.json",
+      "sha256": "414303d08c1fb76b9b14bc531882108749f3e17d71c0a06da6a7b9fd9266e3b4",
+      "bytes": 108320
+    }
+  ],
+  "editorial_sources": [
+    {
+      "url": "https://www.smard.de/page/home/wiki-article/446/384/so-funktioniert-der-strommarkt",
+      "scope": "Merit order and day-ahead market",
+      "consulted_on": "2026-10-03"
+    },
+    {
+      "url": "https://www.smard.de/page/home/topic-article/444/209624",
+      "scope": "Full year 2022: gas crisis, price-setting gas plants, French nuclear availability",
+      "consulted_on": "2026-10-03"
+    },
+    {
+      "url": "https://www.smard.de/page/home/topic-article/444/220298/nettoexport-von-strom-im-ersten-quartal",
+      "scope": "Q1 2026 versus Q1 2025: lower price from high renewables and lower quarterly gas prices; gas up from late February",
+      "consulted_on": "2026-10-03"
+    },
+    {
+      "url": "https://www.smard.de/page/home/topic-article/444/221002/erzeugung-und-verbrauch-leicht-gestiegen",
+      "scope": "Q2 2026 versus Q2 2025: gas prices up about 25 percent, more conventional generation, June heat wave",
+      "consulted_on": "2026-10-03"
+    }
+  ],
+  "exporter": "frontend/src/data_ingestion/freeze_strom_ytd.py",
+  "units": {
+    "energy": "TWh",
+    "source_energy": "GWh",
+    "share": "% of public net generation",
+    "price": "EUR/MWh, nominal",
+    "price_hour_sum": "(EUR/MWh)*h",
+    "hours": "h"
+  },
+  "coverage": {
+    "years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "start_month_day": "01-01",
+    "end_month_day": "09-30",
+    "leap_day": "included; 274 days in 2020/2024, otherwise 273",
+    "quarters": "2025 and 2026: Q1-Q3, calendar quarters, reconciled to the period totals",
+    "missing_energy_days": 0,
+    "missing_price_days": 0
+  },
+  "methodology": {
+    "energy": "Sum daily GWh / 1000; generation includes all 12 sources including pumped storage and nuclear, excludes load.",
+    "renewable": "Sum biomass, hydro, wind_offshore, wind_onshore, solar, other_renewables / total generation; no mean of daily shares.",
+    "price": "Sum(daily price_eur_mwh * hours) / sum(hours); source daily prices are rounded; no load weighting.",
+    "missing": "Reject missing dates, energy or prices; no gap filling. Preserve source-derived nuclear zero after 2023-04-15.",
+    "scope": "Public net generation DE; no PV self-consumption, industrial or railway grids. Not gross consumption or retail prices.",
+    "limitations": "Daily source sums can include upstream partial data/interpolation; the latest 35 days were still inside the dashboard correction window when frozen. No causal attribution from these aggregates."
+  },
+  "payloads": {
+    "periods.csv": {
+      "sha256": "a9d591661024f2583eb44412b8308f18c9f298fbbb7a7fd04ece7e5999ea9193",
+      "bytes": 1062,
+      "rows": 8,
+      "columns": [
+        "year",
+        "start",
+        "end",
+        "days",
+        "energy_days",
+        "price_days",
+        "hours",
+        "generation_twh",
+        "renewable_twh",
+        "renewable_share_pct",
+        "load_twh",
+        "price_hour_sum",
+        "price_eur_mwh",
+        "negative_mean_days"
+      ]
+    },
+    "mix_by_year.csv": {
+      "sha256": "c2fb4840502324c0a1698cad1610ff9901ba7c0f44813903c5cb10899bd0a263",
+      "bytes": 2465,
+      "rows": 96,
+      "columns": [
+        "year",
+        "source",
+        "generation_twh"
+      ]
+    },
+    "comparison.csv": {
+      "sha256": "43bb01a52da97c7ae4a1e5045981d48dc62ec0dad070171e274d036f6efdcd79",
+      "bytes": 114,
+      "rows": 2,
+      "columns": [
+        "year",
+        "wind_onshore_twh",
+        "solar_twh",
+        "other_twh"
+      ]
+    },
+    "quarters.csv": {
+      "sha256": "b03aa57923b4fee042d3f95b5514a0584f2006d5425103a53a2c78d96930af63",
+      "bytes": 494,
+      "rows": 3,
+      "columns": [
+        "quarter",
+        "days_2025",
+        "hours_2025",
+        "price_hour_sum_2025",
+        "price_2025",
+        "wind_onshore_2025",
+        "solar_2025",
+        "days_2026",
+        "hours_2026",
+        "price_hour_sum_2026",
+        "price_2026",
+        "wind_onshore_2026",
+        "solar_2026"
+      ]
+    }
+  }
+}
