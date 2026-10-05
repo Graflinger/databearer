@@ -186,7 +186,7 @@ test('article dates, static tables, comparisons and closing link agree with the 
   const article = fs.readFileSync(path.resolve(__dirname, '../src/posts/2026/strom-2026-ytd-zahlen.md'), 'utf8');
   const de = (number, digits) => number.toLocaleString('de-DE', { minimumFractionDigits: digits, maximumFractionDigits: digits });
   expect(article).toContain('title: "Strom 2026 bisher: Solar und Wind an Land');
-  expect(article).toContain('date: 2026-10-03');
+  expect(article).toContain('date: 2026-10-04');
   expect(article).not.toContain('lastUpdated:');
   expect(article).toContain('[Strom-Dashboard](/dashboards/strom/).');
   expect(article).toMatch(/\n## Daten und Quellen\n[^#]*$/);
