@@ -178,6 +178,11 @@ describe('2026 out-of-sample comparison', () => {
     const maxGas = Math.max(...data.monthly.filter((row) => row.Zeitraum === '2023–2025').map((row) => row.Gaspreis_EUR_MWh));
     expect(data.current.at(-1).Gaspreis_EUR_MWh).toBeGreaterThan(maxGas);
     expect(source).toContain('Im September lag der Gaspreis zudem über allen Werten der Jahre 2023–2025');
+    // The heat-wave explanation stays partial and keeps the September counterexample.
+    expect(source).toContain('https://www.dwd.de/DE/presse/pressemitteilungen/DE/2026/20260831_deutschlandwetter_sommer_news.html');
+    expect(source).toContain('kann einen Teil der Abweichung 2026 erklären');
+    expect(Math.round(data.current.at(-1).Abweichung_EUR_MWh)).toBe(31);
+    expect(source).toContain('Auch im September lag der Strompreis rund 31 Euro über der Erwartung');
   });
 });
 

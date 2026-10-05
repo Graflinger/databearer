@@ -83,6 +83,12 @@ file `strompreis_korrelation_2026.csv` adds January–September 2026.
   deviation is 19.6 €/MWh; June–September 2026 deviate by 20.1–31.6 €/MWh. September
   2026 gas (75.3 €/MWh) lies above the 2023–2025 range (maximum 63.9 €/MWh in January
   2023), so that month's expectation is an extrapolation; the article says so.
+- **2026 context:** the article cites the DWD summer review (31 Aug 2026: one of the
+  warmest summers since 1881, unprecedented heat wave 18–28 June, lasting heat in the
+  south/southwest) and SMARD's Q2 2026 review for the market mechanism (evening
+  cooling load, low wind, summer start-up pricing). It states that the heat can
+  explain *part* of the June–September deviation, not all of it: September deviates
+  as much as August without a June-type heat wave (DWD September review, 29 Sep 2026).
 
 The article keeps only a short "Daten und Quellen" section (one-author voice, no file
 names, hashes or tooling). Correlation tables show period, months and the Pearson
