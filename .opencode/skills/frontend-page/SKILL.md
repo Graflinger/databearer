@@ -65,7 +65,7 @@ Important folders:
 
    ```yaml
    ---
-   title: "Post Title" # accurate claim; no brand suffix
+   title: "Post Title" # accurate, specific finding; no brand suffix (see blog-post-workflow)
    date: YYYY-MM-DD
    draft: true # boolean; remove when publishing
    excerpt: "Key finding first, 1–2 plain-text sentences."

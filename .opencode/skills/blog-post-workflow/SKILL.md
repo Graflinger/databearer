@@ -48,6 +48,37 @@ Default style:
 - Avoid overclaiming from one data point.
 - Prefer concrete phrasing over generic commentary.
 
+### Make it worth reading, without clickbait
+
+Accurate and interesting are not opposites. Databearer is not a clickbait blog, but
+a correct article nobody reads is a wasted article. Draft for curiosity, then check
+every sentence against the data.
+
+- **Title:** name the most interesting true finding or tension, concretely
+  ("Der Gaspreis gibt den Takt vor: Was den Strompreis an der Börse seit 2019
+  bewegt"), not just the topic ("Strompreis, Gaspreis und Erneuerbare"). Keep scope
+  and timeframe. A question is fine only if the excerpt or first paragraph answers it.
+- **Excerpt:** the answer plus one tension or surprise, in 1–2 sentences.
+- **Opening:** start from the reader's question or a common belief, give the key
+  number within the first three sentences, and set up the open question the article
+  resolves (twist, exception, "and then came 2026").
+- **Headings state findings or questions**, not topics: "Wird Gas teurer, zieht
+  Strom mit" rather than "Strom- und Gaspreis im Vergleich". A reader skimming only
+  the headings should get the story.
+- **Arc:** question → main answer → surprise or exception → mechanism (why) → what is
+  new now → what it means and what it does not prove. End sections with a short
+  bridge to the next question ("Warum hängt Strom so eng am Gas?").
+- **Close** with a one- or two-sentence takeaway the reader can repeat, and an
+  honest open question if one remains.
+- Plain words, short paragraphs, one memorable number per section, concrete
+  comparisons.
+
+Not allowed: withheld answers ("Sie werden nicht glauben…"), superlatives or records
+the data do not show, causal verbs ("treibt", "drückt", "verursacht") where only a
+correlation is shown, dropping or softening caveats for effect, and headline numbers
+that apply to a narrower period than the heading implies. Match the strength of each
+verb to the evidence.
+
 ### Voice: one author
 
 Databearer is written by one person. Never suggest a team:
@@ -199,6 +230,8 @@ Before considering a post complete:
 
 - Exactly one H1; post body has no H1.
 - Excerpt is plain text, key finding first, not clickbait, no draft labels.
+- Title, opening and headings carry the findings and a real tension; every promise
+  is kept in the text, and no verb is stronger than the evidence.
 - The strongest claim is backed by data shown in the post.
 - Every chart has static evidence, units, period and a verified source.
 - Caveats are explicit, stated once and in plain words.

@@ -1,19 +1,21 @@
 ---
-title: "Strompreis, Gaspreis und Erneuerbare: Was die Monatsdaten seit 2019 zeigen"
+title: "Der Gaspreis gibt den Takt vor: Was den Strompreis an der Börse seit 2019 bewegt"
 date: 2026-10-04
-excerpt: "Von 2019 bis 2025 folgte der deutsche Großhandelsstrompreis vor allem dem Gaspreis; in ruhigeren Phasen war er in Monaten mit viel Wind- und Solarstrom deutlich niedriger. 2026 steigt er mit dem Gaspreis – seit Juni aber stärker, als Gas und Erneuerbare erwarten lassen."
+excerpt: "Seit 2019 folgt der Börsenstrompreis fast im Gleichschritt dem Gaspreis – und in ruhigen Jahren war Strom in Monaten mit viel Wind und Sonne deutlich billiger. 2026 passt nicht mehr ganz ins Muster: Seit Juni ist Strom teurer, als Gas und Erneuerbare erwarten lassen."
 image: "/images/blog_card_images/2026/strompreis-gas-erneuerbare.png"
 imageText: "KI-generiertes Symbolbild: Windräder und Solarpark auf der einen, Gasleitung und Gaskraftwerk auf der anderen Seite, verbunden durch Hochspannungsleitungen."
 fullWidthCard: false
 topic: ["energie", "wirtschaft"]
 ---
-Über die 84 Monate von 2019 bis 2025 bewegte sich der deutsche Großhandelsstrompreis fast im Gleichschritt mit dem europäischen Gaspreis: Die Korrelation liegt bei **0,97**. Mit dem Anteil erneuerbarer Stromerzeugung korreliert er über denselben Zeitraum kaum (**−0,17**). Eine Korrelation misst, wie eng zwei Größen gemeinsam steigen und fallen: +1 bedeutet vollständigen Gleichlauf, −1 eine vollständige Gegenbewegung, 0 keinen linearen Zusammenhang.
+Steigt der Strompreis, ist ein Verdacht schnell zur Hand: Wind und Sonne machten Strom teurer. Die Börsendaten seit 2019 zeichnen ein anderes Bild. Über 84 Monate bewegte sich der deutsche Großhandelsstrompreis fast im Gleichschritt mit dem europäischen Gaspreis: Die Korrelation liegt bei **0,97**. Mit dem Anteil erneuerbarer Stromerzeugung hing er über denselben Zeitraum kaum zusammen (**−0,17**). Eine Korrelation misst, wie eng zwei Größen gemeinsam steigen und fallen: +1 bedeutet vollständigen Gleichlauf, −1 eine vollständige Gegenbewegung, 0 keinen linearen Zusammenhang.
 
-Der schwache Gesamtwert täuscht jedoch. **Innerhalb** der Phasen vor und nach der Gaspreiskrise war der Strompreis in Monaten mit viel Wind- und Solarstrom deutlich niedriger (**−0,90** für 2019–2020, **−0,82** für 2023–2025). Kurz gesagt: Der Gaspreis bestimmte, **auf welchem Niveau** der Strompreis lag. Der Erneuerbarenanteil hängt damit zusammen, wie weit er **innerhalb dieses Niveaus** nach unten ging. 2026 steigt der Strompreis mit dem Gaspreis – seit Juni aber deutlich stärker, als dieser Zusammenhang erwarten lässt.
+Spielen Wind und Sonne also keine Rolle? Doch – der schwache Gesamtwert täuscht. **Innerhalb** der ruhigeren Jahre vor und nach der Gaspreiskrise war Strom in Monaten mit viel Wind- und Solarstrom deutlich billiger (**−0,90** für 2019–2020, **−0,82** für 2023–2025). Kurz gesagt: Der Gaspreis bestimmte, **auf welchem Niveau** der Strompreis lag. Der Erneuerbarenanteil hängt damit zusammen, wie weit er **innerhalb dieses Niveaus** nach unten ging.
+
+Und dann kommt 2026: Der Strompreis steigt mit dem Gaspreis – seit Juni aber deutlich stärker, als dieses Muster erwarten lässt.
 
 <script defer src="/js/lib/echarts.min.js"></script>
 
-## Strom- und Gaspreis laufen seit 2019 eng zusammen
+## Wird Gas teurer, zieht Strom mit
 
 Im Jahresmittel kostete eine Megawattstunde Strom am Day-Ahead-Markt 2019 **37,67 Euro** und 2020 **30,47 Euro**. 2022 waren es **235,45 Euro**, danach sank der Preis wieder: auf **78,51 Euro** 2024 und **89,32 Euro** 2025. Der Gaspreis beschreibt denselben Bogen. Im Monatsmittel lag er 2020 bei **9,60 Euro** je Megawattstunde, 2022 bei **132,10 Euro** und 2025 bei **36,41 Euro**.
 
@@ -38,11 +40,11 @@ Im Jahresmittel kostete eine Megawattstunde Strom am Day-Ahead-Markt 2019 **37,6
 <div class="chart-sources"><strong>Quellen: </strong><a href="https://www.smard.de/home/marktdaten">Bundesnetzagentur | SMARD.de – Großhandelspreise Day-Ahead DE-LU</a> (CC BY 4.0); <a href="https://www.worldbank.org/en/research/commodity-markets">World Bank – Commodity Price Data (Pink Sheet), Natural gas, Europe</a> (CC BY 4.0); <a href="https://data.ecb.europa.eu/data/datasets/EXR/EXR.M.USD.EUR.SP00.A">EZB – Referenzkurs US-Dollar/Euro</a>; eigene Umrechnung und Berechnung.</div>
 </div>
 
-Dieser Gleichlauf ergibt sich aus der Preisbildung. Am Day-Ahead-Markt setzt für jede Stunde das teuerste Kraftwerk den Preis, das noch zur Deckung der Nachfrage gebraucht wird. In Deutschland ist das in vielen Stunden ein Gaskraftwerk. Wird Gas teurer, bietet dieses Kraftwerk höher, und der Strompreis steigt mit. Ein Gaskraftwerk mit einem Wirkungsgrad von 55 Prozent braucht etwa 1,8 Megawattstunden Gas für eine Megawattstunde Strom. Hinzu kommen die Kosten für CO₂-Zertifikate.
+Warum hängt Strom so eng am Gas? Die Antwort liegt in der Preisbildung. Am Day-Ahead-Markt setzt für jede Stunde das teuerste Kraftwerk den Preis, das noch zur Deckung der Nachfrage gebraucht wird. In Deutschland ist das in vielen Stunden ein Gaskraftwerk. Wird Gas teurer, bietet dieses Kraftwerk höher, und der Strompreis steigt mit. Ein Gaskraftwerk mit einem Wirkungsgrad von 55 Prozent braucht etwa 1,8 Megawattstunden Gas für eine Megawattstunde Strom. Hinzu kommen die Kosten für CO₂-Zertifikate.
 
-## Über alle Jahre: starker Zusammenhang mit Gas, kaum einer mit Erneuerbaren
+## Über alle Jahre wirken Erneuerbare bedeutungslos – ein Trugschluss
 
-Legt man alle 84 Monate in ein Streudiagramm, bilden die Gasmonate fast eine Gerade. Beim Erneuerbarenanteil entsteht dagegen eine Wolke ohne klare Richtung. Die Farben machen allerdings sichtbar, dass diese Wolke aus drei getrennten Gruppen besteht.
+Legt man alle 84 Monate in ein Streudiagramm, bilden die Gasmonate fast eine Gerade. Beim Erneuerbarenanteil entsteht dagegen eine Wolke ohne klare Richtung. Erst die Farben verraten, dass diese Wolke aus drei getrennten Gruppen besteht – und innerhalb jeder Gruppe zeigt sich ein klares Muster.
 
 <div class="chart-section">
 <h3 id="strompreis-streuung-gas-heading">Strompreis und Gaspreis je Monat, nach Zeitraum, 2019–2025</h3>
@@ -86,7 +88,7 @@ Legt man alle 84 Monate in ein Streudiagramm, bilden die Gasmonate fast eine Ger
 
 Warum verschwindet der Zusammenhang über den Gesamtzeitraum? Der Erneuerbarenanteil stieg vor allem **nach** der Krise: Im Mittel der Monate lag er 2019–2022 bei knapp 45 Prozent, 2023–2025 bei 58 Prozent. Zugleich waren Strom- und Gaspreis 2023–2025 mehr als doppelt so hoch wie 2019–2020. Mischt man die Phasen, heben sich der Niveausprung beim Gas und der Zusammenhang mit den Erneuerbaren innerhalb der Phasen weitgehend auf. Statistisch ist das ein Beispiel für das [Simpson-Paradoxon](https://de.wikipedia.org/wiki/Simpson-Paradoxon): Ein Zusammenhang, der in jeder Gruppe besteht, kann im zusammengelegten Datensatz verschwinden.
 
-## Von Monat zu Monat: Erneuerbare erklären zuletzt mehr als Gas
+## Nach der Krise schwankt Strom eher mit Wind und Sonne als mit Gas
 
 Eine zweite Prüfung klammert den langfristigen Trend aus. Sie vergleicht nur, wie stark sich die Werte **von einem Monat zum nächsten** verändern. Über den Gesamtzeitraum dominiert auch hier der Gaspreis (**0,89** gegenüber **−0,54**). In den Jahren 2023–2025 kehrt sich das Bild aber um: Veränderungen des Erneuerbarenanteils gehen deutlich enger mit Veränderungen des Strompreises einher (**−0,85**) als Veränderungen des Gaspreises (**0,50**).
 
@@ -112,9 +114,9 @@ Eine zweite Prüfung klammert den langfristigen Trend aus. Sie vergleicht nur, w
 
 Das passt zu einer einfachen Lesart: Während der Krise schwankte der Gaspreis so stark, dass er fast alles andere überdeckte. Seit 2023 ist er vergleichsweise ruhiger. Die Monatsschwankungen des Strompreises hängen dadurch stärker mit Wind und Sonne zusammen.
 
-## Beide Größen zusammen betrachtet
+## 2023–2025: ein Prozentpunkt mehr Erneuerbare, 1,59 Euro weniger
 
-Gaspreis und Erneuerbarenanteil hängen auch miteinander zusammen: Im Winter ist Gas meist teurer, und es wird weniger Solarstrom erzeugt. Eine Regression nimmt deshalb beide Größen gleichzeitig auf. Sie zeigt, wie sich der Strompreis im Mittel verändert, wenn sich nur eine der beiden Größen ändert.
+Ein Haken bleibt: Gaspreis und Erneuerbarenanteil hängen auch miteinander zusammen. Im Winter ist Gas meist teurer, und es wird weniger Solarstrom erzeugt. Eine Regression nimmt deshalb beide Größen gleichzeitig auf. Sie zeigt, wie sich der Strompreis im Mittel verändert, wenn sich nur eine der beiden Größen ändert.
 
 **In den Jahren 2023–2025 lag der Strompreis bei gleichem Gaspreis um rund 1,59 Euro je Megawattstunde niedriger, wenn der Erneuerbarenanteil einen Prozentpunkt höher war.** Ein Euro höherer Gaspreis ging bei gleichem Erneuerbarenanteil mit 0,91 Euro höherem Strompreis einher. Über alle Jahre war der Gas-Zusammenhang stärker (**1,68 Euro**), der Erneuerbaren-Zusammenhang dagegen nicht eindeutig von null zu unterscheiden.
 
@@ -140,9 +142,9 @@ Ein Teil des Erneuerbaren-Zusammenhangs ist Jahreszeit. Rechnet man zusätzlich 
 
 </details>
 
-## 2026: Der Gaspreis steigt, der Strompreis noch stärker
+## 2026: Gas erklärt die Richtung, aber nicht mehr die Höhe
 
-Für 2026 liegen Monatswerte bis September vor. Sie fließen in keine der obigen Berechnungen ein. Stattdessen lässt sich prüfen, ob der Zusammenhang der Jahre 2023–2025 auch 2026 trägt.
+Für 2026 liegen Monatswerte bis September vor. Sie fließen in keine der obigen Berechnungen ein – und eignen sich deshalb als Test: Trägt das Muster der Jahre 2023–2025 auch im laufenden Jahr?
 
 Die Richtung stimmt. Im ersten Quartal war Gas günstiger als ein Jahr zuvor, und auch Strom war billiger. Im zweiten und dritten Quartal stieg der Gaspreis deutlich, im dritten Quartal hat er sich fast verdoppelt. Der Strompreis zog mit.
 
@@ -169,7 +171,7 @@ Die Höhe passt aber nicht mehr. Seit Juni lag der Strompreis jeden Monat **20 b
 
 Warum, lässt sich aus diesen Monatsdaten nicht ablesen. Für den Juni nennt die Bundesnetzagentur in ihrer [Auswertung des zweiten Quartals](https://www.smard.de/page/home/topic-article/444/221002/erzeugung-und-verbrauch-leicht-gestiegen) eine Hitzewelle mit sehr hohen Abendpreisen. Zudem lohnt sich für viele konventionelle Kraftwerke im Sommer kein Dauerbetrieb; sie werden nur für die Abendstunden angefahren und preisen die Anfahrkosten ein. Für Juli bis September steht eine solche Auswertung noch aus. Im September lag der Gaspreis zudem über allen Werten der Jahre 2023–2025; die Erwartung für diesen Monat ist deshalb unsicherer.
 
-## Was die Zahlen zeigen und was nicht
+## Was die Zahlen zeigen – und was nicht
 
 - **Gas bestimmte das Niveau.** Ein Euro höherer Gaspreis je Megawattstunde ging über alle Jahre mit rund 1,7 Euro höherem Strompreis einher. Das liegt in der Größenordnung des Gasbedarfs eines Gaskraftwerks für eine Megawattstunde Strom.
 - **Erneuerbare hängen mit dem Abstand nach unten zusammen.** Innerhalb ruhigerer Phasen lag der Strompreis in erneuerbarenstarken Monaten deutlich niedriger. Wie viel davon auf Wind und Sonne selbst zurückgeht und wie viel auf die Jahreszeit, lässt sich mit 84 Monatswerten nicht sauber trennen.
@@ -177,6 +179,8 @@ Warum, lässt sich aus diesen Monatsdaten nicht ablesen. Für den Juni nennt die
 - **Korrelation ist keine Ursache.** Weitere Einflüsse fehlen in dieser Auswertung: CO₂- und Kohlepreise, Stromimporte, Kraftwerksausfälle und das Wetter in den Nachbarländern. Bewegen sich solche Größen gleichzeitig mit dem Gaspreis, steckt ihr Einfluss teilweise im Gas-Zusammenhang.
 - **Monatsmittel glätten.** Innerhalb eines Tages wirkt der Erneuerbarenanteil viel direkter: In sonnigen Mittagsstunden fällt der Preis oft stark, abends steigt er wieder. Monatsdaten zeigen diesen Mechanismus nur abgeschwächt. Stündliche Werte zeigt das [Strom-Dashboard](/dashboards/strom/).
 - **Großhandel ist nicht Haushaltsstrom.** Haushaltstarife enthalten Netzentgelte, Steuern und Umlagen. Außerdem kaufen Versorger oft Monate im Voraus ein. Die hier gezeigten Zusammenhänge übertragen sich deshalb nur verzögert und abgeschwächt auf Endkundenpreise.
+
+Wer wissen will, wohin der Börsenstrompreis geht, schaut also zuerst auf den Gaspreis – und dann auf Wind und Sonne. Warum Strom 2026 seit Juni teurer ist, als beide zusammen erklären, ist dagegen noch offen.
 
 Wie sich der Anteil erneuerbarer Stromerzeugung langfristig entwickelt hat, beschreibt der Beitrag [Erneuerbare Stromerzeugung auf dem Vormarsch](/posts/2025/Erneuerbare-Stromerzeugung-auf-dem-Vormarsch/). Weitere Analysen gibt es im [Themenbereich Energie](/themen/energie/).
 
