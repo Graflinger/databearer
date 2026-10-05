@@ -196,6 +196,17 @@ test('no calculation links a higher renewable share to a higher wholesale price'
   for (const value of values) expect(value).toBeLessThanOrEqual(0.05);
 });
 
+test('storage outlook links the battery article and quotes its published prices', () => {
+  const link = document.querySelector('a[href="/posts/2026/batteriespeicher-wandel/"]');
+  expect(link).not.toBeNull();
+  expect(link.textContent).not.toBe('hier');
+  const battery = fs.readFileSync(path.join(root, 'posts/2026/batteriespeicher-wandel.md'), 'utf8');
+  expect(battery).toContain('Um **13 Uhr liegt der mittlere Day-Ahead-Preis bei 37,94 EUR/MWh**');
+  expect(battery).toContain('**um 19 Uhr 248,93 EUR/MWh**');
+  expect(source).toContain('um 13 Uhr bei rund 38, um 19 Uhr bei rund 249 Euro je Megawattstunde');
+  expect(source).toContain('was die Speicher selbst kosten, misst diese Auswertung nicht');
+});
+
 describe('editorial rules', () => {
   const body = () => document.body.textContent;
   test('one-author voice, no pipeline detail, caveat stated once', () => {
