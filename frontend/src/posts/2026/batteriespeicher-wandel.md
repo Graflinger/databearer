@@ -4,7 +4,7 @@ date: 2026-09-27
 excerpt: "Große Batteriespeicher liefern einen immer größeren Teil der neuen Speicherkapazität in Deutschland. 2026 stellen sie schon fast die Hälfte, und das Jahr übertrifft bereits nach knapp neun Monaten das gesamte Vorjahr."
 image: "/images/blog_card_images/2026/batteriespeicher-wandel.png"
 imageAlt: "Illustration: Batteriespeicher-Schränke zwischen Solarmodulen, dahinter Windräder und ein Bauernhaus in hügeliger Landschaft bei Sonnenuntergang"
-imageText: "Große Batteriespeicher liefern einen immer größeren Teil der neuen Speicherkapazität"
+imageText: "Große Batteriespeicher liefern einen immer größeren Teil der neuen Speicherkapazität (KI-generiert)"
 topic: ["energie", "wirtschaft"]
 fullWidthCard: false
 permalink: /posts/2026/batteriespeicher-wandel/

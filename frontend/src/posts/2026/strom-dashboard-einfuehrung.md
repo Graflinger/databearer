@@ -4,7 +4,7 @@ date: 2026-09-14
 lastUpdated: 2026-09-14
 excerpt: "Wie viel Strom liefern Wind und Sonne? Wie entwickeln sich Börsenpreise und Stromhandel? Das neue Dashboard zeigt aktuelle Zahlen und langfristige Trends."
 image: "/images/dashboards/strommarkt-deutschland.svg"
-imageText: "Das neue Dashboard bündelt Strommix, Netzlast, Preise und Langfristvergleiche für Deutschland."
+imageText: "Das neue Dashboard bündelt Strommix, Netzlast, Preise und Langfristvergleiche für Deutschland (KI-generiert)"
 fullWidthCard: false
 topic: ["energie"]
 ---

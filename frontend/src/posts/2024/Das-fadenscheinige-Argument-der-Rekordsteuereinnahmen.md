@@ -4,7 +4,7 @@ date: 2024-10-21
 lastUpdated: 2024-10-23
 excerpt: 'Fast jedes Jahr das gleiche Spiel in den Meldungen verschiedener Zeitungen: "Der Bund nimmt eine Rekordmenge von Steuern ein" - "Die Steuereinnahmen erreichen einen neuen Rekord". Doch was ist dran? Und ist das überhaupt wichtig?'
 image: '/images/blog_card_images/2024/rekordsteuern.png'
-imageText: 'Durch Inflation und Wirtschaftswachstum sind Rekordsteuereinnahmen quasi ein Naturgesetz'
+imageText: 'Durch Inflation und Wirtschaftswachstum sind Rekordsteuereinnahmen quasi ein Naturgesetz (KI-generiert)'
 fullWidthCard: false
 topic: ['politik-und-gesellschaft']
 ---
