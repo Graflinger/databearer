@@ -5,12 +5,31 @@ model: github-copilot/gpt-5.5
 temperature: 0.2
 permission:
   read: allow
-  edit: ask
-  bash: ask
+  edit: allow
   grep: allow
   glob: allow
   skill:
     "*": allow
+  external_directory:
+    "*": ask
+    "/tmp/**": allow
+    "/var/folders/k1/t0305t314372vqsc585ptywr0000gn/T/opencode/**": allow
+  bash:
+    "*": allow
+    "git push*": ask
+    "git reset --hard*": ask
+    "git clean*": ask
+    "git checkout -- *": ask
+    "rm -rf *": ask
+    "sudo *": ask
+    "gh pr merge*": ask
+    "gh release*": ask
+    "gh workflow run*": ask
+  github_merge_pull_request: ask
+  github_push_files: ask
+  github_create_or_update_file: ask
+  github_delete_file: ask
+  github_create_repository: ask
 ---
 
 # Gipiti project agent

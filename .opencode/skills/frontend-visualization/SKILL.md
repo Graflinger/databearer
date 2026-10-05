@@ -270,7 +270,7 @@ Inspect Git status/diff and ignore boundaries; no commits or publication unless 
 
 Required:
 
-- `type`: currently `line` or `bar`.
+- `type`: `line`, `bar` or `scatter`.
 - `dataFile`: CSV path relative to `src/data_ingestion/data/`; use article year/topic
   for new frozen datasets. Legacy flat paths still resolve.
 - `outputFile`: generated JS filename.
@@ -283,6 +283,13 @@ Common optional fields:
 - `seriesKeys`, `seriesNames` for multi-series charts
 - `smooth` for line charts
 - `color`, `colors`, `stacked` for bar/multi-series styling
+- Bar only: `yAxisMin`/`yAxisMax` fix the value axis (e.g. `-1`/`1` for correlations);
+  omitted bounds leave existing charts unchanged.
+- Scatter only: `xKey`/`yKey` (both numeric, required), `labelKey` (tooltip label),
+  `groupKey` + `groupOrder` (one colored series per group), `xUnit`/`yUnit`,
+  `xDecimals`/`yDecimals`, `trendLines` (least-squares line per group). Scatter
+  scripts have no `xData`; test their tables against the CSV (see
+  `tests/strompreis-korrelation-post.test.js`).
 
 ## Troubleshooting
 
