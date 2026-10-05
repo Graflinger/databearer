@@ -20,6 +20,7 @@
 const path = require('path');
 const { buildLineChart } = require('./builders/lineChart');
 const { buildBarChart } = require('./builders/barChart');
+const { buildScatterChart } = require('./builders/scatterChart');
 const { loadData, saveChart } = require('./builders/utils');
 const { loadChartConfigs } = require('./builders/chartConfigLoader');
 
@@ -57,7 +58,7 @@ for (const config of chartConfigs) {
   try {
     // Validate config
     if (!config.type) {
-      throw new Error('Chart config must specify "type" (line or bar)');
+      throw new Error('Chart config must specify "type" (line, bar or scatter)');
     }
     if (!config.dataFile) {
       throw new Error('Chart config must specify "dataFile"');
@@ -80,8 +81,10 @@ for (const config of chartConfigs) {
       buildFn = buildLineChart;
     } else if (config.type === 'bar') {
       buildFn = buildBarChart;
+    } else if (config.type === 'scatter') {
+      buildFn = buildScatterChart;
     } else {
-      throw new Error(`Unknown chart type: ${config.type}. Use 'line' or 'bar'`);
+      throw new Error(`Unknown chart type: ${config.type}. Use 'line', 'bar' or 'scatter'`);
     }
 
     // Build chart configuration (remove metadata fields)

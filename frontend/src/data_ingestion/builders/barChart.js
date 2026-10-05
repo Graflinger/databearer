@@ -15,6 +15,9 @@
  * @param {string} options.color - Bar color for single series (optional)
  * @param {boolean} options.stacked - Stack bars (default: false)
  * @param {boolean} options.narrowShortYearLabels - Below 600px, show every year label as '’19' (optional)
+ * @param {boolean} options.allXAxisLabels - Never hide category labels; below 600px year ranges shorten to '2019–25' (optional)
+ * @param {number} options.yAxisMin - Fixed lower y-axis bound, e.g. -1 for correlations (optional)
+ * @param {number} options.yAxisMax - Fixed upper y-axis bound, e.g. 1 for correlations (optional)
  * @returns {string} JavaScript code for the chart
  */
 function buildBarChart(data, options = {}) {
@@ -31,11 +34,20 @@ function buildBarChart(data, options = {}) {
     color = null,
     stacked = false,
     narrowShortYearLabels = false,
+    yAxisMin = null,
+    yAxisMax = null,
+    allXAxisLabels = false,
   } = options;
 
   if (!containerId) {
     throw new Error('containerId is required');
   }
+  for (const bound of [yAxisMin, yAxisMax]) {
+    if (bound !== null && !Number.isFinite(bound)) throw new Error('yAxisMin/yAxisMax must be finite numbers');
+  }
+  if (yAxisMin !== null && yAxisMax !== null && yAxisMin >= yAxisMax) throw new Error('yAxisMin must be below yAxisMax');
+  // Emitted only when configured, so existing charts keep byte-identical output.
+  const yAxisBounds = `${yAxisMin === null ? '' : `\n        min: ${yAxisMin},`}${yAxisMax === null ? '' : `\n        max: ${yAxisMax},`}`;
 
   const xData = data.map((d) => d[xKey]);
 
@@ -151,7 +163,14 @@ function buildBarChart(data, options = {}) {
           }
         },
         axisLabel: {
-          color: colors.textColor${narrowShortYearLabels ? `,
+          color: colors.textColor${allXAxisLabels ? `,
+          // Few, long category labels (e.g. periods): show all, also on phones,
+          // where year ranges shorten to '2019–25'.
+          interval: 0,
+          ...(chartDom.clientWidth < 600 ? {
+            fontSize: 11,
+            formatter: (value) => String(value).replace(/^(\\d{4})([–-])\\d{2}(\\d{2})$/, '$1$2$3')
+          } : {})` : ''}${narrowShortYearLabels ? `,
           ...(chartDom.clientWidth < 600 ? {
             // Keep every year, incl. the marked last one, visible on phones.
             interval: 0,
@@ -165,7 +184,7 @@ function buildBarChart(data, options = {}) {
         }
       },
       yAxis: {
-        type: 'value',
+        type: 'value',${yAxisBounds}
         name: ${JSON.stringify(yAxisLabel)},
         nameLocation: 'middle',
         nameGap: 50,

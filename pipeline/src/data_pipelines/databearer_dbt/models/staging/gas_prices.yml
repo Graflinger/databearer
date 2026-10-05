@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: world_bank_gas_europe_monthly
+        description: >-
+          World Bank Pink Sheet "Natural gas, Europe" in nominal USD/MMBtu, monthly
+          (TTF from April 2015), CC BY 4.0. Written by ingest_gas_price_data.py.
+      - name: ecb_usd_eur_monthly
+        description: ECB reference rate EXR.M.USD.EUR.SP00.A, US dollar per euro, monthly average.

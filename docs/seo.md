@@ -98,7 +98,9 @@ Implementation: [`.eleventy.js`](../frontend/.eleventy.js), [`src/seo.js`](../fr
   summary. Write it as plain text in 1–2 sentences, with the key finding first. Do not
   use Markdown or HTML. Leave out draft labels such as "Rechercheentwurf". Do not pad
   the copy or aim for a fixed length or keyword list.
-- **`title`**: an accurate claim, with scope or timeframe where needed. `metaTitle`
+- **`title`**: an accurate claim, with scope or timeframe where needed. Lead with the
+  most interesting true finding rather than the topic; no clickbait (see the
+  `blog-post-workflow` skill, *Make it worth reading*). `metaTitle`
   and `metaDescription` are optional and must match the visible content.
 - **Dates:** use an explicit publication `date`. Set `lastUpdated` only for a real
   substantive editorial, data or chart revision.

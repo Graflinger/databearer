@@ -57,3 +57,15 @@ models:
       including non-batteries and orphans. Known positive finite GW/GWh quantify exclusions
       without filling unknowns; known_positive_unit_power_gw exposes partial known unit
       power even when whole-plant power is unknown. Ambiguous duplicate kWh is not summed.
+  - name: fact_gas_price_europe_monthly
+    description: >-
+      Monthly World Bank Pink Sheet "Natural gas, Europe" (TTF since April 2015; a monthly
+      benchmark, not a day-ahead quote) converted from nominal USD/MMBtu to EUR/MWh with the
+      ECB monthly average USD/EUR reference rate. Only months with both inputs are present.
+    columns:
+      - name: month
+        description: First day of the calendar month.
+        tests: [not_null, unique]
+      - name: gas_eur_per_mwh
+        description: gas_usd_per_mmbtu / usd_per_eur / 0.29307107017 (MWh per MMBtu).
+        tests: [not_null]
