@@ -3,7 +3,7 @@ title: "Der Gaspreis gibt den Takt vor: Was den Strompreis an der Börse seit 20
 date: 2026-10-05
 excerpt: "Seit 2019 folgt der Börsenstrompreis fast im Gleichschritt dem Gaspreis – und in ruhigen Jahren war Strom in Monaten mit viel Wind und Sonne deutlich billiger. 2026 passt nicht mehr ganz ins Muster: Seit Juni ist Strom teurer, als Gas und Erneuerbare erwarten lassen."
 image: "/images/blog_card_images/2026/strompreis-gas-erneuerbare.png"
-imageText: "Windräder und Solarpark auf der einen, Gasleitung und Gaskraftwerk auf der anderen Seite, verbunden durch Hochspannungsleitungen."
+imageText: "Solarpark, Windräder und ein konventionelles Kraftwerk, verbunden durch Hochspannungsleitungen (KI-generiert)"
 fullWidthCard: false
 topic: ["energie", "wirtschaft"]
 ---
