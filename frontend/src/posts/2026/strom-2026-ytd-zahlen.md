@@ -3,7 +3,7 @@ title: "Strom 2026 bisher: Solar und Wind an Land liegen fast gleichauf"
 date: 2026-10-04
 excerpt: "Solar und Wind an Land liegen 2026 fast gleichauf. Bis Ende September steigen Erzeugung und Erneuerbarenanteil gegenüber 2025 – der Börsenpreis aber auch, vor allem im Sommer."
 image: "/images/blog_card_images/2026/strom-ytd-2026.png"
-imageText: "KI-generiertes Symbolbild: Solarpark und Windräder in einer weiten Landschaft."
+imageText: "Solarpark und Windräder in einer weiten Landschaft (KI-generiert)"
 fullWidthCard: false
 topic: ["energie"]
 ---
