@@ -4,7 +4,7 @@ date: 2025-07-09
 lastUpdated: 2025-07-09
 excerpt: 'Der Juni 2025 markiert mit über 70% den bisherigen Höhepunkt in der Stromerzeugung durch EEG.'
 image: '/images/blog_card_images/2025/erneuerbareaufdemvormarsch.png'
-imageText: 'Erneuerbare Energien werden immer wichtiger für die Stromerzeugung in Deutschland'
+imageText: 'Erneuerbare Energien werden immer wichtiger für die Stromerzeugung in Deutschland (KI-generiert)'
 fullWidthCard: false
 topic: ['energie']
 ---

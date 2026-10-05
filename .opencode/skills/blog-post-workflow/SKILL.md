@@ -97,7 +97,7 @@ draft: true # remove when publishing
 excerpt: "Key finding first, 1–2 plain-text sentences, no draft labels."
 image: "/images/blog_card_images/<year>/<file>.png"
 imageAlt: "" # describe informative heroes; empty if decorative
-imageText: "Visible image caption"
+imageText: "Visible image caption (KI-generiert)"
 # socialImage: "/images/blog_card_images/<year>/<social-file>.png"
 # socialImageAlt: "Description of the social preview image"
 fullWidthCard: false
@@ -124,6 +124,9 @@ Allowed topics:
   ([Content guidance](../../../docs/seo.md#content-guidance)).
 - Images must be local `/images/...` files. `imageAlt`/`socialImageAlt` describe the
   image, and `imageText` is the caption ([Images](../../../docs/seo.md#images)).
+  Every article image is AI-generated, so the visible caption `imageText` ends with
+  ` (KI-generiert)`: "Große Speicher prägen den Batterieausbau (KI-generiert)". No
+  "KI-generiertes Symbolbild:" prefix and no period before the parenthesis.
 - The layout renders the H1 and byline, so the body uses H2/H3 only. Internal links
   use `/posts/<year>/<slug>/`.
 
@@ -206,7 +209,8 @@ Before considering a post complete:
 - The data/methodology section is short; technical detail lives in `docs/`.
 - No other project's methodology is named or linked unless its data is used.
 - Internal links are relevant and descriptive.
-- Hero/social alt describes the image; the caption is `imageText`.
+- Hero/social alt describes the image; the caption is `imageText` and ends with
+  ` (KI-generiert)`.
 - Drafting-only flags are removed when publishing.
 - Frontend tests, lint, build and `npm run test:seo-output` pass.
 

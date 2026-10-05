@@ -4,7 +4,7 @@ date: 2026-06-21
 lastUpdated: 2026-09-23
 excerpt: "Die erste Windkraftausschreibung 2026 ist deutlich überzeichnet, die Nachfrage steigt kräftig und der Zuschlagswert fällt auf den niedrigsten Stand seit 2018."
 image: "/images/blog_card_images/2026/windkraftausschreibungen-2026.png"
-imageText: "Die Windkraftausschreibungen starten 2026 mit hoher Nachfrage und niedrigen Preisen"
+imageText: "Die Windkraftausschreibungen starten 2026 mit hoher Nachfrage und niedrigen Preisen (KI-generiert)"
 fullWidthCard: false
 topic: ["energie", "wirtschaft"]
 ---

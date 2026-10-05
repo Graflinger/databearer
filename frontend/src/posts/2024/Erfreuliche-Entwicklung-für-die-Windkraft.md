@@ -4,7 +4,7 @@ date: 2024-10-27
 lastUpdated: 2024-10-27
 excerpt: 'Nach Jahren der ernüchternden Ausschreibungen und Ausbauzahlen, kommt Schwung in die Entwicklung von Windenergie an Land. Kann diese Entwicklung aufrecht erhalten bleiben?'
 image: '/images/blog_card_images/2024/windenergie1.png'
-imageText: 'Die Windkraft kommt wieder voran'
+imageText: 'Die Windkraft kommt wieder voran (KI-generiert)'
 fullWidthCard: false
 topic: ['energie']
 ---

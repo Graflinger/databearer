@@ -4,7 +4,7 @@ date: 2025-06-10
 lastUpdated: 2025-06-11
 excerpt: 'Der neuen Regierung wurde ein Geschenk, in Form von herausragenden Ausschreibungsergebnissen für neue Windkraftanlagen, hinterlassen. Wird das weitergeführt oder abgewürgt?'
 image: '/images/blog_card_images/2025/windenergie2.png'
-imageText: 'Die Windenergie nimmt noch mehr Fahrt auf'
+imageText: 'Die Windenergie nimmt noch mehr Fahrt auf (KI-generiert)'
 fullWidthCard: false
 topic: ["wirtschaft", "energie"]
 ---

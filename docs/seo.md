@@ -215,6 +215,10 @@ format, with `—` for gaps. Use the same convention for new tables.
 - **Card images are decorative** (`alt=""`). The card title carries the meaning.
 - **Hero alt:** `imageAlt` describes informative hero content. Leave it empty for
   decorative images. `imageText` is the visible caption, not alt text.
+- **AI label:** every article image is AI-generated. `imageText` therefore ends with
+  ` (KI-generiert)` (no "KI-generiertes Symbolbild:" prefix, no period before it).
+  Labelling an existing caption is not a substantive revision: do not set or change
+  `lastUpdated` for it. `tests/post-image-captions.test.js` enforces the label.
 - **Social preview:** a measured raster variant, at most 1200 px wide, keeping the
   source aspect ratio. Its source is `socialImage || image || dashboardImage`. Pages
   without an image use the generated brand preview (1200×630 JPEG).
