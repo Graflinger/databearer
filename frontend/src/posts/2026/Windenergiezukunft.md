@@ -3,7 +3,7 @@ title: "Einblicke in die Windkraftauschreibungen 2025"
 date: 2026-01-19
 excerpt: "Robuste Ergebnisse und sinkende Preise markieren ein erfolgreiches Jahr für die Ausschreibungen der Windkraft an Land."
 image: "/images/blog_card_images/2026/windenergie3.png"
-imageText: "2025 war ein erfolgreiches Ausschreibungsjahr für die Windenergie an Land"
+imageText: "2025 war ein erfolgreiches Ausschreibungsjahr für die Windenergie an Land (KI-generiert)"
 fullWidthCard: false
 topic: ["energie", "wirtschaft"]
 ---

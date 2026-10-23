@@ -71,7 +71,7 @@ Important folders:
    excerpt: "Key finding first, 1–2 plain-text sentences."
    image: "/images/blog_card_images/<year>/<file>.png"
    imageAlt: "" # describe informative heroes; empty if decorative
-   imageText: "Visible editorial image caption"
+   imageText: "Visible editorial image caption (KI-generiert)" # always ends with (KI-generiert)
    topic: ["energie"] # energie, wirtschaft, politik-und-gesellschaft
    fullWidthCard: false
    # lastUpdated: YYYY-MM-DD # real substantive revision only

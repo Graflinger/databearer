@@ -117,7 +117,7 @@ recommend rotating it.
    ```yaml
    image: "/images/blog_card_images/<year>/my-post-image.png"
    imageAlt: "Description of what the image shows" # empty only if decorative
-   imageText: "Visible editorial image caption"
+   imageText: "Visible editorial image caption (KI-generiert)"
    # socialImage: "/images/blog_card_images/<year>/my-post-social.png"
    # socialImageAlt: "Description of the social preview image"
    ```
@@ -149,6 +149,10 @@ The details are in [Images](../../../docs/seo.md#images). In short:
   with a clear `Image not found` error. Unused files are never processed.
 - The build creates WebP plus JPEG/PNG variants in the ignored
   `_site/assets/images/`. Never commit them or hand-write their hashed URLs.
+- Every article image is AI-generated, so the visible caption `imageText` ends with
+  ` (KI-generiert)`: "Große Speicher prägen den Batterieausbau (KI-generiert)". No
+  "KI-generiertes Symbolbild:" prefix and no period before the parenthesis.
+  The caption says what the image stands for; `imageAlt` describes what it shows.
 - Cards are decorative. `imageAlt` (and optional `socialImageAlt` for a separate
   `socialImage`) should describe the image, not repeat the caption. When no alt is
   set, `og:image:alt` is omitted. Pages without an image use the brand preview with
