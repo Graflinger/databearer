@@ -10,8 +10,8 @@ not promise rankings.
 - [ ] `title` is an accurate claim with scope or timeframe and has no brand suffix.
   `metaTitle`/`metaDescription` are optional and must be accurate.
 - [ ] `excerpt` is plain text in 1–2 sentences, with the key finding first and no
-  draft labels. It becomes the meta description, card text, search excerpt and feed
-  summary ([Content guidance](../../docs/seo.md#content-guidance)).
+  draft labels. It becomes the meta description, card text, search excerpt, feed
+  summary and `/llms.txt` note ([Content guidance](../../docs/seo.md#content-guidance)).
 - [ ] `date` is explicit (`YYYY-MM-DD`). `lastUpdated` is set only for a real
   substantive revision.
 - [ ] `draft: true` is present while drafting and removed for publication, together
@@ -23,6 +23,8 @@ not promise rankings.
   ([Images](../../docs/seo.md#images)).
 - [ ] `topic` includes at least one of `energie`, `wirtschaft`,
   `politik-und-gesellschaft`.
+- [ ] The file name (the URL slug) is lowercase ASCII with hyphens: `ä` → `ae`, no
+  colons or capitals. A published post is never renamed.
 
 ## Body
 
@@ -30,6 +32,9 @@ not promise rankings.
   short "Daten und Quellen" section comes last. One-author voice: no "wir"/"unser"
   for the author's own work. No third-party methodology is named unless its data
   is used.
+- [ ] Headings are descriptive and stable; they become link anchors. Key numbers
+  appear in sentences with unit, period and data date, not only in charts
+  ([Writing for search and AI citation](../../docs/seo.md#writing-for-search-and-ai-citation)).
 - [ ] Each chart follows the [chart pattern](../../docs/seo.md#charts-and-evidence):
   - one deferred ECharts script;
   - a container with `role="img"`, `aria-labelledby` and `aria-describedby`;

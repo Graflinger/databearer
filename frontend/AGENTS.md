@@ -122,6 +122,7 @@ Chart config structure:
 title: "Post Title"                # accurate claim; no brand suffix
 date: 2025-01-01
 draft: true                        # boolean; remove when publishing
+# file name = URL slug: lowercase ASCII with hyphens; never rename after publishing
 excerpt: "Key finding first, 1–2 plain-text sentences"
 image: "/images/blog_card_images/2025/filename.png"
 imageAlt: ""                       # describe informative heroes; empty if decorative
@@ -142,9 +143,17 @@ fullWidthCard: false               # optional
   HTML and does not appear in collections, the sitemap, feeds or search. Stale HTML is
   deleted only after a successful full production write
   ([Drafts](../docs/seo.md#drafts)).
-- **Indexing:** `noindex: true` gives `noindex, follow` and no canonical.
-  `excludeFromSitemap` only affects the sitemap
+- **Indexing:** `noindex: true` gives `noindex, follow` and no canonical; indexable
+  pages get `index, follow, max-image-preview:large`. `excludeFromSitemap` only
+  affects the sitemap and `/llms.txt`
   ([Indexing and sitemap](../docs/seo.md#indexing-and-sitemap)).
+- **Crawlers and AI discovery:** `robots.txt` (`src/robots.njk`) deliberately allows
+  all crawlers, naming AI search and training bots; `/llms.txt` (`src/llms.11ty.js`)
+  lists the public, indexable pages; headings get automatic anchor ids
+  ([Crawlers and AI discovery](../docs/seo.md#crawlers-and-ai-discovery)).
+- **Structured data:** one author `Person`, `articleSection` from `topic`, and a
+  `Dataset` only for pages with a descriptor in `src/dashboards/dashboards.11tydata.js`
+  ([Metadata](../docs/seo.md#metadata-and-structured-data)).
 - **Ads:** AdSense is off site-wide via `site.adsense.enabled`
   ([Metadata](../docs/seo.md#metadata-and-structured-data)).
 - **Images:** use local `/images/...` sources only. Card images are decorative.
@@ -194,7 +203,9 @@ Charts support dark mode detection and lazy loading via IntersectionObserver.
 ## Key Files
 - `.eleventy.js` - Eleventy config, filters, collections, chart generation hook
 - `src/_includes/base.njk` - Site layout with SEO meta, structured data, navigation
-- `src/seo.js` - Metadata/JSON-LD, sitemap/feed filters, related posts, stale-HTML cleanup
+- `src/seo.js` - Metadata/JSON-LD (Person, Dataset), robots values, sitemap/feed filters, related posts, stale-HTML cleanup
+- `src/robots.njk`, `src/llms.11ty.js` - crawler policy and `/llms.txt` index
+- `src/dashboards/dashboards.11tydata.js` - code-defined Dataset descriptors for dashboards
 - `lib/responsive-images.js` - `responsiveImage`, `socialImageMeta`, `imageThumbnail`
 - `src/search.11ty.js` + `lib/search-text.js` - `/search.json` index
 - `src/data_ingestion/generate-charts.js` - Chart generation entry point
