@@ -451,9 +451,12 @@ guarantees rankings or AI citations.
 2. **Apex redirect:** `databearer.de` still answers `307` (temporary) to
    `blog.databearer.de`, keeping path and query. If this is meant to be permanent,
    switch it to 301/308.
-3. **`*.pages.dev`:** after the next deployment, check
-   `curl -sI https://<project>.pages.dev/ | grep -i x-robots-tag` shows `noindex`.
-   Cloudflare preview deployments already have it by default.
+3. **`*.pages.dev`:** on 2026-10-29 the production alias
+   `https://databearer-frontend.pages.dev/` answered `200` without `X-Robots-Tag`, a
+   crawlable duplicate of the custom domain. The `_headers` host rule fixes this once
+   released; then check that
+   `curl -sI https://databearer-frontend.pages.dev/ | grep -i x-robots-tag` shows
+   `noindex`. Cloudflare preview deployments already have it by default.
 4. **AI bot settings in Cloudflare:** `robots.txt` allows all AI crawlers. Check that
    Cloudflare's AI Crawl Control, "Block AI bots", Bot Fight Mode and the
    Search/Training/Agent controls (introduced September 2026) do not block or
