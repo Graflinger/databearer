@@ -149,14 +149,18 @@ Allowed topics:
 - `draft: true` keeps the post out of all output in every run mode. When publishing,
   remove it together with any drafting-only exclusions
   ([Drafts](../../../docs/seo.md#drafts)).
-- The `excerpt` becomes the meta description, card text, search excerpt and feed
-  summary. Titles carry no brand suffix. Corrections set `lastUpdated` and add a
-  visible `*Korrektur vom …*` note
+- The `excerpt` becomes the meta description, card text, search excerpt, feed
+  summary and `/llms.txt` note. Titles carry no brand suffix. Corrections set
+  `lastUpdated` and add a visible `*Korrektur vom …*` note
   ([Content guidance](../../../docs/seo.md#content-guidance)).
 - Images must be local `/images/...` files. `imageAlt`/`socialImageAlt` describe the
   image, and `imageText` is the caption ([Images](../../../docs/seo.md#images)).
-- The layout renders the H1 and byline, so the body uses H2/H3 only. Internal links
-  use `/posts/<year>/<slug>/`.
+- The layout renders the H1 and byline, so the body uses H2/H3 only. Headings become
+  link anchors, so give them descriptive, stable wording. Internal links use
+  `/posts/<year>/<slug>/`; new slugs are lowercase ASCII with hyphens.
+- Write passages that can be quoted alone (finding, unit, period, source) and state
+  the data date in the text; see the search and AI-citation
+  [recommendations](../../../docs/seo.md#writing-for-search-and-ai-citation).
 
 Recommended structure:
 

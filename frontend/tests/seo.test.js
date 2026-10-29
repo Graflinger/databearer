@@ -10,7 +10,7 @@ const site = require('../src/_data/site');
 
 // Jest cannot load Eleventy's ESM entry that .eleventy.js requires; the draft
 // policy is captured from the real production config with a recording config.
-jest.mock('@11ty/eleventy', () => ({ HtmlBasePlugin() {} }));
+jest.mock('@11ty/eleventy', () => ({ HtmlBasePlugin() {}, IdAttributePlugin: function IdAttributePlugin() {} }));
 const { productionPreprocessors } = require('./fixtures/seo-cleanup.cjs');
 
 const JS_CLASS_SCRIPT = "document.documentElement.classList.add('js');window.addEventListener('load',function(){if(!document.documentElement.classList.contains('nav-enhanced'))document.documentElement.classList.remove('js');});";
@@ -149,7 +149,7 @@ describe('SEO policy and metadata', () => {
       expect(document.querySelector('meta[name="robots"]').content).toBe('noindex, follow');
       expect(document.querySelector('meta[property="og:url"]').content).toBe(`${site.url}${url}`);
       const unflagged = (await renderLayout({ title: 'Utility', page: { url } })).document;
-      expect(unflagged.querySelector('meta[name="robots"]').content).toBe('index, follow');
+      expect(unflagged.querySelector('meta[name="robots"]').content).toBe('index, follow, max-image-preview:large');
       expect(unflagged.querySelectorAll('link[rel="canonical"]')).toHaveLength(1);
     }
   });
@@ -240,7 +240,7 @@ describe('SEO policy and metadata', () => {
       publisher: { '@id': `${site.url}/#organization` } });
     expect(organization).toEqual({ '@context': 'https://schema.org', '@type': 'Organization', '@id': `${site.url}/#organization`,
       name: 'Databearer', url: `${site.url}/`, logo, description: site.description, sameAs: site.social,
-      founder: { '@type': 'Person', name: site.author, url: `${site.url}/about/` } });
+      founder: { '@type': 'Person', '@id': `${site.url}/about/#person`, name: site.author, url: `${site.url}/about/` } });
     // Articles reference the same publisher identity and logo, without homepage-only profiles.
     const [post] = seo.metadata({ site, page: { url: '/posts/p/' }, isPost: true, title: 'P', date: '2026-01-01' }).structuredData;
     expect(post.publisher).toEqual({ '@type': 'Organization', '@id': `${site.url}/#organization`, name: 'Databearer', url: `${site.url}/`, logo });
@@ -258,7 +258,186 @@ describe('SEO policy and metadata', () => {
     expect(rules.get('/data/history/german-electricity/manifest.json')).toEqual(new Map([['cache-control', 'no-cache']]));
     expect(rules.get('/data/history/german-electricity/:year.:sha.json'))
       .toEqual(new Map([['cache-control', 'public, max-age=31536000, immutable']]));
-    expect(rules.size).toBe(6);
+    expect(rules.get('/llms.txt')).toEqual(new Map([['x-robots-tag', 'noindex']]));
+    // Production and preview *.pages.dev aliases duplicate the custom domain.
+    expect(rules.get('https://:project.pages.dev/*')).toEqual(new Map([['x-robots-tag', 'noindex']]));
+    expect(rules.get('https://:version.:project.pages.dev/*')).toEqual(new Map([['x-robots-tag', 'noindex']]));
+    expect(rules.size).toBe(9);
+  });
+
+  test('robots meta allows large image previews on indexable pages only', () => {
+    expect(seo.ROBOTS_INDEX).toBe('index, follow, max-image-preview:large');
+    expect(seo.metadata({ site, page: { url: '/seite/' }, title: 'Seite' }).robots).toBe(seo.ROBOTS_INDEX);
+    expect(seo.metadata({ site, page: { url: '/suche/' }, title: 'Suche', noindex: true }).robots).toBe('noindex, follow');
+  });
+
+  test('one Person identity links article authors, the Organization founder and the author page', () => {
+    const id = `${site.url}/about/#person`;
+    expect(seo.person(site)).toEqual({ '@type': 'Person', '@id': id, name: site.author, url: `${site.url}/about/` });
+    const [article] = seo.metadata({ site, page: { url: '/posts/p/' }, isPost: true, title: 'P', date: '2026-01-01' }).structuredData;
+    expect(article.author['@id']).toBe(id);
+    const home = seo.metadata({ site, page: { url: '/' }, title: site.title }).structuredData;
+    expect(home.find((entity) => entity['@type'] === 'Organization').founder['@id']).toBe(id);
+    const about = seo.metadata({ site, page: { url: '/about/' }, title: 'Über mich' }).structuredData;
+    expect(about.map((entity) => entity['@type'])).toEqual(['AboutPage', 'Person', 'BreadcrumbList']);
+    expect(about[0].mainEntity).toEqual({ '@id': id });
+    expect(about[1]).toEqual({ '@context': 'https://schema.org', ...seo.person(site) });
+  });
+
+  test('articleSection names the known topics of a post in order; other pages have none', () => {
+    const section = (data) => seo.metadata({ site, page: { url: '/posts/p/' }, title: 'P', date: '2026-01-01', ...data })
+      .structuredData[0].articleSection;
+    expect(section({ isPost: true, topic: ['wirtschaft', 'energie'] })).toEqual(['Wirtschaft', 'Energie']);
+    expect(section({ isPost: true, topic: ['politik-und-gesellschaft', 'unbekannt'] })).toEqual(['Politik & Gesellschaft']);
+    expect(section({ isPost: true, topic: 'energie' })).toEqual(['Energie']);
+    expect(section({ isPost: true })).toBeUndefined();
+    expect(section({ topic: ['energie'] })).toBeUndefined();
+  });
+
+  test('a Dataset entity is built only from the page dataset descriptor and linked as main entity', () => {
+    const dataset = {
+      name: 'Messreihe', description: 'Eine ausreichend lange Beschreibung der Messreihe mit Zeitraum und Einheit.',
+      license: 'https://creativecommons.org/licenses/by/4.0/', creditText: 'Daten: Quelle', isBasedOn: { name: 'Quelle', url: 'https://example.org/' },
+      spatialCoverage: 'Deutschland', temporalCoverage: '2015-01-01/2026-10-28', variableMeasured: ['Netzlast'],
+      dateModified: '2026-10-29T12:26:40Z', distribution: [{ name: 'JSON', contentUrl: '/data/x.json', encodingFormat: 'application/json' }],
+    };
+    const [page, entity] = seo.metadata({ site, page: { url: '/dashboards/x/' }, title: 'X', dataset }).structuredData;
+    expect(page.mainEntity).toEqual({ '@id': `${site.url}/dashboards/x/#dataset` });
+    expect(entity).toEqual({
+      '@context': 'https://schema.org', '@type': 'Dataset', '@id': `${site.url}/dashboards/x/#dataset`, url: `${site.url}/dashboards/x/`,
+      name: 'Messreihe', description: dataset.description, inLanguage: 'de-DE', isAccessibleForFree: true,
+      creator: expect.objectContaining({ '@type': 'Organization', '@id': `${site.url}/#organization` }),
+      license: dataset.license, creditText: 'Daten: Quelle', isBasedOn: { '@type': 'Dataset', name: 'Quelle', url: 'https://example.org/' },
+      spatialCoverage: { '@type': 'Place', name: 'Deutschland' }, temporalCoverage: '2015-01-01/2026-10-28', variableMeasured: ['Netzlast'],
+      dateModified: '2026-10-29T12:26:40.000Z',
+      distribution: [{ '@type': 'DataDownload', name: 'JSON', encodingFormat: 'application/json', contentUrl: `${site.url}/data/x.json` }],
+    });
+    // Optional fields are omitted rather than invented.
+    const minimal = seo.metadata({ site, page: { url: '/d/' }, title: 'D', dataset: { name: 'N', description: 'Beschreibung' } }).structuredData[1];
+    expect(Object.keys(minimal).sort()).toEqual(['@context', '@id', '@type', 'creator', 'description', 'inLanguage', 'isAccessibleForFree', 'name', 'url']);
+    for (const broken of [{ description: 'Ohne Namen' }, { name: 'Ohne Beschreibung' }, { name: ' ', description: 'x' }]) {
+      expect(() => seo.metadata({ site, page: { url: '/d/' }, title: 'D', dataset: broken })).toThrow(/Dataset for .* needs/);
+    }
+    expect(seo.metadata({ site, page: { url: '/d/' }, title: 'D', noindex: true, dataset }).structuredData
+      .some((item) => item['@type'] === 'Dataset')).toBe(false);
+  });
+
+  test('the electricity dashboard dataset repeats the visible source, licence, coverage and downloads', () => {
+    const { electricityDataset, DATASETS, eleventyComputed } = require('../src/dashboards/dashboards.11tydata');
+    const germanElectricity = JSON.parse(sourceFile('_data/germanElectricity.json'));
+    const manifest = JSON.parse(sourceFile('data-history/german-electricity/manifest.json'));
+    const strom = matter(sourceFile('dashboards/strom.njk')).data;
+    expect(Object.keys(DATASETS)).toEqual([strom.permalink]);
+    const data = { page: { url: strom.permalink }, description: strom.description, germanElectricity, germanElectricityHistory: { manifest } };
+    const dataset = electricityDataset(data);
+    expect(dataset).toMatchObject({
+      description: strom.description, license: germanElectricity.source.license_url,
+      isBasedOn: { name: germanElectricity.source.name, url: germanElectricity.source.url },
+      temporalCoverage: `${manifest.first_date}/${manifest.last_date}`, dateModified: germanElectricity.snapshot_created_at,
+    });
+    // Every download is a published route with a visible link on the dashboard.
+    const dashboard = sourceFile('dashboards/strom.njk');
+    expect(matter(sourceFile('data/german-electricity.njk')).data.permalink).toBe(dataset.distribution[0].contentUrl);
+    for (const { contentUrl } of dataset.distribution) expect(dashboard).toContain(`href="${contentUrl}"`);
+    expect(dashboard).toContain('CC BY 4.0');
+    expect(eleventyComputed.dataset(data)).toEqual(dataset);
+    expect(eleventyComputed.dataModified(data)).toBe(germanElectricity.snapshot_created_at);
+    for (const url of ['/dashboards/', '/other/']) {
+      expect(eleventyComputed.dataset({ ...data, page: { url } })).toBeUndefined();
+      expect(eleventyComputed.dataModified({ ...data, page: { url } })).toBeUndefined();
+    }
+    expect(electricityDataset({ ...data, germanElectricity: {} })).toBeUndefined();
+    const withoutHistory = electricityDataset({ ...data, germanElectricityHistory: undefined });
+    expect(withoutHistory.temporalCoverage).toBeUndefined();
+    expect(withoutHistory.distribution.map((item) => item.contentUrl)).toEqual(['/data/german-electricity.json']);
+  });
+
+  test('robots.txt allows every crawler and names AI search, user-fetch and training agents explicitly', () => {
+    const text = nunjucks.renderString(sourceFile('robots.njk').replace(/^---[\s\S]*?---\s*/, ''), { site });
+    expect(text).not.toMatch(/^\s*Disallow/im);
+    const groups = [];
+    let current = null;
+    for (const line of text.split('\n').map((value) => value.replace(/#.*/, '').trim()).filter(Boolean)) {
+      const [field, ...rest] = line.split(':');
+      const value = rest.join(':').trim();
+      if (/^user-agent$/i.test(field)) {
+        if (!current || current.rules.length) groups.push(current = { agents: [], rules: [] });
+        current.agents.push(value);
+      } else if (/^sitemap$/i.test(field)) {
+        expect(value).toBe(`${site.url}/sitemap.xml`);
+      } else {
+        current.rules.push(`${field.trim()}: ${value}`);
+      }
+    }
+    for (const group of groups) expect(group.rules).toEqual(['Allow: /']);
+    const agents = groups.flatMap((group) => group.agents);
+    for (const agent of ['*', 'OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'Claude-SearchBot', 'Claude-User', 'ClaudeBot',
+      'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'CCBot', 'meta-externalagent', 'Amazonbot']) {
+      expect(agents).toContain(agent);
+    }
+    expect(new Set(agents).size).toBe(agents.length);
+  });
+
+  test('the production config registers the built-in heading id plugin', () => {
+    const plugins = [];
+    const recorder = new Proxy({}, {
+      get(target, key) {
+        if (key === 'addPlugin') return (plugin) => plugins.push(plugin);
+        if (key === 'ignores' || key === 'watchIgnores') return new Set();
+        return () => {};
+      },
+    });
+    require('../.eleventy.js')(recorder);
+    expect(plugins).toContain(require('@11ty/eleventy').IdAttributePlugin);
+  });
+});
+
+describe('llms.txt', () => {
+  const { llmsText } = require('../src/llms.11ty');
+  const item = (url, data = {}) => ({ url, data });
+  const collections = {
+    post: [
+      item('/posts/2025/alt/', { title: 'Alt [Teil 1]', date: '2025-01-01', excerpt: 'Erste  Zeile\nzweite', topic: ['energie'] }),
+      item('/posts/2026/neu-(2)/', { title: 'Neu', date: '2026-02-01', lastUpdated: '2026-03-01', excerpt: 'Neu.', topic: ['wirtschaft', 'energie'] }),
+      item('/posts/2026/geheim/', { title: 'Geheim', date: '2026-05-01', draft: true }),
+      item('/posts/2026/ohne-index/', { title: 'Ohne Index', date: '2026-05-02', noindex: true }),
+      item('/posts/2026/für-alle/', { title: 'Umlaut', date: '2026-01-15' }),
+    ],
+    dashboard: [item('/dashboards/strom/', { title: 'Strom', dashboardSummary: 'Täglich.', dashboardCadence: 'Automatisch' })],
+    all: [item('/themen/energie/', { description: 'Energie-Themen.' }), item('/themen/wirtschaft/', { description: 'W.', noindex: true }),
+      item('/about/', { title: 'Über mich' }), item('/dashboards/', { title: 'Dashboards', description: 'Übersicht.' }),
+      item('/suche/', { title: 'Suche', noindex: true })],
+  };
+  const text = llmsText({ site, collections });
+
+  test('starts with the site name and summary and lists only indexable pages, newest articles first', () => {
+    const lines = text.split('\n');
+    expect(lines.slice(0, 3)).toEqual(['# Databearer', '', `> ${site.description}.`]);
+    expect(text.endsWith('\n')).toBe(true);
+    const sections = lines.filter((line) => line.startsWith('## '));
+    expect(sections).toEqual(['## Artikel', '## Dashboards', '## Themen', '## Optional']);
+    const links = [...text.matchAll(/^- \[(.+?)\]\((\S+)\)/gm)].map((match) => match[2]);
+    expect(links.slice(0, 3)).toEqual([`${site.url}/posts/2026/neu-%282%29/`, `${site.url}/posts/2026/f%C3%BCr-alle/`, `${site.url}/posts/2025/alt/`]);
+    expect(text).not.toMatch(/geheim|Geheim|ohne-index|Ohne Index|\/suche\/|themen\/wirtschaft/);
+    expect(links).toContain(`${site.url}/dashboards/strom/`);
+    expect(links).toContain(`${site.url}/themen/energie/`);
+    expect(links).toContain(`${site.url}/about/`);
+    for (const link of links) expect(new URL(link).origin).toBe(site.url);
+  });
+
+  test('notes carry plain one-line summaries, explicit dates and topic labels without breaking Markdown', () => {
+    expect(text).toContain(`- [Alt \\[Teil 1\\]](${site.url}/posts/2025/alt/): Erste Zeile zweite (veröffentlicht 2025-01-01; Thema: Energie)`);
+    expect(text).toContain('Neu. (veröffentlicht 2026-02-01; aktualisiert 2026-03-01; Themen: Wirtschaft, Energie)');
+    expect(text).toContain(`- [Strom](${site.url}/dashboards/strom/): Täglich. (Automatisch)`);
+    expect(text).toContain(`- [Energie](${site.url}/themen/energie/): Energie-Themen.`);
+  });
+
+  test('empty collections still produce a valid index with the optional machine-readable links', () => {
+    const empty = llmsText({ site, collections: {} });
+    expect(empty).toMatch(/^# Databearer\n/);
+    expect(empty).not.toContain('## Artikel');
+    expect(empty).toContain(`(${site.url}/feed.json)`);
+    expect(empty).toContain(`(${site.url}/sitemap.xml)`);
   });
 });
 
@@ -357,6 +536,18 @@ describe('focused generated SEO output', () => {
     }
     expect(search.map((item) => new URL(item.url, site.url).href).sort())
       .toEqual(feed.items.map((item) => item.url).sort());
+  });
+
+  test('llms.txt in a real build lists the published articles and the author page, never drafts or utility pages', () => {
+    const text = read('llms.txt');
+    const links = [...text.matchAll(/^- \[(.+?)\]\((\S+)\)/gm)].map((match) => match[2]);
+    const feed = JSON.parse(read('feed.json'));
+    for (const post of feed.items) expect(links).toContain(post.url);
+    expect(links).toContain(`${site.url}/about/`);
+    expect(text).not.toMatch(/suche|404|draft-preview|retired-page|hidden-page|Secret draft/);
+    // Machine routes are listed explicitly; they are not sitemap pages.
+    expect(read('sitemap.xml')).not.toContain('llms.txt');
+    expect(read('robots.txt')).toContain('User-agent: GPTBot');
   });
 
   test('feeds preserve JSON fields, make content URLs absolute and use the maximum modification date', () => {

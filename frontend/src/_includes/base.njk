@@ -11,7 +11,7 @@
         {%- elif image -%}{%- set socialAlt = imageAlt -%}
         {%- elif dashboardImage -%}{%- set socialAlt = dashboardImageAlt -%}{%- endif -%}
         {%- set social = (socialImage or image or dashboardImage) | socialImageMeta(socialAlt) -%}
-        {%- set seo = {site: site, page: page, pagination: pagination, title: title, metaTitle: metaTitle, metaDescription: metaDescription, excerpt: excerpt, description: description, image: image, social: social, date: date, lastUpdated: lastUpdated, isPost: isPost, isTopicPage: isTopicPage, topic: topic, draft: draft, noindex: noindex} | seoMetadata -%}
+        {%- set seo = {site: site, page: page, pagination: pagination, title: title, metaTitle: metaTitle, metaDescription: metaDescription, excerpt: excerpt, description: description, image: image, social: social, date: date, lastUpdated: lastUpdated, isPost: isPost, isTopicPage: isTopicPage, topic: topic, draft: draft, noindex: noindex, dataset: dataset} | seoMetadata -%}
         {%- set metaTitleValue = seo.title -%}
         {%- set metaDescriptionValue = seo.description -%}
         {%- set metaImageValue = seo.image -%}
@@ -67,7 +67,7 @@
         <link rel="apple-touch-icon" sizes="180x180" href="/images/logo_circle.png">
 
         {# Robots #}
-        <meta name="robots" content="{{ 'noindex, follow' if seo.noindex else 'index, follow' }}">
+        <meta name="robots" content="{{ seo.robots }}">
 
         {# RSS Feed #}
         <link rel="alternate" type="application/atom+xml" title="Databearer Blog Feed" href="{{ site.url }}/feed.xml">

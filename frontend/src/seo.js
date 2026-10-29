@@ -10,10 +10,16 @@ function isoDate(value) {
   return new Date(value).toISOString();
 }
 
-// Sitemap lastmod: UTC calendar date of the explicit editorial revision/publication.
+// Sitemap lastmod: UTC calendar date of the explicit editorial revision/publication,
+// or for data pages (dashboards) the creation date of the published data snapshot.
+// Never build time or file timestamps.
 function sitemapLastmod(item) {
-  return isoDate(item.data.lastUpdated || item.data.date)?.slice(0, 10);
+  return isoDate(item.data.lastUpdated || item.data.date || item.data.dataModified)?.slice(0, 10);
 }
+
+// Indexable pages allow large image previews (Search, Discover); utility pages do not index.
+const ROBOTS_INDEX = 'index, follow, max-image-preview:large';
+const ROBOTS_NOINDEX = 'noindex, follow';
 
 function absoluteUrl(value, origin) {
   return new URL(value || '/', origin).href;
@@ -67,6 +73,42 @@ function relatedPosts(collections, currentPage, currentTopics = []) {
   return ranked.slice(0, 4).map((entry) => entry.post);
 }
 
+// One Person identity for the author: article bylines, the Organization founder and
+// the author page all reference the same `@id`, so the graph names one entity.
+function person(site) {
+  const url = absoluteUrl(site.authorUrl || '/about/', site.url);
+  return { '@type': 'Person', '@id': `${url}#person`, name: site.author, url };
+}
+
+// Dataset entity for a data page. `dataset` comes from code-defined page data (for
+// example src/dashboards/dashboards.11tydata.js) and must only describe what the page
+// visibly states: name, description, source, licence, coverage and downloads.
+function datasetEntity(dataset, { url, site, organization }) {
+  for (const key of ['name', 'description']) {
+    if (typeof dataset[key] !== 'string' || !dataset[key].trim()) throw new Error(`Dataset for ${url} needs a ${key}`);
+  }
+  const entity = {
+    '@context': 'https://schema.org', '@type': 'Dataset', '@id': `${url}#dataset`, url,
+    name: dataset.name, description: dataset.description, inLanguage: site.locale, isAccessibleForFree: true,
+    creator: organization,
+  };
+  if (dataset.license) entity.license = dataset.license;
+  if (dataset.creditText) entity.creditText = dataset.creditText;
+  if (dataset.isBasedOn) entity.isBasedOn = { '@type': 'Dataset', ...dataset.isBasedOn };
+  if (dataset.spatialCoverage) entity.spatialCoverage = { '@type': 'Place', name: dataset.spatialCoverage };
+  if (dataset.temporalCoverage) entity.temporalCoverage = dataset.temporalCoverage;
+  if (dataset.variableMeasured?.length) entity.variableMeasured = dataset.variableMeasured;
+  const modified = isoDate(dataset.dateModified);
+  if (modified) entity.dateModified = modified;
+  if (dataset.distribution?.length) {
+    entity.distribution = dataset.distribution.map((item) => ({
+      '@type': 'DataDownload', name: item.name, encodingFormat: item.encodingFormat,
+      contentUrl: absoluteUrl(item.contentUrl, site.url),
+    }));
+  }
+  return entity;
+}
+
 function metadata(data) {
   const { site, page = {}, pagination } = data;
   const url = absoluteUrl(page.url || '/', site.url);
@@ -77,7 +119,7 @@ function metadata(data) {
   // Data-driven: utility pages such as search and 404 declare `noindex: true`.
   const noindex = data.draft === true || data.noindex === true;
   const image = absoluteUrl(data.social?.url || data.image || LOGO.url, site.url);
-  const author = { '@type': 'Person', name: site.author, url: absoluteUrl(site.authorUrl || '/about/', site.url) };
+  const author = person(site);
   const organization = {
     '@type': 'Organization', '@id': `${site.url}/#organization`, name: site.name, url: `${site.url}/`,
     logo: { '@type': 'ImageObject', url: absoluteUrl(LOGO.url, site.url), width: LOGO.width, height: LOGO.height },
@@ -86,18 +128,33 @@ function metadata(data) {
     '@type': 'WebSite', '@id': `${site.url}/#website`, name: site.name, alternateName: [site.title],
     url: `${site.url}/`, publisher: { '@id': organization['@id'] },
   };
+  const isAuthorPage = page.url && absoluteUrl(page.url, site.url) === author.url;
   const entity = {
     '@context': 'https://schema.org',
-    '@type': isPost ? 'BlogPosting' : data.isTopicPage || pagination || page.url === '/dashboards/' ? 'CollectionPage' : page.url === '/about/' ? 'AboutPage' : 'WebPage',
+    '@type': isPost ? 'BlogPosting' : data.isTopicPage || pagination || page.url === '/dashboards/' ? 'CollectionPage' : isAuthorPage ? 'AboutPage' : 'WebPage',
     '@id': `${url}#${isPost ? 'article' : 'webpage'}`, url, name: title, description, inLanguage: site.locale,
     isPartOf: { '@id': website['@id'] },
   };
-  if (isPost) Object.assign(entity, {
-    headline: data.title, image, author, publisher: organization,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-    datePublished: isoDate(data.date), dateModified: isoDate(data.lastUpdated || data.date),
-  });
+  if (isPost) {
+    const sections = (Array.isArray(data.topic) ? data.topic : data.topic ? [data.topic] : [])
+      .map((topic) => topicNames[topic]).filter(Boolean);
+    Object.assign(entity, {
+      headline: data.title, image, author, publisher: organization,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+      datePublished: isoDate(data.date), dateModified: isoDate(data.lastUpdated || data.date),
+    });
+    if (sections.length) entity.articleSection = sections;
+  }
   const structuredData = [entity];
+  if (isAuthorPage) {
+    entity.mainEntity = { '@id': author['@id'] };
+    structuredData.push({ '@context': 'https://schema.org', ...author });
+  }
+  if (data.dataset && !noindex) {
+    const dataset = datasetEntity(data.dataset, { url, site, organization });
+    entity.mainEntity = { '@id': dataset['@id'] };
+    structuredData.push(dataset);
+  }
   if (page.url === '/') {
     structuredData.push({ '@context': 'https://schema.org', ...website }, {
       '@context': 'https://schema.org', ...organization, description: site.description, sameAs: site.social, founder: author,
@@ -111,7 +168,8 @@ function metadata(data) {
     structuredData.push({ '@context': 'https://schema.org', '@type': 'BreadcrumbList',
       itemListElement: crumbs.map((crumb, i) => ({ '@type': 'ListItem', position: i + 1, ...crumb })) });
   }
-  return { title, description, url, image, isPost, noindex, structuredData };
+  const robots = noindex ? ROBOTS_NOINDEX : ROBOTS_INDEX;
+  return { title, description, url, image, isPost, noindex, robots, structuredData };
 }
 
 const OUTPUT_MARKER = '.databearer-seo-output';
@@ -223,5 +281,5 @@ function configure(eleventyConfig) {
   });
 }
 
-module.exports = { LOGO, isoDate, sitemapLastmod, absoluteUrl, scriptJSON, published, indexable, relatedPosts, metadata,
-  OUTPUT_MARKER, OUTPUT_MARKER_CONTENT, htmlOutputSnapshot, cleanHtmlOutput, configure };
+module.exports = { LOGO, ROBOTS_INDEX, ROBOTS_NOINDEX, topicNames, isoDate, sitemapLastmod, absoluteUrl, scriptJSON, published,
+  indexable, relatedPosts, person, metadata, OUTPUT_MARKER, OUTPUT_MARKER_CONTENT, htmlOutputSnapshot, cleanHtmlOutput, configure };
