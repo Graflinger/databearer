@@ -21,6 +21,7 @@ for (const name of ['_data/site.js', '_includes/base.njk',
   'posts/posts.11tydata.js', 'feed.njk', 'feed.json.njk', 'sitemap.njk', 'robots.njk', '404.md', 'images/logo_big.png']) copy(name);
 // The real search index template, loaded in place so its relative requires resolve.
 write('search.11ty.js', `module.exports = require(${JSON.stringify(path.join(root, 'src/search.11ty.js'))});\n`);
+write('llms.11ty.js', `module.exports = require(${JSON.stringify(path.join(root, 'src/llms.11ty.js'))});\n`);
 write('_includes/post.njk', '---\nlayout: base.njk\n---\n{{ content | safe }}');
 write('index.njk', '---\nlayout: base.njk\ntitle: Archive\npagination:\n  data: collections.post\n  size: 1\n---\nArchive');
 write('suche.njk', '---\nlayout: base.njk\ntitle: Suche\nnoindex: true\n---\nSuche');

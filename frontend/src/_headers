@@ -11,6 +11,10 @@
 /search.json
   X-Robots-Tag: noindex
 
+# Machine-readable index for LLM tools; the listed HTML pages are the indexable copies.
+/llms.txt
+  X-Robots-Tag: noindex
+
 /suche/
   X-Robots-Tag: noindex, follow
 
@@ -18,3 +22,11 @@
 # paths cannot match a path rule; the page's robots meta (noindex) covers them.
 /404
   X-Robots-Tag: noindex, follow
+
+# The production *.pages.dev alias duplicates the custom domain. Cloudflare adds
+# noindex to preview deployments only, so both aliases are set here explicitly.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

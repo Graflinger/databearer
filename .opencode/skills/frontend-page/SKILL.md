@@ -59,7 +59,8 @@ Important folders:
 
 ## Adding a blog post
 
-1. Create `src/posts/<year>/<descriptive-slug>.md`.
+1. Create `src/posts/<year>/<descriptive-slug>.md`. Use a lowercase ASCII slug with
+   hyphens (`ä` → `ae`, no colons or capitals); never rename a published post file.
 2. Use `layout: post` only if not inherited by directory data; otherwise follow existing posts.
 3. Required/recommended frontmatter:
 
@@ -96,12 +97,18 @@ Important folders:
 [`docs/seo.md`](../../../docs/seo.md) is the single detailed source. In short:
 
 - `draft: true` works on any template and in every run mode, including `npm start`.
-  A draft produces no HTML and does not appear in collections, the sitemap, feeds or
-  search. To preview it, set `draft: false` temporarily. Stale HTML is removed only
-  after a successful full `npm run build` ([Drafts](../../../docs/seo.md#drafts)).
-- `noindex: true` gives `noindex, follow`, no canonical, and no sitemap or search
-  entry. `excludeFromSitemap` only affects the sitemap
+  A draft produces no HTML and does not appear in collections, the sitemap, feeds,
+  search or `/llms.txt`. To preview it, set `draft: false` temporarily. Stale HTML is
+  removed only after a successful full `npm run build` ([Drafts](../../../docs/seo.md#drafts)).
+- `noindex: true` gives `noindex, follow`, no canonical, and no sitemap, search or
+  `/llms.txt` entry. `excludeFromSitemap` only affects the sitemap and `/llms.txt`
   ([Indexing](../../../docs/seo.md#indexing-and-sitemap)).
+- `robots.txt` deliberately allows all crawlers, including named AI search and
+  training bots, and `/llms.txt` indexes the public pages. Headings get automatic
+  anchor ids ([Crawlers and AI discovery](../../../docs/seo.md#crawlers-and-ai-discovery)).
+- JSON-LD is generated in `src/seo.js`: one author `Person`, `articleSection` from
+  `topic`, and a `Dataset` only for pages with a code-defined descriptor
+  ([Metadata](../../../docs/seo.md#metadata-and-structured-data)).
 - Images must be local `/images/...` files, and only referenced sources are
   processed. Cards are decorative. `socialImageAlt`/`imageAlt` describe the image;
   without them `og:image:alt` is omitted ([Images](../../../docs/seo.md#images)).
@@ -121,9 +128,9 @@ Current topics:
 Topic-specific collections are defined in `.eleventy.js` as `energiePosts`, `wirtschaftPosts`, and
 `politikPosts`. A new topic needs:
 
-- a `topicNames` entry in `src/seo.js`;
+- a `topicNames` entry in `src/seo.js` (breadcrumbs, `articleSection`, `/llms.txt`);
 - a collection in `.eleventy.js`;
-- a `src/themen/` page with `isTopicPage: true` and `addAllPagesToCollections: true`;
+- a `src/themen/` page with `isTopicPage: true`, a `description` and `addAllPagesToCollections: true`;
 - updated labels in `post.njk` and the navigation in `base.njk`.
 
 See [Topics](../../../docs/seo.md#topics).

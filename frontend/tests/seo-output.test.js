@@ -4,6 +4,7 @@ const sharp = require('sharp');
 // Already supplied by Eleventy's frontmatter pipeline; no additional dependency.
 const matter = require('gray-matter');
 const site = require('../src/_data/site');
+const { ROBOTS_INDEX, ROBOTS_NOINDEX, topicNames } = require('../src/seo');
 
 const enabled = process.env.SEO_OUTPUT_CHECK === '1';
 const output = path.join(__dirname, '../_site');
@@ -135,7 +136,7 @@ if (enabled && !htmlFiles.length) {
     if (!imageMetadata.has(filename)) imageMetadata.set(filename, sharp(filename).metadata());
     return imageMetadata.get(filename);
   };
-  const noindex = (document) => meta(document, 'robots') === 'noindex, follow';
+  const noindex = (document) => meta(document, 'robots') === ROBOTS_NOINDEX;
 
   beforeAll(() => {
     texts = new Map(htmlFiles.map((file) => [absolute(routeFor(file)), fs.readFileSync(file, 'utf8')]));
@@ -158,7 +159,7 @@ if (enabled && !htmlFiles.length) {
   test.each(htmlFiles.map((file) => [routeFor(file)]))('%s: canonical (indexable only), title, H1, description and JSON-LD', (route) => {
     const url = absolute(route);
     const document = pages.get(url);
-    expect(['index, follow', 'noindex, follow']).toContain(meta(document, 'robots'));
+    expect([ROBOTS_INDEX, ROBOTS_NOINDEX]).toContain(meta(document, 'robots'));
     const canonical = [...document.querySelectorAll('link[rel="canonical"]')].map((node) => node.getAttribute('href'));
     expect(canonical).toEqual(noindex(document) ? [] : [url]);
     const title = one(document, 'title').textContent.trim();
@@ -341,11 +342,101 @@ if (enabled && !htmlFiles.length) {
         expect(lastmod).toMatch(/^\d{4}-\d{2}-\d{2}$/);
         expect(lastmod).toBe(new Date(post.lastUpdated || post.date).toISOString().slice(0, 10));
       } else {
-        // Current static/dashboard pages have no explicit editorial revision date.
-        expect(entry.querySelector('lastmod')).toBeNull();
+        // Data pages carry the date of their published snapshot (the Dataset's
+        // dateModified); other static pages have no explicit revision date.
+        const dataset = jsonLd(pages.get(url)).find((entity) => entity['@type'] === 'Dataset');
+        if (dataset?.dateModified) expect(one(entry, 'lastmod').textContent).toBe(dataset.dateModified.slice(0, 10));
+        else expect(entry.querySelector('lastmod')).toBeNull();
       }
     }
     expect(read('robots.txt')).toContain(`Sitemap: ${origin}/sitemap.xml`);
+  });
+
+  test('robots.txt allows every crawler and names AI search, user-fetch and training agents', () => {
+    const text = read('robots.txt');
+    expect(text).not.toMatch(/^\s*Disallow/im);
+    const lines = text.split('\n').map((line) => line.replace(/#.*/, '').trim()).filter(Boolean);
+    expect(lines.filter((line) => /^allow:/i.test(line)).every((line) => line === 'Allow: /')).toBe(true);
+    const agents = lines.filter((line) => /^user-agent:/i.test(line)).map((line) => line.split(':')[1].trim());
+    for (const agent of ['*', 'OAI-SearchBot', 'GPTBot', 'Claude-SearchBot', 'ClaudeBot', 'PerplexityBot', 'Google-Extended']) {
+      expect(agents).toContain(agent);
+    }
+    expect(lines[lines.length - 1]).toBe(`Sitemap: ${origin}/sitemap.xml`);
+  });
+
+  test('llms.txt links only indexable pages and machine routes, including every article and dashboard', () => {
+    const text = read('llms.txt');
+    expect(text.split('\n').slice(0, 3)).toEqual([`# ${site.name}`, '', `> ${site.description}.`]);
+    const links = [...text.matchAll(/^- \[(.+?)\]\((\S+)\)/gm)].map((match) => match[2]);
+    expect(new Set(links).size).toBe(links.length);
+    const sitemapUrls = new Set([...sitemap.querySelectorAll('url > loc')].map((node) => node.textContent));
+    const machine = ['/feed.json', '/feed.xml', '/sitemap.xml'].map((route) => absolute(route));
+    for (const link of links) {
+      expect(new URL(link).origin).toBe(origin);
+      if (machine.includes(link)) {
+        localFile(link, link);
+        continue;
+      }
+      expect(pages.has(link)).toBe(true);
+      expect(noindex(pages.get(link))).toBe(false);
+      expect(sitemapUrls.has(link)).toBe(true);
+    }
+    for (const item of jsonFeed.items) expect(links).toContain(absolute(item.url));
+    for (const item of search) expect(links).toContain(absolute(item.url)); // Articles and dashboards.
+    expect(sitemapUrls.has(absolute('/llms.txt'))).toBe(false);
+  });
+
+  test('one author identity across articles, the Organization and the author page; articles name their sections', () => {
+    const person = absolute(`${site.authorUrl}#person`);
+    const about = jsonLd(pages.get(absolute(site.authorUrl)));
+    expect(about[0]).toMatchObject({ '@type': 'AboutPage', mainEntity: { '@id': person } });
+    expect(about.find((entity) => entity['@type'] === 'Person')).toMatchObject({ '@id': person, name: site.author, url: absolute(site.authorUrl) });
+    const home = jsonLd(pages.get(absolute('/')));
+    expect(home.find((entity) => entity['@type'] === 'Organization').founder['@id']).toBe(person);
+    const published = posts.filter((post) => post.draft !== true && post.permalink !== false);
+    expect(published.length).toBeGreaterThan(0);
+    for (const post of published) {
+      const [article] = jsonLd(pages.get(post.url));
+      expect(article.author).toMatchObject({ '@type': 'Person', '@id': person, name: site.author });
+      const sections = (post.topic || []).map((topic) => topicNames[topic]).filter(Boolean);
+      if (sections.length) expect(article.articleSection).toEqual(sections);
+      else expect(article.articleSection).toBeUndefined();
+    }
+  });
+
+  test('data pages declare a Dataset with visible source, licence, coverage and published downloads', () => {
+    const datasets = [...pages].map(([url, document]) => [url, document, jsonLd(document)])
+      .filter(([, , entities]) => entities.some((entity) => entity['@type'] === 'Dataset'));
+    expect(datasets.map(([url]) => url)).toContain(absolute('/dashboards/strom/'));
+    for (const [url, document, entities] of datasets) {
+      const dataset = entities.find((entity) => entity['@type'] === 'Dataset');
+      expect(entities[0].mainEntity).toEqual({ '@id': dataset['@id'] });
+      expect(dataset).toMatchObject({ '@id': `${url}#dataset`, url, inLanguage: site.locale, isAccessibleForFree: true,
+        creator: { '@id': `${origin}/#organization` } });
+      // Google requires 50–5000 characters; the text is the page's own description.
+      expect(dataset.description.length).toBeGreaterThanOrEqual(50);
+      expect(dataset.description).toBe(meta(document, 'description'));
+      expect(new URL(dataset.license).protocol).toBe('https:');
+      expect(document.querySelector(`a[href="${dataset.license}"]`)).not.toBeNull();
+      expect(document.querySelector(`a[href="${dataset.isBasedOn.url}"]`)).not.toBeNull();
+      expect(dataset.temporalCoverage).toMatch(/^\d{4}-\d{2}-\d{2}\/\d{4}-\d{2}-\d{2}$/);
+      expect(Number.isFinite(Date.parse(dataset.dateModified))).toBe(true);
+      expect(dataset.distribution.length).toBeGreaterThan(0);
+      for (const download of dataset.distribution) {
+        expect(download).toMatchObject({ '@type': 'DataDownload', encodingFormat: 'application/json' });
+        JSON.parse(fs.readFileSync(localFile(download.contentUrl, url), 'utf8'));
+        expect(document.querySelector(`a[href="${new URL(download.contentUrl).pathname}"]`)).not.toBeNull();
+      }
+    }
+  });
+
+  test.each(htmlFiles.map((file) => [routeFor(file)]))('%s: every heading has an id and ids are unique for deep links', (route) => {
+    const document = pages.get(absolute(route));
+    for (const heading of document.querySelectorAll('h1, h2, h3, h4, h5, h6')) {
+      if (heading.textContent.trim()) expect({ heading: heading.textContent.trim(), id: heading.id.trim() !== '' }).toMatchObject({ id: true });
+    }
+    const ids = [...document.querySelectorAll('[id]')].map((node) => node.id);
+    expect(ids.filter((id, index) => ids.indexOf(id) !== index)).toEqual([]);
   });
 
   test('Cloudflare header rules are published unchanged', () => {

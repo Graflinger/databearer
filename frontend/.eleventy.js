@@ -1,4 +1,4 @@
-const { HtmlBasePlugin } = require('@11ty/eleventy');
+const { HtmlBasePlugin, IdAttributePlugin } = require('@11ty/eleventy');
 const { execSync } = require('child_process');
 const electricity = require('./src/js/dashboards/electricity-data');
 const { validateBuildSnapshot } = require('./src/data_ingestion/builders/electricitySnapshot');
@@ -51,6 +51,10 @@ module.exports = function (eleventyConfig) {
 
   // Add HTML base plugin to manage base URLs
   eleventyConfig.addPlugin(HtmlBasePlugin);
+
+  // Built-in: stable `id`s on headings without one, so sections can be deep-linked
+  // and cited (`/posts/…/#abschnitt`). Existing ids are kept; duplicate ids fail the build.
+  eleventyConfig.addPlugin(IdAttributePlugin);
 
   // Copy the JS directory to output
   eleventyConfig.addPassthroughCopy('src/js');
