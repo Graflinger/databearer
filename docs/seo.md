@@ -140,7 +140,7 @@ These were reviewed during the October 2026 audit and deliberately left out:
 | `WebSite` `SearchAction` (sitelinks search box) | Google retired the sitelinks search box in November 2024. |
 | `FAQPage`/`HowTo` markup, ratings or reviews | The articles contain no such visible content; adding it would be invented markup. |
 | Machine-readable `citation`/`isBasedOn` on articles | Sources are visible links in each article. Copying them by hand into markup would drift. Datasets use `isBasedOn` because their source comes from validated data. |
-| IndexNow pings in the build | Would need a key file and a network call on deploy. Cloudflare Crawler Hints can do this at the edge (see Recommendations). |
+| IndexNow pings in the build | Would need a key file and a network call after each release. Cloudflare Crawler Hints would need DNS on Cloudflare; Bing Webmaster Tools URL submission covers it for now (see Recommendations). |
 | Image, news or video sitemaps; `hreflang`; `rel="prev/next"` | Images are discoverable from pages, the site is not a news publisher, it has one language, and Google no longer uses `prev/next`. |
 | `keywords` meta tag | Ignored by major search engines. |
 | Organization `publishingPrinciples` and Person `sameAs` | Need a corrections/methodology page and personal profile URLs that do not exist yet (owner input; see Recommendations). |
@@ -442,52 +442,47 @@ guarantees rankings or AI citations.
 
 ### Crawler access and hosting
 
-1. **`www` host:** `https://www.databearer.de/` answers `200` with the full site.
-   Only the canonical tag points to `blog.databearer.de`. Add a permanent (301/308)
-   redirect from every `www` path to the same path on `blog.databearer.de`, keeping
-   the query string (Cloudflare Bulk Redirects; Pages `_redirects` does not support
-   domain-level redirects). Do not use `noindex` for this, because it conflicts with
-   the canonical.
-2. **Apex redirect:** `databearer.de` still answers `307` (temporary) to
-   `blog.databearer.de`, keeping path and query. If this is meant to be permanent,
-   switch it to 301/308.
-3. **`*.pages.dev`:** on 2026-10-29 the production alias
-   `https://databearer-frontend.pages.dev/` answered `200` without `X-Robots-Tag`, a
-   crawlable duplicate of the custom domain. The `_headers` host rule fixes this once
-   released; then check that
-   `curl -sI https://databearer-frontend.pages.dev/ | grep -i x-robots-tag` shows
-   `noindex`. Cloudflare preview deployments already have it by default.
-4. **AI bot settings in Cloudflare:** `robots.txt` allows all AI crawlers. Check that
-   Cloudflare's AI Crawl Control, "Block AI bots", Bot Fight Mode and the
-   Search/Training/Agent controls (introduced September 2026) do not block or
-   challenge them, otherwise they override the published policy. Keep Cloudflare's
-   *managed robots.txt* off, or make sure what it adds matches this policy.
-5. **Verify with real traffic:** use Cloudflare's per-bot analytics or logs. Verify
-   bots by the IP lists their operators publish (OpenAI, Perplexity, Anthropic,
-   Google, Bing), not by user agent alone, and look for `403`/challenge responses.
-6. **Crawler list review:** every six months, compare the named agents in
-   `robots.njk` with the vendors' crawler pages (OpenAI, Anthropic, Perplexity,
-   Google, Apple, Meta) and the Cloudflare bot reference, and update the list.
-7. **Core Web Vitals:** review field data in Search Console or CrUX. Chart posts load
-   the deferred ECharts bundle (about 1.1 MB). Lab scores are not field validation.
+**Setup (checked 2026-11-01):** DNS for `databearer.de` is at **Porkbun**, not
+Cloudflare. `blog.databearer.de` and `www.databearer.de` are CNAMEs to
+`databearer-frontend.pages.dev` (Cloudflare Pages custom domains). The apex
+`databearer.de` uses Porkbun URL forwarding. Because there is no Cloudflare zone,
+zone features (Redirect Rules, Bulk Redirects, AI Crawl Control, Bot Fight Mode,
+Crawler Hints, per-bot analytics) do not apply to this site, and Pages `_redirects`
+cannot redirect by host.
+
+| # | Item | State on 2026-11-01 | Target | Where and how | Verify | Priority |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | `www.databearer.de` | `200` with the full site (also `robots.txt`); only the canonical points to `blog.` | `301` to the same path and query on `https://blog.databearer.de` | Porkbun → Domain Management → `databearer.de` → URL Forwarding → add: hostname `www`, forward to `https://blog.databearer.de`, **Permanent (301)**, **include URI path**, **wildcard off** (wildcard would also forward `blog.`). Porkbun needs the `www` CNAME removed. Then remove `www.databearer.de` from Pages → `databearer-frontend` → Custom domains. Do not use `noindex` on `www`; it conflicts with the canonical. | `curl -sI "https://www.databearer.de/posts/2026/batteriespeicher-wandel/?a=1"` → `301`, `location: https://blog.databearer.de/posts/2026/batteriespeicher-wandel/?a=1`; same for `http://www.databearer.de/` | High |
+| 2 | `databearer.de` (apex) | `307` (Porkbun forwarding, temporary), path and query kept | `301` with path and query | Porkbun → URL Forwarding → root entry (empty hostname): change the type to **Permanent (301)**, keep "include URI path", wildcard off. Keep `307` only if the apex may later host something else. | `curl -sI "https://databearer.de/about/?a=1"` → `301` to `https://blog.databearer.de/about/?a=1`; also `http://databearer.de/` | Medium |
+| 3 | `databearer-frontend.pages.dev` | Fixed: `X-Robots-Tag: noindex` since the 2026-11-01 release (`_headers`) | Stays `noindex` | Nothing | `curl -sI https://databearer-frontend.pages.dev/ \| grep -i x-robots-tag` | Done |
+| 4 | Preview deployments `*.databearer-frontend.pages.dev` | `noindex` (Cloudflare default plus `_headers`; checked on a PR preview) | Stays `noindex` | Nothing | `curl -sI https://<preview>.databearer-frontend.pages.dev/ \| grep -i x-robots-tag` | Done |
+| 5 | `http://blog.databearer.de` | `301` to HTTPS | Unchanged | Nothing | `curl -sI http://blog.databearer.de/about/` | Done |
+| 6 | URL normalisation on `blog.` | No trailing slash, `/index.html` and `/404.html` `308` to the canonical form; unknown paths and wrong letter case return a real `404` | Unchanged | Nothing; Cloudflare Pages does this | `curl -sI https://blog.databearer.de/posts/2026/batteriespeicher-wandel` → `308` | Done |
+| 7 | HSTS | No `Strict-Transport-Security` header | Optional `max-age=31536000` on `blog.` only | Small code PR: add the header for `/*` in `_headers`. No `includeSubDomains`/`preload` until every subdomain is HTTPS-only. Security hardening, not a ranking factor. | `curl -sI https://blog.databearer.de/ \| grep -i strict-transport` | Low |
+| 8 | AI crawler access | `robots.txt` allows all; no Cloudflare zone bot rules apply; requests with GPTBot, ClaudeBot and PerplexityBot user agents got `200` (weak evidence: spoofed user agents) | Real AI crawlers can fetch every public page | Nothing to switch now. Occasionally ask ChatGPT, Perplexity and Claude to open a new article URL. If DNS ever moves to Cloudflare, review AI Crawl Control, "Block AI bots" and managed `robots.txt` defaults immediately. | Assistant can open and quote the page | Monitor |
+| 9 | Crawler list in `robots.njk` | 17 named agents, October 2026 vendor docs | Current names | Every six months compare with the vendors' crawler pages (OpenAI, Anthropic, Perplexity, Google, Apple, Meta) and the Cloudflare bot reference; update via PR | Robots tests pass | Low |
+| 10 | Core Web Vitals | Not reviewed; chart posts load the deferred ECharts bundle (about 1.1 MB) | Field data in the "good" range | Search Console → Core Web Vitals, or CrUX. Lab scores are not field validation. | Search Console report | Low |
+| 11 | Move DNS to Cloudflare (optional) | DNS at Porkbun | Only if zone features are wanted | Would enable Redirect Rules/Bulk Redirects, Crawler Hints (IndexNow), AI Crawl Control, per-bot analytics and the apex directly on Pages. Cost: nameserver change and migration of every record (mail, TXT verification); a missed record breaks mail or verification. Not needed for items 1–2. | Owner decision | Optional |
+
+Recommended order: 12 and 13 below (no risk), then 1, then 2, then re-run the
+verify commands and the Rich Results Test.
 
 ### Search engines and monitoring
 
-- **Google Search Console and Bing Webmaster Tools:** verify the domain (DNS
-  verification covers all hosts), submit `/sitemap.xml`, and review indexing
-  reports, the robots.txt report and Core Web Vitals. Bing matters for AI search too:
-  Microsoft Copilot uses the Bing index, and ChatGPT search has used it as a source.
-- **IndexNow:** enable Cloudflare *Crawler Hints* to notify Bing, Yandex and other
-  IndexNow engines when pages change, without code.
-- **After deployment:** test one post, the dashboard and `/about/` with Google's Rich
-  Results Test and the Schema.org validator. The dashboard Dataset may appear in
-  Google Dataset Search after crawling; it can take weeks and is not guaranteed.
+| # | Item | State on 2026-11-01 | Action | Priority |
+| --- | --- | --- | --- | --- |
+| 12 | Google Search Console | A `google-site-verification` TXT record exists on `databearer.de`, so a Domain property (covering `blog.` and `www.`) is probably verified | Open the property, submit `https://blog.databearer.de/sitemap.xml`, and check *Page indexing* for `www` or `pages.dev` URLs and "Duplicate, Google chose different canonical", plus the robots.txt report. Run *URL inspection → Test live URL* on a post and the dashboard. | High |
+| 13 | Bing Webmaster Tools | No Bing verification record found | Add the site with **Import from Google Search Console** (no DNS change), submit the sitemap, and use URL submission (IndexNow) for new articles. Microsoft Copilot uses the Bing index, and ChatGPT search has used it as a source. | High |
+| 14 | IndexNow | Cloudflare Crawler Hints is a zone feature and unavailable without a Cloudflare zone | Submit new URLs in Bing Webmaster Tools. An automatic ping would need a key file and a post-release workflow step (code). | Low |
+| 15 | Structured data | Live since 2026-11-01 | Test one post, `/about/` and `/dashboards/strom/` with Google's Rich Results Test and the Schema.org validator. The dashboard Dataset may appear in Google Dataset Search after crawling; it can take weeks and is not guaranteed. | Medium |
+
 - **AI visibility:** every few months, ask ChatGPT, Perplexity, Claude, Copilot and
   Google AI Mode about topics the blog covers (for example wind auction results or
-  battery storage expansion) and record whether and how Databearer is cited. Check
-  referrers such as `chatgpt.com`, `perplexity.ai`, `claude.ai` and `copilot` in
-  server-side or Cloudflare statistics. Adding a client-side analytics script would
-  need a privacy-policy update and is not part of this guide.
+  battery storage expansion) and record whether and how Databearer is cited. The
+  site has no analytics, so referrers such as `chatgpt.com`, `perplexity.ai` or
+  `claude.ai` are not measured. Measuring them would need an analytics tool (for
+  example Cloudflare Web Analytics, which Pages injects as a script), a
+  privacy-policy update and an owner decision.
 
 ### Writing for search and AI citation
 
