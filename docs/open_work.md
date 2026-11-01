@@ -35,7 +35,7 @@ Rows are sorted by ID so that parallel branches edit different lines.
 | `erneuerbare-wachstum` | story | in review | `feature/dashboard-erneuerbare-wachstum` | [#34](https://github.com/Graflinger/databearer/pull/34) | `docs/erneuerbare_wachstum.md` (on branch) | Review the article `/posts/2026/solar-boomt-wind-waechst/`. Merge `main` in (28 behind), then merge. |
 | `image-caption-ai-label` | chore | in review | `chore/image-caption-ai-label` | [#50](https://github.com/Graflinger/databearer/pull/50) | — | Review and merge. Captions are public, so add the PR to `release-promotion` after merging. |
 | `netzeingriffe` | story | in review | `feature/dashboard-netzeingriffe-stabilitaet` | [#33](https://github.com/Graflinger/databearer/pull/33) | `docs/netzeingriffe.md` (on branch) | Review the article `/posts/2026/netzeingriffe-netzstabilitaet/`. Merge `main` in (28 behind). Follow-up idea: the documented BNetzA SAIDI route. |
-| `release-promotion` | infra | awaiting release | `main` → `releases/cloudflare` | [#44](https://github.com/Graflinger/databearer/pull/44), [#47](https://github.com/Graflinger/databearer/pull/47), [#52](https://github.com/Graflinger/databearer/pull/52) | [dashboard publication](dashboard_publication.md), [seo.md](seo.md) | #44/#47 are live via squash promotions [#48](https://github.com/Graflinger/databearer/pull/48)/[#51](https://github.com/Graflinger/databearer/pull/51) but not in release ancestry. Fast-forward `releases/cloudflare` to the reviewed `main` (no force), verify live `robots.txt`, `/llms.txt`, headers and structured data (#52), then empty this row. Owner hosting items for #52 are in seo.md *Recommendations*. |
+| `release-promotion` | infra | awaiting release | `main` → `releases/cloudflare` | — | [dashboard publication](dashboard_publication.md) | Nothing pending. Last promotion: fast-forward to `51cd785` on 2026-11-01 (#44, #47, #52 now in release ancestry; live checks passed). |
 | `strom-ytd` | story | in review | `feature/dashboard-strom-ytd` | [#31](https://github.com/Graflinger/databearer/pull/31) | `docs/strom_ytd.md` (on branch) | Review the article `/posts/2026/strom-2026-ytd-zahlen/`. The January–September 9 window is time-sensitive, so decide soon whether to publish as-is or refresh. Merge `main` in (28 behind). |
 | `stromhandel` | story | in review | `feature/dashboard-stromhandel-jahre` | [#32](https://github.com/Graflinger/databearer/pull/32) | `docs/stromhandel_post.md` (on branch) | Review the article `/posts/2026/stromimporte-exporte-deutschland/`. Merge `main` in (28 behind), then merge. |
 | `weekly-release-promotion` | infra | in review | `feature/weekly-release-promotion` | [#49](https://github.com/Graflinger/databearer/pull/49) | — | Review. Merging enables automatic promotion of `main` to production every Sunday. |
@@ -44,7 +44,9 @@ Rows are sorted by ID so that parallel branches edit different lines.
 
 Add `idea` rows to the table above, or list rough ideas here until they get an ID.
 
-- *(none yet)*
+- **SEO owner tasks** (no branch needed): `www` → `blog` 301 and apex 307 → 301 via
+  Porkbun URL forwarding, Search Console sitemap check, Bing Webmaster Tools import,
+  then the editorial items. Step-by-step table: [seo.md → Recommendations](seo.md#crawler-access-and-hosting).
 
 ## Branch cleanup candidates
 
