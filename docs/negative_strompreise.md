@@ -2,11 +2,13 @@
 
 Topic-ID: `negative-strompreise` · Branch: `feature/negative-strompreise`
 
+Draft-PR: [#58](https://github.com/Graflinger/databearer/pull/58) gegen `main`.
+
 ## Status und Aufgaben
 
 **Lizenz-Gate für Energinet am 2026-11-05 bestanden.** Zwei Preisabrufe sind erfolgt;
 das vollständige Intervallraster und die Aggregationen sind geprüft. Eingefrorenes
-Evidenzpaket, vier Charts und Entwurfsartikel liegen vor; QA bestanden, Draft-PR folgt.
+Evidenzpaket, vier Charts und Entwurfsartikel liegen vor; QA bestanden, Draft-PR #58 offen.
 SMARD und die unten abgelehnten Preisalternativen werden nicht verwendet.
 Kein Deployment autorisiert.
 
@@ -19,7 +21,7 @@ Kein Deployment autorisiert.
 - [x] Energinet-Zeitreihen beschaffen; DE-Abdeckung, Gebotszone und Intervall-QA prüfen.
 - [x] Kennzahlen, eingefrorenes Evidenzpaket und Charts erstellen.
 - [x] Entwurfsartikel (`draft: true`), Tests und visuelle QA abschließen.
-- [ ] Commit, Push und Draft-PR gegen `main`; kein Merge und keine Promotion.
+- [x] Commit, Push und Draft-PR gegen `main`; kein Merge und keine Promotion.
 - [ ] Kartenbild und redaktionelle Freigabe durch den Nutzer.
 
 ## Lizenzprüfung (Abrufdatum aller folgenden Seiten: 2026-11-05)
@@ -367,7 +369,7 @@ gegen die eingefrorenen Daten sowie die generierten Chartwerte.
 - Unabhängiger Read-only-Review berechnete Kennzahlen erneut aus allen Rohintervallen;
   keine fachlichen Blocker für einen Draft-PR. Veralteten MaStR-Änderungshinweis korrigiert.
 
-Noch ausstehend: Draft-PR; anschließend redaktionelle Nutzerfreigabe und Kartenbild.
+Noch ausstehend: Review des Draft-PR, redaktionelle Nutzerfreigabe und Kartenbild.
 Keine Kontaktaufnahme ohne Auftrag. Keine PR-Vorlage im Repository gefunden.
 
 Der SMARD-Vorbehalt betrifft potenziell auch bestehende Preisverwendungen im Repo.
