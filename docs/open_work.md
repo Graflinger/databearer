@@ -8,7 +8,7 @@ Maintain it with the `work-tracking` skill (`.opencode/skills/work-tracking/`).
 GitHub is the source of truth for PR state. When this file and GitHub disagree,
 reconcile this file.
 
-**Last reconciled:** 2026-11-01 (against `gh pr list` and `origin/*`)
+**Last reconciled:** 2026-11-05 (against `gh pr list` and `origin/*`)
 
 ## Status values
 
@@ -32,6 +32,7 @@ Rows are sorted by ID so that parallel branches edit different lines.
 
 | ID | Type | Status | Branch | PR | Docs | Next step |
 | --- | --- | --- | --- | --- | --- | --- |
+| `energieintensive-industrie` | story | in progress | `feature/energieintensive-industrie` | — | [Research and licence review](energieintensive_industrie.md) | Review draft article, decide on card image and September data refresh after 6 November; retain draft until owner approval. |
 | `erneuerbare-wachstum` | story | in review | `feature/dashboard-erneuerbare-wachstum` | [#34](https://github.com/Graflinger/databearer/pull/34) | `docs/erneuerbare_wachstum.md` (on branch) | Review the article `/posts/2026/solar-boomt-wind-waechst/`. Merge `main` in (28 behind), then merge. |
 | `image-caption-ai-label` | chore | in review | `chore/image-caption-ai-label` | [#50](https://github.com/Graflinger/databearer/pull/50) | — | Review and merge. Captions are public, so add the PR to `release-promotion` after merging. |
 | `netzeingriffe` | story | in review | `feature/dashboard-netzeingriffe-stabilitaet` | [#33](https://github.com/Graflinger/databearer/pull/33) | `docs/netzeingriffe.md` (on branch) | Review the article `/posts/2026/netzeingriffe-netzstabilitaet/`. Merge `main` in (28 behind). Follow-up idea: the documented BNetzA SAIDI route. |
