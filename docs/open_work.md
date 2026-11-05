@@ -8,7 +8,7 @@ Maintain it with the `work-tracking` skill (`.opencode/skills/work-tracking/`).
 GitHub is the source of truth for PR state. When this file and GitHub disagree,
 reconcile this file.
 
-**Last reconciled:** 2026-11-01 (against `gh pr list` and `origin/*`)
+**Last reconciled:** 2026-11-05 (against `gh pr list` and `origin/*`; existing parallel topics preserved)
 
 ## Status values
 
@@ -32,12 +32,15 @@ Rows are sorted by ID so that parallel branches edit different lines.
 
 | ID | Type | Status | Branch | PR | Docs | Next step |
 | --- | --- | --- | --- | --- | --- | --- |
+| `energieintensive-industrie` | story | in progress | `feature/energieintensive-industrie` | [#55](https://github.com/Graflinger/databearer/pull/55) | `docs/energieintensive_industrie.md` (on branch) | Draft redaktionell prüfen; Kartenbild und Veröffentlichungsfreigabe offen. |
 | `erneuerbare-wachstum` | story | in review | `feature/dashboard-erneuerbare-wachstum` | [#34](https://github.com/Graflinger/databearer/pull/34) | `docs/erneuerbare_wachstum.md` (on branch) | Review the article `/posts/2026/solar-boomt-wind-waechst/`. Merge `main` in (28 behind), then merge. |
+| `gas-importabhaengigkeit` | story | in progress | `feature/gas-importabhaengigkeit` | [#54](https://github.com/Graflinger/databearer/pull/54) | `docs/gas_importabhaengigkeit.md` (on branch) | Draft redaktionell prüfen; Kartenbild und Veröffentlichungsfreigabe offen. |
 | `image-caption-ai-label` | chore | in review | `chore/image-caption-ai-label` | [#50](https://github.com/Graflinger/databearer/pull/50) | — | Review and merge. Captions are public, so add the PR to `release-promotion` after merging. |
 | `netzeingriffe` | story | in review | `feature/dashboard-netzeingriffe-stabilitaet` | [#33](https://github.com/Graflinger/databearer/pull/33) | `docs/netzeingriffe.md` (on branch) | Review the article `/posts/2026/netzeingriffe-netzstabilitaet/`. Merge `main` in (28 behind). Follow-up idea: the documented BNetzA SAIDI route. |
 | `release-promotion` | infra | awaiting release | `main` → `releases/cloudflare` | — | [dashboard publication](dashboard_publication.md) | Nothing pending. Last promotion: fast-forward to `51cd785` on 2026-11-01 (#44, #47, #52 now in release ancestry; live checks passed). |
 | `strom-ytd` | story | in review | `feature/dashboard-strom-ytd` | [#31](https://github.com/Graflinger/databearer/pull/31) | `docs/strom_ytd.md` (on branch) | Review the article `/posts/2026/strom-2026-ytd-zahlen/`. The January–September 9 window is time-sensitive, so decide soon whether to publish as-is or refresh. Merge `main` in (28 behind). |
 | `stromhandel` | story | in review | `feature/dashboard-stromhandel-jahre` | [#32](https://github.com/Graflinger/databearer/pull/32) | `docs/stromhandel_post.md` (on branch) | Review the article `/posts/2026/stromimporte-exporte-deutschland/`. Merge `main` in (28 behind), then merge. |
+| `waermepumpen-absatz` | story | in progress | `feature/waermepumpen-absatz` | [#56](https://github.com/Graflinger/databearer/pull/56) | [Wärmepumpen](waermepumpen_absatz.md) | Draft redaktionell und rechtlich freigeben; Kartenbild offen. Destatis-Evidenz geprüft, BWP/BDH nur zitierte Einzelfakten; keine Veröffentlichung autorisiert. |
 | `weekly-release-promotion` | infra | in review | `feature/weekly-release-promotion` | [#49](https://github.com/Graflinger/databearer/pull/49) | — | Review. Merging enables automatic promotion of `main` to production every Sunday. |
 
 ## Ideas without a branch
