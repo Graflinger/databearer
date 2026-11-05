@@ -24,3 +24,13 @@ data/**
 !data/2026/strompreis-korrelation/strompreis_korrelation_regression.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_2026.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_metadata.json
+
+# Frozen Eurostat evidence for gas imports; no source downloads.
+!data/2026/gas_importe/
+!data/2026/gas_importe/dependency.csv
+!data/2026/gas_importe/partners.csv
+!data/2026/gas_importe/partner_comparison.csv
+!data/2026/gas_importe/monthly.csv
+!data/2026/gas_importe/balance_de.csv
+!data/2026/gas_importe/quality.json
+!data/2026/gas_importe/manifest.json

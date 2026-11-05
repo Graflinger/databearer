@@ -16,6 +16,7 @@
  * @param {boolean} options.stacked - Stack bars (default: false)
  * @param {boolean} options.narrowShortYearLabels - Below 600px, show every year label as '’19' (optional)
  * @param {boolean} options.allXAxisLabels - Never hide category labels; below 600px year ranges shorten to '2019–25' (optional)
+ * @param {boolean} options.rotateXAxisLabels - Show all category labels at 45 degrees with extra bottom space (optional)
  * @param {number} options.yAxisMin - Fixed lower y-axis bound, e.g. -1 for correlations (optional)
  * @param {number} options.yAxisMax - Fixed upper y-axis bound, e.g. 1 for correlations (optional)
  * @returns {string} JavaScript code for the chart
@@ -37,6 +38,7 @@ function buildBarChart(data, options = {}) {
     yAxisMin = null,
     yAxisMax = null,
     allXAxisLabels = false,
+    rotateXAxisLabels = false,
   } = options;
 
   if (!containerId) {
@@ -163,7 +165,9 @@ function buildBarChart(data, options = {}) {
           }
         },
         axisLabel: {
-          color: colors.textColor${allXAxisLabels ? `,
+          color: colors.textColor${rotateXAxisLabels ? `,
+          interval: 0,
+          rotate: 45` : ''}${allXAxisLabels ? `,
           // Few, long category labels (e.g. periods): show all, also on phones,
           // where year ranges shorten to '2019–25'.
           interval: 0,
@@ -217,7 +221,7 @@ function buildBarChart(data, options = {}) {
       grid: {
         left: '10%',
         right: '10%',
-        bottom: '15%',
+        bottom: ${rotateXAxisLabels ? "'30%'" : "'15%'"},
         top: ${isMultiSeries ? (title ? "'25%'" : "'18%'") : title ? "'15%'" : "'10%'"}
       },
       animation: true,
