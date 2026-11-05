@@ -8,7 +8,7 @@ Maintain it with the `work-tracking` skill (`.opencode/skills/work-tracking/`).
 GitHub is the source of truth for PR state. When this file and GitHub disagree,
 reconcile this file.
 
-**Last reconciled:** 2026-11-01 (against `gh pr list` and `origin/*`)
+**Last reconciled:** 2026-11-05 (against `gh pr list` and `origin/*`; existing parallel topics preserved)
 
 ## Status values
 
@@ -38,6 +38,7 @@ Rows are sorted by ID so that parallel branches edit different lines.
 | `release-promotion` | infra | awaiting release | `main` → `releases/cloudflare` | — | [dashboard publication](dashboard_publication.md) | Nothing pending. Last promotion: fast-forward to `51cd785` on 2026-11-01 (#44, #47, #52 now in release ancestry; live checks passed). |
 | `strom-ytd` | story | in review | `feature/dashboard-strom-ytd` | [#31](https://github.com/Graflinger/databearer/pull/31) | `docs/strom_ytd.md` (on branch) | Review the article `/posts/2026/strom-2026-ytd-zahlen/`. The January–September 9 window is time-sensitive, so decide soon whether to publish as-is or refresh. Merge `main` in (28 behind). |
 | `stromhandel` | story | in review | `feature/dashboard-stromhandel-jahre` | [#32](https://github.com/Graflinger/databearer/pull/32) | `docs/stromhandel_post.md` (on branch) | Review the article `/posts/2026/stromimporte-exporte-deutschland/`. Merge `main` in (28 behind), then merge. |
+| `waermepumpen-absatz` | story | in progress | `feature/waermepumpen-absatz` | — | [Wärmepumpen](waermepumpen_absatz.md) | Draft mit lizenzgeprüften Destatis-Neubaudaten erstellen; BWP/BDH nur als zitierte Einzelfakten, Kartenbild offen. |
 | `weekly-release-promotion` | infra | in review | `feature/weekly-release-promotion` | [#49](https://github.com/Graflinger/databearer/pull/49) | — | Review. Merging enables automatic promotion of `main` to production every Sunday. |
 
 ## Ideas without a branch
