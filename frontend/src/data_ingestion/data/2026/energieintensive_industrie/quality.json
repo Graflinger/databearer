@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "production_months": 104,
+  "price_semesters": 17,
+  "missing_values": 0,
+  "duplicate_keys": 0,
+  "calculated": {
+    "industry": {
+      "latest": 90.7,
+      "vs_february_2022_pct": -10.019841269841267,
+      "vs_2018_mean_pct": -16.35413464494313,
+      "vs_2021_mean_pct": -8.645291253986919,
+      "month_on_month_pct": 0.5543237250554389,
+      "three_month_pct": -0.5460502366217646
+    },
+    "energy_intensive": {
+      "latest": 79.7,
+      "vs_february_2022_pct": -19.168356997971593,
+      "vs_2018_mean_pct": -21.6322517207473,
+      "vs_2021_mean_pct": -19.98661423910315,
+      "month_on_month_pct": -0.4993757802746468,
+      "three_month_pct": -2.8525512253917196
+    },
+    "prices": {
+      "de_latest_ct_kwh": 17.42,
+      "eu_latest_ct_kwh": 15.59,
+      "de_premium_pct": 11.73829377806288,
+      "de_vs_2025_s1_pct": -9.834368530020699,
+      "de_vs_2018_s1_pct": 42.786885245901665
+    }
+  },
+  "press_release": {
+    "energy_intensive_mom_sa_ca_pct": -0.5,
+    "energy_intensive_three_month_sa_ca_pct": -2.9,
+    "energy_intensive_yoy_ca_pct": -2.1,
+    "energy_use_share_2021_pct_as_reported": 77.0,
+    "gross_value_added_share_2021_pct_as_reported": 17.0
+  },
+  "notes": [
+    "Press rates use unrounded source levels; exported chart levels have one source decimal.",
+    "Year-on-year press rate is calendar adjusted, not calculated from the seasonally adjusted chart.",
+    "77% is reported by the press release; an older Destatis explanatory appendix shows 76%. No independent recomputation.",
+    "August 2026 production and Germany 2026-S1 price are provisional."
+  ]
+}

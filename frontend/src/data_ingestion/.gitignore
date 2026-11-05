@@ -24,3 +24,11 @@ data/**
 !data/2026/strompreis-korrelation/strompreis_korrelation_regression.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_2026.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_metadata.json
+
+# Frozen evidence for the energy-intensive industry article; no raw downloads.
+!data/2026/energieintensive_industrie/
+!data/2026/energieintensive_industrie/production.csv
+!data/2026/energieintensive_industrie/electricity_prices.csv
+!data/2026/energieintensive_industrie/production_annual.csv
+!data/2026/energieintensive_industrie/quality.json
+!data/2026/energieintensive_industrie/manifest.json
