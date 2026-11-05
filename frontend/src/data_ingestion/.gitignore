@@ -24,3 +24,13 @@ data/**
 !data/2026/strompreis-korrelation/strompreis_korrelation_regression.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_2026.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_metadata.json
+
+# Frozen negative-price aggregates: Energinet CC BY 4.0 and MaStR cohorts only.
+!data/2026/negative_strompreise/
+!data/2026/negative_strompreise/manifest.json
+!data/2026/negative_strompreise/annual.csv
+!data/2026/negative_strompreise/year_to_date.csv
+!data/2026/negative_strompreise/monthly.csv
+!data/2026/negative_strompreise/quarterly.csv
+!data/2026/negative_strompreise/midday.csv
+!data/2026/negative_strompreise/battery.csv
