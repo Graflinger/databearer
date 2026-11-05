@@ -1,6 +1,7 @@
 # Wärmepumpen: Neubauanteil ist nicht Absatz
 
 Topic: `waermepumpen-absatz`. Branch: `feature/waermepumpen-absatz`.
+Draft-PR gegen `main`: [#56](https://github.com/Graflinger/databearer/pull/56).
 Recherche- und Lizenzprüfdatum: **2026-11-05**. Nur Draft-PR gegen `main`;
 keine Veröffentlichung, kein Merge, keine Release-Promotion.
 
@@ -10,7 +11,7 @@ keine Veröffentlichung, kein Merge, keine Release-Promotion.
 - [x] Eingefrorenes Datenpaket, Exporter, Charts und Validator prüfen.
 - [x] Artikel und politische Einordnung gegen Originalquellen prüfen.
 - [x] Tests, Lint, Build, SEO-Ausgabe und lokale Vorschau prüfen.
-- [ ] Commit, Push und Draft-PR; Tracker verlinken.
+- [x] Commit, Push und Draft-PR; Tracker verlinken.
 
 ## Aussage und Abgrenzung
 
