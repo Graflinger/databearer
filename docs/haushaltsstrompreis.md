@@ -1,6 +1,7 @@
 # Haushaltsstrompreis
 
-Topic: `haushaltsstrompreis`; branch: `feature/haushaltsstrompreis`.
+Topic: `haushaltsstrompreis`; branch: `feature/haushaltsstrompreis`;
+draft PR: [#57](https://github.com/Graflinger/databearer/pull/57) against `main`.
 Editorial decision, 2026-11-05: the user approved completing the Eurostat-only
 article after the wholesale-price licence gate failed. No new SMARD numbers,
 derived wholesale data or quantitative pass-through analysis are included.
