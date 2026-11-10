@@ -1,0 +1,62 @@
+{
+  "checked_on": "2026-11-05",
+  "eurostat": {
+    "status": "usable_with_conditions",
+    "license": "Eurostat statistical-data reuse authorisation under Commission Decision 2011/833/EU",
+    "version": "2011/833/EU (12 December 2011); Eurostat notice unversioned",
+    "terms_url": "https://ec.europa.eu/eurostat/web/main/help/copyright-notice",
+    "legal_notice_url": "https://commission.europa.eu/legal-notice_en",
+    "decision_url": "https://eur-lex.europa.eu/eli/dec/2011/833/oj",
+    "editorial_license": "CC BY 4.0 International",
+    "editorial_license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "required_credit_template": "Source: [Eurostat dataset datacode link], [access date]",
+    "credit": "Quelle: Eurostat, nrg_pc_204 / nrg_pc_204_c (jeweils mit Datacode-Link), Abruf 05.11.2026. © Europäische Union, 2026.",
+    "modifications": "Eigene Auswahl (EU, Band DC), Umrechnung EUR/kWh in ct/kWh, Differenzen, Summen, Anteile und Darstellung.",
+    "disclaimer": "Eurostat ist für diese Bearbeitung nicht verantwortlich.",
+    "public_git_redistribution": "Allowed with source, access date, modification notice and disclaimer retained.",
+    "commercial_use": "Explicitly allowed for the selected EU statistical data, including a potentially advertising-funded site.",
+    "database_rights": "Explicit permission to reuse statistical datasets; CC BY section 4 covers licensed sui generis database rights where CC applies. No third-party rights assumed.",
+    "third_party_exceptions": "No maps, logos, photos or co-published works. No non-EU countries or restricted trade datasets. API source ESTAT and SOURCE_INSTITUTIONS Eurostat; no specific ownership restriction identified in selected dataset annotations/descriptions."
+  },
+  "destatis_context": {
+    "status": "usable_with_conditions_context_only",
+    "license": "Destatis Copyright allgemein",
+    "version": "unversioned; checked 2026-11-05",
+    "terms_url": "https://www.destatis.de/DE/Service/Impressum/copyright-allgemein.html",
+    "required_credit": "Statistisches Bundesamt (Destatis), precise source page and access date; © Statistisches Bundesamt (Destatis), 2026",
+    "modifications": "Eigene Zusammenfassung der Methoden- und Pressemitteilungstexte, Abruf 05.11.2026.",
+    "public_git_redistribution": "Text reproduction and adaptation allowed online with attribution and changes indicated.",
+    "commercial_use": "Explicitly allowed.",
+    "database_rights": "No database extraction; no separate database-right licence claimed.",
+    "third_party_exceptions": "Third-party rights and co-publications excluded. No images or other third-party material used.",
+    "urls": [
+      "https://www.destatis.de/DE/Themen/Wirtschaft/Preise/Erdgas-Strom-DurchschnittsPreise/_inhalt.html",
+      "https://www.destatis.de/DE/Presse/Pressemitteilungen/2023/09/PD23_388_61243.html",
+      "https://www.destatis.de/DE/Presse/Pressemitteilungen/2024/09/PD24_375_61243.html"
+    ]
+  },
+  "smard": {
+    "status": "not_used",
+    "license": "General CC BY 4.0 International; specific unresolved wholesale-price exception",
+    "version": "4.0",
+    "terms_url": "https://www.smard.de/home/datennutzung",
+    "required_credit": "Bundesnetzagentur | SMARD.de",
+    "modifications": "None; no data copied or derived, including from local history.",
+    "public_git_redistribution": "Not cleared for this new wholesale-price publication.",
+    "commercial_use": "General CC permits commercial reuse, but wholesale-specific uncertainty remains.",
+    "database_rights": "General CC section 4 cannot resolve potentially unlicensed upstream rights.",
+    "third_party_exceptions": "Publisher asks that wholesale prices not be reused while licensing is reviewed in HEDWIG."
+  },
+  "energy_charts": {
+    "status": "not_used",
+    "license": "General CC BY 4.0; DE-LU /price explicitly sourced unchanged from SMARD",
+    "version": "4.0; API documentation 2.0",
+    "terms_url": "https://api.energy-charts.info/openapi.json",
+    "required_credit": "Energy-Charts.info; Bundesnetzagentur | SMARD.de",
+    "modifications": "None; no price data downloaded.",
+    "public_git_redistribution": "Not cleared: same underlying SMARD wholesale-rights uncertainty.",
+    "commercial_use": "Other bidding zones may expressly prohibit external/commercial raw and derived reuse.",
+    "database_rights": "No independent grant resolving upstream rights identified.",
+    "third_party_exceptions": "DE-LU supplied by SMARD; not a rights-independent alternative."
+  }
+}
