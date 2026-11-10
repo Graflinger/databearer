@@ -75,6 +75,8 @@ Then fix drift:
 2. Put `Tracker: \`<id>\`` in the PR body.
 3. Keep *Next step* short and actionable: what the reviewer or author must do next.
    Put details in the PR body or the topic's `docs/` file, not in the tracker.
+4. Follow the `pull-request` skill: the repository and PRs are public, so PR text
+   never contains source data, figures or findings. Data details go to `docs/`.
 
 ## When merging, promoting or closing
 
@@ -110,3 +112,4 @@ more than 2 weeks, or far behind `main`).
 - Never mark something done because it is merged if it isn't live yet.
 - Keep the file compact. If a row needs more than 2–3 sentences, the detail
   belongs in a `docs/` file or the PR.
+- Tracker rows follow the same rule as PR text: no source data or figures.
