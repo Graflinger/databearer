@@ -1,42 +1,5 @@
 [
   {
-    "id": "bwp",
-    "publisher": "Bundesverband Wärmepumpe (BWP) e. V.",
-    "usage": "Einzelne zugeschriebene Fakten im Artikel; keine Absatzzeitreihe, Grafik, Originaltexte oder Rohdateien im Repo.",
-    "name": "BWP Impressum – Urheberrecht; keine offene Lizenz",
-    "version": "unversioned",
-    "terms_url": "https://www.waermepumpe.de/impressum/",
-    "date_checked": "2026-11-05",
-    "retrieved_date": "2026-11-05",
-    "source_urls": [
-      "https://www.waermepumpe.de/presse/pressemitteilungen/details/waermepumpen-absatz-waechst-im-ersten-halbjahr-auf-195000-anlagen/",
-      "https://www.waermepumpe.de/presse/news/details/ueber-50-prozent-im-plus-waermepumpen-absatz-steigt-2025-deutlich"
-    ],
-    "redistribution": false,
-    "commercial_use": "Keine allgemeine gewerbliche Weiterverwertungslizenz. Downloads/Kopien laut Bedingungen nur privat und nicht kommerziell; hier nur Tatsachenberichterstattung in eigener Formulierung.",
-    "attribution": "Kein lizenzvertraglicher Wortlaut. Redaktionell: BWP/BDH-Absatzstatistik, mitgeteilt vom Bundesverband Wärmepumpe (BWP), Titel, Veröffentlichungsdatum und Originalquellenlink.",
-    "modification_notice": "Eigene Formulierung einzelner Fakten, keine bearbeitete Datenreihe; Bestandsanteil ausdrücklich als Branchenschätzung ohne exakten Bezugszeitraum.",
-    "database_rights": "Keine Erlaubnis zur Übernahme/Weiterverbreitung der Absatzdatenbank festgestellt; nicht aus Pressezugang ableiten.",
-    "third_party_rights": "Drittanbieterrechte ausdrücklich vorbehalten, Grafik BWP/BDH nicht übernommen."
-  },
-  {
-    "id": "bdh",
-    "publisher": "Bundesverband der Deutschen Heizungsindustrie e. V.",
-    "usage": "Nur Gegenprüfung der Jahresbilanz; keine Daten- oder Grafikübernahme.",
-    "name": "BDH Impressum; keine Datenlizenz festgestellt",
-    "version": "unversioned",
-    "terms_url": "https://www.bdh-industrie.de/kontakt/impressum",
-    "date_checked": "2026-11-05",
-    "retrieved_date": "2026-11-05",
-    "source_urls": ["https://www.bdh-industrie.de/presse/pressemeldungen/artikel/jahresbilanz-heizungsabsatz-faellt-auf-niedrigsten-stand-seit-15-jahren"],
-    "redistribution": false,
-    "commercial_use": "Keine ausdrückliche kommerzielle Datenweiterverbreitungserlaubnis festgestellt; das ist kein pauschales gesetzliches Zitierverbot.",
-    "attribution": "Kein Lizenzwortlaut festgestellt; bei Faktzitat BDH, Titel, Datum und Original-URL nennen.",
-    "modification_notice": "Keine Übernahme oder Bearbeitung eines BDH-Datensatzes.",
-    "database_rights": "Keine Datenbankfreigabe festgestellt, keine Absatzzeitreihe übernommen.",
-    "third_party_rights": "Gemeinsame Statistik BWP/BDH; Rechte Dritter nicht als freigegeben behandeln."
-  },
-  {
     "id": "gmodg",
     "publisher": "Bundesgesetzblatt / Bundesministerium der Justiz und für Verbraucherschutz, Gesetze im Internet",
     "usage": "Einzelne amtliche Gesetzesregelungen als Fakten paraphrasiert und verlinkt.",

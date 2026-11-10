@@ -15,7 +15,7 @@ keine Veröffentlichung, kein Merge, keine Release-Promotion.
 
 ## Aussage und Abgrenzung
 
-Arbeitstitel: „Wärmepumpen: Im Neubau längst vorn – wie stabil ist der Boom?“
+Arbeitstitel: „Wärmepumpen im Neubau: Der Anteil steigt, die Zahl sinkt“
 Die Bautätigkeitsstatistik zeigt einen strukturellen Wechsel der vorwiegenden
 Heizenergie neu errichteter Wohngebäude. Sie misst **nicht** den Absatz von Geräten,
 den Heizungstausch im Gebäudebestand, die Zahl beheizter Wohnungen oder vermiedene
@@ -68,22 +68,18 @@ Dies ist eine dokumentierte redaktionelle Rechteprüfung, keine Rechtsberatung.
   Hier wird aber die direkt verfügbare Website-CSV verwendet, kein GENESIS-Export;
   deshalb lautet die Lizenzzuordnung des Pakets nicht pauschal `dl-de/by-2-0`.
 
-### BWP/BDH: keine freigegebene Datenreihe
+### BWP/BDH: nicht verwendet
 
-- [BWP-Impressum, Abschnitt Urheberrecht](https://www.waermepumpe.de/impressum/),
-  keine offene Lizenz und keine Versionsnummer. Verwertung außerhalb der gesetzlichen
-  Grenzen bedarf schriftlicher Zustimmung; Downloads/Kopien nur privat und nicht kommerziell.
-- Die [Pressemitteilung vom 6. August 2026](https://www.waermepumpe.de/presse/pressemitteilungen/details/waermepumpen-absatz-waechst-im-ersten-halbjahr-auf-195000-anlagen/)
-  bestätigt 195.000 Geräte und +40 % im ersten Halbjahr 2026; ausdrücklich Lieferungen
-  der Hersteller an Großhandel/Fachhandwerk, keine gemessenen Inbetriebnahmen.
-- **Entscheidung:** Nur einzelne zugeschriebene Tatsachen in eigener Formulierung
-  mit Originalquellenlink, wie im Auftrag erlaubt. Keine Grafik, kein Pressetext,
-  kein Rohdownload und keine Absatzzeitreihe im Repo oder Chart. Keine behauptete
-  Lizenz für gewerbliche Datenweiterverbreitung; auch eine Quellenangabe würde eine
-  fehlende Erlaubnis zur Datenbankübernahme nicht ersetzen. Dritt- und Datenbankrechte
-  bleiben vorbehalten. Kein lizenzvertraglich vorgeschriebener Namensnennungswortlaut,
-  da keine entsprechende Lizenz erteilt wurde; redaktionell „BWP/BDH-Absatzstatistik,
-  mitgeteilt vom Bundesverband Wärmepumpe (BWP)“ plus Datum/Link.
+- [BWP-Impressum, Abschnitt Urheberrecht](https://www.waermepumpe.de/impressum/):
+  keine offene Lizenz. Verwertung außerhalb der gesetzlichen Grenzen bedarf
+  schriftlicher Zustimmung; Downloads/Kopien nur privat und nicht kommerziell.
+- [BDH-Impressum](https://www.bdh-industrie.de/kontakt/impressum): keine
+  festgestellte offene Datenlizenz oder Erlaubnis zur kommerziellen Weiterverwendung.
+- **Entscheidung (2026-11-10):** Absatzzahlen, Wachstumsraten und Bestandsanteile
+  aus BWP/BDH-Mitteilungen werden **weder im Artikel noch im Repository** verwendet,
+  auch nicht als einzelne zugeschriebene Angaben. Ohne Weiterverwendungserlaubnis
+  ist keine saubere Zitierung möglich. Der Artikel stützt sich ausschließlich auf
+  Destatis-Daten; die Bestandsfrage bleibt ausdrücklich offen.
 
 ### Nicht verwendete Alternativen
 
@@ -93,23 +89,8 @@ gleichgesetzt. Eurostat-Haushaltspreise und BAFA/KfW-Förderstatistiken sind fü
 tragfähige Neubau-Story nicht erforderlich und werden nicht ins Datenpaket aufgenommen.
 Für diese **nicht genutzten** Alternativen wird keine Lizenzfreigabe behauptet.
 
-### Ergänzende Originalprüfung: BDH, Bestandsanteil, Recht und Förderung
+### Ergänzende Originalprüfung: Recht und Förderung
 
-- **BDH:** [Impressum](https://www.bdh-industrie.de/kontakt/impressum) und
-  [Datenschutz](https://www.bdh-industrie.de/kontakt/datenschutz) enthalten keine
-  festgestellte offene Datenlizenz, Versionsnummer oder Erlaubnis für kommerzielle
-  Datenbankweiterverwendung. Das ist keine Feststellung eines pauschalen Verbots,
-  sondern einer **nicht nachgewiesenen Freigabe**. Die
-  [BDH-Jahresbilanz vom 1. Februar 2026](https://www.bdh-industrie.de/presse/pressemeldungen/artikel/jahresbilanz-heizungsabsatz-faellt-auf-niedrigsten-stand-seit-15-jahren)
-  bestätigt 299.000 Geräte und +55 %. Sie dient nur als Gegenprüfung; keine BDH-Datei
-  wird übernommen. Kein vorgeschriebener Lizenz-Credit festgestellt; bei Zitierung
-  Herausgeber, Titel, Datum und Original-URL nennen.
-- **BWP-Bestandsanteil:** In der
-  [Jahresbilanz vom 27. Januar 2026](https://www.waermepumpe.de/presse/news/details/ueber-50-prozent-im-plus-waermepumpen-absatz-steigt-2025-deutlich)
-  nennt Geschäftsführer Martin Sabel „knapp 80 Prozent des Absatzes“ im Bestand.
-  Die Mitteilung beschreibt weder Methode noch exakten Bezugszeitraum („mittlerweile“).
-  Deshalb ausschließlich zugeschriebene Branchenschätzung, keine amtliche Quote,
-  kein Anteil des Bestands und keine Ableitung aus Neubau und Gesamtabsatz.
 - **GModG:** [BGBl. 2026 I Nr. 226](https://www.recht.bund.de/bgbl/1/2026/226/VO.html),
   ausgefertigt am 23. Juli, verkündet am 28. Juli 2026. Die
   [amtliche Regierungserläuterung vom 29. Juli](https://www.bundesregierung.de/breg-de/aktuelles/neues-gebaeudemodernisierungsgesetz-2430284)
@@ -177,8 +158,8 @@ die Wahrheit der Quelldaten.
 
 - Kein KI-Kartenbild erzeugt. Vor Veröffentlichung Bildentscheidung und ggf. Alttext/Credit.
 - Draft bleibt bis zur ausdrücklichen Veröffentlichungsgenehmigung gesetzt.
-- Aktuelle Absatz-, Förder- und Rechtslage vor Veröffentlichung erneut prüfen;
-  keine Jahreshochrechnung aus einem Halbjahr und keine Förderzusage als Installation zählen.
+- Aktuelle Förder- und Rechtslage vor Veröffentlichung erneut prüfen; keine
+  Förderzusage als Installation zählen. Keine Verbandsabsatzzahlen ergänzen.
 
 ## Reproduktion und Qualitätssicherung
 
@@ -188,7 +169,7 @@ Evidenzpaket: `frontend/src/data_ingestion/data/2026/waermepumpen/`:
 Original-URLs, Veröffentlichungsdaten, tatsächliche UTC-Abrufzeiten und SHA-256
 der Rohantworten sowie Dateigrößen, Hashes, Zeilenzahlen, Spaltenverträge und Lizenzen.
 Kontextrechte werden aus `context_licenses.json` neben dem Exporter übernommen;
-diese Datei enthält keine Verbandsdatenreihe.
+sie enthält nur amtliche Rechtsquellen; BWP/BDH stehen unter `excluded_sources`.
 
 Der Build prüft das komplette Paket vor Chartgenerierung, einschließlich der nur
 im Text verwendeten Genehmigungsdaten. Unerwartete oder fehlende Dateien, Symlinks,
@@ -239,5 +220,5 @@ Prüfergebnis auf Node **20.20.2**, 5. November 2026:
   2 kritisch). Kein Dependency-/Lockfile-Upgrade als Nebeneffekt dieses Artikel-PRs.
 
 PR-Vorlagensuche unter `.github/`, Repository-Root und `docs/` ergab keine
-eingecheckte Pull-Request-Vorlage. Beschreibung daher mit Zusammenfassung,
-Quellen-/Lizenztabelle, Tests, offenen Punkten und `Tracker`-Verweis.
+eingecheckte Pull-Request-Vorlage. Die PR-Beschreibung folgt dem Skill
+`pull-request`: keine Daten oder Kennzahlen, Verweis auf diese Datei.

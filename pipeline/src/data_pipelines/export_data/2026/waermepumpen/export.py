@@ -208,6 +208,7 @@ def make_manifest(sources):
         }],
         "context_source_licenses": json.loads(Path(__file__).with_name("context_licenses.json").read_text(encoding="utf-8")),
         "excluded_sources": [
+            {"name": "BWP/BDH heat pump sales statistics and press releases", "status": "not-used-no-redistribution-licence", "license_clearance": False},
             {"name": "EHPA members data", "status": "not-accessed-not-used", "license_clearance": False},
             {"name": "IEA reports and datasets", "status": "not-used-not-license-reviewed", "license_clearance": False},
             {"name": "Eurostat household energy prices", "status": "not-used-not-license-reviewed", "license_clearance": False},

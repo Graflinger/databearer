@@ -104,7 +104,7 @@ function validateWaermepumpen(dataDir = path.join(__dirname, '../data/2026/waerm
   }
   // Context facts do not inherit the Destatis data redistribution permission.
   check(Array.isArray(manifest.context_source_licenses)
-    && same(manifest.context_source_licenses.map((record) => record.id), ['bwp', 'bdh', 'gmodg', 'beg-em', 'bundesregierung']), 'context licenses');
+    && same(manifest.context_source_licenses.map((record) => record.id), ['gmodg', 'beg-em', 'bundesregierung']), 'context licenses');
   for (const record of manifest.context_source_licenses) {
     check(record.redistribution === false && record.date_checked === '2026-11-05' && record.retrieved_date === '2026-11-05'
       && ['publisher', 'usage', 'name', 'version', 'commercial_use', 'attribution', 'modification_notice', 'database_rights', 'third_party_rights']
@@ -112,7 +112,7 @@ function validateWaermepumpen(dataDir = path.join(__dirname, '../data/2026/waerm
       && /^https:\/\//.test(record.terms_url) && Array.isArray(record.source_urls) && record.source_urls.length > 0
       && record.source_urls.every((url) => /^https:\/\//.test(url)), 'context license restrictions');
   }
-  check(Array.isArray(manifest.excluded_sources) && manifest.excluded_sources.length === 4
+  check(Array.isArray(manifest.excluded_sources) && manifest.excluded_sources.length === 5
     && manifest.excluded_sources.every((record) => record.license_clearance === false && typeof record.status === 'string'), 'excluded sources');
   keys(manifest.files, Object.keys(HEADERS), 'file allowlist');
   keys(manifest.contracts, Object.keys(HEADERS), 'contracts');

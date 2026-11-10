@@ -55,16 +55,15 @@ test('every table cell matches its frozen chart input and generated script', () 
   }
 });
 
-test('scope, approximations and restricted sources remain explicit', () => {
+test('scope and approximations stay explicit; unlicensed sources stay out', () => {
   const text = document.body.textContent;
   expect(text).toContain('Gebäude, nicht Wohnungen');
   expect(text).toContain('Näherungen, nicht um exakte Fallzahlen oder verkaufte Geräte');
-  expect(text).toContain('Lieferungen der Hersteller an Großhändler oder Fachhandwerker');
-  expect(text).toContain('einen genauen Bezugszeitraum für diese Schätzung nennt die Mitteilung nicht');
-  expect(text).toContain('knapp 80 Prozent des Absatzes im Gebäudebestand');
+  expect(text).toContain('den Austausch alter Heizungen in bestehenden Häusern bildet sie nicht ab');
   expect(text).toContain('verfügbarer Haushaltsmittel');
   expect(text).toContain('Rechtsanspruch');
-  expect(text).toContain('keine Übernahme der Grafik oder Absatzzeitreihe');
+  // Industry sales figures have no redistribution licence and must stay out.
+  expect(source).not.toMatch(/waermepumpe\.de|bdh-industrie|\bBWP\b|\bBDH\b/);
   expect(document.querySelectorAll('img')).toHaveLength(0);
   expect(document.querySelectorAll('iframe')).toHaveLength(0);
   expect(text).not.toMatch(/\b(wir|unser\w*)\b/i);

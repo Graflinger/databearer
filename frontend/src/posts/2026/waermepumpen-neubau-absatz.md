@@ -1,23 +1,21 @@
 ---
-title: "Wärmepumpen: Im Neubau längst vorn – wie stabil ist der Boom?"
+title: "Wärmepumpen im Neubau: Der Anteil steigt, die Zahl sinkt"
 date: 2026-11-05
 draft: true
-excerpt: "73,6 Prozent der 2025 fertiggestellten Wohngebäude heizen mit Wärmepumpe. Doch weil weniger gebaut wird, sinkt dort ihre Zahl – und der Absatzboom entscheidet sich nicht allein im Neubau."
+excerpt: "73,6 Prozent der 2025 fertiggestellten Wohngebäude heizen mit Wärmepumpe. Doch weil weniger gebaut wird, sinkt dort ihre Zahl – und über den Heizungstausch im Bestand sagt die Neubaustatistik nichts."
 fullWidthCard: false
 topic: ["energie", "politik-und-gesellschaft"]
 ---
 
 Die Wärmepumpe legt zu. Aber welche Zahl erzählt eigentlich ihren Erfolg? **73,6 Prozent der 2025 fertiggestellten Wohngebäude in Deutschland heizen hauptsächlich mit Wärmepumpe**, meldet das Statistische Bundesamt (Destatis). Zehn Jahre zuvor waren es erst 31,4 Prozent. Im Neubau ist aus einer Minderheit die klare Mehrheit geworden.
 
-Auch der Absatz wächst wieder: Für das erste Halbjahr 2026 meldet der Bundesverband Wärmepumpe (BWP) aus der gemeinsamen BWP/BDH-Statistik **195.000 Geräte, 40 Prozent mehr als im Vorjahreszeitraum**. Das sind allerdings Lieferungen der Hersteller an Großhändler oder Fachhandwerker – nicht gezählte Installationen in Häusern. Die [Originalmitteilung vom 6. August 2026](https://www.waermepumpe.de/presse/pressemitteilungen/details/waermepumpen-absatz-waechst-im-ersten-halbjahr-auf-195000-anlagen/) beschreibt einen wachsenden Absatzmarkt, aber noch keinen gesicherten Dauerboom.
-
-Denn die amtlichen Neubaudaten enthalten eine Überraschung: Obwohl der Wärmepumpenanteil steigt, werden zuletzt **weniger neue Wohngebäude mit Wärmepumpe fertig**. Wie passt das zusammen?
+Doch dieselben Daten enthalten eine Überraschung: Obwohl der Wärmepumpenanteil steigt, werden zuletzt **weniger neue Wohngebäude mit Wärmepumpe fertig**. Wie passt das zusammen? Und was verrät der Neubau über die viel größere Zahl bestehender Häuser?
 
 <script defer src="/js/lib/echarts.min.js"></script>
 
 ## Im Neubau hat sich das Verhältnis von Wärmepumpe und Gas umgekehrt
 
-2015 heizte noch mehr als die Hälfte der neuen Wohngebäude vorwiegend mit Erdgas. 2025 war es nur noch etwa jedes zehnte. Im selben Zeitraum stieg der Wärmepumpenanteil um **42,2 Prozentpunkte**, von 31,4 auf 73,6 Prozent. Die Verschiebung ist damit deutlich älter als die aktuelle Absatzmeldung.
+2015 heizte noch mehr als die Hälfte der neuen Wohngebäude vorwiegend mit Erdgas. 2025 war es nur noch etwa jedes zehnte. Im selben Zeitraum stieg der Wärmepumpenanteil um **42,2 Prozentpunkte**, von 31,4 auf 73,6 Prozent. Der Wechsel hat sich über ein ganzes Jahrzehnt aufgebaut.
 
 <div class="chart-section">
 <h3 id="waermepumpen-anteil-heading">Hauptsächliche Heizenergie neuer Wohngebäude in Deutschland, 2015–2025</h3>
@@ -70,7 +68,7 @@ Multipliziert man die von Destatis veröffentlichten, gerundeten Gebäudezahlen 
 <div class="chart-sources"><strong>Quellen: </strong>Statistisches Bundesamt (Destatis), Bautätigkeitsstatistik: <a href="https://www.destatis.de/DE/Presse/Pressemitteilungen/2024/06/PD24_N025_31_51.html">N025 vom 4. Juni 2024</a>, <a href="https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/06/PD26_N038_31_51.html">N038 vom 10. Juni 2026</a>; abgerufen am 5. November 2026. Nutzung nach <a href="https://www.destatis.de/DE/Service/Impressum/copyright-allgemein.html">Destatis Copyright allgemein</a>; eigene Berechnung und Darstellung. Wärmepumpengebäude: gerundete Gesamtzahl mal Anteil, auf Hunderter gerundet; Teilmenge der Gesamtzahl, nicht zusätzlich zu ihr.</div>
 </div>
 
-Das ist kein Widerspruch zur Absatzmeldung. Die beiden Statistiken zählen andere Dinge, zu anderen Zeitpunkten und für unterschiedliche Teile des Marktes. Eine Wärmepumpe kann bereits an einen Händler geliefert sein, während das Haus noch gebaut wird. Und beim Austausch einer Heizung im Altbau entsteht überhaupt kein neues Wohngebäude.
+Über den Wärmepumpenmarkt insgesamt sagt das noch wenig. Die Neubaustatistik zählt Gebäude im Jahr ihrer Fertigstellung, keine verkauften oder installierten Geräte. Eine Wärmepumpe kann bereits an einen Händler geliefert sein, während das Haus noch gebaut wird. Und beim Austausch einer Heizung im Altbau entsteht überhaupt kein neues Wohngebäude.
 
 ## Die Baupläne sprechen weiter für Wärmepumpen – sind aber keine Bestellungen
 
@@ -80,9 +78,9 @@ Zugleich stieg die Gesamtzahl genehmigter Wohngebäude von rund 54.800 auf 62.10
 
 Aus 83 Prozent lässt sich deshalb weder ein Absatzwert für 2026 errechnen noch ableiten, wann sich der Neubaumarkt erholt.
 
-## Der Dauerboom entscheidet sich auch außerhalb des Neubaus
+## Was im Gebäudebestand passiert, zeigt diese Statistik nicht
 
-Der neue Heizungsmarkt reicht weit über neue Häuser hinaus. In seiner [Jahresbilanz vom 27. Januar 2026](https://www.waermepumpe.de/presse/news/details/ueber-50-prozent-im-plus-waermepumpen-absatz-steigt-2025-deutlich) meldete der BWP für 2025 **299.000 abgesetzte Heizungswärmepumpen, ein Plus von 55 Prozent**. Zugleich erklärte Geschäftsführer Martin Sabel, mittlerweile würden **knapp 80 Prozent des Absatzes im Gebäudebestand** erzielt. Das ist eine Branchenangabe, keine aus der Neubaustatistik berechnete Quote; einen genauen Bezugszeitraum für diese Schätzung nennt die Mitteilung nicht.
+Der Heizungsmarkt reicht weit über neue Häuser hinaus. Die Bautätigkeitsstatistik erfasst jedoch nur neu errichtete Gebäude; den Austausch alter Heizungen in bestehenden Häusern bildet sie nicht ab. Mit den hier verwendeten amtlichen Daten lässt sich deshalb weder sagen, wie viele Wärmepumpen insgesamt verkauft werden, noch welcher Teil davon in den Bestand geht.
 
 Ein hoher Wärmepumpenanteil im Neubau beantwortet daher nicht die entscheidende Frage: Wie oft ersetzen Eigentümerinnen und Eigentümer in bestehenden Gebäuden ihre alte Heizung durch eine Wärmepumpe?
 
@@ -94,16 +92,15 @@ Der [Beitrag zu Strompreis, Gaspreis und Erneuerbaren](/posts/2026/strompreis-ga
 
 Auch der rechtliche Rahmen hat sich verändert. Die wesentlichen Neuregelungen des Gebäudemodernisierungsgesetzes gelten seit dem **29. Juli 2026**. Die bisherige allgemeine Vorgabe von 65 Prozent erneuerbarer Energie beim Einbau einer neuen Heizung entfiel; Gas- und Ölheizungen bleiben als Optionen bestehen. Grundlage ist das am 28. Juli verkündete [Änderungsgesetz, BGBl. 2026 I Nr. 226](https://www.recht.bund.de/bgbl/1/2026/226/VO.html), nicht lediglich eine politische Ankündigung. Daraus folgt aber keine Zusage dauerhaft unveränderter Brennstoffanforderungen: [§ 42a](https://www.gesetze-im-internet.de/geg/__42a.html) sieht eine gesonderte gesetzliche Regelung für eine Grüngas- und Grünheizölquote vor.
 
-Die geltende [BEG-EM-Förderrichtlinie vom 17. August 2026](https://www.bundesanzeiger.de/pub/publication/jLXvW09kHTQoDINAdoC?0=) läuft bis **31. Dezember 2030**. Das ist keine Garantie unveränderter Fördersätze oder einer Förderung für jeden Antrag: Die Richtlinie nennt ausdrücklich den Vorbehalt verfügbarer Haushaltsmittel und schließt einen Rechtsanspruch aus. Eine Förderzusage wiederum ist noch keine in Betrieb genommene Anlage. Weder aus dem Gesetz noch aus der Laufzeit der Förderung lässt sich deshalb allein ein stabiler Absatz ableiten.
+Die geltende [BEG-EM-Förderrichtlinie vom 17. August 2026](https://www.bundesanzeiger.de/pub/publication/jLXvW09kHTQoDINAdoC?0=) läuft bis **31. Dezember 2030**. Das ist keine Garantie unveränderter Fördersätze oder einer Förderung für jeden Antrag: Die Richtlinie nennt ausdrücklich den Vorbehalt verfügbarer Haushaltsmittel und schließt einen Rechtsanspruch aus. Eine Förderzusage wiederum ist noch keine in Betrieb genommene Anlage. Weder aus dem Gesetz noch aus der Laufzeit der Förderung lässt sich deshalb allein eine stabile Nachfrage ableiten.
 
 Die Entwicklung ist ein konkretes Beispiel für die im [Artikel über Industriepolitik und Elektrifizierung](/posts/2025/Industriepolitik/) diskutierte Verschiebung hin zu strombasierten Anwendungen. Wie schnell sie den gesamten Gebäudebestand erreicht, ist eine andere Frage als ihre Dominanz im Neubau.
 
-**Der Technologiewechsel im Neubau ist gut belegt; die Stabilität des gesamten Absatzbooms noch nicht.** Dafür braucht es neben steigenden Marktanteilen auch anhaltende Nachfrage im Bestand und tatsächlich in Betrieb genommene Anlagen. Aus Absatz allein folgen weder ebenso viele Installationen noch eine bestimmte Menge vermiedener Emissionen: Dazu müssten unter anderem die ersetzte Heizung, der Wärmebedarf, die Anlageneffizienz und die Stromversorgung bekannt sein.
+**Der Technologiewechsel im Neubau ist gut belegt; wie schnell er den Gebäudebestand erreicht, noch nicht.** Dafür braucht es neben steigenden Anteilen im Neubau auch anhaltende Nachfrage im Bestand und tatsächlich in Betrieb genommene Anlagen. Aus Neubauanteilen allein folgt auch keine bestimmte Menge vermiedener Emissionen: Dazu müssten unter anderem der Wärmebedarf, die Anlageneffizienz und die Stromversorgung bekannt sein.
 
 ## Daten und Quellen
 
-Die Auswertung verwendet die Bautätigkeitsstatistik von Destatis für fertiggestellte Wohngebäude von 2015 bis 2025 sowie Genehmigungen 2024 und 2025. Datenveröffentlichung für 2025: 10. Juni 2026, bei Fertigstellungen wesentlich auf Basis der Anfang Mai eingegangenen Meldungen. Rechercheabruf: 5. November 2026. Die Gebäudezahlen mit Wärmepumpe sind aus gerundeten Veröffentlichungswerten berechnete Näherungen. Die Halbjahresmeldung des BWP ist eine separat zitierte Branchenangabe; sie wird nicht zur Jahresprognose hochgerechnet.
+Die Auswertung verwendet die Bautätigkeitsstatistik von Destatis für fertiggestellte Wohngebäude von 2015 bis 2025 sowie Genehmigungen 2024 und 2025. Datenveröffentlichung für 2025: 10. Juni 2026, bei Fertigstellungen wesentlich auf Basis der Anfang Mai eingegangenen Meldungen. Rechercheabruf: 5. November 2026. Die Gebäudezahlen mit Wärmepumpe sind aus gerundeten Veröffentlichungswerten berechnete Näherungen.
 
 - **Destatis:** [Pressemitteilung N038/2026 mit Zeitreihe](https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/06/PD26_N038_31_51.html), [N031/2025](https://www.destatis.de/DE/Presse/Pressemitteilungen/2025/06/PD25_N031_31_51.html) und [N025/2024](https://www.destatis.de/DE/Presse/Pressemitteilungen/2024/06/PD24_N025_31_51.html). Nutzungserlaubnis: [Copyright allgemein](https://www.destatis.de/DE/Service/Impressum/copyright-allgemein.html), mit Quellenangabe; eigene Auswahl, Berechnung und Darstellung.
-- **BWP/BDH:** [Absatzmeldung zum ersten Halbjahr 2026, 6. August 2026](https://www.waermepumpe.de/presse/pressemitteilungen/details/waermepumpen-absatz-waechst-im-ersten-halbjahr-auf-195000-anlagen/) und [Jahresbilanz 2025, 27. Januar 2026](https://www.waermepumpe.de/presse/news/details/ueber-50-prozent-im-plus-waermepumpen-absatz-steigt-2025-deutlich). Einzelne Fakten als Verbandsangabe zitiert, keine Übernahme der Grafik oder Absatzzeitreihe; [keine offene Datenlizenz ausgewiesen](https://www.waermepumpe.de/impressum/).
 - **Recht und Förderung:** [BGBl. 2026 I Nr. 226](https://www.recht.bund.de/bgbl/1/2026/226/VO.html), [§ 42a GModG](https://www.gesetze-im-internet.de/geg/__42a.html) und BEG EM vom 17. August 2026, [BAnz AT 27.08.2026 B1](https://www.bundesanzeiger.de/pub/publication/jLXvW09kHTQoDINAdoC?0=), insbesondere Nummern 7.2 und 10. Einzelne amtliche Rechtstexte, [§ 5 UrhG](https://www.gesetze-im-internet.de/urhg/__5.html); keine Übernahme der Veröffentlichungsdatenbanken. Rechtsstand geprüft am 5. November 2026.

@@ -103,7 +103,7 @@ test.each([
   (m) => { m.licenses[0].commercial_use = false; },
   (m) => { m.context_source_licenses = []; },
   (m) => { m.context_source_licenses[0].redistribution = true; },
-  (m) => { m.context_source_licenses[3].database_rights = ''; },
+  (m) => { m.context_source_licenses[1].database_rights = ''; },
   (m) => { m.excluded_sources[0].license_clearance = true; },
 ])('invalid dates, contracts or licensing fail (%#)', (edit) => {
   manifestEdit(edit);
