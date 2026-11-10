@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "kind": "frozen_energieintensive_industrie",
+  "methodology_version": 1,
+  "period": {
+    "production_first": "2018-01",
+    "production_last": "2026-08",
+    "prices_first": "2018-S1",
+    "prices_last": "2026-S1"
+  },
+  "exporter": "pipeline/src/data_pipelines/export_data/2026/energieintensive_industrie/export.py",
+  "contract_sha256": "94625fb407008e55f51e3c80030f518c0f5bed4bc9839433fb0e7666a5dd9a2b",
+  "reviewed_at": "2026-11-05",
+  "sources": {
+    "production": {
+      "publisher": "Statistisches Bundesamt (Destatis)",
+      "url": "https://www.destatis.de/DE/Themen/Branchen-Unternehmen/Industrie-Verarbeitendes-Gewerbe/_Grafik/_Interaktiv/produktionsentwicklung-energieintensiven-industriezweige.html?showChartData=1",
+      "dataset": "Produktionsentwicklung in energieintensiven Industriezweigen; EVAS 42153, underlying GENESIS table 42153-0001",
+      "licence": {
+        "name": "Destatis general copyright reuse permission",
+        "version": "unversioned; reviewed 2026-11-05",
+        "url": "https://www.destatis.de/DE/Service/Impressum/copyright-allgemein.html",
+        "copyright": "© Statistisches Bundesamt (Destatis), 2026",
+        "publisher_wording": "Vervielfältigung und Verbreitung, auch auszugsweise, mit Quellennachweis gestattet.",
+        "attribution": "Quelle: Statistisches Bundesamt (Destatis), Produktionsentwicklung in energieintensiven Industriezweigen, Abruf 05.11.2026; eigene Auswahl, Berechnung und Darstellung.",
+        "changes": "Selection from 2018; German decimals converted; CSV reshaped; own averages and percentage changes.",
+        "public_git_redistribution": "Permitted with source and change notice, including derived data.",
+        "commercial_use": "Explicitly permitted, including Internet distribution and advertising-funded use.",
+        "database_rights": "Permission expressly covers redistribution of data; no additional database-right restriction specified. Not a public-domain claim.",
+        "third_party_rights": "Excluded; no third-party attribution on the selected production table. No logos, photos, VDA or AG Energiebilanzen data used.",
+        "dataset_exceptions": "None identified on this production chart/data page. General website permission applies to this actual acquisition route."
+      },
+      "unit": "2021=100",
+      "adjustment": "X13 JDemetra+, seasonally and calendar adjusted",
+      "scope": "Germany; industry = manufacturing and mining, excluding energy and construction; energy-intensive = WZ 2008 C17, C19, C20, C23, C24",
+      "revision": "Public chart as retrieved 2026-11-05; latest observation August 2026 provisional. Chart has no separate revision timestamp. GENESIS cube catalogue reported 06.10.2026 18:06:08h; this is not claimed as the chart's timestamp.",
+      "acquisition": {
+        "url": "https://www.destatis.de/DE/Themen/Branchen-Unternehmen/Industrie-Verarbeitendes-Gewerbe/_Grafik/_Interaktiv/produktionsentwicklung-energieintensiven-industriezweige.html?showChartData=1",
+        "retrieved_at": "2026-11-05T19:44:01.705678+00:00",
+        "sha256": "476476a16db9b8071df559d5963a55c538507de85c5e7f44da56b96289c5551d",
+        "bytes": 82992
+      }
+    },
+    "prices": {
+      "publisher": "Eurostat",
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?lang=EN&freq=S&siec=E7000&unit=KWH&geo=DE&geo=EU27_2020&currency=EUR&tax=X_VAT&nrg_cons=MWH2000-19999&sinceTimePeriod=2018-S1&untilTimePeriod=2026-S1",
+      "dataset_url": "https://ec.europa.eu/eurostat/databrowser/view/nrg_pc_205/default/table",
+      "dataset": "nrg_pc_205",
+      "licence": {
+        "name": "Eurostat statistical data reuse policy / Commission Decision 2011/833/EU",
+        "version": "2011/833/EU; publisher policy reviewed 2026-11-05",
+        "url": "https://ec.europa.eu/eurostat/web/main/help/copyright-notice",
+        "decision_url": "https://eur-lex.europa.eu/eli/dec/2011/833/oj",
+        "copyright": "© European Union, 2026",
+        "publisher_wording": "Source: [Eurostat dataset datacode link], [access date]",
+        "attribution": "Source: Eurostat, nrg_pc_205, https://ec.europa.eu/eurostat/databrowser/view/nrg_pc_205/default/table, 05.11.2026; © European Union, 2026.",
+        "changes": "Eigene Auswahl, Umrechnung und Darstellung. Eurostat ist für diese Bearbeitung nicht verantwortlich.",
+        "public_git_redistribution": "Permitted with attribution and modification/non-responsibility notice, including derived CSVs.",
+        "commercial_use": "Explicitly permitted for the selected Germany/EU statistics, including advertising-funded use.",
+        "database_rights": "Policy authorises reuse of statistical data and metadata; no additional database-right restriction specified for this selection.",
+        "third_party_rights": "Excluded. API names Eurostat as source; only Germany and EU27_2020 selected. No third-party content, logos or trade statistics.",
+        "dataset_exceptions": "No contrary terms in dataset metadata or its linked information note of 17 September 2026 (navigation reorganisation). Non-European-country and specified trade-data commercial exceptions do not apply. Statistical data is not relabelled CC BY 4.0."
+      },
+      "unit": "EUR/kWh converted to ct/kWh by multiplying by 100",
+      "band": "ID: annual consumption 2000 to below 20000 MWh (MWH2000-19999)",
+      "band_reason": "Substantial industrial-scale consumption, with a complete Germany/EU series; context indicator, not a representative tariff for the five energy-intensive sectors or the largest consumers.",
+      "tax": "X_VAT: excluding VAT and other recoverable taxes and levies, including non-recoverable charges",
+      "scope": "Non-households, not exclusively industry; EU27_2020 includes Germany and is Eurostat's weighted aggregate. Nominal half-year prices, no inflation adjustment.",
+      "acquisition": {
+        "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?lang=EN&freq=S&siec=E7000&unit=KWH&geo=DE&geo=EU27_2020&currency=EUR&tax=X_VAT&nrg_cons=MWH2000-19999&sinceTimePeriod=2018-S1&untilTimePeriod=2026-S1",
+        "retrieved_at": "2026-11-05T19:44:02.680283+00:00",
+        "sha256": "678c1cfbdb0ca68a8f7a7bcc964cbbdaa4f4378fd82a781bbdb64c3833faabc3",
+        "bytes": 4677
+      },
+      "updated": "2026-10-19T11:00:00+0200"
+    },
+    "press": {
+      "publisher": "Statistisches Bundesamt (Destatis)",
+      "url": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/10/PD26_355_421.html",
+      "dataset": "Press release 355, 7 October 2026",
+      "licence_ref": "production",
+      "attribution": "Quelle: Statistisches Bundesamt (Destatis), Pressemitteilung Nr. 355 vom 7. Oktober 2026, Abruf 05.11.2026; eigene Zusammenfassung.",
+      "scope": "Energy-intensive industry: -0.5% month on month (SA/CA), -2.1% year on year (CA), -2.9% June-August vs March-May (SA/CA); 77% energy use and 17% industrial gross value added in 2021 as quoted by the publisher.",
+      "acquisition": {
+        "url": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/10/PD26_355_421.html",
+        "retrieved_at": "2026-11-05T19:44:03.066793+00:00",
+        "sha256": "49d4f0d2c6634f19ffd3dda73eb17a9624dc7c9c0ad62cd6f20b39d080d74f19",
+        "bytes": 83990
+      }
+    }
+  },
+  "context_sources": [
+    {
+      "url": "https://www.destatis.de/DE/Themen/Branchen-Unternehmen/Industrie-Verarbeitendes-Gewerbe/produktionsindex-energieintensive-branchen.html",
+      "reviewed_at": "2026-11-05",
+      "licence_ref": "sources.production.licence",
+      "attribution": "Quelle: Statistisches Bundesamt (Destatis), Bedeutung der energieintensiven Industriezweige in Deutschland, Abruf 05.11.2026; eigene Zusammenfassung.",
+      "scope": "Definitions, five branches and 2021 value-added weights; explicitly exclude third-party AG Energiebilanzen chart 1. Appendix's 76% energy share conflicts with press/text 77%; disclosed."
+    },
+    {
+      "url": "https://www.destatis.de/DE/Presse/Wochenvorschau/_inhalt.html",
+      "reviewed_at": "2026-11-05",
+      "licence_ref": "sources.production.licence",
+      "attribution": "Quelle: Statistisches Bundesamt (Destatis), Wochenvorschau KW45/2026, Stand 30.10.2026, Abruf 05.11.2026; eigene Zusammenfassung.",
+      "scope": "September 2026 production scheduled for 6 November 2026; not yet published on retrieval date."
+    },
+    {
+      "url": "https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics",
+      "reviewed_at": "2026-11-05",
+      "licence": {
+        "name": "Creative Commons Attribution 4.0 International",
+        "version": "4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "terms_url": "https://ec.europa.eu/eurostat/web/main/help/copyright-notice",
+        "copyright": "© European Union, 2026",
+        "publisher_wording": "Source: Eurostat, [Title of the product], [link to the product], [access date].",
+        "attribution": "Source: Eurostat, Electricity price statistics, https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics, 05.11.2026; © European Union, 2026.",
+        "changes": "Eigene Zusammenfassung der Methodik, keine Übersetzung der Publikation. Eurostat ist für diese Bearbeitung nicht verantwortlich.",
+        "public_git_redistribution": "Permitted with attribution, licence link and change notice; no extra downstream restrictions.",
+        "commercial_use": "Permitted under CC BY 4.0 for EU-owned editorial content.",
+        "database_rights": "Section 4 covers licensed sui generis database rights. This entry covers editorial methodology only, not the statistical data licence.",
+        "third_party_rights": "Not covered; no photos, logos or third-party works reused.",
+        "dataset_exceptions": "No contrary notice for the explanatory methodological text. No reuse of non-European price tables."
+      },
+      "scope": "Definitions, invoiced half-year prices, non-household scope, weighted EU aggregate and incomplete coverage of relief paid outside supplier bills. No numerical price observations imported from this article."
+    }
+  ],
+  "unused_genesis_route": {
+    "table": "42153-0001",
+    "licence": "Datenlizenz Deutschland – Namensnennung – Version 2.0 (dl-de/by-2-0)",
+    "licence_url": "https://www.govdata.de/dl-de/by-2-0",
+    "terms_url": "https://www.destatis.de/DE/Service/Impressum/copyright-genesis-online.html",
+    "attribution": "Datenquelle: Statistisches Bundesamt (Destatis), Genesis-Online, 05.11.2026; Datenlizenz by-2-0; eigene Berechnung/eigene Darstellung",
+    "reason": "Authenticated data/table and data/tablefile returned status 7000 (no data cube); catalogue/metadata worked. No production observations acquired via this route. Used the publisher's public chart table instead, under its general copyright permission."
+  },
+  "files": {
+    "production.csv": {
+      "sha256": "1eb376209d6b862c0022700ae60d9914aca7fcebbc17f577405292ce01d594d4",
+      "bytes": 2382,
+      "columns": [
+        "Monat",
+        "Industrie",
+        "Energieintensiv"
+      ],
+      "rows": 104
+    },
+    "electricity_prices.csv": {
+      "sha256": "b3be93d5e0aefedd1a5557531049a1025bee47d5ceb7b24be2a0d233b298abbd",
+      "bytes": 478,
+      "columns": [
+        "Halbjahr",
+        "Deutschland_ct_kWh",
+        "EU27_ct_kWh",
+        "Deutschland_Status",
+        "EU27_Status"
+      ],
+      "rows": 17
+    },
+    "production_annual.csv": {
+      "sha256": "fa61560e5429497d90e48cb6de0090678c5fa06e149f2f333c93931dc6ca54f4",
+      "bytes": 252,
+      "columns": [
+        "Zeitraum",
+        "Monate",
+        "Industrie",
+        "Energieintensiv"
+      ],
+      "rows": 9
+    },
+    "quality.json": {
+      "sha256": "9d013a9200a6a287e6fba430fab00a437ec99020d1d83e85ee5a14b95ab7ff30",
+      "bytes": 1631
+    }
+  }
+}
