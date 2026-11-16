@@ -1,0 +1,136 @@
+{
+  "exporter_sha256": "e396bfc2022733c0d5eccdfb095cfc75c90dcf562559993d66a34ad9acefa57a",
+  "exporter_version": "1.0.0",
+  "files": {
+    "pv_lernkurve_jahre.csv": {
+      "bytes": 1389,
+      "columns": [
+        "Jahr",
+        "Welt_GW",
+        "Deutschland_GW",
+        "China_GW",
+        "Anteil_Bestand_Deutschland_Prozent",
+        "CO2_Anteil_Deutschland_Prozent",
+        "Solar_Stromanteil_Welt_Prozent",
+        "Solar_Stromanteil_Deutschland_Prozent"
+      ],
+      "rows": 26,
+      "sha256": "0fd8239e0eda2551852f803730961116c2809803b4b49598a6fd0226efefef16"
+    },
+    "pv_lernkurve_kennzahlen.csv": {
+      "bytes": 582,
+      "columns": [
+        "Kennzahl",
+        "Zeitraum",
+        "Wert",
+        "Einheit"
+      ],
+      "rows": 10,
+      "sha256": "0e41c58b661debbd8ba93af657fe590de935f25897fb07c6c2a4b29284b5ed45"
+    },
+    "pv_lernkurve_lernkurve.csv": {
+      "bytes": 1081,
+      "columns": [
+        "Jahr",
+        "Modulpreis_USD_W",
+        "Kumulierte_Leistung_Welt_MW"
+      ],
+      "rows": 51,
+      "sha256": "4323b14d674ccb726ab9899862e2254e44068f22321fc94a43051d7d1d67dd41"
+    },
+    "pv_lernkurve_modulpreis.csv": {
+      "bytes": 308,
+      "columns": [
+        "Jahr",
+        "Modulpreis_USD_W"
+      ],
+      "rows": 26,
+      "sha256": "8c7b3966c71b94d77aa6d5caad1d4578fa7c9e3f48123b08815e0c87d768b48c"
+    },
+    "pv_lernkurve_zubau.csv": {
+      "bytes": 1210,
+      "columns": [
+        "Jahr",
+        "Zubau_Welt_GW",
+        "Zubau_Deutschland_GW",
+        "Zubau_China_GW",
+        "Zubau_Uebrige_Welt_GW",
+        "Anteil_Zubau_Deutschland_Prozent",
+        "Anteil_Bestand_Deutschland_Prozent"
+      ],
+      "rows": 25,
+      "sha256": "18d04c4f012c9a9422c443902ad8e2dbc070660efdc61c6d489a4772210341e2"
+    }
+  },
+  "kind": "frozen_pv_lernkurve_article",
+  "methodology": {
+    "additions": "Annual net additions = year-end capacity minus previous year-end capacity, from the rounded values; retirements are netted out",
+    "capacity": "Year-end installed photovoltaic capacity (on-grid + off-grid, without concentrated solar power), GW, rounded to 3 decimals",
+    "known_source_issue": "From 2022 IRENA reports less German capacity than the Bundesnetzagentur/AGEE-Stat (end of 2022: 61.2 vs. about 66.5 GW; 2022 net addition 1.2 vs. 7.2 GW); values are used as published, so Germany's shares since 2022 are rather understated",
+    "learning_rate": "OLS of log2(module price) on log2(global cumulative on-grid PV capacity in MW); learning rate = 1 - 2^slope; descriptive fit, not a causal estimate",
+    "price": "Module price only (no installation or system costs), constant 2025 US$ per watt",
+    "shares": "Germany's share = Germany / world total, from the rounded values, in percent",
+    "statistics_input": "Rounded values in pv_lernkurve_jahre.csv and pv_lernkurve_lernkurve.csv"
+  },
+  "period": {
+    "boom": [
+      2004,
+      2010
+    ],
+    "capacity": [
+      2000,
+      2025
+    ],
+    "chart_prices": [
+      2000,
+      2025
+    ],
+    "early": [
+      2001,
+      2012
+    ],
+    "prices": [
+      1975,
+      2025
+    ]
+  },
+  "schema_version": 1,
+  "sources": {
+    "capacity": {
+      "landing_page": "https://ourworldindata.org/grapher/installed-solar-pv-capacity",
+      "license": "©IRENA 2026, reuse with attribution; OWID processing CC BY 4.0",
+      "name": "IRENA, Renewable Energy Statistics 2026 – processed by Our World in Data",
+      "note": "On-grid plus off-grid photovoltaics in GW; concentrated solar power excluded; empty off-grid values count as zero",
+      "retrieved_at": "2026-11-16T20:19:56Z",
+      "sha256": "59278daaa434b6be55ba242224dfdcf2f664aa9e21ada1ad81d134fbd2babfa0",
+      "url": "https://catalog.ourworldindata.org/grapher/irena/2026-07-28/renewable_capacity/renewable_energy_statistics.parquet"
+    },
+    "co2_share": {
+      "landing_page": "https://ourworldindata.org/grapher/annual-share-of-co2-emissions",
+      "license": "CC BY 4.0",
+      "name": "Global Carbon Budget (2026) – processed by Our World in Data",
+      "note": "Fossil CO2 emissions excluding land-use change, share of global emissions",
+      "retrieved_at": "2026-11-16T20:19:56Z",
+      "sha256": "2d3f6d38b8095c8cd30860bf6895ed523371becbb9f7f755159d331387ea95e4",
+      "url": "https://catalog.ourworldindata.org/grapher/gcp/2026-11-10/global_carbon_budget/global_carbon_budget.parquet"
+    },
+    "module_cost": {
+      "landing_page": "https://ourworldindata.org/grapher/solar-pv-prices",
+      "license": "©IRENA, reuse with attribution; Nemet CC BY 3.0; Farmer & Lafond CC BY 4.0; OWID processing CC BY 4.0",
+      "name": "IRENA (2025, 2026); Nemet (2009); Farmer and Lafond (2016) – processed by Our World in Data",
+      "note": "Module price in constant 2025 US$ per watt; global estimates before 2010, European pvXchange benchmarks from 2010; cumulative on-grid PV capacity",
+      "retrieved_at": "2026-11-16T20:19:56Z",
+      "sha256": "98ea73427b38387207276400e79595fba8e946133dad4014d6b13d0386d056f1",
+      "url": "https://catalog.ourworldindata.org/grapher/energy/2026-10-23/photovoltaic_cost_and_capacity/photovoltaic_cost_and_capacity.parquet"
+    },
+    "solar_share": {
+      "landing_page": "https://ourworldindata.org/grapher/share-electricity-solar",
+      "license": "Ember CC BY 4.0; ©Energy Institute 2026; OWID processing CC BY 4.0",
+      "name": "Ember (2026); Energy Institute – Statistical Review of World Energy (2026) – processed by Our World in Data",
+      "note": "Solar share of electricity generation in percent",
+      "retrieved_at": "2026-11-16T20:19:56Z",
+      "sha256": "34b96d09554af33b51adcb9f90b058ec5ad7b5adb6a8c446bc47951aea28e127",
+      "url": "https://catalog.ourworldindata.org/grapher/energy/2026-06-30/electricity_mix/electricity_mix.parquet"
+    }
+  }
+}

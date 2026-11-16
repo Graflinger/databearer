@@ -55,4 +55,9 @@ jobs:
         working-directory: pipeline
         env:
           PYTHONPATH: .
+      - name: Frozen article evidence (PV learning curve)
+        run: python -m unittest discover -s tests -p 'test_pv_lernkurve.py' -v
+        working-directory: pipeline
+        env:
+          PYTHONPATH: .
       - run: python -m unittest discover -s scripts/tests -p 'test_*.py' -v

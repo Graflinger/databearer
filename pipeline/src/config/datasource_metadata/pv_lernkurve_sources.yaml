@@ -1,0 +1,43 @@
+# Pinned Our World in Data catalog tables for the 2026 PV learning-curve article.
+# Used by src/data_pipelines/get_raw_data/ingest_pv_lernkurve_data.py.
+# Each URL names a dated catalog version, so a re-run fetches the same vintage.
+sources:
+  irena_capacity:
+    description: "IRENA Renewable Energy Statistics 2026, installed capacity by country, processed by Our World in Data"
+    url: "https://catalog.ourworldindata.org/grapher/irena/2026-07-28/renewable_capacity/renewable_energy_statistics.parquet"
+    landing_page: "https://ourworldindata.org/grapher/installed-solar-pv-capacity"
+    original_source: "https://www.irena.org/Publications/2026/Jul/Renewable-Energy-Statistics-2026"
+    license: "©IRENA 2026 (reuse with attribution); Our World in Data processing CC BY 4.0"
+    attribution: "IRENA (2026) – processed by Our World in Data"
+    # On-grid photovoltaics plus off-grid photovoltaics, in GW. Concentrated solar
+    # power is excluded on purpose: this article is about solar modules.
+    columns: ["country", "year", "solar_photovoltaic_gw", "solar_photovoltaic__off_grid_gw"]
+    max_bytes: 2000000
+  pv_module_cost:
+    description: "Solar photovoltaic module price and global cumulative capacity, 1975 onwards"
+    url: "https://catalog.ourworldindata.org/grapher/energy/2026-10-23/photovoltaic_cost_and_capacity/photovoltaic_cost_and_capacity.parquet"
+    landing_page: "https://ourworldindata.org/grapher/solar-pv-prices"
+    original_source: "https://www.irena.org/Publications/2026/Jul/Renewable-Power-Generation-Costs-in-2025"
+    license: "©IRENA 2025/2026 (reuse with attribution); Nemet (2009) CC BY 3.0; Farmer & Lafond (2016) CC BY 4.0; Our World in Data processing CC BY 4.0"
+    attribution: "IRENA (2025, 2026); Nemet (2009); Farmer und Lafond (2016) – processed by Our World in Data"
+    # cost: constant 2025 US$ per watt; cumulative_capacity: MW, on-grid PV.
+    columns: ["country", "year", "cost", "cumulative_capacity"]
+    max_bytes: 200000
+  co2_share:
+    description: "Global Carbon Budget 2026: national fossil CO2 emissions as share of global emissions"
+    url: "https://catalog.ourworldindata.org/grapher/gcp/2026-11-10/global_carbon_budget/global_carbon_budget.parquet"
+    landing_page: "https://ourworldindata.org/grapher/annual-share-of-co2-emissions"
+    original_source: "https://globalcarbonbudget.org/"
+    license: "CC BY 4.0"
+    attribution: "Global Carbon Budget (2026) – processed by Our World in Data"
+    columns: ["country", "year", "emissions_total_as_share_of_global"]
+    max_bytes: 12000000
+  solar_electricity_share:
+    description: "Ember and Energy Institute: solar share of electricity generation"
+    url: "https://catalog.ourworldindata.org/grapher/energy/2026-06-30/electricity_mix/electricity_mix.parquet"
+    landing_page: "https://ourworldindata.org/grapher/share-electricity-solar"
+    original_source: "https://ember-energy.org/data/"
+    license: "Ember CC BY 4.0; ©Energy Institute 2026; Our World in Data processing CC BY 4.0"
+    attribution: "Ember (2026); Energy Institute – Statistical Review of World Energy (2026) – processed by Our World in Data"
+    columns: ["country", "year", "solar_share_of_electricity__pct"]
+    max_bytes: 5000000

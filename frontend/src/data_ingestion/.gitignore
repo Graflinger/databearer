@@ -24,3 +24,12 @@ data/**
 !data/2026/strompreis-korrelation/strompreis_korrelation_regression.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_2026.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_metadata.json
+
+# Frozen, validated evidence for the 2026 PV learning-curve article (Germany's role in global solar).
+!data/2026/pv-lernkurve/
+!data/2026/pv-lernkurve/pv_lernkurve_jahre.csv
+!data/2026/pv-lernkurve/pv_lernkurve_zubau.csv
+!data/2026/pv-lernkurve/pv_lernkurve_modulpreis.csv
+!data/2026/pv-lernkurve/pv_lernkurve_lernkurve.csv
+!data/2026/pv-lernkurve/pv_lernkurve_kennzahlen.csv
+!data/2026/pv-lernkurve/pv_lernkurve_metadata.json

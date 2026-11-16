@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: owid_irena_solar_pv_capacity
+        description: >-
+          IRENA Renewable Energy Statistics 2026 via OWID catalog (2026-07-28): on-grid and
+          off-grid photovoltaic capacity in GW by country and year. Written by
+          ingest_pv_lernkurve_data.py; concentrated solar power is not ingested.
+      - name: owid_pv_module_cost_capacity
+        description: >-
+          OWID photovoltaic_cost_and_capacity (2026-10-23): module price in constant 2025
+          US$ per watt and global on-grid cumulative PV capacity in MW, 1975 onwards.
+      - name: owid_gcp_co2_share
+        description: Global Carbon Budget 2026 via OWID, fossil CO2 emissions as percent of the global total.
+      - name: owid_solar_electricity_share
+        description: Ember/Energy Institute via OWID electricity_mix (2026-06-30), solar share of electricity in percent.
