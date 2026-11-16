@@ -1,6 +1,7 @@
 ---
 title: "„Wir können eh nichts ändern“? Wie Deutschland half, Solarstrom für die ganze Welt billig zu machen"
 date: 2026-11-16
+draft: true
 excerpt: "Deutschland stößt knapp 1,5 Prozent des weltweiten CO₂ aus. Doch von 2004 bis 2010 entstand fast jede zweite neue Solaranlage der Welt hier – genau in den Jahren, in denen der große Preisverfall der Solarmodule einsetzte. Bezahlt haben die deutschen Stromkunden, profitiert hat die ganze Welt."
 image: "/images/blog_card_images/2026/pv-lernkurve-deutschland.png"
 imageAlt: "Gemaltes Dorf mit roten Ziegeldächern voller Solarmodule, dahinter grüne Hügel und große Solarparks bis zum Meer unter blauem Himmel"
