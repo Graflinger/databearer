@@ -95,5 +95,8 @@ is merged and, if public-facing, live on `releases/cloudflare`.
 - Run frontend commands from `frontend/`; use `npm test` and `npm run build` for
   frontend changes. Follow pipeline skill guidance for focused dbt selection/tests.
 - Keep `.data/`, raw downloads, and credentials out of Git. Preserve unrelated work.
+- PRs are public. Never put source data, figures, findings, licence matrices or
+  source excerpts into PR titles, descriptions, comments, reviews or commit messages;
+  link the topic's `docs/` file instead. Load the `pull-request` skill for PR work.
 - Do not commit, push, or deploy unless requested; documenting a future automated
   publication workflow does not authorize publishing during the current task.
