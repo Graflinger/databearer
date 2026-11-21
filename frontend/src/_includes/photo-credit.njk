@@ -1,0 +1,11 @@
+{%- macro creditLabel(label, url) -%}
+    {%- if url -%}<a href="{{ url | escape }}">{{ label | escape }}</a>
+    {%- else -%}{{ label | escape }}{%- endif -%}
+{%- endmacro -%}
+{%- set credit = imageCredit | photoCredit -%}
+{%- if credit -%}
+<p class="image-caption image-credit">Foto: {{ creditLabel(credit.photographer, credit.sourceUrl) }}
+    {%- if credit.license %} · Lizenz: {{ creditLabel(credit.license, credit.licenseUrl) }}{% endif %}
+    {%- if credit.changes %} · {{ credit.changes | escape }}{% endif -%}
+</p>
+{%- endif -%}

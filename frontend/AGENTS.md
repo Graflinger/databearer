@@ -127,6 +127,7 @@ excerpt: "Key finding first, 1–2 plain-text sentences"
 image: "/images/blog_card_images/2025/filename.png"
 imageAlt: ""                       # describe informative heroes; empty if decorative
 imageText: "Visible image caption" # also JSON Feed `_image_alt`
+# imageCredit: optional photographer, sourceUrl, license, licenseUrl, changes (see docs/seo.md → Images)
 # socialImage: "/images/blog_card_images/2025/social.png"
 # socialImageAlt: "Description of the social preview image"
 topic: ["energie", "wirtschaft"]   # determines topic collections

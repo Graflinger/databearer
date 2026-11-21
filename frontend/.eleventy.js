@@ -10,6 +10,7 @@ const seo = require('./src/seo');
 
 module.exports = function (eleventyConfig) {
   require('./lib/responsive-images').register(eleventyConfig);
+  eleventyConfig.addFilter('photoCredit', require('./lib/photo-credit'));
   seo.configure(eleventyConfig);
   // Strict draft policy for every template and run mode (build, serve, watch):
   // boolean `draft: true` from front matter, directory or global data skips the

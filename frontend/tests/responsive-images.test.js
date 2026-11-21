@@ -4,6 +4,7 @@ const path = require('node:path');
 const sharp = require('sharp');
 const nunjucks = require('nunjucks');
 const matter = require('gray-matter');
+const photoCredit = require('../lib/photo-credit');
 const { execFileSync } = require('node:child_process');
 const { MAX_IMAGES, SIZES, createImageService, renderPicture, register } = require('../lib/responsive-images');
 
@@ -332,7 +333,7 @@ describe('real Eleventy fixture build', () => {
 
 // Exercise the real Nunjucks templates, async shortcode and filters, without a full site build.
 function environment() {
-  const env = new nunjucks.Environment(null, { autoescape: true });
+  const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(path.join(root, 'src/_includes')), { autoescape: true });
   const config = {
     on: jest.fn(), addWatchTarget: jest.fn(), addAsyncFilter: jest.fn(),
     addNunjucksAsyncFilter: (name, filter) => env.addFilter(name, filter, true),
@@ -358,6 +359,7 @@ function environment() {
   env.addFilter('localDate', () => '20. September 2026');
   env.addFilter('htmlDateString', () => '2026-09-20');
   env.addFilter('relatedPosts', (collections) => collections.post);
+  env.addFilter('photoCredit', photoCredit);
   return env;
 }
 
@@ -403,4 +405,57 @@ test('article has eager hero, byline, slash-terminated topics and guarded lazy r
   expect([...document.querySelectorAll('a[href^="/themen/"]')].every((a) => a.getAttribute('href') === '/themen/energie/')).toBe(true);
   expect(document.querySelectorAll('.related-posts img')).toHaveLength(1);
   expect(document.querySelector('.related-posts img').getAttribute('loading')).toBe('lazy');
+});
+
+describe('article photo attribution', () => {
+  const imageText = 'Windräder im November';
+  async function renderHero(data = {}) {
+    document.body.innerHTML = await renderTemplate('post.njk', {
+      ...post.data, imageText, site: {}, collections: { post: [] }, ...data,
+    });
+  }
+
+  test('existing caption renders without a credit', async () => {
+    await renderHero();
+    expect(document.querySelector('.post-header-image .image-caption').textContent).toBe(imageText);
+    expect(document.querySelector('.image-credit')).toBeNull();
+  });
+
+  test('no credit is displayed without a hero', async () => {
+    await renderHero({ image: undefined, imageCredit: { photographer: 'Ada' } });
+    expect(document.querySelector('.image-credit')).toBeNull();
+  });
+
+  test('source and license link independently, with escaped credit text separate from the caption', async () => {
+    const credit = {
+      photographer: 'Ada <i>Sommer</i> & Co.', sourceUrl: 'https://example.org/photo?id=1&size=2',
+      license: 'CC BY <b>4.0</b>', licenseUrl: 'http://example.org/license', changes: 'Beschnitt <em>oben</em>',
+    };
+    await renderHero({ imageCredit: credit });
+    const line = document.querySelector('.post-header-image p.image-credit');
+    const links = [...line.querySelectorAll('a')];
+    expect(links.map((link) => [link.textContent, link.getAttribute('href')])).toEqual([
+      [credit.photographer, credit.sourceUrl], [credit.license, credit.licenseUrl],
+    ]);
+    expect(line.textContent).toContain(credit.changes);
+    expect(document.querySelector('.post-header-image .image-caption:not(.image-credit)').textContent).toBe(imageText);
+  });
+
+  test.each([{ photographer: 'Ada' }, { photographer: 'Ada', license: 'CC BY 4.0' }])(
+    'credit %j renders as plain text without URLs or caption', async (imageCredit) => {
+      await renderHero({ imageText: undefined, imageCredit });
+      const line = document.querySelector('.post-header-image p.image-credit');
+      expect(line.querySelector('a')).toBeNull();
+      for (const value of Object.values(imageCredit)) expect(line.textContent).toContain(value);
+    },
+  );
+
+  test.each([
+    [{ license: 'CC0' }, 'photographer'],
+    [{ photographer: 'Ada', licenseUrl: 'https://example.org/license' }, 'licenseUrl'],
+    [{ photographer: 'Ada', sourceUrl: '/relative' }, 'sourceUrl'],
+    [{ photographer: 'Ada', license: 'CC0', licenseUrl: 'ftp://example.org/license' }, 'licenseUrl'],
+  ])('invalid credit %j fails template rendering with the field name', async (imageCredit, field) => {
+    await expect(renderHero({ imageCredit })).rejects.toThrow(field);
+  });
 });
