@@ -317,6 +317,25 @@ format, with `—` for gaps. Use the same convention for new tables.
 - **Card images are decorative** (`alt=""`). The card title carries the meaning.
 - **Hero alt:** `imageAlt` describes informative hero content. Leave it empty for
   decorative images. `imageText` is the visible caption, not alt text.
+- **Photo credits:** add optional `imageCredit` frontmatter to a post with a hero.
+  It appears below the hero and its caption, even if there is no `imageText`.
+  Only `photographer` is required. Link to the original photo page (not its CDN
+  download); if supplying `licenseUrl`, also name the license. Example:
+
+  ```yaml
+  imageCredit:
+    photographer: "Name der Fotografin"
+    sourceUrl: "https://example.org/photos/123"
+    license: "CC BY 4.0"
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0/"
+    changes: "Ausschnitt und Farbkorrektur"
+  ```
+
+  Record the download date, source, license at download and edits in your photo
+  provenance notes; keep receipts or private agreements outside the public repo.
+  Only commit an asset if its terms permit distribution of the file in public Git.
+  Credits are article-only: cards, feed fields and social previews are unchanged.
+  Check reuse rights and supply any required credit separately for social or video.
 - **Social preview:** a measured raster variant, at most 1200 px wide, keeping the
   source aspect ratio. Its source is `socialImage || image || dashboardImage`. Pages
   without an image use the generated brand preview (1200×630 JPEG).

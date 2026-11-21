@@ -8,7 +8,7 @@ Maintain it with the `work-tracking` skill (`.opencode/skills/work-tracking/`).
 GitHub is the source of truth for PR state. When this file and GitHub disagree,
 reconcile this file.
 
-**Last reconciled:** 2026-11-01 (against `gh pr list` and `origin/*`)
+**Last reconciled:** 2026-11-21 (against `gh pr list` and `origin/*`)
 
 ## Status values
 
@@ -32,12 +32,20 @@ Rows are sorted by ID so that parallel branches edit different lines.
 
 | ID | Type | Status | Branch | PR | Docs | Next step |
 | --- | --- | --- | --- | --- | --- | --- |
-| `erneuerbare-wachstum` | story | in review | `feature/dashboard-erneuerbare-wachstum` | [#34](https://github.com/Graflinger/databearer/pull/34) | `docs/erneuerbare_wachstum.md` (on branch) | Review the article `/posts/2026/solar-boomt-wind-waechst/`. Merge `main` in (28 behind), then merge. |
+| `energieintensive-industrie` | story | in progress | `feature/energieintensive-industrie` | [#55](https://github.com/Graflinger/databearer/pull/55) | `docs/energieintensive_industrie.md` (on branch) | Review the draft and decide on the card image and September data refresh. |
+| `erneuerbare-wachstum` | story | in review | `feature/dashboard-erneuerbare-wachstum` | [#34](https://github.com/Graflinger/databearer/pull/34) | `docs/erneuerbare_wachstum.md` (on branch) | Review the article `/posts/2026/solar-boomt-wind-waechst/` and bring the branch up to date with `main`. |
+| `gas-importabhaengigkeit` | story | in progress | `feature/gas-importabhaengigkeit` | [#54](https://github.com/Graflinger/databearer/pull/54) | `docs/gas_importabhaengigkeit.md` (on branch) | Review the four charts and choose a card image before editorial sign-off. |
+| `haushaltsstrompreis` | story | in progress | `feature/haushaltsstrompreis` | [#57](https://github.com/Graflinger/databearer/pull/57) | `docs/haushaltsstrompreis.md` (on branch) | Review the Eurostat draft and frozen data, then choose a card image for approval. |
 | `image-caption-ai-label` | chore | in review | `chore/image-caption-ai-label` | [#50](https://github.com/Graflinger/databearer/pull/50) | — | Review and merge. Captions are public, so add the PR to `release-promotion` after merging. |
-| `netzeingriffe` | story | in review | `feature/dashboard-netzeingriffe-stabilitaet` | [#33](https://github.com/Graflinger/databearer/pull/33) | `docs/netzeingriffe.md` (on branch) | Review the article `/posts/2026/netzeingriffe-netzstabilitaet/`. Merge `main` in (28 behind). Follow-up idea: the documented BNetzA SAIDI route. |
+| `negative-strompreise` | story | in progress | `feature/negative-strompreise` | [#58](https://github.com/Graflinger/databearer/pull/58) | `docs/negative_strompreise.md` (on branch) | Review the draft and Energinet source choice, then select a card image for approval. |
+| `netzeingriffe` | story | in review | `feature/dashboard-netzeingriffe-stabilitaet` | [#33](https://github.com/Graflinger/databearer/pull/33) | `docs/netzeingriffe.md` (on branch) | Review the article `/posts/2026/netzeingriffe-netzstabilitaet/` and update from `main`. Follow-up idea: the documented BNetzA SAIDI route. |
+| `photo-credits` | chore | in progress | `feature/photo-credits` | — | — | Add photo credits and verify their placement on the rendered site. |
+| `pr-public-text-policy` | chore | in review | `chore/pr-public-text-policy` | [#59](https://github.com/Graflinger/databearer/pull/59) | `.opencode/skills/pull-request/SKILL.md` (on branch) | Review the guidance on keeping source data out of public PR text. |
+| `pv-lernkurve` | story | in progress | `feature/pv-lernkurve-deutschland` | [#60](https://github.com/Graflinger/databearer/pull/60) | `docs/pv_lernkurve.md` (on branch) | Review the solar learning-curve article before removing the draft flag and marking the PR ready. |
 | `release-promotion` | infra | awaiting release | `main` → `releases/cloudflare` | — | [dashboard publication](dashboard_publication.md) | Nothing pending. Last promotion: fast-forward to `51cd785` on 2026-11-01 (#44, #47, #52 now in release ancestry; live checks passed). |
-| `strom-ytd` | story | in review | `feature/dashboard-strom-ytd` | [#31](https://github.com/Graflinger/databearer/pull/31) | `docs/strom_ytd.md` (on branch) | Review the article `/posts/2026/strom-2026-ytd-zahlen/`. The January–September 9 window is time-sensitive, so decide soon whether to publish as-is or refresh. Merge `main` in (28 behind). |
-| `stromhandel` | story | in review | `feature/dashboard-stromhandel-jahre` | [#32](https://github.com/Graflinger/databearer/pull/32) | `docs/stromhandel_post.md` (on branch) | Review the article `/posts/2026/stromimporte-exporte-deutschland/`. Merge `main` in (28 behind), then merge. |
+| `strom-ytd` | story | in review | `feature/dashboard-strom-ytd` | [#31](https://github.com/Graflinger/databearer/pull/31) | `docs/strom_ytd.md` (on branch) | Decide whether to refresh the January–September 9 window before publishing `/posts/2026/strom-2026-ytd-zahlen/`; update the branch from `main`. |
+| `stromhandel` | story | in review | `feature/dashboard-stromhandel-jahre` | [#32](https://github.com/Graflinger/databearer/pull/32) | `docs/stromhandel_post.md` (on branch) | Review the article `/posts/2026/stromimporte-exporte-deutschland/` and update the branch from `main`. |
+| `waermepumpen-absatz` | story | in progress | `feature/waermepumpen-absatz` | [#56](https://github.com/Graflinger/databearer/pull/56) | `docs/waermepumpen_absatz.md` (on branch) | Complete editorial and licensing review of the Destatis draft and choose a card image. |
 | `weekly-release-promotion` | infra | in review | `feature/weekly-release-promotion` | [#49](https://github.com/Graflinger/databearer/pull/49) | — | Review. Merging enables automatic promotion of `main` to production every Sunday. |
 
 ## Ideas without a branch
