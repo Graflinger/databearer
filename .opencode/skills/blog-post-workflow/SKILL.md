@@ -31,6 +31,8 @@ Combine this skill with:
 - `image-generation` if a blog card image is needed
 - `work-tracking` when creating the post's branch or PR, so that the topic appears
   in `docs/open_work.md`
+- `pull-request` before writing a PR title, description or comment: PRs are public
+  and must not contain data, figures or findings from the article
 
 ## Editorial style
 
@@ -227,6 +229,9 @@ update chart inputs, provenance, article numbers/dates and tests together.
 9. Inspect errors, chart output, feed impact and changed files. Keep the
    [JSON Feed fields](../../../docs/seo.md#feeds) used by the private
    `video-generator` unchanged.
+10. When opening the PR, follow `pull-request`: describe the topic and the changed
+    files, link the topic doc, and keep key findings and all numbers out of the PR.
+    Report the findings to the user in the chat instead.
 
 ## QA checklist
 
