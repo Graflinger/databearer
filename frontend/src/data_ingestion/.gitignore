@@ -24,3 +24,11 @@ data/**
 !data/2026/strompreis-korrelation/strompreis_korrelation_regression.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_2026.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_metadata.json
+
+# Frozen Eurostat household-price evidence; no raw downloads.
+!data/2026/haushaltsstrompreis/
+!data/2026/haushaltsstrompreis/verlauf.csv
+!data/2026/haushaltsstrompreis/komponenten.csv
+!data/2026/haushaltsstrompreis/eu.csv
+!data/2026/haushaltsstrompreis/eu-auswahl.csv
+!data/2026/haushaltsstrompreis/manifest.json
