@@ -1,0 +1,173 @@
+(function() {
+  const chartDom = document.getElementById('negative-preise-tageszeit');
+  if (!chartDom) {
+    console.error('Chart container "negative-preise-tageszeit" not found');
+    return;
+  }
+
+  let chart = null;
+  let isInitialized = false;
+  const hasAuthoredLabel = chartDom.hasAttribute('aria-labelledby') || chartDom.hasAttribute('aria-label');
+
+  // Detect dark mode
+  const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Get theme colors
+  const getThemeColors = () => {
+    const dark = isDarkMode();
+    const defaultColors = dark
+      ? ['#73c0de', '#91cc75', '#fac858', '#ee6666', '#9a60b4', '#ea7ccc']
+      : ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272'];
+
+    return {
+      textColor: dark ? '#e0e0e0' : '#333333',
+      backgroundColor: dark ? 'transparent' : 'transparent',
+      defaultColors: defaultColors,
+      axisLineColor: dark ? '#6e7079' : '#cccccc',
+      splitLineColor: dark ? '#3a3a3a' : '#e0e0e0'
+    };
+  };
+
+  const updateChart = () => {
+    if (!chart) return;
+
+    const colors = getThemeColors();
+    const xData = ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"];
+    const seriesData = [{"key":"Anteil_2024_Prozent","name":"Q2 2024","data":[0,0,0,0,0,0,0,0,3.2967,6.5934,13.1868,23.0769,30.7692,35.1648,37.3626,29.6703,21.978,10.989,1.0989,0,0,0,0,0],"color":null},{"key":"Anteil_2025_Prozent","name":"Q2 2025","data":[0,0,0,0,0,0,0,0,0,6.5934,20.8791,46.1538,60.4396,65.9341,65.9341,62.6374,41.7582,6.5934,2.1978,0,0,0,0,0],"color":null},{"key":"Anteil_2026_Prozent","name":"Q2 2026","data":[0.2747,0.5495,1.0989,1.0989,1.0989,1.0989,1.0989,1.9231,4.9451,8.5165,18.6813,31.3187,43.6813,46.4286,43.1319,34.6154,24.1758,10.1648,2.4725,0,0,0,0,0],"color":null}];
+
+    const option = {
+      aria: {
+        enabled: true,
+        // Keep the article's authored accessible name and summary when present.
+        label: {
+          enabled: !hasAuthoredLabel
+        }
+      },
+      backgroundColor: colors.backgroundColor,
+      title: undefined,
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: isDarkMode() ? 'rgba(50, 50, 50, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+        borderColor: colors.axisLineColor,
+        textStyle: {
+          color: colors.textColor
+        }
+      },
+      legend: {
+        data: seriesData.map(s => s.name),
+        top: '5%',
+        textStyle: {
+          color: colors.textColor
+        }
+      },
+      xAxis: {
+        type: 'category',
+        data: xData,
+        name: "Uhrzeit (Europe/Berlin)",
+        nameLocation: 'middle',
+        nameGap: 30,
+        nameTextStyle: {
+          color: colors.textColor
+        },
+        axisLine: {
+          lineStyle: {
+            color: colors.axisLineColor
+          }
+        },
+        axisLabel: {
+          color: colors.textColor
+        },
+        splitLine: {
+          lineStyle: {
+            color: colors.splitLineColor
+          }
+        }
+      },
+      yAxis: {
+        type: 'value',
+        name: "Negative Zeit (%)",
+        nameLocation: 'middle',
+        nameGap: 50,
+        nameTextStyle: {
+          color: colors.textColor
+        },
+        axisLine: {
+          lineStyle: {
+            color: colors.axisLineColor
+          }
+        },
+        axisLabel: {
+          color: colors.textColor
+        },
+        splitLine: {
+          lineStyle: {
+            color: colors.splitLineColor
+          }
+        }
+      },
+      series: seriesData.map((series, index) => ({
+        name: series.name,
+        data: series.data,
+        type: 'line',
+        smooth: false,
+        lineStyle: {
+          width: 2,
+          color: series.color || colors.defaultColors[index % colors.defaultColors.length]
+        },
+        itemStyle: {
+          color: series.color || colors.defaultColors[index % colors.defaultColors.length]
+        },
+        symbolSize: 6
+      })),
+      grid: {
+        left: '10%',
+        right: '10%',
+        bottom: '15%',
+        top: '18%'
+      },
+      animation: true,
+      animationDuration: 1000,
+      animationEasing: 'cubicOut'
+    };
+
+    chart.setOption(option);
+  };
+
+  const initChart = () => {
+    if (isInitialized) return;
+    isInitialized = true;
+
+    if (!chartDom.hasAttribute('role')) chartDom.setAttribute('role', 'img');
+    chart = echarts.init(chartDom);
+    updateChart();
+
+    // Listen for theme changes
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateChart);
+    }
+
+    // Make chart responsive
+    window.addEventListener('resize', function() {
+      if (chart) chart.resize();
+    });
+  };
+
+  // Use Intersection Observer to lazy load chart when visible
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          initChart();
+          observer.unobserve(chartDom);
+        }
+      });
+    }, {
+      rootMargin: '50px' // Start loading 50px before entering viewport
+    });
+
+    observer.observe(chartDom);
+  } else {
+    // Fallback for browsers without IntersectionObserver
+    initChart();
+  }
+})();

@@ -1,0 +1,339 @@
+{
+  "schema_version": 1,
+  "kind": "frozen_negative_strompreise_article",
+  "topic_id": "negative-strompreise",
+  "status": "validated",
+  "checked_on": "2026-11-05",
+  "data_acquired_at": "2026-11-05T21:38:12.645863+00:00",
+  "observation_cutoff": "2026-10-31",
+  "note": "Frozen aggregates; no dashboard data consumed or changed. Negative duration is sum of negative source interval durations, not sign of hourly averages. 2026 is incomplete. Phase lengths are clipped at each reported period boundary; nulls break phases. Battery evidence has a separate snapshot and scope.",
+  "considered_alternatives": [
+    {
+      "id": "entsoe-day-ahead",
+      "checked_on": "2026-11-05",
+      "used": false,
+      "terms_url": "https://transparencyplatform.zendesk.com/hc/en-us/articles/40921911218961-Legal-Terms-and-Conditions",
+      "licence": "Terms of Use 29 March 2023; CC BY 4.0 applies only to the free-reuse list of 18 October 2023",
+      "decision": "Day-ahead energy prices (12.1.d) absent from free-reuse list; no explicit clearance for public raw/derived data or commercial reuse. Primary-owner copyright/database rights reserved.",
+      "attribution_and_changes": "Attribution does not resolve missing permission; no observations reused."
+    },
+    {
+      "id": "epex-direct",
+      "checked_on": "2026-11-05",
+      "used": false,
+      "terms_url": "https://www.epexspot.com/en/GCDataUse",
+      "licence": "General Conditions of Data Use, 1 November 2025; no open data licence",
+      "decision": "External publication, commercial and Derived Usage require agreement/approval. Copyright/database and third-party rights reserved; no public dataset reuse.",
+      "attribution_and_changes": "Contract-specific; none agreed. No observations reused."
+    },
+    {
+      "id": "nordpool-direct",
+      "checked_on": "2026-11-05",
+      "used": false,
+      "terms_url": "https://www.nordpoolgroup.com/en/About-us/terms-and-conditions-for-useofwebsite/",
+      "licence": "Website terms (no version stated); no open data licence",
+      "decision": "Direct website redistribution requires prior written consent; automated extraction not permitted. Commercial API/redistribution uses separate agreements. Not applied automatically to independently licensed Energinet publication.",
+      "attribution_and_changes": "No public-data attribution formula grants permission; no observations reused."
+    },
+    {
+      "id": "ember-price-data",
+      "checked_on": "2026-11-05",
+      "used": false,
+      "terms_url": "https://ember-energy.org/creative-commons/",
+      "dataset_url": "https://ember-energy.org/data/european-wholesale-electricity-price-data/",
+      "licence": "CC BY 4.0 declared for Ember content",
+      "decision": "ENTSO-E price upstream not cleared by its free-reuse list; no specific upstream-rights resolution found. Also unsuitable for exact negative intervals because methodology interpolates missing values and averages resolutions.",
+      "attribution_and_changes": "Ember credit and CC change notice would apply to licensed work; no data copied, transformed or distributed."
+    },
+    {
+      "id": "netztransparenz",
+      "checked_on": "2026-11-05",
+      "used": false,
+      "terms_url": "https://www.netztransparenz.de/de-de/Impressum",
+      "licence": "No open data licence found; unversioned website terms",
+      "decision": "Reproduction requires written TSO permission unless statutory permission applies. Price page expressly withholds EPEX downloads on copyright grounds. Public raw/derived/commercial reuse not cleared.",
+      "attribution_and_changes": "No licence attribution formula found that grants public reuse; no observations reused."
+    },
+    {
+      "id": "rte-eco2mix-prices",
+      "checked_on": "2026-11-05",
+      "used": false,
+      "terms_url": "https://www.rte-france.com/donnees-publications/eco2mix-donnees-temps-reel/donnees-marche",
+      "licence": "Price-specific conditions (no version stated); no open data licence",
+      "decision": "Noncommercial consultation only; downloading/extraction prohibited; commercial use or third-party distribution needs exchange approval. EPEX ownership explicitly reserved.",
+      "attribution_and_changes": "Attribution is not a substitute for approval; no observations reused."
+    }
+  ],
+  "editorial_sources": [
+    {
+      "id": "dwd-summer-2026",
+      "checked_on": "2026-11-05",
+      "usage": "Factual summary in prose only; no weather dataset or image copied",
+      "url": "https://www.dwd.de/DE/presse/pressemitteilungen/DE/2026/20260831_deutschlandwetter_sommer_news.html",
+      "terms_url": "https://www.dwd.de/DE/service/rechtliche_hinweise/rechtliche_hinweise_node.html",
+      "attribution_terms_url": "https://www.dwd.de/DE/service/rechtliche_hinweise/vorlagen_quellenangabe.html",
+      "licence": "CC BY 4.0",
+      "attribution": "Quelle: Deutscher Wetterdienst",
+      "modification": "Inhaltlich zusammengefasst; keine Abbildungen übernommen",
+      "public_and_commercial_reuse": "Permitted under CC BY 4.0 for covered DWD content; marked third-party content requires separate permission. Database rights only to extent licensor can grant."
+    },
+    {
+      "id": "eeg-law",
+      "checked_on": "2026-11-05",
+      "usage": "Legal context paraphrased, not individual legal advice; no data series",
+      "urls": [
+        "https://www.gesetze-im-internet.de/eeg_2014/__51.html",
+        "https://www.gesetze-im-internet.de/eeg_2014/__100.html"
+      ],
+      "licence": "Statutory text, not a versioned open-data licence; German laws excluded from copyright under section 5(1) UrhG",
+      "attribution": "EEG sections 51 and 100, accessed 2026-11-05",
+      "modification": "Own concise summary with exceptions; no website design copied"
+    }
+  ],
+  "scope_evidence": {
+    "market_area": "https://www.nordpoolgroup.com/en/message-center-container/newsroom/exchange-message-list/2019/q3/nord-pool-first-to-offer-day-ahead-markets-across-europe/",
+    "resolution_transition": "https://www.nordpoolgroup.com/en/trading/transition-to-15-minute-market-time-unit-mtu/",
+    "note": "Editorial market-definition references only, no Nord Pool price observations extracted. Energinet calls the area DE/Germany and identifies Nord Pool market; common German-Luxembourg area is interpreted using market documentation. Energinet historical coverage predates Nord Pool's own CWE launch, so upstream pre-launch supplier is not independently established."
+  },
+  "sources": [
+    {
+      "id": "energinet-de-day-ahead",
+      "used": true,
+      "decision": "usable_with_conditions",
+      "declared_licence": "CC BY 4.0",
+      "terms_url": "https://www.energidataservice.dk/terms-and-conditions",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "checked_on": "2026-11-05",
+      "dataset_urls": [
+        "https://www.energidataservice.dk/tso-electricity/Elspotprices",
+        "https://www.energidataservice.dk/tso-electricity/DayAheadPrices"
+      ],
+      "metadata_urls": [
+        "https://api.energidataservice.dk/meta/dataset/Elspotprices",
+        "https://api.energidataservice.dk/meta/dataset/DayAheadPrices"
+      ],
+      "required_attribution": "Appropriate credit and indication of changes; publisher suggests: Source: Energinet (www.energidataservice.dk).",
+      "planned_attribution": "Source: Energinet (www.energidataservice.dk); CC BY 4.0; Auswertung und Aggregation: Databearer.",
+      "modifications_notice": "Interval-duration weighting, negative-price counts, period/hour-of-day summaries and rounding; never interpolate gaps.",
+      "public_repo_raw_and_derived": "Explicit permission to copy, change and distribute all published data under CC BY 4.0. Only compact aggregates will be committed.",
+      "commercial_use": "Explicitly permitted by publisher terms.",
+      "database_and_third_party_rights": "CC BY 4.0 covers database rights the licensor can grant. Metadata identifies Nord Pool market prices; no price-specific exclusions or SMARD origin found. Upstream Nord Pool agreement is not public; ordinary rights-chain uncertainty remains, not a proven conflicting restriction. Direct Nord Pool website terms do not automatically govern separately licensed Energinet publication.",
+      "publisher_grant": "Users may copy, change and distribute data freely, even for commercial purposes.",
+      "disclaimer": "Data provided as is; Energinet disclaims liability for content, origin, errors, omissions and availability; do not imply endorsement."
+    },
+    {
+      "id": "smard-wholesale-prices",
+      "used": false,
+      "decision": "blocked",
+      "declared_licence": "CC BY 4.0",
+      "terms_url": "https://www.smard.de/home/datennutzung",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/legalcode.de",
+      "checked_on": "2026-11-05",
+      "required_attribution": "Bundesnetzagentur | SMARD.de",
+      "modifications_notice": "Required for any later authorised filtering, aggregation or conversion; none performed.",
+      "public_repo_raw_and_derived": "Not cleared: publisher explicitly advises against wholesale-price reuse pending HEDWIG licensing review.",
+      "commercial_use": "General CC BY permits it, but specific wholesale-price rights are unresolved; not cleared.",
+      "database_and_third_party_rights": "CC BY 4.0 section 4 covers only rights the licensor can grant. Exchange/source rights under review; prior valid CC grants are not presumed revoked.",
+      "publisher_warning": "Wir überprüfen rechtliche Fragen zur Lizenzierung der Großhandelspreise derzeit umfassend im Rahmen des aktuellen Festlegungsverfahrens HEDWIG. Diese sollten daher bis auf weiteres nicht weiterverwendet werden.",
+      "review_url": "https://www.bundesnetzagentur.de/1067894"
+    },
+    {
+      "id": "energy-charts-de-lu-prices",
+      "used": false,
+      "decision": "not_used_conflicting_upstream_rights",
+      "declared_licence": "CC BY 4.0 via Bundesnetzagentur | SMARD.de",
+      "terms_url": "https://api.energy-charts.info/openapi.json",
+      "terms_scope": "info.description and paths./price.get.description",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/legalcode.de",
+      "checked_on": "2026-11-05",
+      "required_attribution": "Energy-Charts.info; Bundesnetzagentur | SMARD.de for DE-LU source data",
+      "modifications_notice": "Required if later authorised; no data transformed.",
+      "public_repo_raw_and_derived": "Not cleared: DE-LU and DE-AT-LU explicitly redistribute unchanged SMARD data, not an independent rights chain.",
+      "commercial_use": "Not cleared for this use. Other non-SMARD-listed zones expressly prohibit external/commercial use of raw and derived data.",
+      "database_and_third_party_rights": "Same unresolved upstream exchange/source rights; general API CC statement does not resolve the SMARD-specific warning."
+    },
+    {
+      "id": "mastr-battery-aggregates",
+      "used": true,
+      "decision": "usable_with_conditions",
+      "declared_licence": "Datenlizenz Deutschland – Namensnennung – Version 2.0",
+      "dataset_url": "https://www.marktstammdatenregister.de/MaStR/Datendownload",
+      "terms_url": "https://www.marktstammdatenregister.de/MaStR/Startseite/Impressum",
+      "licence_url": "https://www.govdata.de/dl-de/by-2-0",
+      "checked_on": "2026-11-05",
+      "required_attribution": "Provider designation, licence name/link and dataset URI; no additional verbatim provider formula found on checked pages.",
+      "planned_attribution": "Bundesnetzagentur, Marktstammdatenregister – Datenlizenz Deutschland – Namensnennung – Version 2.0; eigene Filterung und Aggregation",
+      "modifications_notice": "Selected overall commissioning cohorts 2019–2025 from the frozen operating-battery aggregate; projected and renamed capacity/count columns. Eigene Filterung und Aggregation; no raw unit/operator records or SMARD price profile reused.",
+      "public_repo_raw_and_derived": "Permitted for the specifically licensed public data with attribution; project will publish anonymous aggregates only, not raw operator/unit records.",
+      "commercial_use": "Explicitly permitted with attribution and change notice.",
+      "database_and_third_party_rights": "Broad permission for provided data/metadata; no separate database-rights clause in licence text. Exclude differently marked material; no blanket clearance of personal or third-party rights. Do not copy SMARD price fields from mixed battery packages."
+    }
+  ],
+  "timezone": "Europe/Berlin",
+  "period_start": "2019-01-01",
+  "interval_change": "2025-10-01",
+  "price_area_source": "DE",
+  "price_area_interpreted": "DE-LU",
+  "methodology_version": 1,
+  "raw_inputs": [
+    {
+      "filename": "Elspotprices.json",
+      "url": "https://api.energidataservice.dk/dataset/Elspotprices?start=2019-01-01&end=2025-10-01&filter=%7B%22PriceArea%22%3A+%5B%22DE%22%5D%7D&columns=HourUTC%2CPriceArea%2CSpotPriceEUR&sort=HourUTC+asc&limit=100000",
+      "retrieved_at": "2026-11-05T21:38:11.928681+00:00",
+      "bytes": 4514024,
+      "sha256": "49d0ba9c9acd71b1936d16bfe38644221100bb21ec6fff15f4c5a9ae41f4629b",
+      "records": 59159
+    },
+    {
+      "filename": "DayAheadPrices.json",
+      "url": "https://api.energidataservice.dk/dataset/DayAheadPrices?start=2025-10-01&end=2026-11-01&filter=%7B%22PriceArea%22%3A+%5B%22DE%22%5D%7D&columns=TimeUTC%2CPriceArea%2CDayAheadPriceEUR&sort=TimeUTC+asc&limit=100000",
+      "retrieved_at": "2026-11-05T21:38:12.645863+00:00",
+      "bytes": 3062104,
+      "sha256": "d467299e17ca997ed000680c717f7763064ba6ced324d9787a893ac2a65c3890",
+      "records": 38020
+    }
+  ],
+  "files": {
+    "annual.csv": {
+      "sha256": "c6ef075dc17bc4b130f7ca7208586e9b7de09fe5e5aaec866a3d90ccb5f64754",
+      "bytes": 507,
+      "rows": 7,
+      "columns": [
+        "Zeitraum",
+        "Erwartete_Stunden",
+        "Bekannte_Stunden",
+        "Negative_Stunden",
+        "Anteil_Prozent",
+        "Minimum_EUR_MWh",
+        "Negativmittel_EUR_MWh",
+        "Laengste_Phase_Stunden"
+      ]
+    },
+    "year_to_date.csv": {
+      "sha256": "441ec8aea0f250d2557cdf6215c9210bec6a5eeadf70b0a9c4ecb5e01b5b3ae5",
+      "bytes": 329,
+      "rows": 3,
+      "columns": [
+        "Zeitraum",
+        "Erwartete_Stunden",
+        "Bekannte_Stunden",
+        "Negative_Stunden",
+        "Anteil_Prozent",
+        "Minimum_EUR_MWh",
+        "Negativmittel_EUR_MWh",
+        "Laengste_Phase_Stunden"
+      ]
+    },
+    "monthly.csv": {
+      "sha256": "636f21612c95f2b09221c3ed64cafc397c6c70dfd62b511a713a7ce144e80169",
+      "bytes": 4704,
+      "rows": 94,
+      "columns": [
+        "Monat",
+        "Erwartete_Stunden",
+        "Bekannte_Stunden",
+        "Negative_Stunden",
+        "Anteil_Prozent",
+        "Minimum_EUR_MWh",
+        "Negativmittel_EUR_MWh",
+        "Laengste_Phase_Stunden"
+      ]
+    },
+    "quarterly.csv": {
+      "sha256": "69a4690cbfdaa9e2b4756b127e9e73d4c1f5ac8faac72e82036daa6b045705d5",
+      "bytes": 626,
+      "rows": 9,
+      "columns": [
+        "Zeitraum",
+        "Erwartete_Stunden",
+        "Bekannte_Stunden",
+        "Negative_Stunden",
+        "Anteil_Prozent",
+        "Minimum_EUR_MWh",
+        "Negativmittel_EUR_MWh",
+        "Laengste_Phase_Stunden"
+      ]
+    },
+    "midday.csv": {
+      "sha256": "12a6fcbd053096b1e9ab6a500da3687ab821a20cfba35d5acecdb3af2c032322",
+      "bytes": 1380,
+      "rows": 24,
+      "columns": [
+        "Stunde",
+        "Anteil_2024_Prozent",
+        "Negativ_2024_Stunden",
+        "Bekannt_2024_Stunden",
+        "Anteil_2025_Prozent",
+        "Negativ_2025_Stunden",
+        "Bekannt_2025_Stunden",
+        "Anteil_2026_Prozent",
+        "Negativ_2026_Stunden",
+        "Bekannt_2026_Stunden"
+      ]
+    },
+    "battery.csv": {
+      "sha256": "410fde934f73c6017449ce9fb8f2132fbcc802a8da115914e792e9d53d178dfb",
+      "bytes": 286,
+      "rows": 7,
+      "columns": [
+        "Jahr",
+        "Leistung_GW",
+        "Energie_GWh",
+        "Anlagen"
+      ]
+    }
+  },
+  "exporter": {
+    "path": "pipeline/src/data_pipelines/export_data/2026/negative_strompreise/export.py",
+    "sha256": "54b1c6537f83689fdbe3a25eac766103dd07788eed479b593566291d33215993"
+  },
+  "battery_input": {
+    "path": "frontend/src/data_ingestion/data/2026/battery_storage/battery_storage_yearly.csv",
+    "bytes": 7731,
+    "columns": [
+      "snapshot_date",
+      "commissioning_year",
+      "size_segment",
+      "plant_count",
+      "unit_count",
+      "power_gw",
+      "energy_gwh",
+      "median_duration_hours",
+      "network_verified_plant_count",
+      "period_complete"
+    ],
+    "rows": 109,
+    "sha256": "44a205feda9d718ede94027c9df3bdf68c1c0ddd4d06513ee4721abc4b324546",
+    "snapshot_date": "2026-09-26",
+    "source": {
+      "archive_sha256": "d01a4ba35010335927f4d6a134778e47991fcc2bb3a781d4009be960324d602e",
+      "snapshot_date": "2026-09-26",
+      "source_filename": "Gesamtdatenexport_20260926_26.1_battery_subset.zip",
+      "source_url": "https://download.marktstammdatenregister.de/Gesamtdatenexport_20260926_26.1.zip"
+    },
+    "metadata_sha256": "0dd4f8790e03f6c0ff97fdfb9b6991fc2e0320d5bfcbf47aae3db914072c84d6",
+    "interpretation": "Operating plants observed at snapshot, grouped by commissioning year; not historical total stock or net annual additions."
+  },
+  "quality": {
+    "intervals": 97179,
+    "null_intervals": 0,
+    "negative_intervals": 4061,
+    "by_source": {
+      "Elspotprices": {
+        "interval_minutes": 60,
+        "intervals": 59159,
+        "negative_intervals": 2002,
+        "null_intervals": 0
+      },
+      "DayAheadPrices": {
+        "interval_minutes": 15,
+        "intervals": 38020,
+        "negative_intervals": 2059,
+        "null_intervals": 0
+      }
+    },
+    "duplicates": 0,
+    "omitted_intervals": 0,
+    "interpolated_intervals": 0
+  }
+}
