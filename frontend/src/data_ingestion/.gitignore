@@ -24,3 +24,10 @@ data/**
 !data/2026/strompreis-korrelation/strompreis_korrelation_regression.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_2026.csv
 !data/2026/strompreis-korrelation/strompreis_korrelation_metadata.json
+
+# Frozen Destatis aggregates; no raw downloads or restricted industry series.
+!data/2026/waermepumpen/
+!data/2026/waermepumpen/anteil.csv
+!data/2026/waermepumpen/neubau.csv
+!data/2026/waermepumpen/genehmigungen.csv
+!data/2026/waermepumpen/manifest.json
