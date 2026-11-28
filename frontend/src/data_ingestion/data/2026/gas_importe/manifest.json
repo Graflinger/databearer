@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "kind": "frozen_gas_importe_article",
+  "methodology_version": 1,
+  "created_at": "2026-11-05T19:42:47.868937+00:00",
+  "sources": {
+    "dependency": {
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_ind_id?lang=EN&geo=DE&geo=EU27_2020&siec=G3000&siec=TOTAL&siec=O4000XBIO&siec=C0000X0350-0370&sinceTimePeriod=1990&untilTimePeriod=2024",
+      "retrieved_at": "2026-11-05T19:42:45.425152+00:00",
+      "sha256": "ea5467b95f51186f0243abd641a6093f85371a9f238abfc3049c57317b904029",
+      "bytes": 7976,
+      "dataset": "nrg_ind_id",
+      "source_updated_at": "2026-07-16T23:00:00+0200",
+      "doi": "https://doi.org/10.2908/NRG_IND_ID",
+      "license_id": "eurostat-data-reuse-2011-833",
+      "source_description": "<p>Share of an economy’s gross available energy that must be imported, calculated as net imports (imports minus exports) divided by gross available energy, shown for total energy and main fuel groups; negative values indicate net exporters.</p>",
+      "attribution": "Quelle: Eurostat, https://ec.europa.eu/eurostat/databrowser/view/nrg_ind_id/default/table, Abruf 2026-11-05. © Europäische Union."
+    },
+    "partners": {
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_ti_gas?lang=EN&geo=DE&unit=TJ_GCV&sinceTimePeriod=2021&untilTimePeriod=2024",
+      "retrieved_at": "2026-11-05T19:42:46.358492+00:00",
+      "sha256": "ae1ca30a72471e775910a76f478d2d32612e953290ee99ea1b9e9897bd962ac1",
+      "bytes": 24616,
+      "dataset": "nrg_ti_gas",
+      "source_updated_at": "2026-10-09T23:00:00+0200",
+      "doi": "https://doi.org/10.2908/NRG_TI_GAS",
+      "license_id": "eurostat-data-reuse-2011-833",
+      "source_description": "<p>Annual volumes of natural gas and liquefied natural gas imported by country of ultimate origin, classified under the Standard International Energy Product Classification in line with Regulation (EC) No 1099/2008 on energy statistics.</p>",
+      "attribution": "Quelle: Eurostat, https://ec.europa.eu/eurostat/databrowser/view/nrg_ti_gas/default/table, Abruf 2026-11-05. © Europäische Union."
+    },
+    "monthly": {
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_cb_gasm?lang=EN&geo=DE&geo=EU27_2020&unit=TJ_GCV&nrg_bal=IMP&nrg_bal=EXP&nrg_bal=IPRD&nrg_bal=IC_OBS&nrg_bal=IC_CAL_MG&nrg_bal=STK_CHG_MG&sinceTimePeriod=2024&untilTimePeriod=2025",
+      "retrieved_at": "2026-11-05T19:42:47.424450+00:00",
+      "sha256": "b8ca9a3aa2e5cd2ba6ad3d59467fc3b34357da0b3f2e7b995b7e96c5471c7db9",
+      "bytes": 9492,
+      "dataset": "nrg_cb_gasm",
+      "source_updated_at": "2026-11-03T23:00:00+0100",
+      "doi": "https://doi.org/10.2908/NRG_CB_GASM",
+      "license_id": "eurostat-data-reuse-2011-833",
+      "source_description": "<p>Monthly quantities of natural gas along the energy balance, covering supply, stock changes, transformation, losses and final consumption by sector, classified under the Standard International Energy Product Classification and collected under Regulation (EC) No 1099/2008.</p>",
+      "attribution": "Quelle: Eurostat, https://ec.europa.eu/eurostat/databrowser/view/nrg_cb_gasm/default/table, Abruf 2026-11-05. © Europäische Union."
+    }
+  },
+  "licenses": {
+    "eurostat-data-reuse-2011-833": {
+      "checked_on": "2026-11-05",
+      "name": "Eurostat free re-use policy / Commission Decision 2011/833/EU",
+      "version": "2011/833/EU; no separately numbered statistical-data licence",
+      "terms_url": "https://ec.europa.eu/eurostat/web/main/help/copyright-notice",
+      "legal_basis": "https://eur-lex.europa.eu/eli/dec/2011/833/oj",
+      "commission_notice": "https://commission.europa.eu/legal-notice_en",
+      "status": "permitted_with_attribution_and_modification_notice",
+      "commercial_reuse": true,
+      "public_repository_derived_data": true,
+      "required_attribution_template": "Source: [Eurostat dataset datacode link], [access date]",
+      "modification_notice": "Eigene Auswahl, Umrechnung und Darstellung. Eurostat ist für diese Bearbeitung nicht verantwortlich.",
+      "database_rights": "Express statistical-data extraction/reuse permission; no claim of public domain or waiver of all database rights.",
+      "third_party_rights": "No identified third-party works, logos, photographs or restrictive dataset notices used. Energy metadata section 6.2 explicitly confirms commercial free reuse.",
+      "territorial_exceptions": "Only DE and EU27_2020 reporting geographies. Partner US/RU observations are German declarations, not third-country own statistics. No CH/LI reporting trade or Austrian CN8 data.",
+      "editorial_content_license": "CC BY 4.0 International (not used to relabel statistical CSVs)",
+      "editorial_content_terms": "https://ec.europa.eu/eurostat/web/main/help/copyright-notice",
+      "publisher_metadata": "https://ec.europa.eu/eurostat/cache/metadata/en/nrg_prd_esms.htm",
+      "not_used": [
+        "GIE AGSI+/ALSI",
+        "Bruegel",
+        "BNetzA gas data",
+        "AG Energiebilanzen",
+        "BMWK FAQ",
+        "nrg_ind_idogas",
+        "nrg_cb_gas"
+      ],
+      "not_used_reason": "No data incorporated; Eurostat selected aggregates suffice. No permission inferred for other publishers."
+    }
+  },
+  "context_sources": [
+    {
+      "title": "Natural gas supply statistics",
+      "url": "https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Natural_gas_supply_statistics&oldid=711429",
+      "retrieved_on": "2026-11-05",
+      "license": "CC BY 4.0 International",
+      "modification": "Own summary, no publication translation"
+    }
+  ],
+  "coverage": {
+    "dependency": [
+      1990,
+      2024
+    ],
+    "partners": [
+      2021,
+      2024
+    ],
+    "monthly": [
+      "2024-01",
+      "2025-12"
+    ],
+    "reporting_geographies": [
+      "DE",
+      "EU27_2020"
+    ],
+    "timezone": "calendar years/months as reported; retrieval UTC"
+  },
+  "units": {
+    "dependency": "percent; not capped at 100",
+    "source_energy": "TJ gross calorific value",
+    "chart_energy": "TWh gross calorific value = TJ / 3600"
+  },
+  "missing_values": "Required observations must be finite; no imputation. Explicit published zeros retained. Source status flags preserved in quality.json.",
+  "exporter": "pipeline/src/data_pipelines/export_data/2026/gas_importe/export_gas_importe.py",
+  "files": {
+    "dependency.csv": {
+      "sha256": "62fd85b38e4d4dac8711353679092869ab74af18861b93e9593606d0923a97b4",
+      "bytes": 1983,
+      "columns": [
+        "Jahr",
+        "Gas_DE_PC",
+        "Gas_EU_PC",
+        "Oel_DE_PC",
+        "Kohle_DE_PC",
+        "Gesamt_DE_PC"
+      ],
+      "rows": 35
+    },
+    "partners.csv": {
+      "sha256": "b2317681f8f124b8a5bd8a61f1299c5bad0fb4b57f74cf2569229ddff1088aa4",
+      "bytes": 592,
+      "columns": [
+        "Jahr",
+        "TOTAL_TJ",
+        "RU_TJ",
+        "NO_TJ",
+        "NL_TJ",
+        "BE_TJ",
+        "US_TJ",
+        "FR_TJ",
+        "NSP_TJ",
+        "LNG_TJ",
+        "US_LNG_TJ"
+      ],
+      "rows": 4
+    },
+    "partner_comparison.csv": {
+      "sha256": "f0954dbdb7c9fecb05e0b76b2e65376089a49390317d70f3a24a5416ae5ed493",
+      "bytes": 218,
+      "columns": [
+        "Partner",
+        "Jahr_2021_TWh",
+        "Jahr_2024_TWh"
+      ],
+      "rows": 6
+    },
+    "monthly.csv": {
+      "sha256": "d33371fd4c498d9647a2ab79301c57ba9a6f2f256fd512b59f38f6173c71060b",
+      "bytes": 4784,
+      "columns": [
+        "Geo",
+        "Monat",
+        "IMP_TJ",
+        "EXP_TJ",
+        "IPRD_TJ",
+        "IC_OBS_TJ",
+        "IC_CAL_MG_TJ",
+        "STK_CHG_MG_TJ"
+      ],
+      "rows": 48
+    },
+    "balance_de.csv": {
+      "sha256": "3d71db88c72e00aca52b4847fc83d4c7ee668909127889b6274c9219b3846028",
+      "bytes": 229,
+      "columns": [
+        "Jahr",
+        "Import_TWh",
+        "Export_TWh",
+        "Netto_TWh",
+        "Foerderung_TWh",
+        "Verbrauch_TWh",
+        "Speicheraenderung_TWh"
+      ],
+      "rows": 2
+    },
+    "quality.json": {
+      "sha256": "849ade1da7688ec12f74d8edaf0d79668e4a9795433091258d64f769875a0623",
+      "bytes": 1560
+    }
+  }
+}

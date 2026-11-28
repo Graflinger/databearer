@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "complete_months_per_geo_year": 12,
+  "summaries": {
+    "DE": {
+      "2024": {
+        "IMP": 3175657.2030000007,
+        "EXP": 411277.625,
+        "IPRD": 136227.0,
+        "IC_OBS": 3013048.578,
+        "IC_CAL_MG": 3013048.578,
+        "STK_CHG_MG": -112442.0,
+        "NET_TJ": 2764379.5780000007,
+        "NET_OBS_PC": 91.74693027468342
+      },
+      "2025": {
+        "IMP": 3843073.541,
+        "EXP": 1060079.432,
+        "IPRD": 133145.403,
+        "IC_OBS": 3114236.512,
+        "IC_CAL_MG": 3114236.512,
+        "STK_CHG_MG": -198097.0,
+        "NET_TJ": 2782994.109,
+        "NET_OBS_PC": 89.36360800717502
+      }
+    },
+    "EU27_2020": {
+      "2024": {
+        "IMP": 17090027.536000002,
+        "EXP": 6129661.186999999,
+        "IPRD": 1167499.115,
+        "IC_OBS": 12769238.712000001,
+        "IC_CAL_MG": 12798608.172,
+        "STK_CHG_MG": -614800.424,
+        "NET_TJ": 10960366.349000003,
+        "NET_OBS_PC": 85.83414090849367
+      },
+      "2025": {
+        "IMP": 18521668.28,
+        "EXP": 7054243.3319999995,
+        "IPRD": 1205228.6119999997,
+        "IC_OBS": 13093254.201,
+        "IC_CAL_MG": 13121804.802,
+        "STK_CHG_MG": -398639.34699999995,
+        "NET_TJ": 11467424.948000003,
+        "NET_OBS_PC": 87.58269542436727
+      }
+    }
+  },
+  "source_flags": [],
+  "partner_sums_reconciled": true,
+  "missing_values_imputed": 0,
+  "caveat": "Reported partners are not a verified molecular origin map. Monthly stock changes: negative means drawdown. Monthly rates are not nrg_ind_id."
+}
